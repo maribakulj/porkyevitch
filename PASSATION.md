@@ -47,6 +47,7 @@ revient là-bas comme une brique nommée. lermolieff (`~/lermolieff`, futur dép
 | `2026-10-25-iconclass-architecture` | préinscrite (amendements 2-4), feu vert Codex ; encodage C-RADIO complet : voir ci-dessous | E0 → reference.json → D → E1 → E2 → E3, chaque script relu |
 | `2026-10-25-banc-rijksmuseum` | préinscription BLOQUANTE sur B1-B4 (rapport `porkyevitch-banc-rijksmuseum-codex.md`) ; étape 0 : voir ci-dessous | amender B1-B4 et synchroniser l'amendement 4 avec les effectifs de l'étape 0 ; script de collecte relu ; audit des filtres ; tirage ; gel |
 | `2026-10-25-lermolieff-publication` | code `fdb9f29` relu (feu vert) ; essai distant : voir ci-dessous | VERSIONS.md ; publication (historique neuf d'un seul commit, GitHub public + `Ma-Ri-Ba-Ku/lermolieff-iconclass-{c-radio,pe-spatial}`) **après** le banc Rijksmuseum, relecture, et page montrée à Marcel |
+| publication HF (dans lermolieff-publication) | cartes prêtes dans `~/lermolieff/hf/{c-radio,pe-spatial}` (README avec en-tête YAML, LICENSE MIT, NOTICE + licence NVIDIA pour c-radio, manifest.json) | ajouter : exemple d'usage, `model-index` (ICAI + Rijksmuseum), citation ; créer les dépôts **privés** avec huggingface_hub (jeton local jamais lu), envoyer, vérifier le sha de head.pt sur le Hub, montrer la page à Marcel, passer en public sur son accord, en même temps que GitHub |
 | autres dossiers | clos (copiés de caypollard avec PROVENANCE.md) | `xanto-parties` est à rendre au projet xanto |
 
 ### Calculs lancés le 25/10 (à compléter au retour)
