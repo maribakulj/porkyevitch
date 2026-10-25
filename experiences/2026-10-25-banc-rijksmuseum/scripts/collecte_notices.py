@@ -211,12 +211,21 @@ def actor_keys(obj: dict, counts: dict) -> tuple[list[dict], list[str]]:
         if not isinstance(part, dict):
             continue
         roles = [r for t in as_list(part.get("technique")) for r in notation(t)]
-        named = [(a, "direct") for a in as_list(part.get("carried_out_by"))]
+        first = [(a, "direct") for a in as_list(part.get("carried_out_by"))]
         for s in as_list(part.get("assigned_by")):
-            for a in as_list(s.get("assigned") if isinstance(s, dict) else None):
-                if isinstance(a, dict) and a.get("type") != "Place":
-                    named.append((a, "assigned"))
-                    for b in as_list((a.get("formed_by") or {}).get("influenced_by")):
+            first += [(a, "assigned") for a in as_list(s.get("assigned") if isinstance(s, dict) else None)]
+        named = []
+        for a, how in first:
+            # places never link; an influence source is read on direct and attributed actors alike
+            if isinstance(a, dict) and a.get("type") == "Place":
+                counts["place_skipped"] += 1
+                continue
+            named.append((a, how))
+            if isinstance(a, dict):
+                for b in as_list((a.get("formed_by") or {}).get("influenced_by")):
+                    if isinstance(b, dict) and b.get("type") == "Place":
+                        counts["place_skipped"] += 1
+                    else:
                         named.append((b, "influence"))
         role_set = {r.lower() for r in roles}
         if role_set & LINK_ROLES:
@@ -324,6 +333,9 @@ def record(pid: str, types: list[str], c: dict) -> dict:
     rec["image"] = image
     rec["actors"], rec["generic_actors"] = actor_keys(obj, c)
     rec["parents"] = [p.get("id") for p in as_list(obj.get("part_of")) if isinstance(p, dict) and p.get("id")]
+    rec["eligible"] = False
+    if rec["failed"]:
+        return rec  # a failed resolution is the object's only class: never read as an absence (no code, no image, no right)
     if not rec["cc0_record"]:
         rec["excluded"].append("no_cc0_record")
     if image is None and "not_alignable" not in rec["excluded"]:
@@ -388,12 +400,12 @@ print("sample", report["sample"], flush=True)
 
 COUNTS = ["objects", "failed", "eligible", "no_cc0_record", "no_code", "no_pdm_iiif_image_for_coded_visual", "not_alignable",
           "other_rights", "projected_truth_empty_or_unreadable", "codes_total", "codes_unreadable", "codes_86", "with_link_actor",
-          "only_generic_actor", "no_actor", "with_parent", "parts_role_other", "actor_without_id", "iconclass_uri_unsupported"]
+          "only_generic_actor", "no_actor", "with_parent", "parts_role_other", "actor_without_id", "iconclass_uri_unsupported", "place_skipped"]
 by_type = {t: dict.fromkeys(COUNTS, 0) for t in TYPES}
 tmp = OUT / "notices.jsonl.tmp"
 with open(tmp, "w") as fh:
     for n, pid in enumerate(union):
-        c = {"parts_role_other": 0, "actor_without_id": 0, "iconclass_uri_unsupported": 0}
+        c = {"parts_role_other": 0, "actor_without_id": 0, "iconclass_uri_unsupported": 0, "place_skipped": 0}
         rec = record(pid, types_of[pid], c)
         fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
         for t in rec["types"]:

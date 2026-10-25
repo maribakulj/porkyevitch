@@ -1,6 +1,6 @@
 {
- "date_utc": "2026-10-25T20:50:19Z",
- "script_sha256": "eb7a74838783505ee75c966e0a2247117c3b01a7983f7c019908fe3353d1e530",
+ "date_utc": "2026-10-25T21:01:03Z",
+ "script_sha256": "d086b37d71046ce29104c4ea99db002f25d457b7186912e644f6185824abbb1d",
  "essai": true,
  "config": {
   "types": [
@@ -107,7 +107,8 @@
     "with_parent": 0,
     "parts_role_other": 0,
     "actor_without_id": 3,
-    "iconclass_uri_unsupported": 0
+    "iconclass_uri_unsupported": 0,
+    "place_skipped": 1
    },
    "print": {
     "objects": 20,
@@ -128,7 +129,8 @@
     "with_parent": 0,
     "parts_role_other": 0,
     "actor_without_id": 0,
-    "iconclass_uri_unsupported": 0
+    "iconclass_uri_unsupported": 0,
+    "place_skipped": 0
    },
    "drawing": {
     "objects": 20,
@@ -149,7 +151,8 @@
     "with_parent": 0,
     "parts_role_other": 0,
     "actor_without_id": 0,
-    "iconclass_uri_unsupported": 0
+    "iconclass_uri_unsupported": 0,
+    "place_skipped": 0
    }
   },
   "notices_sha256": "0eacb85555d8f7da0939216fb82ab94bc0f9fd76ce23223a65dc699fc071a5f9"
