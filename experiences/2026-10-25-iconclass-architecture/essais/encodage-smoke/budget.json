@@ -1,0 +1,18 @@
+{
+ "ram_peak_gb": 3.869068,
+ "vram_peak_allocated_gb": 2.875719168,
+ "vram_peak_reserved_gb": 3.133145088,
+ "disk_free_before_gb": {
+  "/kaggle/working/smoke": 20.940500992,
+  "/tmp": 1126.146142208
+ },
+ "disk_free_after_gb": {
+  "/kaggle/working/smoke": 20.82424832,
+  "/tmp": 1124.800884736
+ },
+ "outputs_gb": 0.116055973,
+ "images_encoded_this_run": 832,
+ "encode_seconds": 36.06871032714844,
+ "images_per_second": 23.067084807126157,
+ "wall_seconds": 191.7913634777069
+}

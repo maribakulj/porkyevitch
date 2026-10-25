@@ -32,7 +32,7 @@ for v in ("c-radio", "pe-spatial"):
     out = subprocess.run([sys.executable, "-m", "lermolieff.predict", "--head", f"{src}/head-{v}.pt", *files],
                          capture_output=True, text=True, cwd="/tmp")
     got = [json.loads(l)["codes"] for l in out.stdout.splitlines() if l.startswith("{")]
-    pub = json.load(open(f"{src}/lermolieff/resultats/icai788_{v}_predictions.json"))["T_head"][:32]
+    pub = json.load(open(f"{src}/lermolieff/lermolieff/resultats/icai788_{v}_predictions.json"))["T_head"][:32]
     same = sum(sorted(a) == sorted(b) for a, b in zip(got, pub))
     report[v] = {"returncode": out.returncode, "images": len(got), "identical": same,
                  "passed": out.returncode == 0 and len(got) == 32 and same >= 30,

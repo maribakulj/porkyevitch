@@ -1,0 +1,15 @@
+     26 s  preflight ok
+     78 s  test-00000-of-00001: 64 rows
+     91 s  train-00000-of-00011: 64 rows
+    102 s  train-00001-of-00011: 64 rows
+    112 s  train-00002-of-00011: 64 rows
+    122 s  train-00003-of-00011: 64 rows
+    133 s  train-00004-of-00011: 64 rows
+    143 s  train-00005-of-00011: 64 rows
+    152 s  train-00006-of-00011: 64 rows
+    161 s  train-00007-of-00011: 64 rows
+    171 s  train-00008-of-00011: 64 rows
+    180 s  train-00009-of-00011: 64 rows
+    189 s  train-00010-of-00011: 64 rows
+    192 s  emblematica: 64 rows
+    192 s  done, control None
