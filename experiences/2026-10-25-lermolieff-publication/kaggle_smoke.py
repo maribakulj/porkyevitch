@@ -1,6 +1,7 @@
 # Remote end-to-end check of lermolieff (image -> codes), both variants, installed in this fresh Kaggle environment.
 # Compares the codes for the first 32 ICAI test images with the published predictions (resultats/icai788_<variant>_predictions.json).
-# Rule fixed before the run: a variant passes if at least 30 of the 32 images get exactly the published codes.
+# Rule fixed before the run: a variant passes if predict exits 0 and at least 30 of the 32 images get exactly the published codes;
+# the script exits non-zero unless both variants pass.
 import glob, json, os, shutil, subprocess, sys, time
 
 W = "/kaggle/working"
@@ -33,7 +34,10 @@ for v in ("c-radio", "pe-spatial"):
     got = [json.loads(l)["codes"] for l in out.stdout.splitlines() if l.startswith("{")]
     pub = json.load(open(f"{src}/lermolieff/resultats/icai788_{v}_predictions.json"))["T_head"][:32]
     same = sum(sorted(a) == sorted(b) for a, b in zip(got, pub))
-    report[v] = {"returncode": out.returncode, "images": len(got), "identical": same, "passed": len(got) == 32 and same >= 30,
+    report[v] = {"returncode": out.returncode, "images": len(got), "identical": same,
+                 "passed": out.returncode == 0 and len(got) == 32 and same >= 30,
                  "seconds": round(time.time() - t0, 1), "stderr_tail": out.stderr[-1500:]}
 json.dump(report, open(f"{W}/smoke_lermolieff.json", "w"), indent=1)
 print(json.dumps(report, indent=1))
+if not all(report[v]["passed"] for v in ("c-radio", "pe-spatial")):
+    sys.exit(1)
