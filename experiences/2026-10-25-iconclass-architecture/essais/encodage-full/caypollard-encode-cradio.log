@@ -1,0 +1,9 @@
+[{"stream_name":"stdout","time":5.402518489,"data":"inputs /kaggle/input/datasets/mabaku/caypollard-iconclass-pe ['candidates.jsonl', 'ext_images', 'gel2', 'near256.json', 'passk', 'remote_external_iconclass.py', 'remote_iconclass_head.py'] /kaggle/input/datasets/mabaku/caypollard-iconclass-t0 ['gel2', 'head.pt', 'predictions.json', 'resultats.json', 'scripts']\n"}
+,{"stream_name":"stdout","time":6135.514326278,"data":"CHAIN DONE full ok\n"}
+,{"stream_name":"stderr","time":6138.261091339,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":6138.261126658,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":6138.813388071,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":6138.8134144,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":6139.698790992,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":6141.333135342,"data":"[NbConvertApp] Writing 289279 bytes to __results__.html\n"}
+]

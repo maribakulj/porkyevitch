@@ -1,0 +1,18 @@
+{
+ "technical_only": false,
+ "icai788_historical_measure": {
+  "hier_f1_new": 0.547921570709416,
+  "hier_f1_published": 0.547921570709416,
+  "identical_predictions": 788,
+  "images": 788
+ },
+ "emblematica_test": {
+  "identical_predictions": 800,
+  "images": 800
+ },
+ "diagnostic_emblematica_vectors": {
+  "max_abs_diff": 0.0,
+  "min_cosine_fp32": 0.9999997615814209
+ },
+ "passed": true
+}

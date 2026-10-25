@@ -1,0 +1,17 @@
+    706 s  preflight ok
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/343 [00:00<?, ?it/s]Loading weights:  78%|███████▊  | 267/343 [00:00<00:00, 2666.33it/s]Loading weights: 100%|██████████| 343/343 [00:00<00:00, 2708.21it/s]
+    814 s  test-00000-of-00001: 788 rows
+   1211 s  train-00000-of-00011: 8000 rows
+   1613 s  train-00001-of-00011: 8000 rows
+   2009 s  train-00002-of-00011: 8000 rows
+   2419 s  train-00003-of-00011: 8000 rows
+   2811 s  train-00004-of-00011: 8000 rows
+   3206 s  train-00005-of-00011: 8000 rows
+   3597 s  train-00006-of-00011: 8000 rows
+   3986 s  train-00007-of-00011: 8000 rows
+   4375 s  train-00008-of-00011: 8000 rows
+   4774 s  train-00009-of-00011: 8000 rows
+   5074 s  train-00010-of-00011: 6216 rows
+   6094 s  emblematica: 7320 rows
+   6095 s  done, control True
