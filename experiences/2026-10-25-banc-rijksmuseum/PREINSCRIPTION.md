@@ -68,7 +68,10 @@ qui partagent :
 Ne créent **pas** d'arête : les rôles d'édition et de diffusion (*publisher, vendor, printer, compiler, clichémaker, writer*), les
 lieux, les ensembles de collection (`member_of`, ensembles de conservation du musée), et les **acteurs génériques** (« anonyme »,
 « inconnu » : acteurs dont la notation ou le libellé correspond à `anoni|anonym|onbekend|unknown|unidentified`, liste exacte des URI
-écartées publiée). Un objet sans aucun lien reste un groupe à lui seul ; la part de ces singletons, et celle des objets dont le seul
+écartées publiée). Le filtre de rôle vaut pour les acteurs nommés directement comme pour les attributions qualifiées ; une partie de
+production dont le rôle n'est dans aucune des deux listes (ou absent) **crée une arête** par prudence, et ces cas sont comptés ; une
+source d'influence crée une arête quel que soit le rôle de la partie. Script : `scripts/collecte_notices.py` (extraction des clés) ;
+les composantes sont calculées après les images, avec les copies internes. Un objet sans aucun lien reste un groupe à lui seul ; la part de ces singletons, et celle des objets dont le seul
 acteur est générique, sont publiées comme limite (deux anonymes d'une même main non identifiée restent comptés comme indépendants).
 Les clés et les motifs de chaque réunion sont gardés (`groupes.json` : pour chaque arête, son type et sa clé).
 

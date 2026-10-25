@@ -1,0 +1,159 @@
+{
+ "date_utc": "2026-10-25T20:38:55Z",
+ "script_sha256": "edf6b5237abab72caab1b1db1d78dce2b4699c9fbbcb9e5a99f61236687b9107",
+ "essai": true,
+ "config": {
+  "types": [
+   "painting",
+   "print",
+   "drawing"
+  ],
+  "per_type": 20,
+  "seed": 0,
+  "profile": "la-framed",
+  "accept": "application/ld+json",
+  "search": "https://data.rijksmuseum.nl/search/collection",
+  "size": "!800,800",
+  "link_roles": [
+   "after design by",
+   "after drawing by",
+   "after painting by",
+   "after print by",
+   "draftsman (artist)",
+   "fotograaf",
+   "knipkunstenaar",
+   "maker",
+   "naar ontwerp van",
+   "naar prent van",
+   "naar schilderij van",
+   "naar tekening van",
+   "painter",
+   "photographer",
+   "prentmaker",
+   "printmaker",
+   "schilder",
+   "tekenaar",
+   "vervaardiger"
+  ],
+  "no_link_roles": [
+   "clich\u00e9maker",
+   "compiler (person in literature)",
+   "drukker",
+   "printer (person)",
+   "publisher",
+   "samensteller",
+   "schrijver",
+   "uitgever",
+   "vendor",
+   "verkoper",
+   "writer (clerical worker)"
+  ],
+  "generic": "anoni|anonym|onbekend|unknown|unidentified",
+  "numpy": "2.5.4"
+ },
+ "frame": {
+  "painting": {
+   "type": "painting",
+   "total_items": 4920,
+   "pids_met": 300,
+   "pages": 3,
+   "pids_order_sha256": "24b43aef4b7415096f87a8a7fa2cdc53cdf3f3dc6ad0cecd86ced9b12a029a91"
+  },
+  "print": {
+   "type": "print",
+   "total_items": 387333,
+   "pids_met": 300,
+   "pages": 3,
+   "pids_order_sha256": "0713b1fec9057afa1c0b7a13e7f8a2860a610010cc82e0e91eabd9ceb3a1a853"
+  },
+  "drawing": {
+   "type": "drawing",
+   "total_items": 48619,
+   "pids_met": 300,
+   "pages": 3,
+   "pids_order_sha256": "018400d7b43aa9854a1060ede2734d8c62ce8c8f9a547755c8919508c973aa87"
+  }
+ },
+ "sample": {
+  "per_type": {
+   "painting": 20,
+   "print": 20,
+   "drawing": 20
+  },
+  "union": 60,
+  "sampled_in_several_types": 0,
+  "sampled_pid_also_in_another_list": 0,
+  "union_sha256": "90463a15f0da0ef336a2df2b146424a97f5cbad98529bcfbbf654da60ab5718c"
+ },
+ "records": {
+  "done": 60,
+  "by_type": {
+   "painting": {
+    "objects": 20,
+    "failed": 0,
+    "eligible": 19,
+    "no_cc0_record": 0,
+    "no_code": 1,
+    "no_pdm_iiif_image_for_coded_visual": 0,
+    "not_alignable": 0,
+    "other_rights": 0,
+    "projected_truth_empty_or_unreadable": 0,
+    "codes_total": 46,
+    "codes_unreadable": 0,
+    "codes_86": 0,
+    "with_link_actor": 18,
+    "only_generic_actor": 2,
+    "no_actor": 0,
+    "with_parent": 0,
+    "parts_role_other": 0,
+    "actor_without_id": 3,
+    "iconclass_uri_unsupported": 0
+   },
+   "print": {
+    "objects": 20,
+    "failed": 0,
+    "eligible": 18,
+    "no_cc0_record": 0,
+    "no_code": 1,
+    "no_pdm_iiif_image_for_coded_visual": 1,
+    "not_alignable": 0,
+    "other_rights": 1,
+    "projected_truth_empty_or_unreadable": 0,
+    "codes_total": 42,
+    "codes_unreadable": 0,
+    "codes_86": 0,
+    "with_link_actor": 6,
+    "only_generic_actor": 14,
+    "no_actor": 0,
+    "with_parent": 0,
+    "parts_role_other": 0,
+    "actor_without_id": 0,
+    "iconclass_uri_unsupported": 0
+   },
+   "drawing": {
+    "objects": 20,
+    "failed": 0,
+    "eligible": 16,
+    "no_cc0_record": 0,
+    "no_code": 4,
+    "no_pdm_iiif_image_for_coded_visual": 0,
+    "not_alignable": 0,
+    "other_rights": 0,
+    "projected_truth_empty_or_unreadable": 0,
+    "codes_total": 35,
+    "codes_unreadable": 0,
+    "codes_86": 0,
+    "with_link_actor": 17,
+    "only_generic_actor": 3,
+    "no_actor": 0,
+    "with_parent": 0,
+    "parts_role_other": 0,
+    "actor_without_id": 0,
+    "iconclass_uri_unsupported": 0
+   }
+  },
+  "notices_sha256": "8a40a0ebd659aadea408f04817f3e0cae2a402ffb53e9bbc3e46cf256656599b"
+ },
+ "cache_keys_sha256": "cec66a0e4f3f4dd38065bd12d4d88d4edde2ba173692c1492f7c13e6dff0fc6f",
+ "requests_sent": 0
+}
