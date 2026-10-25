@@ -21,30 +21,40 @@ pas la lecture des relations entre figures.
 
 - **Encodeur** : celui que la règle PE-Spatial désigne comme version recommandée (`caypollard/results/iconclass-tete-pe/PREINSCRIPTION.md` :
   PE-Spatial si la borne basse de T-PE − T est ≥ −2 points sur les deux bancs, sinon C-RADIO). Règle inchangée.
-- Référence **T** : la tête de cet encodeur, telle que calculée (MLP 2 048, perte asymétrique, codes vus ≥ 5 fois et leurs ancêtres,
-  15 époques, seuil global choisi sur la validation ; `caypollard/scripts/remote_iconclass_head.py`). **Avant E1**, on fige dans
-  `reference.json` : l'encodeur désigné, le `head.pt` de T, ses caractéristiques et leurs empreintes, et ses chiffres sur les deux bancs.
+- **T0** : la tête de cet encodeur, telle que calculée (MLP 2 048, perte asymétrique, codes vus ≥ 5 fois et leurs ancêtres,
+  15 époques, seuil global choisi sur la validation ; `caypollard/scripts/remote_iconclass_head.py`). Dans ce texte, « T »
+  sans autre précision désigne T0.
   Les chiffres 54,8 % / 26,1 % ci-dessous sont ceux de T-C-RADIO ; si PE est désignée, les chiffres de T-PE deviennent la référence.
 - **E0, contrôle de la référence, avant E1** (motif : pour T-C-RADIO, l'époque retenue est la dernière, 14 sur 0-14, la validation
   montait encore, et le seuil retenu, 0,60, est la borne haute de la grille) :
   - **T-seuil** : mêmes poids que T, seuil global choisi sur la validation dans une grille étendue de 0,05 à 0,95 par pas de 0,05 ;
   - **T-long** : même tête réentraînée jusqu'à 30 époques, époque et seuil (grille étendue) choisis sur la validation.
-  La **référence T\*** des essais E1-E3 est celle des trois (T, T-seuil, T-long) qui a le meilleur F1 hiérarchique de validation
-  (égalités : la plus simple, dans cet ordre). Tous les essais E1-E3 utilisent la grille étendue, pour que la référence et les
-  essais aient accès aux mêmes seuils. Si T\* ≠ T, la comparaison T\* − T est la première de la famille.
+  La **référence T\*** des essais E1-E3 est celle des trois (T0, T-seuil, T-long) qui a le meilleur F1 hiérarchique de validation
+  (mesure de validation sans chapitre 86, voir plus bas ; égalités : la plus simple, dans cet ordre). Cette sélection sur la
+  validation compte une fois dans la famille (comparaison T\* − T0) et ne donne lieu à aucune autre revendication sur les tests.
+  **Après E0 et avant E1**, on fige dans `reference.json` : l'encodeur, T\* (ses poids, son époque, son seuil, son horizon
+  d'entraînement de 15 ou 30 époques), ses caractéristiques et leurs empreintes, et ses chiffres sur les deux bancs.
+- **Ce que les essais reprennent de T\*** : TK et T-niv utilisent les probabilités de T\* (les poids de T0 si T\* = T-seuil) ;
+  T-niv part du seuil de T\* ; TK à α = 1 et au seuil de T\* reproduit T\* exactement (contrôle exigé). T-H, T-Z et T-D sont
+  entraînés sur l'horizon de T\* (15 époques, ou 30 si T\* = T-long), époque et seuil choisis sur la validation dans la grille
+  étendue. Tous utilisent la grille étendue, pour que la référence et les essais aient accès aux mêmes seuils.
 - Limites mesurées qui motivent les essais (T-C-RADIO) : 54,8 % (ICAI 788) contre 26,1 % (Emblematica 762) en F1 hiérarchique ; F1 des
   codes exacts d'environ 0,04 hors corpus ; sur ICAI, les voisins K trouvent plus de codes exacts que T (0,356 contre 0,275) ; la tête
   moyenne les jetons de l'image ; tout code absent de l'annotation compte comme négatif.
 
 ## Règle générale
 
-- **Un seul changement par brique** (sauf E2 et E3, déclarés comme recettes ci-dessous), toujours comparé à T\* (E0 : à T), mêmes données, même
+- **Un seul changement par brique** (sauf E2 et E3, déclarés comme recettes ci-dessous), toujours comparé à T\* (E0 : à T0), mêmes données, même
   partage de validation (5 % groupés par md5, graine 0), même vocabulaire calculé sur le seul sous-ensemble d'entraînement.
 - **Tout réglage se choisit sur la validation ICAI seule.** Le test ICAI (788) et le test Emblematica (gel2 : 800 images, 59 livres ;
   762 évaluables sans chapitre 86, 58 livres) ne servent qu'à mesurer, une fois par brique.
-- **Famille fixe de sept comparaisons** : T\* − T (E0), TK, T-niv, TK-niv, T-H, T-Z, T-D (chacune garde sa place même si elle
+- **Famille fixe de sept comparaisons** : T\* − T0 (E0), TK, T-niv, TK-niv, T-H, T-Z, T-D (chacune garde sa place même si elle
   n'est pas exécutée). Correction de Bonferroni au niveau familial de 5 % unilatéral : niveau de chaque borne 1 − 0,05/7 ≈ 99,29 %.
-  Écarts en F1 absolu, sur les deux bancs **avec la même projection sans chapitre 86** (T-C-RADIO : 54,6 % sur ICAI ainsi projeté) :
+  Écarts en F1 absolu, sur les deux bancs **avec la même projection sans chapitre 86**, appliquée à la vérité et aux prédictions ;
+  une image dont la vérité projetée est vide est exclue, et le dénominateur est le nombre d'images restantes : ICAI 787 images
+  (une seule exclue ; T0 = 0,5459), Emblematica 762. La même projection sert à la mesure de validation dans toute la série (choix
+  d'époque, de seuil et de T\*) ; les cibles d'entraînement ne changent pas (les codes du chapitre 86 restent appris).
+  Δ_ext sur Emblematica, Δ_ICAI sur ICAI :
   Δ_ext sur Emblematica, Δ_ICAI sur ICAI. Une brique est **retenue** si la borne inférieure unilatérale à 99,29 % de Δ_ext est
   **> 0** **et** celle de Δ_ICAI est **> −0,01** (non-infériorité jugée sur la borne, pas sur l'estimation) ; les deux conditions
   sont exigées ensemble. Sinon, non retenue, publiée telle quelle, sans nouveau réglage.
@@ -53,8 +63,8 @@ pas la lecture des relations entre figures.
   IC95 bilatéraux ordinaires sont publiés à côté, pour la description. L'amplitude est donnée sans qualificatif automatique.
 - **Regarder avant les chiffres** : pour chaque brique, une planche des 12 images du dev Emblematica (202) où |F1 hiérarchique de la
   brique − celui de T| est le plus grand (égalités : ordre des noms de fichier), avec la vérité et les deux prédictions en clair,
-  regardée avant d'ouvrir les mesures du test. Les images du test ne sont jamais regardées avant que les prédictions et le verdict
-  soient gelés ; elles sont examinées ensuite. **Aucun changement** de seuil, d'architecture, de prétraitement ou de vocabulaire ne
+  regardée avant d'ouvrir les mesures du test. Aucune image des deux tests n'est regardée avant que les prédictions et les verdicts
+  de **toute la série** soient gelés ; elles sont examinées ensuite. **Aucun changement** de seuil, d'architecture, de prétraitement ou de vocabulaire ne
   découle des planches dans cette série ; une correction de bogue avérée est documentée avec ses versions avant/après.
 
 ## Mesures secondaires (descriptives, sans test de sélection)
@@ -76,8 +86,9 @@ Sur T, puis sur chaque brique, les deux bancs, sans test de sélection : (1) pro
 pour voir si les bons ancêtres sont trouvés sans les descendants ; (2) fréquence : F1 selon le nombre d'images d'entraînement du code
 (5-20, 21-100, plus de 100) ; (3) couverture : part des codes de vérité Emblematica hors vocabulaire, par image et par code ;
 (4) nombre de codes prédits par tranche de profondeur, contre la vérité ; (5) avec les probabilités (après l'encodage) : rang et
-probabilité des codes de vérité profonds sous le seuil. Emblematica ne contient que des picturae recadrées (pas de pages entières) ;
-ICAI n'indique pas le type d'image : la distinction recadrage / page entière n'est donc pas mesurable ici, et c'est écrit tel quel.
+probabilité des codes de vérité profonds sous le seuil. Le banc Emblematica est fait de picturae, mais nos archives montrent que certaines
+images ne sont pas recadrées et qu'aucun audit image par image n'a été fait ; ICAI n'indique pas le type d'image : la distinction
+recadrage / page entière n'est donc pas mesurée dans cette série, et c'est écrit tel quel.
 Le diagnostic ne change aucun essai de cette série ; il sert à interpréter les verdicts et à choisir la série suivante.
 
 ## Briques, dans l'ordre
@@ -100,9 +111,9 @@ Le diagnostic ne change aucun essai de cette série ; il sert à interpréter le
 
 ### E2. Cohérence parent-enfant (recette C-HMCNN, réentraînement de la tête seule)
 
-- **T-H** : même architecture, vocabulaire, cibles (fermées par ancêtres), époques et choix sur la validation que T ; deux changements
+- **T-H** : même architecture, vocabulaire, cibles (fermées par ancêtres) que T0, horizon de T\*, choix sur la validation ; deux changements
   liés, comme dans la méthode publiée (Giunchiglia et Lukasiewicz, NeurIPS 2020, éq. 4) — la comparaison est celle de la recette
-  complète contre T, sans attribuer le gain à l'un ou l'autre :
+  complète contre T\*, sans attribuer le gain à l'un ou l'autre :
   - **module de contrainte** : avec D(a) les descendants de a dans le vocabulaire (a compris, selon `ancestors()`), la sortie est
     m_a = max_{b ∈ D(a)} p_b ;
   - **MCLoss** : m⁺_a = max_{b ∈ D(a)} (y_b · p_b) ; L_a = − y_a · log(m⁺_a) − (1 − y_a) · log(1 − m_a) ; **somme sur les codes, moyenne
@@ -110,7 +121,8 @@ Le diagnostic ne change aucun essai de cette série ; il sert à interpréter le
 - Prédiction : seuil sur m_a, puis `most_specific`, comme T.
 - **Pas de variante « cohérence après coup » (T-H0)** : avec un seuil global puis `most_specific`, remonter à chaque ancêtre le
   maximum de ses descendants n'ajoute que des ancêtres de codes déjà au-dessus du seuil, que `most_specific` retire : les prédictions
-  sont identiques à celles de T (vérifié par un test sur les probabilités de validation, publié). Le gain éventuel de T-H ne peut donc
+  sont identiques à celles de T (preuve vérifiée par Codex sur 6 561 cas jouets ; un test sur les probabilités de validation sera
+  exécuté et publié avec les résultats). Le gain éventuel de T-H ne peut donc
   venir que de l'apprentissage.
 - Hiérarchie : celle de la notation (`ancestors()`), la même que la mesure. Une comparaison descriptive avec l'arbre officiel
   (iconclass/data, CC0) sur les 7 907 codes du vocabulaire est publiée (codes dont les ancêtres diffèrent), sans changer la contrainte.
@@ -124,14 +136,16 @@ Le diagnostic ne change aucun essai de cette série ; il sert à interpréter le
   script, attribution gardée) sur les jetons spatiaux de l'encodeur gelé, au lieu du MLP sur le vecteur. Réglages de référence du code
   officiel : une couche, dimension 768, FFN 2 048, dropout 0,1, requêtes gelées ; **100 groupes** (valeur de l'article pour les jeux à
   nombreuses classes, non réglée), classes réparties au hasard (graine 0), permutation et inverse sauvegardés, sorties en trop
-  retirées. Même vocabulaire, même perte asymétrique, mêmes époques, même choix sur la validation.
+  retirées. Même vocabulaire, même perte asymétrique, horizon de T\*, même choix sur la validation.
 - Entrées : jetons de patch seuls (jetons de préfixe retirés avant la remise en grille), ramenés à **8 × 8 = 64 zones** par moyenne
   adaptative (`adaptive_avg_pool2d` : C-RADIO 28 × 28, non divisible par 8 ; PE-Spatial 32 × 32). Pour C-RADIO, le jeton de synthèse
   qu'utilise T n'entre pas : T-D est une recette spatiale alternative, pas la seule localisation ajoutée à T. Sans encodage de position
   ajouté, l'attention ne garantit ni boîtes ni relations spatiales.
 - **T-Z, contrôle spatial simple** (mêmes 64 zones, mêmes entrées que T-D) : une mise en commun apprise (une requête apprise, poids
-  softmax sur les 64 zones, un vecteur de 1 024) suivie du même MLP que T. T-Z − T\* mesure l'apport d'une mise en commun apprise des
-  zones ; T-D contre T-Z (descriptif) celui du décodeur à attention. Mêmes perte, époques, choix sur la validation.
+  softmax sur les 64 zones, un vecteur de 1 024) suivie d'un MLP de même forme que T (entrée 1 024 au lieu de 4 096). Comme T-D,
+  T-Z retire le jeton de synthèse de C-RADIO et change la dimension d'entrée : T-Z − T\* compare une **recette spatiale
+  alternative**, pas la seule mise en commun. T-D contre T-Z (descriptif, à entrées égales) mesure l'apport du décodeur à
+  attention. Mêmes perte, horizon, choix sur la validation.
 - Volume : 86 216 × 64 × 1 024 × 2 octets ≈ 11,3 Go en fp16. Stockage en fichiers `.npy` par morceaux, lisibles sans tout charger ;
   conversion en float32 lot par lot ; l'encodeur libéré avant l'entraînement ; jamais toute la grille en mémoire GPU.
 - Budget mesuré à l'essai à blanc, séparément : poids, gradients, états de l'optimiseur, activations et attention en VRAM ; RAM ;
