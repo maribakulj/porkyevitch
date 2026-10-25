@@ -40,8 +40,9 @@ pour l'ensemble du script, agent « caypollard/0.1 (research prototype) », cach
 2. **Échantillon** : par type, **3 000 identifiants tirés au hasard sans remise** : liste du type triée par points de code Unicode
    (`sorted` de Python), `Generator.choice(n, 3000, replace=False)` sur les indices 0 … n−1 de cette liste, avec un seul générateur
    `numpy.random.default_rng(0)` (numpy 2.5.4, épinglé et vérifié par le script) appelé pour painting, puis print, puis drawing ; si
-   un type a moins de 3 000 identifiants, tous sont pris et c'est publié. Union, dédoublonnée par identifiant ; un objet présent dans plusieurs listes est gardé une fois, avec la liste
-   de ses types (compte publié). Le nombre 3 000 (au lieu des « 6 000 premiers » de la version d'origine) tient la collecte des
+   un type a moins de 3 000 identifiants, tous sont pris et c'est publié. Union, dédoublonnée par identifiant ; un objet présent dans plusieurs listes est gardé une fois ; ses types
+   sont ceux des **listes complètes** du cadre auxquelles il appartient (ordre painting, print, drawing), la provenance du tirage
+   (`sampled_from`) est gardée à part ; les deux comptes sont publiés. Le nombre 3 000 (au lieu des « 6 000 premiers » de la version d'origine) tient la collecte des
    notices dans une session d'environ 9 h (3 requêtes par objet à 1/s) ; il est fixé avant toute collecte.
    **Estimand** : la moyenne par image du F1 hiérarchique sur le banc constitué par **cet** algorithme : cadre à allocation égale
    des identifiants entre les trois types (3 000 chacun, pas proportionnel au musée, où les estampes dominent), puis éligibilité,
@@ -182,8 +183,11 @@ montrent que des comptes et des distances agrégées sur le test.
   prédire, comme sur ICAI) ; leurs parts sont publiées. Les formes d'URI non prises en charge sont comptées. Absence d'annotation et
   échec de résolution sont deux comptes distincts ; un objet dont une résolution a échoué n'est jamais classé « sans code ».
 - **Image** : l'objet numérique retenu est, dans l'ordre de la notice, le premier objet numérique à point d'accès IIIF (hôte exact
-  `iiif.micr.io`) et PDM, **porté par le contenu visuel qui porte les codes**. Si les codes sont répartis sur plusieurs contenus
-  visuels ayant des objets numériques différents (recto/verso, vues multiples), l'objet est exclu comme non alignable et compté.
+  `iiif.micr.io`) et PDM, **porté par le contenu visuel qui porte les codes**. L'alignement se décide **avant** tout examen des droits ou de l'IIIF, sur toutes les vues codées et tous les objets
+  numériques qu'elles résolvent : s'il y a plus d'un objet numérique distinct pour l'ensemble des vues codées (recto/verso, vues
+  multiples), ou une vue codée sans objet numérique, l'objet est exclu comme non alignable et compté ; sinon, cet unique objet
+  numérique doit avoir l'IIIF et le PDM, faute de quoi l'objet est exclu (aucun repli sur l'image d'une autre vue, aucun code
+  retiré).
   Gardés : identifiant canonique de l'objet, identifiant du contenu visuel et de l'objet numérique, URL IIIF exacte, dimensions,
   SHA-256 des octets.
 - **Droits** : CC0 relevé sur la notice (`subject_of[].subject_to`), PDM relevé sur l'objet numérique ou sur son contenu visuel, chacun

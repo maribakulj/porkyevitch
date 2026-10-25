@@ -290,7 +290,7 @@ def record(pid: str, types: list[str], c: dict) -> dict:
     rec["cc0_record"] = [{"uri": u, "path": f"subject_of[{i}].subject_to"} for i, s in enumerate(as_list(obj.get("subject_of")))
                          if isinstance(s, dict) for u in rights(s) if u == CC0]
     others = [("record", u) for s in as_list(obj.get("subject_of")) if isinstance(s, dict) for u in other_rights(rights(s))]
-    codes, candidates, visuals_with_codes = [], [], set()
+    codes, candidates, visuals_with_codes, digitals_of = [], [], set(), {}
     for v in as_list(obj.get("shows")):
         try:
             both = isinstance(v, dict) and "represents_instance_of_type" in v and "digitally_shown_by" in v
@@ -304,12 +304,14 @@ def record(pid: str, types: list[str], c: dict) -> dict:
             visuals_with_codes.add(vis.get("id"))
         pdm_vis = PDM in rights(vis)
         others += [("visual", u) for u in other_rights(rights(vis))]
+        digitals_of.setdefault(vis.get("id"), set())
         for d in as_list(vis.get("digitally_shown_by")):
             try:
                 dig = resolve(d, "access_point")
             except Failure as e:
                 rec["failed"].append(f"digital: {e}")
                 continue
+            digitals_of[vis.get("id")].add(dig.get("id"))
             others += [("digital", u) for u in other_rights(rights(dig))]
             aps = [a.get("id", "") for a in as_list(dig.get("access_point")) if isinstance(a, dict)]
             aps = [a for a in aps if host(a) == IIIF_HOST and "/full/" in a]
@@ -325,11 +327,15 @@ def record(pid: str, types: list[str], c: dict) -> dict:
     projected = [x["code"] for x in rec["codes"] if not x["code"].strip().startswith("86")]
     rec["projected"] = projected
     rec["other_rights"] = [{"node": n, "uri": u} for n, u in others]
+    # Alignment is decided on every coded visual item and every digital object it resolves to, before rights or IIIF are looked at:
+    # one single digital object for all the coded views, or the object is not alignable (a coded view without digital object
+    # included). Only then is that digital object checked for PDM + IIIF.
     image = None
-    if len(visuals_with_codes) > 1 and len({x["digital"] for x in candidates if x["visual"] in visuals_with_codes}) > 1:
+    coded_digitals = set().union(*(digitals_of.get(v, set()) for v in visuals_with_codes)) if visuals_with_codes else set()
+    if visuals_with_codes and (len(coded_digitals) > 1 or any(not digitals_of.get(v) for v in visuals_with_codes)):
         rec["excluded"].append("not_alignable")
     else:
-        image = next((x for x in candidates if x["visual"] in visuals_with_codes), None)
+        image = next((x for x in candidates if x["visual"] in visuals_with_codes and x["digital"] in coded_digitals), None)
     rec["image"] = image
     rec["actors"], rec["generic_actors"] = actor_keys(obj, c)
     rec["parents"] = [p.get("id") for p in as_list(obj.get("part_of")) if isinstance(p, dict) and p.get("id")]
@@ -381,19 +387,21 @@ sample: dict[str, list[str]] = {}
 for t in TYPES:
     idx = rng.choice(len(lists[t]), min(PER_TYPE, len(lists[t])), replace=False)
     sample[t] = [lists[t][i] for i in sorted(idx)]
-types_of: dict[str, list[str]] = {}
+# provenance of the draw (sampled_from) and membership of the complete frame lists (types, in the fixed order)
+sampled_from: dict[str, list[str]] = {}
 for t in TYPES:
     for pid in sample[t]:
-        types_of.setdefault(pid, []).append(t)
+        sampled_from.setdefault(pid, []).append(t)
 sets = {t: set(lists[t]) for t in TYPES}
-in_several_lists = sum(1 for t in TYPES for pid in sample[t] if any(pid in sets[u] for u in TYPES if u != t))
-union = sorted(types_of)
+types_of = {pid: [t for t in TYPES if pid in sets[t]] for pid in sampled_from}
+union = sorted(sampled_from)
 tmp = OUT / "echantillon.json.tmp"
-json.dump({"per_type": sample, "union": [{"pid": p, "types": types_of[p]} for p in union]}, open(tmp, "w"))
+json.dump({"per_type": sample, "union": [{"pid": p, "types": types_of[p], "sampled_from": sampled_from[p]} for p in union]},
+          open(tmp, "w"))
 tmp.replace(OUT / "echantillon.json")
 report["sample"] = {"per_type": {t: len(sample[t]) for t in TYPES}, "union": len(union),
-                    "sampled_in_several_types": sum(len(v) > 1 for v in types_of.values()),
-                    "sampled_pid_also_in_another_list": in_several_lists,
+                    "unique_pids_sampled_in_several_types": sum(len(v) > 1 for v in sampled_from.values()),
+                    "unique_pids_in_several_frame_lists": sum(len(v) > 1 for v in types_of.values()),
                     "union_sha256": hashlib.sha256(json.dumps(union).encode()).hexdigest()}
 write_report()
 print("sample", report["sample"], flush=True)
@@ -407,6 +415,7 @@ with open(tmp, "w") as fh:
     for n, pid in enumerate(union):
         c = {"parts_role_other": 0, "actor_without_id": 0, "iconclass_uri_unsupported": 0, "place_skipped": 0}
         rec = record(pid, types_of[pid], c)
+        rec["sampled_from"] = sampled_from[pid]
         fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
         for t in rec["types"]:
             b = by_type[t]

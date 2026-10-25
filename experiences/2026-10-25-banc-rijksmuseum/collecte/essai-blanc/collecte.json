@@ -1,6 +1,6 @@
 {
- "date_utc": "2026-10-25T21:01:03Z",
- "script_sha256": "d086b37d71046ce29104c4ea99db002f25d457b7186912e644f6185824abbb1d",
+ "date_utc": "2026-10-25T21:06:08Z",
+ "script_sha256": "365f45eebb77bcb26f519bc943a7b53e1a314b4b2e05fc2f7734ab27d3f753f7",
  "essai": true,
  "config": {
   "types": [
@@ -81,8 +81,8 @@
    "drawing": 20
   },
   "union": 60,
-  "sampled_in_several_types": 0,
-  "sampled_pid_also_in_another_list": 0,
+  "unique_pids_sampled_in_several_types": 0,
+  "unique_pids_in_several_frame_lists": 0,
   "union_sha256": "90463a15f0da0ef336a2df2b146424a97f5cbad98529bcfbbf654da60ab5718c"
  },
  "records": {
@@ -155,7 +155,7 @@
     "place_skipped": 0
    }
   },
-  "notices_sha256": "0eacb85555d8f7da0939216fb82ab94bc0f9fd76ce23223a65dc699fc071a5f9"
+  "notices_sha256": "c5d56b215a9d2cf256d4a8a4c1e46f614123de45ee685c0325891c37237c6b53"
  },
  "cache_keys_sha256": "cec66a0e4f3f4dd38065bd12d4d88d4edde2ba173692c1492f7c13e6dff0fc6f",
  "requests_sent": 0
