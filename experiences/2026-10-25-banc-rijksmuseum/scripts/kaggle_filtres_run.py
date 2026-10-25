@@ -7,8 +7,8 @@ import glob, hashlib, json, os, subprocess, sys, time
 MODE = "smoke"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
-SCRIPT_SHA256 = "TO_FILL_AFTER_REVIEW"  # sha256 of filtres_distances.py as reviewed
-ELIG_SHA256 = "TO_FILL"  # sha256 of eligibles.jsonl (smoke: the dry-run list; full: the list of the complete collection)
+SCRIPT_SHA256 = "e0fb13ff2fa1b4747a4cc02d1a31589761e83f0266a7133c81f7bb5de2beaa25"  # sha256 of filtres_distances.py as reviewed
+ELIG_SHA256 = "eef74b15c84a0d3e28cf1fcee518102a49aee51d16c0f5aa329be44f7e20a5f0"  # sha256 of eligibles.jsonl (smoke: the dry-run list; full: the list of the complete collection)
 ENCODER_SCRIPT = "c3f12bb71deda0b96bf3b8d015d9a79f4db666c234ad8edb0ff04633bd2bf1ca"
 
 
@@ -54,6 +54,8 @@ with open(f"{W}/{MODE}.log", "w") as f:
     r = subprocess.run([sys.executable, script, out, feats, elig], env=env, stdout=f, stderr=subprocess.STDOUT)
 if r.returncode != 0:
     fail(f"filters exit {r.returncode} ({MODE})")
+if not json.load(open(f"{out}/run.json")).get("gpu"):
+    fail("no GPU recorded in run.json: not a valid run")
 for need in ("run.json", "resume.json", "budget.json", "controle_encodeur.json", "voisins.jsonl", "internes.jsonl", "rijks.json"):
     if not os.path.exists(f"{out}/{need}"):
         fail(f"missing output {need}")

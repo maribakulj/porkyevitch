@@ -63,6 +63,8 @@ UA = "caypollard/0.1 (research prototype)"
 SIZE = "!800,800"
 INTERNAL_DHASH, INTERNAL_COS = 64, 0.92  # internal copies: dHash < 64 bits or cosine >= 0.92
 dev = "cuda" if torch.cuda.is_available() else "cpu"
+torch.backends.cuda.matmul.allow_tf32 = False  # exact float32 products for the Hamming distances, on any GPU
+torch.backends.cudnn.allow_tf32 = False
 started = time.time()
 _last = [0.0]
 
