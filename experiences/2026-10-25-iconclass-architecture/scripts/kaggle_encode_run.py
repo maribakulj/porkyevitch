@@ -3,7 +3,7 @@
 # Stops at the first failure and exits non-zero, so that Kaggle marks the run as failed.
 import glob, hashlib, os, subprocess, sys, time
 
-MODE = "smoke"
+MODE = "full"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
 SCRIPT_SHA256 = "c3f12bb71deda0b96bf3b8d015d9a79f4db666c234ad8edb0ff04633bd2bf1ca"  # sha256 of encode_cradio.py as reviewed
