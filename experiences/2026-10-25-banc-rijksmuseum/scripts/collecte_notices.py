@@ -5,10 +5,11 @@ Usage: collecte_notices.py CACHE OUT [essai]
 With "essai" (dry run): the frame stops after the first 3 pages of each search and 20 PIDs per type are sampled from them; the report
 says so. A dry run never yields a population.
 1. Frame: the complete list of PIDs of each search type={painting|print|drawing}&imageAvailable=true, page by page (`next`) to the
-   end; a page URL met twice or a failed page stops the script (a partial search is never taken as a population). The list is
-   compared with the search's totalItems (difference reported).
+   end; a page URL met twice or a failed page stops the script (a partial search is never taken as a population). A complete
+   pagination whose count differs from totalItems by more than 1 % also stops it; a difference of at most 1 % is reported.
 2. Sample: per type, 3 000 PIDs drawn without replacement from the list sorted by PID, numpy default_rng(0), types in the order
-   painting, print, drawing, one choice(n, 3000, replace=False) per type on the same generator. Union deduplicated by PID, each object
+   painting, print, drawing, one choice(n, 3000, replace=False) per type on the same generator (all PIDs if n < 3000); numpy 2.5.4
+   is required. Union deduplicated by PID, each object
    keeping the list of its types.
 3. Records: object, visual items (`shows`), digital objects (`digitally_shown_by`), profile la-framed, cache of raw bytes + sidecar
    (as in etape0_disponibilite.py, sha256 checked before decoding), one request per second at most (monotonic clock), retries on
@@ -17,7 +18,8 @@ says so. A dry run never yields a population.
    with an access point on host iiif.micr.io and PDM on it or on its visual item, shown by the visual item that carries the codes;
    codes on several visual items with different digital objects = not alignable; any other rights statement on record, visual item
    or digital object excludes; projected truth (chapter 86 removed) non-empty with at least one readable code; no failed resolution.
-   Truth keeps every notation (unreadable and out-of-vocabulary ones included) with its URI and visual item.
+   Truth keeps every notation (unreadable and out-of-vocabulary ones included) with its URI and visual item; the log keeps every
+   URI (`codes_all`), the truth the deduplicated notations (`codes`).
    Dependency keys for the groups (B1) are extracted here, edges by internal copies come later (after the images).
 OUT/cadre/<type>.json (ordered PIDs met, totalItems, pages), OUT/echantillon.json, OUT/notices.jsonl (one line per sampled object,
 candidate data: kept out of git, never printed), OUT/collecte.json (counts only, script sha256, config, cache keys sha256). Only
@@ -38,6 +40,8 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 import numpy as np
+
+assert np.__version__ == "2.5.4", f"numpy {np.__version__}: the preregistered draw needs numpy 2.5.4"
 
 CACHE, OUT = Path(sys.argv[1]), Path(sys.argv[2])
 ESSAI = len(sys.argv) > 3 and sys.argv[3] == "essai"
@@ -259,6 +263,9 @@ def frame(t: str) -> dict:
         url = nxt.get("id") if isinstance(nxt, dict) else nxt
         if MAX_PAGES and pages >= MAX_PAGES:
             break
+    if not MAX_PAGES:
+        if not isinstance(total, int) or abs(len(pids) - total) > 0.01 * total:
+            sys.exit(f"search {t}: {len(pids)} PIDs against totalItems {total}: more than 1 %, stopping")
     return {"type": t, "total_items": total, "pids_met": len(pids), "pages": pages, "pids": pids,
             "pids_order_sha256": hashlib.sha256(json.dumps(pids).encode()).hexdigest()}
 
@@ -303,6 +310,7 @@ def record(pid: str, types: list[str], c: dict) -> dict:
                 candidates.append({"visual": vis.get("id"), "digital": dig.get("id"), "access_point": aps[0],
                                    "iiif": f"{base}/full/{SIZE}/0/default.jpg",
                                    "pdm_on": "digital" if pdm_dig else "visual"})
+    rec["codes_all"] = codes
     seen = set()
     rec["codes"] = [x for x in codes if not (x["code"] in seen or seen.add(x["code"]))]
     projected = [x["code"] for x in rec["codes"] if not x["code"].strip().startswith("86")]

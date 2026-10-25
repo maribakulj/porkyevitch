@@ -1,6 +1,6 @@
 {
- "date_utc": "2026-10-25T20:38:55Z",
- "script_sha256": "edf6b5237abab72caab1b1db1d78dce2b4699c9fbbcb9e5a99f61236687b9107",
+ "date_utc": "2026-10-25T20:50:19Z",
+ "script_sha256": "eb7a74838783505ee75c966e0a2247117c3b01a7983f7c019908fe3353d1e530",
  "essai": true,
  "config": {
   "types": [
@@ -152,7 +152,7 @@
     "iconclass_uri_unsupported": 0
    }
   },
-  "notices_sha256": "8a40a0ebd659aadea408f04817f3e0cae2a402ffb53e9bbc3e46cf256656599b"
+  "notices_sha256": "0eacb85555d8f7da0939216fb82ab94bc0f9fd76ce23223a65dc699fc071a5f9"
  },
  "cache_keys_sha256": "cec66a0e4f3f4dd38065bd12d4d88d4edde2ba173692c1492f7c13e6dff0fc6f",
  "requests_sent": 0

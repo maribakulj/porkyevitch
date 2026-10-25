@@ -33,23 +33,31 @@ pour l'ensemble du script, agent « caypollard/0.1 (research prototype) », cach
    éligibles vérifiés. Portée : ces premiers résultats seulement ; elle a servi à dimensionner, pas à estimer une proportion du musée.
 1. **Cadre de sondage** : la liste **complète** des identifiants renvoyés par chacune des trois recherches
    `search/collection?type={painting|print|drawing}&imageAvailable=true`, parcourue page par page (`next`) jusqu'au bout, pages
-   brutes archivées avec leur date ; garde contre une page déjà vue ; la liste obtenue par type est comparée à `totalItems` (écart
-   publié ; une recherche interrompue arrête le script, elle n'est jamais prise pour une population).
-2. **Échantillon** : par type, **3 000 identifiants tirés au hasard sans remise** dans la liste triée par identifiant
-   (`numpy.random.default_rng(0)`, types dans l'ordre painting, print, drawing, un appel `choice(n, 3000, replace=False)` par type sur
-   le même générateur). Union, dédoublonnée par identifiant ; un objet présent dans plusieurs listes est gardé une fois, avec la liste
+   brutes archivées avec leur date ; garde contre une page déjà vue ; la liste obtenue par type est comparée à `totalItems` : une
+   recherche interrompue (page en échec, page déjà vue) arrête le script et n'est jamais prise pour une population ; une pagination
+   menée proprement à son terme dont le nombre d'identifiants s'écarte de `totalItems` de **plus de 1 %** arrête aussi le script ; un
+   écart d'au plus 1 % (objets ajoutés ou retirés pendant le parcours) est publié et la liste collectée sert de cadre.
+2. **Échantillon** : par type, **3 000 identifiants tirés au hasard sans remise** : liste du type triée par points de code Unicode
+   (`sorted` de Python), `Generator.choice(n, 3000, replace=False)` sur les indices 0 … n−1 de cette liste, avec un seul générateur
+   `numpy.random.default_rng(0)` (numpy 2.5.4, épinglé et vérifié par le script) appelé pour painting, puis print, puis drawing ; si
+   un type a moins de 3 000 identifiants, tous sont pris et c'est publié. Union, dédoublonnée par identifiant ; un objet présent dans plusieurs listes est gardé une fois, avec la liste
    de ses types (compte publié). Le nombre 3 000 (au lieu des « 6 000 premiers » de la version d'origine) tient la collecte des
    notices dans une session d'environ 9 h (3 requêtes par objet à 1/s) ; il est fixé avant toute collecte.
-   **Estimand** : la moyenne par image du F1 hiérarchique sur le banc ainsi constitué, c'est-à-dire un tirage à **allocation égale
-   entre les trois types** (pas proportionnel au musée, où les estampes dominent), plafonné par groupe (plus bas). La moyenne par
-   groupe est publiée à titre descriptif.
+   **Estimand** : la moyenne par image du F1 hiérarchique sur le banc constitué par **cet** algorithme : cadre à allocation égale
+   des identifiants entre les trois types (3 000 chacun, pas proportionnel au musée, où les estampes dominent), puis éligibilité,
+   filtres, plafond de 20 par composante et préfixe de la permutation des composantes (plus bas). Les proportions de supports du
+   test sont celles que produit ce tirage, sans quota, et ne sont **jamais** rééquilibrées après coup ; elles sont publiées. La
+   moyenne par composante est publiée à titre descriptif.
 3. **Notices** : pour chaque identifiant de l'échantillon, l'objet, ses contenus visuels et leurs objets numériques (contrat B4).
 4. **Éligibilité, avant tout tirage** (les cibles 1 200 / 300 sont donc des images **évaluables**) : `eligible_verified` de l'étape 0
    (CC0 sur la notice ; un objet numérique avec point d'accès IIIF et PDM sur lui ou sur son contenu visuel ; aucune résolution
    échouée), aucune autre déclaration de droits restrictive sur ces nœuds, image alignable avec les codes (B4), et **vérité projetée
    sans le chapitre 86 non vide avec au moins un code lisible**. Les comptes de passage par type sont publiés à chaque étape.
 5. **Images** : téléchargées à distance (Kaggle), jamais sur le Mac, pour les seuls objets éligibles ; `full/!800,800/0/default.jpg`
-   (côté maximal 800 px, rapport d'aspect gardé, aucun recadrage) ; URL exacte, dimensions et SHA-256 des octets gardés.
+   (côté maximal 800 px, rapport d'aspect gardé, aucun recadrage) ; URL exacte, dimensions et SHA-256 des octets retenus. Un
+   téléchargement qui échoue après les reprises, un corps qui ne se décode pas comme image, ou des octets dont l'empreinte diverge à
+   la reprise : l'objet est **exclu, compté, jamais remplacé**, avant tout calcul de composantes ; la faisabilité s'applique au banc
+   restant.
 
 ## Groupes de dépendance (B1)
 
@@ -62,13 +70,18 @@ qui partagent :
   d'atelier compris ; acteur source d'une influence (`formed_by.influenced_by`) ; acteur des rôles *after painting / design / drawing /
   print by* (la composition source) ;
 - un **objet parent** (`part_of`, objet dont l'objet fait partie : album, série, livre) ;
-- une **copie interne** détectée entre deux objets de la population avec les seuils des filtres (dHash < 50 bits ou cosinus C-RADIO
-  ≥ 0,95).
+- une **copie interne** entre deux objets de la population, définie **une fois pour toutes aux valeurs larges de repli** :
+  dHash < 64 bits ou cosinus C-RADIO ≥ 0,92. Ces valeurs contiennent les deux réglages possibles du filtre de référence (50 / 0,95
+  ou le repli 64 / 0,92, plus bas) : les composantes sont donc calculées **une seule fois, avant l'audit**, et ne sont jamais
+  recalculées après la planche, quel que soit le seuil final du filtre de référence. (Cela réunit plus d'objets qu'il ne faut au
+  seuil d'origine : prudence pour l'indépendance, coût en composantes seulement.)
 
 Ne créent **pas** d'arête : les rôles d'édition et de diffusion (*publisher, vendor, printer, compiler, clichémaker, writer*), les
 lieux, les ensembles de collection (`member_of`, ensembles de conservation du musée), et les **acteurs génériques** (« anonyme »,
-« inconnu » : acteurs dont la notation ou le libellé correspond à `anoni|anonym|onbekend|unknown|unidentified`, liste exacte des URI
-écartées publiée). Le filtre de rôle vaut pour les acteurs nommés directement comme pour les attributions qualifiées ; une partie de
+« inconnu » : un acteur est générique si l'expression `anoni|anonym|onbekend|unknown|unidentified` est trouvée, **sans distinction
+de casse, comme sous-chaîne** (`re.search`, `re.I`), dans l'une des valeurs `notation[].@value` ou dans `_label` du nœud de l'acteur
+tel qu'il figure dans la notice de l'objet ; aucune retouche manuelle ; la liste des URI ainsi écartées est publiée, sans être
+modifiée). Le filtre de rôle vaut pour les acteurs nommés directement comme pour les attributions qualifiées ; une partie de
 production dont le rôle n'est dans aucune des deux listes (ou absent) **crée une arête** par prudence, et ces cas sont comptés ; une
 source d'influence crée une arête quel que soit le rôle de la partie. Script : `scripts/collecte_notices.py` (extraction des clés) ;
 les composantes sont calculées après les images, avec les copies internes. Un objet sans aucun lien reste un groupe à lui seul ; la part de ces singletons, et celle des objets dont le seul
@@ -97,18 +110,25 @@ sans prédiction** sur une réserve séparée avant tout tirage du test.
 
 - **Réserve d'audit** : 10 % des composantes (arrondi au supérieur), tirées en premier (algorithme plus bas), jamais dans le test ni le
   dev.
-- **Planche** : pour chaque support (peinture, estampe, dessin) et chaque filtre, les 6 paires de la réserve **juste sous** le seuil
-  (rejetées : les 6 plus proches de la valeur seuil du côté rejet) et les 6 **juste au-dessus** (gardées : les 6 plus proches du côté
-  gardé), soit au plus 72 paires ; si un côté a moins de 6 paires, toutes sont montrées et le manque est noté. Plus, pour chaque
-  support, les 4 paires gardées les plus proches selon chaque filtre si elles ne figurent pas déjà (copies manquées plus loin).
-  **Les deux membres** de chaque paire sont montrés (candidat et image de la référence), avec la distance, sans code ni prédiction.
+- **Paires** : pour chaque objet de la réserve et chaque filtre, une seule paire, avec son plus proche voisin dans la référence
+  (dHash : distance minimale ; cosinus : maximal ; égalité : plus petit indice de la référence dans l'ordre des fragments de
+  l'encodage). Le **support** d'un objet de plusieurs types est le premier de ses types dans l'ordre peinture, estampe, dessin.
+  Ordre de toute sélection : distance au seuil, puis identifiant du candidat (points de code Unicode).
+- **Planche** : pour chaque support et chaque filtre, (a) les 6 paires **juste sous** le seuil (rejetées, les plus proches du seuil)
+  et (b) les 6 **juste au-dessus** (gardées, les plus proches du seuil) ; (c) **plus loin** : 4 paires gardées tirées au hasard
+  (`default_rng(2)`, `Generator.choice` sans remise, supports puis filtres dans l'ordre ci-dessus) parmi les paires gardées hors de
+  (b) situées dans la bande dHash 50-79 bits, ou cosinus 0,85-0,95 ; soit au plus 96 paires. Un côté ou une bande qui a moins de
+  paires que prévu est montré en entier, le manque noté. Une paire retenue par les deux filtres est montrée une fois et compte pour
+  les deux. **Les deux membres** de chaque paire sont montrés (candidat et image de la référence), avec la distance, sans code ni
+  prédiction.
 - **Décision par paire**, écrite dans `audit.json` : *copie* (même image, même composition, recadrage, variante de reproduction,
   état d'une même planche), *non-copie*, ou *incertain*. Regard par l'orchestrateur, puis contre-regard de la planche par un
   vérificateur (Grok wA:p3) ; un désaccord vaut *incertain*.
-- **Règle d'amendement ou d'arrêt, fixée maintenant** : pour un filtre et un support, si **au moins 2 paires gardées** sont des
+- **Règle d'amendement ou d'arrêt, fixée maintenant** : pour un filtre et un support, si **au moins 2 paires gardées** de (b) ou (c) sont des
   *copies* (ou 1 *copie* + 2 *incertains*), le seuil de ce filtre est durci à la valeur de repli prévue — **dHash < 64 bits**,
-  **cosinus ≥ 0,92** — pour tous les supports, puis la planche est refaite une fois sur la réserve avec les nouvelles valeurs ; si
-  elle contredit encore, arrêt et nouvelle préinscription. Les faux rejets (paires rejetées qui sont des *non-copies*) ne relâchent
+  **cosinus ≥ 0,92** — pour tous les supports, puis la planche est refaite une fois sur la réserve avec les nouvelles valeurs (mêmes
+  règles de sélection, bande (c) décalée : dHash 64-93 bits, cosinus 0,82-0,92) ; si elle contredit encore, arrêt et nouvelle
+  préinscription. Les composantes ne changent pas (copies internes déjà aux valeurs larges). Les faux rejets (paires rejetées qui sont des *non-copies*) ne relâchent
   **jamais** un seuil : ils coûtent des données, pas une fuite ; leur part est publiée. Aucune autre recherche de seuil.
 
 ## Chronologie unique (B2)
@@ -117,7 +137,8 @@ sans prédiction** sur une réserve séparée avant tout tirage du test.
 2. images, empreintes, dHash et vecteurs C-RADIO à distance ; distances aux 87 004 images de référence et entre candidats ;
 3. composantes (arêtes de métadonnées + copies internes) ;
 4. tirage de la réserve d'audit ; planche d'audit ; décisions ; règle d'amendement ou d'arrêt ;
-5. retrait des composantes touchées par les filtres (valeurs issues de l'étape 4) dans toute la population restante ;
+5. retrait des composantes touchées par le filtre de référence (seuil final de l'étape 4 : 50 / 0,95 ou 64 / 0,92) dans toute la
+   population hors réserve ; les composantes elles-mêmes restent celles de l'étape 3 ;
 6. contrôle de faisabilité ; tirage du test puis du dev ;
 7. gel : `frozen.json` puis `vu.json` (empreinte du gel après la planche d'audit). Aucune évaluation sans gel signé.
 
@@ -128,10 +149,12 @@ montrent que des comptes et des distances agrégées sur le test.
 ## Tirage et gel (B3)
 
 - **Plafond** : par composante, au plus 20 objets, choisis par un générateur propre à la composante
-  (`default_rng([1, i])`, i = rang de la composante dans l'ordre canonique ; permutation des membres triés par identifiant, les 20
+  (`default_rng([1, i])`, i = rang **à partir de 0** de la composante dans l'ordre canonique ; `Generator.permutation` des membres
+  triés par identifiant, les 20
   premiers gardés).
 - **Ordre canonique** des composantes : par identifiant minimal de leurs membres (tri de chaînes). Permutation des composantes par
-  `default_rng(0)` (une seule permutation, faite avant l'audit).
+  `default_rng(0).permutation(k)` (k composantes ; un générateur neuf, distinct de celui de l'échantillon ; une seule permutation,
+  faite avant l'audit).
 - **Réserve d'audit** : les ⌈10 %⌉ premières composantes de la permutation.
 - **Test puis dev** : en parcourant la suite de la permutation, après retrait des composantes touchées par les filtres, chaque
   composante (plafonnée) est ajoutée **entière** au test tant que le test a moins de 1 200 images, puis au dev tant que le dev a moins
@@ -153,7 +176,8 @@ montrent que des comptes et des distances agrégées sur le test.
 
 - **Vérité** : toutes les notations trouvées sous `shows[] → represents_instance_of_type[] → equivalent[]` dont l'URI est sur l'hôte
   exact `iconclass.org` (comparaison d'hôte, pas de sous-chaîne), décodées une fois sans transformer `+` en espace ; avec, pour chacune,
-  l'URI d'origine et le contenu visuel qui la porte ; dédoublonnées. **Rien n'est retiré** : les codes illisibles par `readable()` et
+  l'URI d'origine et le contenu visuel qui la porte ; la vérité est l'ensemble dédoublonné des notations, le journal garde toutes
+  les URI (y compris deux URI donnant la même notation). **Rien n'est retiré** : les codes illisibles par `readable()` et
   les codes hors vocabulaire de la tête restent dans la vérité (un code illisible compte comme un élément que nul système ne peut
   prédire, comme sur ICAI) ; leurs parts sont publiées. Les formes d'URI non prises en charge sont comptées. Absence d'annotation et
   échec de résolution sont deux comptes distincts ; un objet dont une résolution a échoué n'est jamais classé « sans code ».
