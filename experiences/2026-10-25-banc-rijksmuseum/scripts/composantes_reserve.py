@@ -14,7 +14,7 @@ Sheet (B2): for each reserve object (every member, uncapped) and each filter, it
 first of its types in the order painting, print, drawing. Per support and filter: (a) 6 rejected pairs closest to the threshold, (b) 6
 kept pairs closest to the threshold, (c) 4 kept pairs drawn by default_rng(2) Generator.choice without replacement among kept pairs
 outside (b) inside the band (dHash 50-79 bits / cosine 0.85-0.95, both ends included on the kept side), supports then filters in
-that order, no call when the band holds 4 pairs or fewer (all shown). Order of every selection: distance to the threshold, then
+that order, called whenever the band holds 4 pairs or more, no call under 4 (all shown). Order of every selection: distance to the threshold, then
 candidate PID. A pair (candidate, reference index) selected by both filters is listed once and counts for both.
 Outputs (atomic): groupes.json (components: members, edges with type and key; canonical rank, permutation rank, reserve flag, capped
 members), resume.json (counts: nodes, edges by type, components, sizes, singletons, objects with only generic actors, largest
@@ -163,7 +163,7 @@ for t in TYPES:
             band = lambda x: BAND_COS[0] <= x[2] < BAND_COS[1]  # noqa: E731
         a, b = rejected[:6], kept[:6]
         rest = [x for x in kept[6:] if band(x)]
-        if len(rest) > 4:
+        if len(rest) >= 4:
             c = [rest[j] for j in sorted(rng.choice(len(rest), 4, replace=False))]
             choices.append({"support": t, "filter": filt, "band_size": len(rest)})
         else:
