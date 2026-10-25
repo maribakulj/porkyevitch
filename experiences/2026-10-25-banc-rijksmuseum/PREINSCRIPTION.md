@@ -4,57 +4,187 @@ Date : 25/10/2026, avant toute collecte d'images ou de codes. Demande de Marcel 
 projet sur les emblèmes, licence des métadonnées introuvable, banc déjà consulté) et prendre un banc plus pertinent. Relecture de Codex
 avant chaque script et avant le gel.
 
+**Amendement 1 (25/10, après l'étape 0 et avant toute collecte d'images ou de codes de la population)**, en réponse aux blocages
+B1-B4 de Codex (`~/Documents/reviews/porkyevitch-banc-rijksmuseum-codex.md`) : groupes de dépendance par composantes (B1), audit des
+filtres sur une réserve séparée et chronologie unique (B2), cadre de sondage, éligibilité, tirage et seuil de faisabilité (B3),
+contrat de collecte (B4). La version d'origine est le commit `eac2997`. Faits connus au moment de l'amendement, tous issus de comptes
+agrégés du cache de l'étape 0 (aucun objet, code, nom ni image regardé) : la recherche renvoie les objets **par identifiant
+croissant** (le jeton de page encode le dernier identifiant), avec des totaux de 4 920 peintures, 48 619 dessins et 387 333 estampes
+« avec image » ; un acteur générique « anonyme » figure sur 292 des 900 notices ; un même acteur peut couvrir plus de 100 des 900
+premiers objets. D'où le tirage au hasard dans la liste complète (B3) et l'exclusion des acteurs génériques des liens (B1).
+
 ## Pourquoi ce banc
 
-- Données ouvertes : métadonnées du Rijksmuseum en CC0 (champ `subject_to` des notices) ; images marquées « Public Domain Mark » objet
-  par objet (seules celles-là sont prises). Le banc peut être publié en entier (identifiants, codes, prédictions ; les images restent
-  au musée, référencées par leur adresse IIIF).
+- Données ouvertes : métadonnées du Rijksmuseum en CC0 (déclaration portée par la notice descriptive, `subject_of[].subject_to`) ;
+  reproductions en « Public Domain Mark » (déclaration du contenu visuel ou de l'objet numérique IIIF, avec la politique du musée,
+  §1.1 et §3.7) ; seules celles-là sont prises. Le banc peut être publié en entier (identifiants, codes, prédictions ; les images
+  restent au musée, référencées par leur adresse IIIF).
 - Plusieurs supports (peintures, estampes, dessins) au lieu des seuls livres d'emblèmes : mesure du transfert vers d'autres supports.
-- Jamais consulté : aucune prédiction, aucune image, aucun code de ce banc n'a été regardé par nous avant le gel.
+- Jamais consulté pour nos modèles : aucune prédiction n'a été faite sur ce banc. Qui regarde quoi et quand est fixé plus bas
+  (« Chronologie unique ») : la réserve d'audit est regardée avant le tirage, le dev pendant la série, **le test jamais avant la fin de
+  la série** (prédictions et verdicts des sept bras gelés).
 
 ## Collecte (scripts relus avant exécution)
 
-Source : l'API ouverte du musée, sans clé (data.rijksmuseum.nl, Linked Art) : recherche par type avec image disponible, puis notice
-de l'objet et de sa représentation (`shows` → `represents_instance_of_type` → `equivalent` iconclass.org). Au plus une requête par
-seconde, agent « caypollard/0.1 (research prototype) », reprise sur journal.
+Source : l'API ouverte du musée, sans clé (data.rijksmuseum.nl, Linked Art, profil fixé `la-framed`). Au plus une requête par seconde
+pour l'ensemble du script, agent « caypollard/0.1 (research prototype) », cache de réponses brutes et reprise (contrat en B4).
 
-0. **Disponibilité, métadonnées seules** : pour chacun des trois types (peinture, estampe, dessin), les 300 premiers objets de la
-   recherche (ordre de l'API) : part qui porte au moins un code Iconclass et une image en domaine public. Publiée ; ne sert qu'à
-   dimensionner la collecte. Aucune image n'est téléchargée à cette étape.
-1. **Population** : objets de ces trois types, avec image en domaine public et au moins un code Iconclass lisible (`readable()` de la
-   tête). Codes = notations décodées des adresses iconclass.org. Groupe de dépendance = le créateur principal de l'objet (ou
-   « anonyme » + l'identifiant de l'objet si aucun) : les œuvres d'un même artiste ou d'une même série ne sont pas indépendantes.
-2. **Liste brute** : jusqu'à 6 000 objets par type, dans l'ordre de l'API ; métadonnées et image IIIF à 800 px de côté max.
+0. **Disponibilité, métadonnées seules** — faite le 25/10 (`etape0/RESULTAT.md`) : sur les 300 premiers objets de chaque type, 842/900
+   éligibles vérifiés. Portée : ces premiers résultats seulement ; elle a servi à dimensionner, pas à estimer une proportion du musée.
+1. **Cadre de sondage** : la liste **complète** des identifiants renvoyés par chacune des trois recherches
+   `search/collection?type={painting|print|drawing}&imageAvailable=true`, parcourue page par page (`next`) jusqu'au bout, pages
+   brutes archivées avec leur date ; garde contre une page déjà vue ; la liste obtenue par type est comparée à `totalItems` (écart
+   publié ; une recherche interrompue arrête le script, elle n'est jamais prise pour une population).
+2. **Échantillon** : par type, **3 000 identifiants tirés au hasard sans remise** dans la liste triée par identifiant
+   (`numpy.random.default_rng(0)`, types dans l'ordre painting, print, drawing, un appel `choice(n, 3000, replace=False)` par type sur
+   le même générateur). Union, dédoublonnée par identifiant ; un objet présent dans plusieurs listes est gardé une fois, avec la liste
+   de ses types (compte publié). Le nombre 3 000 (au lieu des « 6 000 premiers » de la version d'origine) tient la collecte des
+   notices dans une session d'environ 9 h (3 requêtes par objet à 1/s) ; il est fixé avant toute collecte.
+   **Estimand** : la moyenne par image du F1 hiérarchique sur le banc ainsi constitué, c'est-à-dire un tirage à **allocation égale
+   entre les trois types** (pas proportionnel au musée, où les estampes dominent), plafonné par groupe (plus bas). La moyenne par
+   groupe est publiée à titre descriptif.
+3. **Notices** : pour chaque identifiant de l'échantillon, l'objet, ses contenus visuels et leurs objets numériques (contrat B4).
+4. **Éligibilité, avant tout tirage** (les cibles 1 200 / 300 sont donc des images **évaluables**) : `eligible_verified` de l'étape 0
+   (CC0 sur la notice ; un objet numérique avec point d'accès IIIF et PDM sur lui ou sur son contenu visuel ; aucune résolution
+   échouée), aucune autre déclaration de droits restrictive sur ces nœuds, image alignable avec les codes (B4), et **vérité projetée
+   sans le chapitre 86 non vide avec au moins un code lisible**. Les comptes de passage par type sont publiés à chaque étape.
+5. **Images** : téléchargées à distance (Kaggle), jamais sur le Mac, pour les seuls objets éligibles ; `full/!800,800/0/default.jpg`
+   (côté maximal 800 px, rapport d'aspect gardé, aucun recadrage) ; URL exacte, dimensions et SHA-256 des octets gardés.
 
-## Filtres contre les copies des données d'entraînement (mêmes règles qu'Emblematica, références à jour)
+## Groupes de dépendance (B1)
 
-- **Filtre 1** : hachage de différence 256 bits (même fonction que `build_external_iconclass_bench.py`) de chaque image contre les
-  87 004 images de `davanstrien/iconclass-vlm-brillfull` (révision 8045366, entraînement et test) ; un créateur dont une œuvre est à
-  moins de 50 bits d'une image du jeu est retiré en entier (pour Emblematica, la référence était l'ensemble ICAI brut ; ici ce sont les
-  images d'apprentissage elles-mêmes, ce qui est la question posée).
-- **Filtre 2** : cosinus C-RADIO (vecteur de la tête) ≥ 0,95 avec une image du jeu → créateur retiré en entier (seuil d'Emblematica,
-  étalonné à l'œil le 25/10).
-- **Regard** : planche des 12 paires restantes les plus proches (cosinus), regardée avant le gel, côté images d'entraînement ; une
-  copie manifeste arrête le gel et conduit à un amendement avant tout tirage (pas de nouveau seuil choisi après avoir vu le test).
+Un **groupe** est une composante connexe du graphe dont les sommets sont les objets éligibles et dont les arêtes relient deux objets
+qui partagent :
 
-## Tirage et gel
+- un **acteur pertinent à l'image**, identifié par son URI du musée : acteur de `produced_by.part[].carried_out_by` dont le rôle
+  (`technique`) est l'un de *painter, printmaker, draftsman, maker, photographer, knipkunstenaar* ; acteur d'une attribution
+  qualifiée (`part[].assigned_by[].assigned`, quel que soit le qualificatif : attribué à, atelier, entourage, suiveur…), groupes
+  d'atelier compris ; acteur source d'une influence (`formed_by.influenced_by`) ; acteur des rôles *after painting / design / drawing /
+  print by* (la composition source) ;
+- un **objet parent** (`part_of`, objet dont l'objet fait partie : album, série, livre) ;
+- une **copie interne** détectée entre deux objets de la population avec les seuils des filtres (dHash < 50 bits ou cosinus C-RADIO
+  ≥ 0,95).
 
-- Après les filtres, tirage par créateurs (graine 0) : un **test de 1 200 objets** et un **dev de 300 objets**, créateurs disjoints ;
-  au plus 20 objets par créateur dans chacun ; proportions des trois types gardées telles que la population filtrée les donne.
-- Projection commune avec la série d'essais : chapitre 86 retiré de la vérité et des prédictions ; une image dont la vérité projetée
-  est vide est exclue ; le dénominateur est publié.
-- Gel : `frozen.json` (listes, groupes, empreintes des images et des métadonnées, versions des scripts) puis `vu.json` (empreinte du gel
-  après le regard de la planche). Aucune évaluation sans gel signé.
+Ne créent **pas** d'arête : les rôles d'édition et de diffusion (*publisher, vendor, printer, compiler, clichémaker, writer*), les
+lieux, les ensembles de collection (`member_of`, ensembles de conservation du musée), et les **acteurs génériques** (« anonyme »,
+« inconnu » : acteurs dont la notation ou le libellé correspond à `anoni|anonym|onbekend|unknown|unidentified`, liste exacte des URI
+écartées publiée). Un objet sans aucun lien reste un groupe à lui seul ; la part de ces singletons, et celle des objets dont le seul
+acteur est générique, sont publiées comme limite (deux anonymes d'une même main non identifiée restent comptés comme indépendants).
+Les clés et les motifs de chaque réunion sont gardés (`groupes.json` : pour chaque arête, son type et sa clé).
+
+Les mêmes composantes servent **à la fois** au retrait après détection de copie (une composante touchée est retirée en entier), à la
+séparation réserve d'audit / dev / test, et au bootstrap apparié (tirages de composantes entières). Une composante n'est **jamais
+scindée** ; une très grande composante reste entière (elle ne fournit au plus que 20 images, voir le plafond) et sa taille est publiée.
+
+Le retrait d'une composante après une copie détectée est conservateur ; il sélectionne des groupes **sans copie détectée parmi les
+candidats examinés**, il ne prouve pas que l'artiste est absent des 87 004 images d'apprentissage.
+
+## Filtres contre les copies des données d'entraînement (B2)
+
+Référence : les 87 004 images de `davanstrien/iconclass-vlm-brillfull` (révision complète `8045366ff092a06e8e1c4e47f1eb43cb2a54d732`,
+entraînement et test), telles que fournies aux systèmes. Le manifeste du gel atteste la révision, les 87 004 identités et leurs
+empreintes, et la recette et la révision C-RADIO exactes (celles de l'encodage complet, kernel `caypollard-encode-cradio` v3).
+
+- **Filtre 1** : hachage de différence 256 bits (même fonction que `build_external_iconclass_bench.py`) ; une image candidate à
+  **moins de 50 bits** d'une image de la référence retire sa composante entière.
+- **Filtre 2** : cosinus C-RADIO (vecteur de la tête) **≥ 0,95** avec une image de la référence retire sa composante entière.
+
+Ces deux valeurs viennent d'Emblematica (étalonnage à l'œil du 25/10) ; leur transfert à d'autres supports n'est pas acquis : **audit
+sans prédiction** sur une réserve séparée avant tout tirage du test.
+
+- **Réserve d'audit** : 10 % des composantes (arrondi au supérieur), tirées en premier (algorithme plus bas), jamais dans le test ni le
+  dev.
+- **Planche** : pour chaque support (peinture, estampe, dessin) et chaque filtre, les 6 paires de la réserve **juste sous** le seuil
+  (rejetées : les 6 plus proches de la valeur seuil du côté rejet) et les 6 **juste au-dessus** (gardées : les 6 plus proches du côté
+  gardé), soit au plus 72 paires ; si un côté a moins de 6 paires, toutes sont montrées et le manque est noté. Plus, pour chaque
+  support, les 4 paires gardées les plus proches selon chaque filtre si elles ne figurent pas déjà (copies manquées plus loin).
+  **Les deux membres** de chaque paire sont montrés (candidat et image de la référence), avec la distance, sans code ni prédiction.
+- **Décision par paire**, écrite dans `audit.json` : *copie* (même image, même composition, recadrage, variante de reproduction,
+  état d'une même planche), *non-copie*, ou *incertain*. Regard par l'orchestrateur, puis contre-regard de la planche par un
+  vérificateur (Grok wA:p3) ; un désaccord vaut *incertain*.
+- **Règle d'amendement ou d'arrêt, fixée maintenant** : pour un filtre et un support, si **au moins 2 paires gardées** sont des
+  *copies* (ou 1 *copie* + 2 *incertains*), le seuil de ce filtre est durci à la valeur de repli prévue — **dHash < 64 bits**,
+  **cosinus ≥ 0,92** — pour tous les supports, puis la planche est refaite une fois sur la réserve avec les nouvelles valeurs ; si
+  elle contredit encore, arrêt et nouvelle préinscription. Les faux rejets (paires rejetées qui sont des *non-copies*) ne relâchent
+  **jamais** un seuil : ils coûtent des données, pas une fuite ; leur part est publiée. Aucune autre recherche de seuil.
+
+## Chronologie unique (B2)
+
+1. cadre, échantillon, notices, éligibilité (métadonnées) ;
+2. images, empreintes, dHash et vecteurs C-RADIO à distance ; distances aux 87 004 images de référence et entre candidats ;
+3. composantes (arêtes de métadonnées + copies internes) ;
+4. tirage de la réserve d'audit ; planche d'audit ; décisions ; règle d'amendement ou d'arrêt ;
+5. retrait des composantes touchées par les filtres (valeurs issues de l'étape 4) dans toute la population restante ;
+6. contrôle de faisabilité ; tirage du test puis du dev ;
+7. gel : `frozen.json` puis `vu.json` (empreinte du gel après la planche d'audit). Aucune évaluation sans gel signé.
+
+Pendant la série d'essais, les planches de différences entre modèles se font sur le **dev** et ne règlent rien. Les images du **test**
+ne sont regardées par personne avant que les prédictions et les verdicts de toute la série soient gelés. Avant le gel, les scripts ne
+montrent que des comptes et des distances agrégées sur le test.
+
+## Tirage et gel (B3)
+
+- **Plafond** : par composante, au plus 20 objets, choisis par un générateur propre à la composante
+  (`default_rng([1, i])`, i = rang de la composante dans l'ordre canonique ; permutation des membres triés par identifiant, les 20
+  premiers gardés).
+- **Ordre canonique** des composantes : par identifiant minimal de leurs membres (tri de chaînes). Permutation des composantes par
+  `default_rng(0)` (une seule permutation, faite avant l'audit).
+- **Réserve d'audit** : les ⌈10 %⌉ premières composantes de la permutation.
+- **Test puis dev** : en parcourant la suite de la permutation, après retrait des composantes touchées par les filtres, chaque
+  composante (plafonnée) est ajoutée **entière** au test tant que le test a moins de 1 200 images, puis au dev tant que le dev a moins
+  de 300. Le test fait donc entre 1 200 et 1 219 images, le dev entre 300 et 319 ; une composante multi-supports est ajoutée avec tous
+  ses supports. **Pas de quota par support** : les proportions sont celles des composantes tirées, publiées. Aucun remplacement après
+  prédiction ; une image dont la prédiction échoue reste au dénominateur avec un F1 nul, et le compte est publié.
+- **Faisabilité, fixée avant tout score** : test ≥ 1 200 images et **≥ 150 composantes** ; dev ≥ 300 images et ≥ 40 composantes. Si
+  la population filtrée ne le permet pas, **arrêt** et nouvelle préinscription (aucun agrandissement du test pour atteindre une
+  signification ; aucun changement de règle de groupe pour gagner des composantes). Le gel publie : nombre de composantes, tailles,
+  part de singletons, part d'objets à acteur seulement générique, supports, et la plus grande composante.
+- 1 200 / 300 est une cible raisonnable, pas une garantie de puissance : la précision dépend du nombre de composantes et de la
+  dispersion des différences appariées.
+- **Projection** commune avec la série d'essais : chapitre 86 retiré de la vérité et des prédictions (déjà fait à l'éligibilité, donc
+  aucune image du test n'a une vérité projetée vide).
+- **Gel** : `frozen.json` (identifiants, types, composantes et motifs de réunion, vérité brute et projetée, URL IIIF, dimensions,
+  empreintes des images et des réponses brutes, versions et SHA des scripts, manifeste de la référence) puis `vu.json`.
+
+## Contrat de collecte (B4)
+
+- **Vérité** : toutes les notations trouvées sous `shows[] → represents_instance_of_type[] → equivalent[]` dont l'URI est sur l'hôte
+  exact `iconclass.org` (comparaison d'hôte, pas de sous-chaîne), décodées une fois sans transformer `+` en espace ; avec, pour chacune,
+  l'URI d'origine et le contenu visuel qui la porte ; dédoublonnées. **Rien n'est retiré** : les codes illisibles par `readable()` et
+  les codes hors vocabulaire de la tête restent dans la vérité (un code illisible compte comme un élément que nul système ne peut
+  prédire, comme sur ICAI) ; leurs parts sont publiées. Les formes d'URI non prises en charge sont comptées. Absence d'annotation et
+  échec de résolution sont deux comptes distincts ; un objet dont une résolution a échoué n'est jamais classé « sans code ».
+- **Image** : l'objet numérique retenu est, dans l'ordre de la notice, le premier objet numérique à point d'accès IIIF (hôte exact
+  `iiif.micr.io`) et PDM, **porté par le contenu visuel qui porte les codes**. Si les codes sont répartis sur plusieurs contenus
+  visuels ayant des objets numériques différents (recto/verso, vues multiples), l'objet est exclu comme non alignable et compté.
+  Gardés : identifiant canonique de l'objet, identifiant du contenu visuel et de l'objet numérique, URL IIIF exacte, dimensions,
+  SHA-256 des octets.
+- **Droits** : CC0 relevé sur la notice (`subject_of[].subject_to`), PDM relevé sur l'objet numérique ou sur son contenu visuel, chacun
+  avec son URI et son chemin ; la politique du musée (§1.1, §3.7) est citée dans le gel. Toute autre déclaration (CC BY, restriction,
+  « in copyright ») sur l'un de ces nœuds exclut l'objet, compté. Le droit de la photographie n'est jamais inféré du seul statut de
+  l'œuvre.
+- **Reprise** : cache de réponses brutes avec sidecar (URL, date UTC, profil, Accept, statut, type, SHA-256 vérifié avant décodage ;
+  profil et Accept dans la clé) ; une requête par seconde au plus (horloge monotone) ; délai d'attente, reprises sur 429/5xx/erreurs
+  réseau en respectant `Retry-After` ; garde contre une page de recherche répétée ; rapport écrit atomiquement avec SHA du script,
+  configuration et empreinte des clés de cache utilisées ; seuls des comptes sont affichés. Les notices (≈ 9 000 objets,
+  ≈ 27 000 requêtes, < 1 Go de cache) sont collectées sur le Mac en arrière-plan (réseau seulement), `df` lu avant ; les images et les
+  calculs de filtres, à distance.
 
 ## Rôle dans la série d'essais d'architecture
 
-Amendement 4 de `../2026-10-25-iconclass-architecture/PREINSCRIPTION.md`, écrit avant tout calcul d'essai : le juge extérieur devient
-ce banc (test de 1 200, bootstrap par créateurs entiers), à la place d'Emblematica ; la règle (famille de 7, Bonferroni 99,29 %
-unilatéral, Δ_ext > 0 et Δ_ICAI > −0,01) est inchangée. Les planches de regard se font sur le dev de 300. Emblematica n'est plus
-utilisé pour décider ; ses chiffres restent internes (porkyevitch) et ne sont pas publiés dans lermolieff.
+Amendement 4 de `../2026-10-25-iconclass-architecture/PREINSCRIPTION.md`, écrit avant tout calcul d'essai, synchronisé avec cet
+amendement 1 : le juge extérieur devient ce banc (test de 1 200 à 1 219 images, bootstrap par composantes entières), à la place
+d'Emblematica ; la règle (famille de 7, Bonferroni 99,29 % unilatéral, Δ_Rijks > 0 et Δ_ICAI > −0,01) est inchangée. Les planches de
+regard se font sur le dev. Emblematica n'est plus utilisé pour décider ; ses chiffres restent internes (porkyevitch) et ne sont pas
+publiés dans lermolieff.
 
 ## Ce que ce banc ne mesure pas
 
-- Un seul musée, néerlandais, avec ses propres habitudes de catalogage Iconclass : un gain ici reste un gain d'accord avec ce catalogue.
-- La part d'objets avec codes Iconclass peut être faible et biaisée vers certains types : publiée à l'étape 0, et la composition finale
-  (types, branches, nombre de créateurs) est publiée avec le gel.
+- Un seul musée, néerlandais, avec ses propres habitudes de catalogage Iconclass : un gain ici reste un gain d'accord avec ce
+  catalogue, parmi ses œuvres numérisées, ouvertes, annotées et retenues par les filtres. Un bootstrap de composantes ne mesure pas une
+  variance entre musées.
+- L'allocation égale entre types et le plafond de 20 par composante font que les proportions du banc ne sont pas celles du musée.
+- Les filtres contre brillfull ne garantissent pas l'absence de ces œuvres du préentraînement des encodeurs : on dira « extérieur à
+  l'ajustement supervisé, après filtres de copies », jamais « jamais vu par le modèle ».
+- La part d'objets codés, la fréquence et la profondeur des codes, la part hors vocabulaire sont descriptives ; ni le banc ni les seuils
+  ne sont choisis pour favoriser les codes déjà appris.

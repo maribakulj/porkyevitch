@@ -6,18 +6,20 @@ Amendement 2 (25/10 au soir, toujours avant tout calcul), à la suite d'une seco
 référence (E0), diagnostic des erreurs (D), contrôle spatial simple (T-Z), même projection sans 86 sur les deux bancs, famille de
 sept comparaisons. À relire par Codex avant tout script.
 Amendement 4 (25/10, avant tout calcul d'essai), à la demande de Marcel : **le juge extérieur devient le banc du Rijksmuseum**
-(`../2026-10-25-banc-rijksmuseum/PREINSCRIPTION.md` : test de 1 200 objets, bootstrap par créateurs entiers, dev de 300 pour les
-planches), à la place d'Emblematica, mis de côté (doublon avec le projet sur les emblèmes, licence introuvable, banc déjà consulté).
-Partout où ce texte dit « Emblematica » pour le verdict, lire « Rijksmuseum » ; la règle de verdict et la famille sont inchangées.
-Emblematica ne sert plus qu'au contrôle de reproduction de T0 à l'encodage, et ses chiffres restent internes.
+(`../2026-10-25-banc-rijksmuseum/PREINSCRIPTION.md`, amendement 1 du banc : test de 1 200 à 1 219 images évaluables, groupes =
+composantes de dépendance, dev de 300 à 319 images pour les planches), à la place d'Emblematica, mis de côté (doublon avec le projet
+sur les emblèmes, licence introuvable, banc déjà consulté). Synchronisé le 25/10 après la relecture de Codex : les nombres, unités et
+instructions exécutables ci-dessous sont remplacés ; les passages marqués « historique » expliquent seulement le choix des essais. La
+règle de verdict et la famille de sept sont inchangées ; changer de musée ne rend ni la graine unique ni le test ICAI déjà consulté
+confirmatoires. Emblematica ne sert plus qu'au contrôle de reproduction de T0 à l'encodage, et ses chiffres restent internes.
 **Chaque script, essai à blanc compris, est relu par Codex avant d'être lancé** (demande de Marcel).
 
 ## Portée
 
-Série **exploratoire**. Elle demande : une recette choisie sur ICAI transfère-t-elle mieux vers Emblematica, sans adaptation à ce
-corpus ? Le test Emblematica gel2 a déjà été consulté (tête T, VLM, règle PE) : ce n'est plus un test vierge pour l'ensemble de la
-démarche. Une graine unique par brique : un essai de recette, pas une preuve de stabilité ; une répétition à graines fixées précédera
-toute recommandation forte. Une conclusion confirmatoire demandera de nouveaux livres jamais consultés, à protocole fixé.
+Série **exploratoire**. Elle demande : une recette choisie sur ICAI transfère-t-elle mieux vers le banc du Rijksmuseum (autre
+catalogue, peintures, estampes, dessins), sans adaptation à ce corpus ? (Historique : la question portait d'abord sur Emblematica,
+dont le test gel2 avait déjà été consulté ; le banc du Rijksmuseum n'a encore servi à aucune prédiction.) Une graine unique par brique : un essai de recette, pas une preuve de stabilité ; une répétition à graines fixées précédera
+toute recommandation forte. Une conclusion confirmatoire demandera un nouveau banc jamais consulté, à protocole fixé.
 Deux décisions distinctes : choisir la tête à publier (permis avec ces résultats exploratoires) et affirmer
 un progrès scientifique hors corpus (non permis sans nouveau banc). Un gain de F1 est un gain d'accord avec le catalogue : une prédiction juste mais non cataloguée reste pénalisée, et la série ne mesure
 pas la lecture des relations entre figures.
@@ -38,12 +40,13 @@ pas la lecture des relations entre figures.
   (mesure de validation sans chapitre 86, voir plus bas ; égalités : la plus simple, dans cet ordre). Cette sélection sur la
   validation compte une fois dans la famille (comparaison T\* − T0) et ne donne lieu à aucune autre revendication sur les tests.
   **Après E0 et avant E1**, on fige dans `reference.json` : l'encodeur, T\* (ses poids, son époque, son seuil, son horizon
-  d'entraînement de 15 ou 30 époques), ses caractéristiques et leurs empreintes, et ses chiffres sur les deux bancs.
+  d'entraînement de 15 ou 30 époques), ses caractéristiques et leurs empreintes, et ses chiffres **de validation** seulement (accès
+  aux résultats des tests : voir « Accès aux résultats »).
 - **Ce que les essais reprennent de T\*** : TK et T-niv utilisent les probabilités de T\* (les poids de T0 si T\* = T-seuil) ;
   T-niv part du seuil de T\* ; TK à α = 1 et au seuil de T\* reproduit T\* exactement (contrôle exigé). T-H, T-Z et T-D sont
   entraînés sur l'horizon de T\* (15 époques, ou 30 si T\* = T-long), époque et seuil choisis sur la validation dans la grille
   étendue. Tous utilisent la grille étendue, pour que la référence et les essais aient accès aux mêmes seuils.
-- Limites mesurées qui motivent les essais (T-C-RADIO) : 54,8 % (ICAI 788) contre 26,1 % (Emblematica 762) en F1 hiérarchique ; F1 des
+- Historique — limites mesurées qui motivent les essais (T-C-RADIO) : 54,8 % (ICAI 788) contre 26,1 % (Emblematica 762) en F1 hiérarchique ; F1 des
   codes exacts d'environ 0,04 hors corpus ; sur ICAI, les voisins K trouvent plus de codes exacts que T (0,356 contre 0,275) ; la tête
   moyenne les jetons de l'image ; tout code absent de l'annotation compte comme négatif.
 
@@ -51,26 +54,32 @@ pas la lecture des relations entre figures.
 
 - **Un seul changement par brique** (sauf E2 et E3, déclarés comme recettes ci-dessous), toujours comparé à T\* (E0 : à T0), mêmes données, même
   partage de validation (5 % groupés par md5, graine 0), même vocabulaire calculé sur le seul sous-ensemble d'entraînement.
-- **Tout réglage se choisit sur la validation ICAI seule.** Le test ICAI (788) et le test Emblematica (gel2 : 800 images, 59 livres ;
-  762 évaluables sans chapitre 86, 58 livres) ne servent qu'à mesurer, une fois par brique.
+- **Tout réglage se choisit sur la validation ICAI seule.** Le test ICAI (788) et le test Rijksmuseum (1 200 à 1 219 images
+  évaluables, composantes de dépendance ; effectifs exacts fixés par le gel du banc) ne servent qu'à mesurer, une fois par brique.
 - **Famille fixe de sept comparaisons** : T\* − T0 (E0), TK, T-niv, TK-niv, T-H, T-Z, T-D (chacune garde sa place même si elle
   n'est pas exécutée). Correction de Bonferroni au niveau familial de 5 % unilatéral : niveau de chaque borne 1 − 0,05/7 ≈ 99,29 %.
   Écarts en F1 absolu, sur les deux bancs **avec la même projection sans chapitre 86**, appliquée à la vérité et aux prédictions ;
   une image dont la vérité projetée est vide est exclue, et le dénominateur est le nombre d'images restantes : ICAI 787 images
-  (une seule exclue ; T0 = 0,5459), Emblematica 762. La même projection sert à la mesure de validation dans toute la série (choix
+  (une seule exclue ; T0 = 0,5459) ; Rijksmuseum : toutes les images du test (l'éligibilité du banc exige déjà une vérité projetée
+  non vide). La même projection sert à la mesure de validation dans toute la série (choix
   d'époque, de seuil et de T\*) ; les cibles d'entraînement ne changent pas (les codes du chapitre 86 restent appris).
-  Δ_ext sur Emblematica, Δ_ICAI sur ICAI :
-  Δ_ext sur Emblematica, Δ_ICAI sur ICAI. Une brique est **retenue** si la borne inférieure unilatérale à 99,29 % de Δ_ext est
+  Δ_Rijks sur le test Rijksmuseum, Δ_ICAI sur le test ICAI. Une brique est **retenue** si la borne inférieure unilatérale à 99,29 % de Δ_Rijks est
   **> 0** **et** celle de Δ_ICAI est **> −0,01** (non-infériorité jugée sur la borne, pas sur l'estimation) ; les deux conditions
   sont exigées ensemble. Sinon, non retenue, publiée telle quelle, sans nouveau réglage.
-- Bootstrap : **10 000 tirages**, graine 0, **mêmes tirages appariés pour tous les systèmes** ; Emblematica par **livres entiers**
-  (moyenne par image recalculée sur les images des livres effectivement tirés, projection sans 86 commune) ; ICAI par images. Les
+- Bootstrap : **10 000 tirages**, graine 0, **mêmes tirages appariés pour tous les systèmes** ; Rijksmuseum par **composantes de
+  dépendance entières** (définies dans la préinscription du banc ; moyenne par image recalculée sur les images des composantes
+  effectivement tirées, projection sans 86 commune) ; ICAI par images. Les
   IC95 bilatéraux ordinaires sont publiés à côté, pour la description. L'amplitude est donnée sans qualificatif automatique.
-- **Regarder avant les chiffres** : pour chaque brique, une planche des 12 images du dev Emblematica (202) où |F1 hiérarchique de la
-  brique − celui de T| est le plus grand (égalités : ordre des noms de fichier), avec la vérité et les deux prédictions en clair,
+- **Regarder avant les chiffres** : pour chaque brique, une planche des 12 images du dev Rijksmuseum (300 à 319) où |F1 hiérarchique
+  de la brique − celui de T\*| est le plus grand (égalités : ordre des identifiants), avec la vérité et les deux prédictions en clair,
   regardée avant d'ouvrir les mesures du test. Aucune image des deux tests n'est regardée avant que les prédictions et les verdicts
   de **toute la série** soient gelés ; elles sont examinées ensuite. **Aucun changement** de seuil, d'architecture, de prétraitement ou de vocabulaire ne
   découle des planches dans cette série ; une correction de bogue avérée est documentée avec ses versions avant/après.
+
+- **Accès aux résultats** (amendement 4 synchronisé) : les agrégats des **deux tests** (ICAI et Rijksmuseum) restent fermés jusqu'au
+  gel des prédictions des sept bras, E0 compris ; `reference.json` désigne T\* sur la validation ICAI seule. Jusque-là, seuls la
+  validation ICAI et le dev Rijksmuseum sont consultés (planches, diagnostic D). Les scores du test Rijksmuseum ne provoquent aucun
+  changement de recette.
 
 ## Mesures secondaires (descriptives, sans test de sélection)
 
@@ -89,11 +98,11 @@ Pour T et chaque brique, sur les deux bancs, avec la même projection des prédi
 
 Sur T, puis sur chaque brique, les deux bancs, sans test de sélection : (1) profondeur : rappel des ancêtres de la vérité par tranche,
 pour voir si les bons ancêtres sont trouvés sans les descendants ; (2) fréquence : F1 selon le nombre d'images d'entraînement du code
-(5-20, 21-100, plus de 100) ; (3) couverture : part des codes de vérité Emblematica hors vocabulaire, par image et par code ;
+(5-20, 21-100, plus de 100) ; (3) couverture : part des codes de vérité Rijksmuseum hors vocabulaire, par image et par code ;
 (4) nombre de codes prédits par tranche de profondeur, contre la vérité ; (5) avec les probabilités (après l'encodage) : rang et
-probabilité des codes de vérité profonds sous le seuil. Le banc Emblematica est fait de picturae, mais nos archives montrent que certaines
-images ne sont pas recadrées et qu'aucun audit image par image n'a été fait ; ICAI n'indique pas le type d'image : la distinction
-recadrage / page entière n'est donc pas mesurée dans cette série, et c'est écrit tel quel.
+probabilité des codes de vérité profonds sous le seuil ; (6) par support du banc Rijksmuseum (peinture, estampe, dessin). Avant le
+gel des sept bras, D se fait sur la validation ICAI et le dev Rijksmuseum ; sur les tests ensuite. ICAI n'indique pas le type
+d'image : la distinction recadrage / page entière n'est pas mesurée dans cette série, et c'est écrit tel quel.
 Le diagnostic ne change aucun essai de cette série ; il sert à interpréter les verdicts et à choisir la série suivante.
 
 ## Briques, dans l'ordre
@@ -111,7 +120,7 @@ Le diagnostic ne change aucun essai de cette série ; il sert à interpréter le
   5+, trois passes ; à chaque pas, la valeur qui maximise le F1 hiérarchique moyen de validation ; égalités : on garde la valeur
   courante, sinon la plus petite.
 - **TK-niv** : TK avec son α choisi, puis T-niv refait sur s_c avec la même procédure. Exécutée seulement si TK et T-niv sont retenues.
-- Calcul : voisins validation × entraînement, test × entraînement et Emblematica × entraînement par lots, sur Kaggle, mis en cache
+- Calcul : voisins validation × entraînement, test × entraînement et Rijksmuseum (dev, test) × entraînement par lots, sur Kaggle, mis en cache
   avec empreintes ; durée mesurée à l'essai à blanc.
 
 ### E2. Cohérence parent-enfant (recette C-HMCNN, réentraînement de la tête seule)
@@ -164,7 +173,7 @@ Le diagnostic ne change aucun essai de cette série ; il sert à interpréter le
 
 - **ICARUS n'est pas utilisé dans E1-E3.** Il contient Emblematica Online parmi ses 19 sources (Zenodo 10.5281/zenodo.18980670,
   CC BY 4.0, ~118 Go). Avant tout usage futur : exclure **toute la source Emblematica Online** de l'entraînement, exclure par
-  identifiants et provenance les livres de nos dev et test (pages, recadrages, éditions liées), puis rechercher les doublons entre
+  identifiants et provenance les livres et objets de nos dev et test, Emblematica et Rijksmuseum (pages, recadrages, éditions liées), puis rechercher les doublons entre
   sources par hachage et voisins visuels ; même audit pour les 788 images ICAI et la validation ; annotations et métadonnées comprises. Première étape, sans les
   images : le fichier de métadonnées (`data.jsonl`, 629 Mo, sur une machine distante) pour mesurer recouvrements, collections,
   distribution des codes et couverture ajoutée, et vérifier la licence déclarée pour chaque source et chaque image.
