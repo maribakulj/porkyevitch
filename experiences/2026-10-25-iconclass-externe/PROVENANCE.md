@@ -10,6 +10,8 @@ Banc extérieur Emblematica (filtres, tirages gel/gel2, étalonnage) ; T, K et V
 
 ## Ce qui a réellement tourné
 
+- `resultats/gel/frozen.json` : script `5e73cfd2d98e…` — version antérieure : `scripts/remote_external_iconclass.py@210d1c4079a8e4997f1a73af1e7c92b1cb3fc1b7` (copiée ici dans `scripts/executes/`).
+- `resultats/gel2/frozen.json` : script `bc95b3598319…` — version antérieure : `scripts/remote_external_iconclass.py@a798259166bbd9e7443af6cc0442a11702eec0e1` (copiée ici dans `scripts/executes/`).
 - `resultats/gel2/vlm_4b_run.json` : script `77bdcfa50d41…` — identique au `scripts/remote_external_vlm.py` copié.
 - `resultats/gel2/vlm_9b_run.json` : script `77bdcfa50d41…` — identique au `scripts/remote_external_vlm.py` copié.
 

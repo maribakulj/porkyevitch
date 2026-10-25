@@ -79,7 +79,8 @@ class Session:
             raise RuntimeError(f"upload of {local} failed: {r.stdout}{r.stderr}")
 
     def upload_parts(self, local: str | Path, remote: str) -> list[str]:
-        """Send a large file as 50 MB parts; the chain joins them with Step('join', colab.join_command(...))."""
+        """Send a large file as 50 MB parts; the chain joins and checks them with
+        Step('join', colab.join_command(remote, parts, colab.sha256(local)))."""
         local = Path(local)
         parts = []
         with open(local, "rb") as f, tempfile.TemporaryDirectory() as tmp:
@@ -104,10 +105,13 @@ class Session:
         os.unlink(f.name)
 
     def start_chain(self, steps: list, log: str = "/content/chain.log") -> subprocess.Popen:
-        """One blocking cell runs every step in order, waits for flags while staying busy, and stops at the first failure."""
+        """One blocking cell runs every step in order, waits for flags while staying busy, and stops at the first failure.
+        The log is emptied first and the chain ends on 'CHAIN DONE <run id>', so a log left by an earlier chain never counts."""
+        self.run_id = f"{int(time.time())}-{os.getpid()}"
         lines = [
             "import subprocess, sys, os, time",
             f"LOG = {log!r}",
+            "open(LOG, 'w').close()",
             "def log(m):",
             "    open(LOG, 'a').write(time.strftime('%H:%M:%S ') + m + '\\n')",
             "def run(name, cmd, env):",
@@ -129,12 +133,14 @@ class Session:
                 ]
             else:
                 lines.append(f"ok = ok and run({s.name!r}, {s.command!r}, {s.env!r})")
-        lines.append("log(f'CHAIN DONE ok={ok}')")
+        lines.append(f"log(f'CHAIN DONE {self.run_id} ok={{ok}}')")
         return _start(self.name, "\n".join(lines))
 
-    def watch(self, until: tuple[str, ...] = ("CHAIN DONE",), every: float = 240, stall_minutes: float = 40,
+    def watch(self, until: tuple[str, ...] | None = None, every: float = 240, stall_minutes: float = 40,
               log: str = "/content/chain.log", progress: str | None = None) -> str:
-        """Follow the chain until one of `until` appears, a step fails, the machine is lost, or nothing moves."""
+        """Follow the chain until it ends ('CHAIN DONE <run id> ok=True' by default) and return its log.
+        Raises if a step fails, the chain ends with ok=False, the machine is lost, or nothing moves."""
+        until = until or (f"CHAIN DONE {self.run_id} ok=True",)
         with tempfile.TemporaryDirectory() as tmp:
             dest, prog = Path(tmp) / "chain.log", Path(tmp) / "progress.log"
             last, still = None, 0.0
@@ -142,7 +148,9 @@ class Session:
                 if not self.alive():
                     raise RuntimeError(f"Colab session {self.name} lost")
                 text = dest.read_text() if self.download(log, dest) else ""
-                if any(u in text for u in until) or re.search(r"exit [1-9]", text):
+                if re.search(r"exit [1-9]", text) or f"CHAIN DONE {getattr(self, 'run_id', '')} ok=False" in text:
+                    raise RuntimeError(f"chain failed on {self.name}:\n{text}")
+                if any(u in text for u in until):
                     return text
                 state = text + (prog.read_text()[-500:] if progress and self.download(progress, prog) else "")
                 still = still + every if state == last else 0.0
@@ -163,5 +171,17 @@ def _start(name: str, code: str) -> subprocess.Popen:
     return p
 
 
-def join_command(remote: str, parts: list[str]) -> str:
-    return f"cat {' '.join(parts)} > {remote} && rm {' '.join(parts)}"
+def sha256(path: str | Path) -> str:
+    import hashlib
+
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        while chunk := f.read(1 << 20):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def join_command(remote: str, parts: list[str], expected_sha256: str) -> str:
+    """Join the parts, check the whole against the local file's sha256, and only then remove the parts."""
+    return (f"cat {' '.join(parts)} > {remote} && echo '{expected_sha256}  {remote}' | sha256sum -c - "
+            f"&& rm {' '.join(parts)}")

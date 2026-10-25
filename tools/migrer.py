@@ -69,10 +69,10 @@ def tracked(src: Path, rel: str) -> list[str]:
 
 
 def script_hashes(d):
-    """Every value recorded under a key named script_sha256, at any depth."""
+    """Every value recorded under a key named script_sha256 or script (a 64-hex sha256), at any depth."""
     if isinstance(d, dict):
         for k, v in d.items():
-            if k == "script_sha256" and isinstance(v, str) and len(v) == 64:
+            if k in ("script_sha256", "script") and isinstance(v, str) and re.fullmatch(r"[0-9a-f]{64}", v):
                 yield v
             else:
                 yield from script_hashes(v)

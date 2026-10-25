@@ -10,6 +10,7 @@ Même tête sur PE-Spatial (T-PE) et comparaison par usage ; C-RADIO reste la ve
 
 ## Ce qui a réellement tourné
 
+- `resultats/externe/reference.json` : script `7a0e5ad8627f…` — **introuvable** dans les scripts copiés et leur historique git.
 - `resultats/full/run.json` : script `ad7cb459336d…` — identique au `scripts/remote_iconclass_head.py` copié.
 
 ## Dépendances restées dans caypollard
