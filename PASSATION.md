@@ -50,15 +50,31 @@ revient là-bas comme une brique nommée. lermolieff (`~/lermolieff`, futur dép
 | publication HF (dans lermolieff-publication) | cartes prêtes dans `~/lermolieff/hf/{c-radio,pe-spatial}` (README avec en-tête YAML, LICENSE MIT, NOTICE + licence NVIDIA pour c-radio, manifest.json) | ajouter : exemple d'usage, `model-index` (ICAI + Rijksmuseum), citation ; créer les dépôts **privés** avec huggingface_hub (jeton local jamais lu), envoyer, vérifier le sha de head.pt sur le Hub, montrer la page à Marcel, passer en public sur son accord, en même temps que GitHub |
 | autres dossiers | clos (copiés de caypollard avec PROVENANCE.md) | `xanto-parties` est à rendre au projet xanto |
 
-### Calculs lancés le 25/10 (à compléter au retour)
+### Calculs du 25/10 : clos, vérifiés par Codex (aucune autorisation automatique pour E0 ni pour la publication)
 
-- Encodage complet C-RADIO : kernel `mabaku/caypollard-encode-cradio` v3, `MODE=full`, `encode_cradio.py` sha `c3f12bb7…`.
-  Sorties (~13 Go) **gardées sur Kaggle** (accord Codex) et branchées comme `kernel_sources` des essais ; seuls run.json, budget.json,
-  controle.json, emb.json, journaux et petits sidecars rapatriés. Le contrôle T0 complet doit passer avant toute utilisation ; E0
-  vérifie SHA et formes avant entraînement.
-- Essai distant lermolieff : kernel `mabaku/lermolieff-smoke-run`, dataset `mabaku/lermolieff-smoke` (archive fdb9f29),
-  `kaggle_smoke.py` sha `33aa811b…` ; réussite = les deux variantes sortent à 0 et ≥ 30/32 images identiques.
-- Étape 0 Rijksmuseum : `etape0_disponibilite.py` sha `8e577da2…`, sur le Mac (métadonnées seules) ; comptes par type.
+- **Encodage complet C-RADIO** — kernel `mabaku/caypollard-encode-cradio` **version 3**, `MODE=full`, `encode_cradio.py` sha
+  `c3f12bb7…`. FEU VERT résultat de Codex : contrôle T0 passé (ICAI 788/788 prédictions identiques, H-F1 0,547921570709416 =
+  publié ; Emblematica 800/800 ; vecteurs max |Δ| 0), 12 fragments, 94 324 lignes. 94 324 images, 20,8 img/s, RAM 5,8 Go, VRAM
+  3,1 Go. Les **tenseurs (13,15 Go) restent dans la sortie de la version 3** : à brancher en `kernel_sources` des essais ; **E0 doit
+  d'abord vérifier à distance leurs SHA, formes, dtype et finitude** contre les sidecars (pas de rehash sur le Mac). Petits fichiers
+  (35) dans `experiences/2026-10-25-iconclass-architecture/essais/encodage-full/` (commit 4ee9d13).
+- **Essai distant lermolieff** — kernel `mabaku/lermolieff-smoke-run`, dataset `mabaku/lermolieff-smoke` (fdb9f29),
+  `kaggle_smoke.py` sha `33aa811b…`. FEU VERT technique : les deux variantes sortent à 0, 32/32 identiques. `~/lermolieff`
+  VERSIONS.md (commit local 32a5e9f, seul changement depuis fdb9f29). Sorties dans
+  `experiences/2026-10-25-lermolieff-publication/essai-distant/`.
+- **Étape 0 Rijksmuseum** — passage 2 (script `82b078b5…`, relu) : 842/900 éligibles vérifiés ; voir
+  `experiences/2026-10-25-banc-rijksmuseum/etape0/RESULTAT.md`. Cache brut (5 416 réponses, 45 Mo) dans le scratchpad de la session
+  w3:p1, `/private/tmp/claude-501/-Users-marcel/e7ea41d7-7155-4ca8-abbd-8be47cfd6ac3/scratchpad/rijks0/cache` : **à copier** si
+  utile, il disparaît avec la session.
+
+### Prochaines étapes, dans l'ordre
+
+1. Banc Rijksmuseum : amendements B1-B4 (groupes de dépendance au-delà du créateur — ~30 % d'objets sans créateur identifié —,
+   audit des filtres de copie hors test, algorithme de tirage, contrat de collecte avec chaîne de droits) et synchronisation de
+   l'amendement 4 ; relecture ; script de collecte ; audit ; tirage ; gel.
+2. Série d'essais : E0 (vérification distante des tenseurs puis T-seuil, T-long) → reference.json → D → E1 → E2 → E3.
+3. Publication lermolieff après le banc (historique neuf d'un seul commit, voir le tableau ci-dessus).
+4. Fusionner `travail` dans `main` quand un ensemble est relu (droit accordé par Marcel à wA:p1).
 
 ## Rapports de Codex
 
