@@ -149,8 +149,10 @@ Le diagnostic ne change aucun essai de cette série ; il sert à interpréter le
 - Volume : 86 216 × 64 × 1 024 × 2 octets ≈ 11,3 Go en fp16. Stockage en fichiers `.npy` par morceaux, lisibles sans tout charger ;
   conversion en float32 lot par lot ; l'encodeur libéré avant l'entraînement ; jamais toute la grille en mémoire GPU.
 - Budget mesuré à l'essai à blanc, séparément : poids, gradients, états de l'optimiseur, activations et attention en VRAM ; RAM ;
-  disque ; débit ; durée ; reprise. Les caractéristiques et les points de reprise sont envoyés au fur et à mesure vers le dépôt privé
-  Hugging Face Ma-Ri-Ba-Ku/porkyevitch-sauvegardes, pour ne jamais recalculer un encodage perdu. Les durées annoncées (~1,5 h d'encodage, ~1-2 h
+  disque ; débit ; durée ; reprise. Persistance (amendement 3, 25/10, avant tout calcul) : pas d'envoi progressif vers Hugging Face depuis
+  Kaggle, faute d'y avoir un jeton (on n'y en met pas) ; les sorties sont gardées par Kaggle à la fin de la session, rapatriées puis
+  sauvegardées vers le dépôt privé Ma-Ri-Ba-Ku/porkyevitch-sauvegardes ; une session perdue en cours de route se relance depuis zéro
+  (gratuit, ~2-3 h), avec des ensembles publiés atomiquement et une reprise vérifiée si le dossier de sortie survit. Les durées annoncées (~1,5 h d'encodage, ~1-2 h
   d'entraînement) sont des estimations. Jamais sur le Mac.
 
 ## Hors de cette série
