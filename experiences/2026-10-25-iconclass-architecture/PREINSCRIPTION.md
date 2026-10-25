@@ -5,6 +5,11 @@ après la relecture de Codex (`~/Documents/reviews/porkyevitch-architecture-prei
 Amendement 2 (25/10 au soir, toujours avant tout calcul), à la suite d'une seconde analyse transmise par Marcel : contrôle de la
 référence (E0), diagnostic des erreurs (D), contrôle spatial simple (T-Z), même projection sans 86 sur les deux bancs, famille de
 sept comparaisons. À relire par Codex avant tout script.
+Amendement 4 (25/10, avant tout calcul d'essai), à la demande de Marcel : **le juge extérieur devient le banc du Rijksmuseum**
+(`../2026-10-25-banc-rijksmuseum/PREINSCRIPTION.md` : test de 1 200 objets, bootstrap par créateurs entiers, dev de 300 pour les
+planches), à la place d'Emblematica, mis de côté (doublon avec le projet sur les emblèmes, licence introuvable, banc déjà consulté).
+Partout où ce texte dit « Emblematica » pour le verdict, lire « Rijksmuseum » ; la règle de verdict et la famille sont inchangées.
+Emblematica ne sert plus qu'au contrôle de reproduction de T0 à l'encodage, et ses chiffres restent internes.
 **Chaque script, essai à blanc compris, est relu par Codex avant d'être lancé** (demande de Marcel).
 
 ## Portée
