@@ -29,6 +29,7 @@ counts are printed.
 from __future__ import annotations
 
 import hashlib
+import http.client
 import json
 import re
 import sys
@@ -147,7 +148,7 @@ def get(url: str) -> dict:
                 time.sleep(max(retry_after(e), 10 * (attempt + 1)))
                 continue
             break
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, Failure) as e:
+        except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.HTTPException, json.JSONDecodeError, Failure) as e:
             last = type(e).__name__
             time.sleep(10 * (attempt + 1))
     raise Failure(last)

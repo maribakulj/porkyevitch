@@ -30,6 +30,7 @@ cosine), resume.json (counts and histograms only), run.json, budget.json, progre
 """
 
 import hashlib
+import http.client
 import importlib.metadata as md
 import io
 import json
@@ -225,7 +226,7 @@ def fetch(url):
                 time.sleep(max(retry_after(e), 10 * (attempt + 1)))
                 continue
             break
-        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
+        except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.HTTPException) as e:
             last = type(e).__name__
             time.sleep(10 * (attempt + 1))
     return None, last
