@@ -7,9 +7,11 @@ order met. Scope: availability among these first results only, not a proportion 
 Records are resolved with the fixed profile la-framed (?_profile=la-framed). Path followed, as documented by the museum (IIIF Image
 API page): object --shows--> visual item --digitally_shown_by--> digital object --access_point--> IIIF image (iiif.micr.io).
 Rights are read only from the `subject_to` of the resource concerned:
-- metadata CC0: `subject_to` of the object record;
-- reproduction PDM: `subject_to` of the digital object whose access point is the IIIF image.
-`eligible_verified` = CC0 on the object + at least one digital object with IIIF access point AND PDM on that same digital object +
+- metadata CC0: `subject_to` of the record describing the object (object.subject_of[]), or of the object itself;
+- image PDM: `subject_to` of the digital object whose access point is the IIIF image, or of the visual item that this digital object
+  shows (amendment after the first run of 25/10: in all 900 records the PDM sits on the visual item and the CC0 on the record; paths
+  read from aggregate counts of the cache, no object, code or image looked at). Both places are counted separately.
+`eligible_verified` = CC0 on the record + at least one digital object with IIIF access point AND PDM on it or on its visual item +
 non-empty readable truth without chapter 86 + no failed resolution for that object. Counts of "found anywhere in the JSON" are kept
 apart, named `exploratory_*`, and never enter `eligible_verified`.
 Cache: one raw response per (URL, profile) in CACHE, raw bytes + sidecar (URL, UTC date, profile, Accept, HTTP status, content type,
@@ -179,8 +181,8 @@ def search_pids(t: str, n: int) -> tuple[list[str], list[str], dict]:
     return pids, pages, status
 
 
-COUNTERS = ["record_ok", "record_failed", "visual_failed", "digital_failed", "metadata_cc0_on_object", "shows_items",
-            "digital_objects", "iiif_access_point", "pdm_on_digital_with_iiif", "with_iconclass", "all_readable",
+COUNTERS = ["record_ok", "record_failed", "visual_failed", "digital_failed", "metadata_cc0_on_object", "metadata_cc0_on_record",
+            "shows_items", "digital_objects", "iiif_access_point", "pdm_on_digital_with_iiif", "pdm_on_visual_item_with_iiif", "with_iconclass", "all_readable",
             "some_unreadable", "truth_non_empty_without_86", "creator_identified", "codes_total", "eligible_verified",
             "eligibility_unknown", "exploratory_cc0_anywhere", "exploratory_pdm_anywhere", "exploratory_iiif_anywhere"]
 
@@ -205,8 +207,10 @@ for t in TYPES:
         c["exploratory_cc0_anywhere"] += any(CC0 in x for x in s)
         c["exploratory_pdm_anywhere"] += any(PDM in x for x in s)
         c["exploratory_iiif_anywhere"] += any("iiif" in x for x in s)
-        cc0 = any(CC0 in u for u in rights(obj))
-        c["metadata_cc0_on_object"] += cc0
+        on_record = any(CC0 in u for rec in as_list(obj.get("subject_of")) if isinstance(rec, dict) for u in rights(rec))
+        cc0 = on_record or any(CC0 in u for u in rights(obj))
+        c["metadata_cc0_on_object"] += any(CC0 in u for u in rights(obj))
+        c["metadata_cc0_on_record"] += on_record
         codes, failed, image_ok = [], False, False
         for v in as_list(obj.get("shows")):
             c["shows_items"] += 1
@@ -218,6 +222,7 @@ for t in TYPES:
                 c["visual_failed"] += 1
                 continue
             codes += iconclass_codes(vis)
+            pdm_vis = any(PDM in u for u in rights(vis))
             for d in as_list(vis.get("digitally_shown_by")):
                 c["digital_objects"] += 1
                 try:
@@ -227,9 +232,11 @@ for t in TYPES:
                     c["digital_failed"] += 1
                     continue
                 iiif = any(isinstance(a, dict) and IIIF_HOST in a.get("id", "") for a in as_list(dig.get("access_point")))
-                pdm = iiif and any(PDM in u for u in rights(dig))
+                pdm_dig = iiif and any(PDM in u for u in rights(dig))
+                pdm = pdm_dig or (iiif and pdm_vis)
                 c["iiif_access_point"] += iiif
-                c["pdm_on_digital_with_iiif"] += pdm
+                c["pdm_on_digital_with_iiif"] += pdm_dig
+                c["pdm_on_visual_item_with_iiif"] += iiif and pdm_vis
                 image_ok |= pdm
         codes = list(dict.fromkeys(codes))
         if codes:
