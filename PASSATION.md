@@ -63,9 +63,8 @@ revient là-bas comme une brique nommée. lermolieff (`~/lermolieff`, futur dép
   VERSIONS.md (commit local 32a5e9f, seul changement depuis fdb9f29). Sorties dans
   `experiences/2026-10-25-lermolieff-publication/essai-distant/`.
 - **Étape 0 Rijksmuseum** — passage 2 (script `82b078b5…`, relu) : 842/900 éligibles vérifiés ; voir
-  `experiences/2026-10-25-banc-rijksmuseum/etape0/RESULTAT.md`. Cache brut (5 416 réponses, 45 Mo) dans le scratchpad de la session
-  w3:p1, `/private/tmp/claude-501/-Users-marcel/e7ea41d7-7155-4ca8-abbd-8be47cfd6ac3/scratchpad/rijks0/cache` : **à copier** si
-  utile, il disparaît avec la session.
+  `experiences/2026-10-25-banc-rijksmuseum/etape0/RESULTAT.md`. Cache brut (5 416 réponses, 45 Mo, hors git) copié dans
+  `~/porkyevitch-donnees/rijks-etape0/cache` (réutilisable : même clé URL + profil + Accept).
 
 ### Prochaines étapes, dans l'ordre
 
