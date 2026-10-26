@@ -45,6 +45,11 @@ EXPERIENCES = {
         ["scripts/remote_xanto_parts.py", "results/xanto-parties"],
         "Test pose/parties pour Xanto. Appartient au projet xanto : copié ici en attendant, à rendre à son agent.",
     ),
+    "2026-10-25-notebooks-caypollard": (
+        ["notebooks"],
+        "Notebooks de la branche pilote-figures. Interfaces sur fixtures, sans execution_count. "
+        "Ce ne sont pas les pilotes des entraînements Colab ou Kaggle des autres expériences.",
+    ),
 }
 
 
@@ -104,10 +109,12 @@ def main() -> None:
             assert files, f"{rel}: nothing tracked"
             files += [e for e in EXTRAS.get(name, []) if e.startswith(rel + "/") and e not in files]
             for f in files:
-                new = Path("scripts" if f.startswith("scripts/") else "") / (Path(f).name if f.startswith("scripts/")
-                                                                              else Path(f).relative_to(rel))
-                if not f.startswith("scripts/"):
-                    new = Path("resultats") / new
+                if f.startswith("scripts/"):
+                    new = Path("scripts") / Path(f).name
+                elif f.startswith("notebooks/"):
+                    new = Path("notebooks") / Path(f).name
+                else:
+                    new = Path("resultats") / Path(f).relative_to(rel)
                 (dest / new).parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src / f, dest / new)
                 h = sha(dest / new)

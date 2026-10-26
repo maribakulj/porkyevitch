@@ -1,6 +1,6 @@
 # porkyevitch
 
-Entraînements et évaluations à distance (Colab, Kaggle) pour les projets de Marcel, à commencer par caypollard. Dépôt privé.
+Entraînements et évaluations à distance (Colab, Kaggle) pour les projets de Marcel, à commencer par caypollard. Le dépôt GitHub est public au 26 octobre 2026. Les poids et la sauvegarde Hugging Face restent privés.
 
 - `porky/` : outils communs, écrits une fois : `colab.py` (cellule chaînée qui ne laisse jamais le noyau inactif, attente de drapeaux,
   envoi en morceaux de 50 Mo, surveillance de la session et du journal) ; `drivemount.py` (montage du Drive sur une machine Colab
@@ -10,7 +10,8 @@ Entraînements et évaluations à distance (Colab, Kaggle) pour les projets de M
 - `experiences/AAAA-MM-JJ-nom/` : un dossier par expérience, toujours le même gabarit : `PREINSCRIPTION.md` (règles écrites avant
   calcul), script(s), `RESULTAT.md`, `PROVENANCE.md` (d'où viennent les fichiers, empreintes de ce qui a réellement tourné),
   `relectures.md` (résumé des relectures de Codex), artefacts légers ; les gros fichiers sont sur le Drive (`Mon Drive/porkyevitch/`)
-  avec leur empreinte.
+  avec leur empreinte. Les scripts `.py` restent les sources exécutables. Un notebook, s'il existe, est dans `notebooks/` et ne les remplace pas.
+- `NOTEBOOKS.md` : pour chaque expérience, le script qui a tourné, son empreinte, l'environnement, les résultats, et le notebook récupéré ou l'absence de notebook. Les notebooks historiques et les scripts sont distingués. Aucun notebook reconstruit n'est présenté comme une exécution.
 
 Règles : règle fixée d'avance ; relecture de Codex avant tout calcul, essai à blanc compris ; regarder les images avant les chiffres ;
 un réglage choisi après coup est une nouvelle brique ; Colab au-delà de 10 unités sur l'accord de Marcel.
@@ -25,3 +26,4 @@ un réglage choisi après coup est une nouvelle brique ; Colab au-delà de 10 un
 | `2026-10-25-iconclass-tete-pe` | même tête sur PE-Spatial, comparaison par usage | close (copiée) |
 | `2026-10-25-xanto-parties` | pose et parties pour Xanto | close, à rendre au projet xanto |
 | `2026-10-25-iconclass-architecture` | essais d'architecture de la tête | préinscrite, feu vert de Codex |
+| `2026-10-25-notebooks-caypollard` | neuf notebooks de caypollard, branche pilote-figures | récupérés, sans exécution enregistrée |

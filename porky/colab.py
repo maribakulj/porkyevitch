@@ -7,6 +7,7 @@ Lessons kept here so that no experiment has to relearn them (24-25/10/2026):
   background and follow a log file on the machine with `colab download`;
 - uploads over about 64 MB fail: send parts of 50 MB and join them on the machine;
 - a second `exec` waits for the kernel to be free, so it cannot be used to look at a running chain; `download` and `upload` can.
+- a chain is a Python string sent to `colab exec`. This module does not write a `.ipynb`. The experiment's `.py` script stays the source that can be hashed and re-run.
 
 Usage from an experiment's launcher:
 
