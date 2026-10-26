@@ -73,7 +73,8 @@ if first:
     sheet_files.append(COMP / "planche_repli.json")
     summary["fallback_sheet"] = summary2
     if second:
-        write_json({"stop": "fallback sheet contradicts the thresholds again", **summary}, OUT / "arret.json")
+        write_json({"stop": "fallback sheet contradicts the thresholds again", **summary,
+                    "inputs_sha256": {f.name: sha(f) for f in sheet_files + audit_files}}, OUT / "arret.json")
         print("STOP: fallback sheet triggered again; new preregistration")
         sys.exit(2)
     T, TC = 64, 0.92
