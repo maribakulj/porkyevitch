@@ -8,7 +8,7 @@ kept bytes, sha256 checked against images.jsonl) and the reference image (brillf
 encoder's shard order, md5 checked against ref_dhash.npz of FILTRES) are put side by side, each fitted into 512 x 512 without
 cropping, with a caption line: pair number, support, filters and groups selected, distances. Writes OUT/paires/<n>.jpg (n = order
 of planche.json, from 1), OUT/planches/<support>-<m>.jpg (contact sheets of 6 pairs) and OUT/index.json (n, pid, ref, support,
-selected, sha256 of both images). Nothing else about the objects is shown.
+selected, sha256 of the candidate image, md5 of the reference image as in ref_dhash.npz). Nothing else about the objects is shown.
 """
 
 import hashlib
