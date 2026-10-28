@@ -4,7 +4,7 @@
 # of kernel porky-e0-run (version 2: full/t_long.pt and full/e0.json, T* of reference.json).
 import glob, hashlib, json, os, subprocess, sys, time
 
-MODE = "smoke"
+MODE = "full"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
 SCRIPT_SHA256 = "f33681ea1bbec2fe9a5eda3b9ae00b3720b136d276489ecbfbacdc58a654f227"  # sha256 of e1_decision.py as reviewed
