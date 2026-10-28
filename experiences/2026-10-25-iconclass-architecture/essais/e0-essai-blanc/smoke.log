@@ -1,0 +1,20 @@
+      6 s  test-00000-of-00001: ok
+     20 s  train-00000-of-00011: ok
+     33 s  train-00001-of-00011: ok
+     46 s  train-00002-of-00011: ok
+     60 s  train-00003-of-00011: ok
+     75 s  train-00004-of-00011: ok
+     88 s  train-00005-of-00011: ok
+    102 s  train-00006-of-00011: ok
+    114 s  train-00007-of-00011: ok
+    127 s  train-00008-of-00011: ok
+    142 s  train-00009-of-00011: ok
+    154 s  train-00010-of-00011: ok
+    157 s  controls: {'t0_sha256_ok': True, 'vocab_equal_t0': True, 'vocab_size': 7907, 'val_images': 4265, 'train_images': 81951, 't0_val_historical': 0.5517433451139009, 't0_val_historical_ok': True, 'passed': True}
+    160 s  T0 0.5517, T-seuil 0.5517 at 0.6
+/kaggle/input/datasets/mabaku/porky-e0-entree/e0_reference.py:275: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  f.write(json.dumps({"epoch": epoch, "val": s, "threshold": t, "val_historical_at_0.6": hist, "loss": float(loss)}) + "\n")
+    179 s  T-long epoch 0: val 0.4307 at 0.55 (historical at 0.6: 0.3989)
+    190 s  T-long epoch 1: val 0.4710 at 0.55 (historical at 0.6: 0.4546)
+    190 s  done: T* = T0

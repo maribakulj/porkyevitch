@@ -4,7 +4,7 @@
 # caypollard-encode-cradio, which must be its version 3 (encode_cradio.py c3f12bb7..., full run, T0 control passed).
 import glob, hashlib, json, os, subprocess, sys, time
 
-MODE = "smoke"
+MODE = "full"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
 SCRIPT_SHA256 = "019c462a66a56c63958d9fe0c0862f3c9aba1556c95c22f3d09ed97775f529d3"  # sha256 of e0_reference.py as reviewed

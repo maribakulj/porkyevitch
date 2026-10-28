@@ -1,0 +1,9 @@
+{
+ "script_sha256": "019c462a66a56c63958d9fe0c0862f3c9aba1556c95c22f3d09ed97775f529d3",
+ "smoke": 2,
+ "torch": "2.11.0+cu128",
+ "numpy": "2.1.3",
+ "gpu": "Tesla T4",
+ "feature_config": "nvidia/C-RADIOv3-L@9d0413465e8a91e67bbf2c1ad342815478d1b906|square-grey128|448|bicubic|autocast-fp16|summary+meanspatial|l2-each-then-l2",
+ "t0_sha256": "2b403a912383853d52ed771ef5843a42a80160e39b180ccf98e8bf3b1fc98242"
+}
