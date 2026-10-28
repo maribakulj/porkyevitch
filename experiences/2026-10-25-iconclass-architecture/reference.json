@@ -1,0 +1,149 @@
+{
+ "date": "2026-10-28",
+ "rule": "PREINSCRIPTION.md (Point de départ, E0) : T* = meilleur F1 hiérarchique de validation ICAI sans chapitre 86 parmi T0, T-seuil, T-long ; égalités : le plus simple ; figé après E0 et avant E1 ; aucun chiffre de test (amendement 4)",
+ "encoder": {
+  "name": "nvidia/C-RADIOv3-L",
+  "revision": "9d0413465e8a91e67bbf2c1ad342815478d1b906",
+  "feature_config": "nvidia/C-RADIOv3-L@9d0413465e8a91e67bbf2c1ad342815478d1b906|square-grey128|448|bicubic|autocast-fp16|summary+meanspatial|l2-each-then-l2",
+  "why": "règle PE-Spatial (experiences/2026-10-25-iconclass-tete-pe/resultats/RESULTAT.md) : borne basse sous -2 points sur les deux bancs, C-RADIO reste la version recommandée",
+  "features": {
+   "source": "kernel mabaku/caypollard-encode-cradio version 3 (encode_cradio.py c3f12bb7..., contrôle T0 passé)",
+   "shards": {
+    "test-00000-of-00001": {
+     "vec_sha256": "da67a4196ae7dabe95dec56308c0b803d802fddc0a3f8bac907f61c4684cb4ae",
+     "grid_sha256": "e5c1569b5925ba4259c0a6c9cf2b09d63365c395b2f4e3d8c849fc74d4382b6f"
+    },
+    "train-00000-of-00011": {
+     "vec_sha256": "a89b45c09ad5ad46da152ca11428fb19370519401af84db38226188370aca479",
+     "grid_sha256": "f321cec3493c48efdb88b7f804f128730cc7be56bd91bb60b4857a65da4cc935"
+    },
+    "train-00001-of-00011": {
+     "vec_sha256": "a60058267d3d98722d00dddb1c87427abfd41c4955fd73ef37b401ff0d164a2f",
+     "grid_sha256": "ab38229560768c4b855b1842788801464376fb6e878248b7d90411016e4e4bc8"
+    },
+    "train-00002-of-00011": {
+     "vec_sha256": "d357c7e2f4fe04ad8ee05fa04338d0850d845a83de971fdd48ca30799280193c",
+     "grid_sha256": "ff477350646d2fd550572f15b3acdf1a1f29bf0369a67c4ed2113d216b978885"
+    },
+    "train-00003-of-00011": {
+     "vec_sha256": "2570f58243f52650110cca1cf57051595d583ccf83e773c216e1fe252a52ea7b",
+     "grid_sha256": "a8ae0f012f9823c697ec87eb432935cdf73b78a2dd254e679ce9856c087d98c2"
+    },
+    "train-00004-of-00011": {
+     "vec_sha256": "119b3fbe3b3f5435c1a69157f6e3402f33356a081d79366e43aff157530be8fd",
+     "grid_sha256": "cc5bade0e364989010c72c56acd0241376db760e5244a725b1b370e161038f79"
+    },
+    "train-00005-of-00011": {
+     "vec_sha256": "8b9e4ca6abc680bf9845fdeba2e7a988601b23d923a017f0a20b53aedd41fb6b",
+     "grid_sha256": "6fc8a7244427428d117a634c55770bd8e56850091a4a1f763f8b8c3a1f8c8fe1"
+    },
+    "train-00006-of-00011": {
+     "vec_sha256": "4b094341c604759bfd04ca2ab959515df5496f1cd857dcfb46efcc82c13bb40b",
+     "grid_sha256": "3824093afb3738782a2f3032bd6514ef67c27d2093a2dc4423a70ac4564ec02f"
+    },
+    "train-00007-of-00011": {
+     "vec_sha256": "de3a034e199c041587fe7f79716dfd7e8b4583c920905ad6015da915e7c1cdfd",
+     "grid_sha256": "79eeb64bd19e97bf85ecf659cda9c8ebb184890d53b211e3b7178c4ddc985fba"
+    },
+    "train-00008-of-00011": {
+     "vec_sha256": "f368687eea94824555b688632b3348c5f8bab22a6e88fc62265979d66c2f21d2",
+     "grid_sha256": "8dc530b956f5fe69513d85e3163adae0996479c50c04ab864a7d7c5cbdb2a7ad"
+    },
+    "train-00009-of-00011": {
+     "vec_sha256": "20a98b44cf6fdc3e0c66ef547de81262af5f27bd420b181fd22bbf46b1af5c53",
+     "grid_sha256": "1f2d7bb1d665cc620931b31a685c497092e9c86b8bc4d0da9727651651909b34"
+    },
+    "train-00010-of-00011": {
+     "vec_sha256": "029fcd54a696411938ff47b06d191b37cdccbeb48c9968ceee36ed701adf45d4",
+     "grid_sha256": "786d80b1af80593d352798b749d219fa1cc86a58d927b74ea19209dd17a6726e"
+    }
+   }
+  }
+ },
+ "T_star": {
+  "name": "T-long",
+  "threshold": 0.6,
+  "epoch": 27,
+  "horizon": 30,
+  "val": 0.5780389782560774,
+  "weights": {
+   "file": "t_long.pt (porky-e0-run v2 ; copie ~/porkyevitch-donnees/e0-complet/)",
+   "sha256": "5a1b3041c0d9aab0e3403182b0881272a02f395542fe8414dc54b4fc7fa045ea"
+  }
+ },
+ "T0": {
+  "threshold": 0.6,
+  "epoch": 14,
+  "horizon": 15,
+  "val": 0.5518895449665665,
+  "weights_sha256": "2b403a912383853d52ed771ef5843a42a80160e39b180ccf98e8bf3b1fc98242"
+ },
+ "candidates_validation": {
+  "T0": {
+   "threshold": 0.6,
+   "epoch": 14,
+   "horizon": 15,
+   "val": 0.5518895449665665
+  },
+  "T-seuil": {
+   "threshold": 0.6,
+   "epoch": 14,
+   "horizon": 15,
+   "val": 0.5518895449665665
+  },
+  "T-long": {
+   "threshold": 0.6,
+   "epoch": 27,
+   "horizon": 30,
+   "val": 0.5780389782560774
+  }
+ },
+ "validation_measure": {
+  "images": 4241,
+  "projection": "chapitre 86 retiré de la vérité et des prédictions ; vérité projetée vide exclue",
+  "grid": [
+   0.05,
+   0.1,
+   0.15,
+   0.2,
+   0.25,
+   0.3,
+   0.35,
+   0.4,
+   0.45,
+   0.5,
+   0.55,
+   0.6,
+   0.65,
+   0.7,
+   0.75,
+   0.8,
+   0.85,
+   0.9,
+   0.95
+  ]
+ },
+ "controls": {
+  "t0_sha256_ok": true,
+  "vocab_equal_t0": true,
+  "vocab_size": 7907,
+  "val_images": 4265,
+  "train_images": 81951,
+  "t0_val_historical": 0.5517433451139009,
+  "t0_val_historical_ok": true,
+  "passed": true
+ },
+ "e0": {
+  "script_sha256": "019c462a66a56c63958d9fe0c0862f3c9aba1556c95c22f3d09ed97775f529d3",
+  "kernel": "mabaku/porky-e0-run v2",
+  "outputs": "essais/e0-complet/",
+  "e0_json_sha256": "2f4c6efd9f704eb442cd4048b62ae09e78c37ff0212e3f2ac5ddcfbb97fe54f4"
+ },
+ "for_the_bricks": "TK et T-niv utilisent les probabilités de T* (poids de T-long) ; T-niv part du seuil 0,60 ; T-H, T-Z, T-D sont entraînés sur 30 époques, époque et seuil choisis sur la validation dans la grille étendue",
+ "reviews": [
+  "~/Documents/reviews/porkyevitch-e0-grok.md",
+  "~/Documents/reviews/porkyevitch-e0-codex.md",
+  "~/Documents/reviews/porkyevitch-e0-essai-verif-grok.md",
+  "~/Documents/reviews/porkyevitch-e0-complet-verif-grok.md"
+ ]
+}
