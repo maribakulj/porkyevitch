@@ -1,0 +1,12 @@
+{
+ "script_sha256": "4a74dad0f569c59a4b90381534c9e656afab1bfd4414e52decb29098a4dfaf1e",
+ "smoke": 2,
+ "torch": "2.11.0+cu128",
+ "numpy": "2.1.3",
+ "gpu": "Tesla T4",
+ "tstar_sha256": "5a1b3041c0d9aab0e3403182b0881272a02f395542fe8414dc54b4fc7fa045ea",
+ "ml_decoder": {
+  "commit": "8a9e984f671c9c30c98d2c45dfcaf4383381c254",
+  "sha256": "59fbf54f027c1ef07e4943d1cb7d9ba6d11a5710018ab05fb7b34270cf1f83f7"
+ }
+}

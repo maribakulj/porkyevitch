@@ -1,0 +1,36 @@
+Traceback (most recent call last):
+  File "/kaggle/input/datasets/mabaku/porky-e3-entree/e3_spatial.py", line 88, in <module>
+    spec.loader.exec_module(mld)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "<frozen importlib._bootstrap_external>", line 1023, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/tmp/ml_decoder_8a9e984.py", line 86, in <module>
+    @torch.jit.script
+     ^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/jit/_script.py", line 1498, in script
+    ret = _script_impl(
+        obj=obj,
+    ...<3 lines>...
+        example_inputs=example_inputs,
+    )
+  File "/usr/local/lib/python3.13/dist-packages/torch/jit/_script.py", line 1237, in _script_impl
+    _compile_and_register_class(obj, _rcb, qualified_name)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.13/dist-packages/torch/jit/_recursive.py", line 57, in _compile_and_register_class
+    ast = get_jit_class_def(obj, obj.__name__)
+  File "/usr/local/lib/python3.13/dist-packages/torch/jit/frontend.py", line 271, in get_jit_class_def
+    sourcelines, file_lineno, filename = get_source_lines_and_file(
+                                         ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        cls, torch._C.ErrorReport.call_stack()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/local/lib/python3.13/dist-packages/torch/_sources.py", line 23, in get_source_lines_and_file
+    filename = inspect.getsourcefile(obj)
+  File "/usr/lib/python3.13/inspect.py", line 972, in getsourcefile
+    filename = getfile(object)
+  File "/usr/local/lib/python3.13/dist-packages/torch/package/package_importer.py", line 744, in _patched_getfile
+    return _orig_getfile(object)
+  File "/usr/lib/python3.13/inspect.py", line 941, in getfile
+    raise TypeError('{!r} is a built-in class'.format(object))
+TypeError: <class 'ml_decoder.GroupFC'> is a built-in class

@@ -85,6 +85,7 @@ write_json({"script_sha256": sha(__file__), "smoke": SMOKE, "torch": torch.__ver
 # ---- ML-Decoder, official file, unchanged, plus the keyword shim ----
 spec = importlib.util.spec_from_file_location("ml_decoder", MLDEC)
 mld = importlib.util.module_from_spec(spec)
+sys.modules["ml_decoder"] = mld  # TorchScript compiles GroupFC from its source: inspect needs the module registered
 spec.loader.exec_module(mld)
 _orig_forward = mld.TransformerDecoderLayerOptimal.forward
 
