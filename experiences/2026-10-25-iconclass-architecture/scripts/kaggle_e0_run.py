@@ -7,7 +7,7 @@ import glob, hashlib, json, os, subprocess, sys, time
 MODE = "smoke"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
-SCRIPT_SHA256 = "TO_FILL_AFTER_REVIEW"  # sha256 of e0_reference.py as reviewed
+SCRIPT_SHA256 = "019c462a66a56c63958d9fe0c0862f3c9aba1556c95c22f3d09ed97775f529d3"  # sha256 of e0_reference.py as reviewed
 ENCODER_SCRIPT = "c3f12bb71deda0b96bf3b8d015d9a79f4db666c234ad8edb0ff04633bd2bf1ca"
 
 
@@ -50,6 +50,9 @@ if r.returncode != 0:
     fail(f"e0 exit {r.returncode} ({MODE})")
 if not json.load(open(f"{out}/run.json")).get("gpu"):
     fail("no GPU recorded in run.json: not a valid run")
+e0 = json.load(open(f"{out}/e0.json"))
+if not e0.get("controls", {}).get("passed") or not e0.get("tensors_passed"):
+    fail("T0 or tensor control not passed")
 for need in ("tenseurs.json", "e0.json", "t_long.pt", "journal_t_long.jsonl", "budget.json"):
     if not os.path.exists(f"{out}/{need}"):
         fail(f"missing output {need}")

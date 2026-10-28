@@ -5,7 +5,7 @@ ICAI validation only. No test measure is computed here (amendment 4: test aggreg
 Usage: e0_reference.py OUT ENC T0
 ENC: the `full/` folder of kernel caypollard-encode-cradio version 3 (feats/<shard>.npz + .json, grid/<shard>.npy + .json).
 T0: the folder holding head.pt of the published C-RADIO head (sha256 2b403a91...). ENV E0_SMOKE=N keeps N training epochs for T-long
-and N rows of validation for the grid search (dry run: technical only); E0_SMOKE=0 is the full run.
+and the first N x 100 validation images with a non-empty projected truth for the grid search (dry run: technical only); E0_SMOKE=0 is the full run.
 
 (1) Tensors: for each of the 12 shards (test, then train 0-10), the vector npz and the grid npy against their sidecar: sha256 of both
     files, manifest equal to its sidecar copy, labels and md5 hashes, shapes (n, 4096) and (n, 64, 1024), float16, finite (grids read
@@ -220,7 +220,7 @@ controls["t0_val_historical"] = historical
 controls["t0_val_historical_ok"] = abs(historical - T0_VAL) <= 0.001
 controls["passed"] = controls["t0_sha256_ok"] and controls["vocab_equal_t0"] and controls["t0_val_historical_ok"]
 progress(f"controls: {controls}")
-if not controls["passed"] and not SMOKE:
+if not controls["passed"]:  # stops the dry run too: T0 control does not depend on the epochs
     write_json({"controls": controls, "tensors_passed": True}, OUT / "e0.json")
     sys.exit(3)
 
