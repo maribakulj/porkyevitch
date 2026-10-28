@@ -1,0 +1,51 @@
+# Phase 2 : pistes pour la tête Iconclass (plan à choisir, 28/10/2026)
+
+Demande de Marcel (28/10) : rassembler en un seul endroit les pistes explorées ailleurs (étude des emblèmes `~/etude-02`, caypollard,
+xanto, revue « graphe de scène » du 17/10) et jamais reportées dans le plan Iconclass. Ce document n'autorise aucun calcul : chaque
+piste choisie devient une **série préinscrite**, relue (Grok p2 puis Codex p4) avant tout essai, essai à blanc compris.
+
+Colonnes à compléter : **vérif.** = Grok wA:p7 (dépôt, poids, licence, date, preuve sur l'art) ; **coût** = Codex wA:p6 (Kaggle T4,
+mémoire, heures, stockage). Le reste est rempli par wA:p1 depuis les notes existantes.
+
+## Point de départ (phase 1, série E0-E3)
+
+- Tête MLP sur le vecteur C-RADIOv3-L (4096), train `davanstrien/iconclass-vlm-brillfull` (révision 8045366, CC0).
+- Validation (5 % par groupes md5) : T* = T-long 0,5780 ; TK (vote des voisins) 0,5839 ; T-H (hiérarchie forcée) 0,5566 ;
+  T-D (ML-Decoder sur les 64 zones) 0,5832 ; **T-Z (requête apprise sur les zones) 0,5891**, meilleure époque = 29/30.
+- Les verdicts (test ICAI 788 + banc Rijksmuseum) ne sont pas encore ouverts. Une piste de phase 2 part de la **meilleure tête
+  retenue** au verdict, ou de T* si aucune ne l'est.
+
+## Juge commun (sans annotation)
+
+- Score H-F1 hiérarchique sur la validation ICAI, puis sur le dev Rijksmuseum une fois le banc gelé ; tests fermés jusqu'au gel
+  des prédictions de toute la série, comme en phase 1.
+- Une piste « marche » si elle bat la tête de départ selon une règle écrite avant le calcul. Un échec d'une construction grossière
+  ne réfute pas l'idée : chaque fiche dit ce qu'un échec réfuterait.
+- Regarder des images réelles (planche de 12 écarts sur le dev) avant les chiffres.
+
+## Les pistes
+
+| # | piste | ce qu'on sait déjà | où | vérif. | coût |
+|---|---|---|---|---|---|
+| P1 | **ICARUS** : plus de données (19 sources, ~118 Go, CC BY 4.0, Zenodo 10.5281/zenodo.18980670) | Contient Emblematica Online ; audit des recouvrements obligatoire (préinscription architecture, « Hors de cette série ») | — | | |
+| P2 | **Le savoir d'Iconclass côté étiquettes** : descriptions textuelles des codes (iconclass/data, CC0), plongement du graphe Iconclass (RDF2Vec, Node2Vec), tête « par similarité » qui peut prédire des codes rares ou jamais vus | caypollard H1 : un graphe porte une information complémentaire à l'image (15-18 % de voisins communs, MAP 0,364 contre 0,343 sur Emblematica) ; mélange simple > modèle appris. Attention aux fuites : le graphe ne doit contenir aucune annotation d'image du test | `~/caypollard/docs/RESULTS.md` | | |
+| P3 | **Décodeur hiérarchique CAT** (Springstein et al., WACV 2024) | Prévu « plus tard » ; mAP par concept, non comparables à nos F1 | revue-sources/iconclass.md | | |
+| P4 | **Poses des figures** comme entrées : ViTPose entraîné sur Human-Art, SDPose (MIT, évalué sur HumanArt) | Brique `vitpose-humanart` déjà dans l'atelier caypollard (utilisée pour Xanto) ; Human-Art : ViTPose-B 0,555 → 0,759 avec boîtes vraies, mais **la détection des personnes** est le goulot (0,270 → 0,410) ; Human-Art couvre danse, théâtre, acrobatie, cinéma + 15 scénarios artistiques | `~/etude-02/notes/sota_2026-10.md`, xanto-parties | | |
+| P5 | **Traits plus fins par zone** : MATCHA, DIFT, Diffusion Hyperfeatures, SketchFusion (gravures au trait), DINOv3, C-RADIO 28×28 | T-Z montre que les zones aident (+0,011) ; « Telling Left from Right » : les traits confondent gauche et droite | sota_2026-10.md ; cadrage régions R2 | | |
+| P6 | **Régions appariées** (mission en cours) : R1 vérification de reprises, R3 vote Iconclass par zones ; ArtMiner, SegSwap, Shape-of-You, MARCO | Cadrage Codex p6 + littérature Grok p7 ; Marcel choisit R1 ou R3 | `~/Documents/reviews/porkyevitch-regions-*.md` | fait | fait |
+| P7 | **Graphe de scène** comme entrées : OvSGTR (Apache 2.0, photos), relations de DEArt 2025 (art, générées automatiquement), SemArt-HOI (14 187 peintures, non publié), CompoVista / VisTCP (peinture chinoise) ; graphes « danse / spectacle » à rechercher | Revue du 17/10 : pas de vérité terrain de relations sur l'art ; Qwen 7B sans entraînement décrit surtout la disposition ; ici le juge est Iconclass, pas les relations | `experiences/2026-10-17-graphe-de-scene/` | | |
+| P8 | **Adapter l'encodeur** (LoRA sur C-RADIO) | Écarté en phase 1 sauf si E3 montre une limite de l'encodeur ; à rediscuter après les verdicts | préinscription architecture | | |
+
+## Ordre recommandé par wA:p1 (à confirmer par Marcel)
+
+1. **P1, audit des métadonnées ICARUS** (sans images) : le plus gros levier probable, et il ne coûte presque rien.
+2. **P2** : peu coûteux (vecteurs déjà calculés, texte CC0), vise directement les codes rares, déjà un signal positif dans caypollard.
+3. **P4 et P5 en sondes** sur traits gelés : une seule passe d'extraction sur Kaggle, puis la même tête qu'en phase 1.
+4. **P6** selon le choix R1 / R3.
+5. **P7**, une fois P4 mesuré (le graphe de scène dépend de la détection des personnes, même goulot).
+6. **P3 et P8** après les verdicts, s'il reste une limite d'architecture ou d'encodeur.
+
+## Règles
+
+Celles de la phase 1 (PASSATION.md) : Kaggle au plus 2 GPU à la fois, créneau demandé à wA:p1 ; rien de lourd sur le Mac ;
+licence vérifiée avant tout usage de code, de poids ou de données ; RichArt (CC BY-NC) jamais dans git ; tests fermés.
