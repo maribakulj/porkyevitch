@@ -5,7 +5,7 @@
 # its pinned commit and checked by sha256.
 import glob, hashlib, json, os, subprocess, sys, time
 
-MODE = "smoke"
+MODE = "full"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
 SCRIPT_SHA256 = "b20b98f16613e3df7c81677b65780b500b8ac292f4b1ca8016c3d449c700c031"  # sha256 of e3_spatial.py as reviewed
