@@ -1,0 +1,9 @@
+[{"stream_name":"stdout","time":4.7047663,"data":"inputs /kaggle/input/datasets/mabaku/porky-e1-entree/e1_decision.py /kaggle/input/notebooks/mabaku/caypollard-encode-cradio/full /kaggle/input/notebooks/mabaku/porky-e0-run/full\n"}
+,{"stream_name":"stdout","time":392.004332036,"data":"CHAIN DONE full ok\n"}
+,{"stream_name":"stderr","time":394.210605799,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":394.210635354,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":394.50954311,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":394.509568377,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":395.341482356,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":396.384486551,"data":"[NbConvertApp] Writing 290843 bytes to __results__.html\n"}
+]
