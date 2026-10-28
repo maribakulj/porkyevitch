@@ -33,6 +33,7 @@ import json
 import os
 import re
 import resource
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -243,28 +244,92 @@ def score(P, t):
     return float(np.mean([hier_f1(g, drop86(p)) for g, p in zip(Yk, preds, strict=True)]))
 
 
-results = {}
+def nbytes(tensors):
+    return int(sum(t.numel() * t.element_size() for t in tensors))
+
+
+def sync():
+    if dev == "cuda":
+        torch.cuda.synchronize()
+
+
+def alloc():
+    sync()
+    return torch.cuda.memory_allocated() if dev == "cuda" else None
+
+
+disk_before = {str(q): shutil.disk_usage(q).free for q in (OUT, Path("/tmp"))}
+results, budgets = {}, {}
 for arm, make, tag in (("T-D", TD, "t_d"), ("T-Z", TZ, "t_z")):
     torch.manual_seed(0)
     torch.cuda.manual_seed_all(0)
+    if dev == "cuda":
+        torch.cuda.empty_cache()
+        torch.cuda.reset_peak_memory_stats()
+    arm_started = time.time()
     model = make().to(dev)
     opt = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=1e-3, weight_decay=1e-4)
     gen = torch.Generator().manual_seed(0)
+    # Budget (preregistration, E3 "Budget mesuré à l'essai à blanc"): measured on the first training batch of the arm, inside the normal
+    # loop (no extra forward, so no extra random draw: the training trajectory is the same with or without these measures).
+    # Units: bytes (CUDA allocator, torch.cuda.memory_allocated, at the instants named); peaks are not added to persistent sizes.
+    attn_out = []
+    hooks = []
+    if arm == "T-D":
+        hooks.append(model.dec.decoder.layers[0].multihead_attn.register_forward_hook(
+            lambda m, i, o: attn_out.append(nbytes([t for t in (o if isinstance(o, tuple) else (o,)) if torch.is_tensor(t)]))))
+    budget = {"weights_bytes": {"trainable": nbytes([q for q in model.parameters() if q.requires_grad]),
+                                "frozen": nbytes([q for q in model.parameters() if not q.requires_grad]),
+                                "buffers": nbytes(list(model.buffers()))},
+              "method": "first training batch of the arm, inside the loop: allocated before forward (A0), after forward (A1: "
+                        "activations and attention kept for backward), after backward (A2: + gradients, - freed activations), after "
+                        "the first AdamW step (A3: + optimiser states); peak = torch.cuda.max_memory_allocated over that batch after a "
+                        "reset; attention = bytes of the outputs of the decoder's multihead attention returned to the caller (forward "
+                        "hook; T-D only); its internal buffers kept for backward are inside A1 - A0 and are not separable from the other "
+                        "activations by this method"}
+    epoch_times = []
     best = None
     for epoch in range(EPOCHS):
         model.train()
         perm = tr_idx[torch.randperm(len(tr_idx), generator=gen).numpy()]
+        sync()
+        t_ep = time.time()
         for i in range(0, len(perm), 512):
             b = perm[i:i + 512]
-            loss = asym_loss(model(batch_grid(b).to(dev)), targets(b).to(dev))
+            first = epoch == 0 and i == 0
+            xb, yb = batch_grid(b).to(dev), targets(b).to(dev)
+            if first:
+                if dev == "cuda":
+                    torch.cuda.reset_peak_memory_stats()
+                a0 = alloc()
+            loss = asym_loss(model(xb), yb)
+            if first:
+                a1 = alloc()
             opt.zero_grad()
             loss.backward()
+            if first:
+                a2 = alloc()
+                grads = nbytes([q.grad for q in model.parameters() if q.grad is not None])
             opt.step()
+            if first:
+                a3 = alloc()
+                states = nbytes([v for st in opt.state.values() for v in st.values() if torch.is_tensor(v)])
+                budget["first_batch"] = {"batch": len(b), "A0_before_forward": a0, "A1_after_forward": a1, "A2_after_backward": a2,
+                                         "A3_after_step": a3, "activations_kept_A1_minus_A0": None if a0 is None else a1 - a0,
+                                         "gradients_bytes": grads, "adamw_states_bytes": states,
+                                         "attention_outputs_bytes": attn_out[0] if attn_out else None,
+                                         "peak_over_batch": torch.cuda.max_memory_allocated() if dev == "cuda" else None}
+                for h in hooks:
+                    h.remove()
+        sync()
+        epoch_times.append({"epoch": epoch, "seconds": time.time() - t_ep, "images": int(len(perm)),
+                            "images_per_second": len(perm) / max(time.time() - t_ep, 1e-9)})
         P = val_probs(model)
         scores = {t: score(P, t) for t in GRID}
         t = min(GRID, key=lambda t: (-scores[t], t))
         with open(OUT / f"journal_{tag}.jsonl", "a") as f:
-            f.write(json.dumps({"epoch": epoch, "val": scores[t], "threshold": t, "loss": float(loss)}) + "\n")
+            f.write(json.dumps({"epoch": epoch, "val": scores[t], "threshold": t, "loss": float(loss),
+                                "train_seconds": epoch_times[-1]["seconds"]}) + "\n")
         progress(f"{arm} epoch {epoch}: val {scores[t]:.4f} at {t}")
         if best is None or scores[t] > best["val"]:
             best = {"epoch": epoch, "threshold": t, "val": scores[t]}
@@ -276,13 +341,25 @@ for arm, make, tag in (("T-D", TD, "t_d"), ("T-Z", TZ, "t_z")):
             torch.save({"state": model.state_dict(), "vocab": vocab, "threshold": t, "epoch": epoch, "grid_config": GRID_CONFIG,
                         **extra}, tmp)
             os.replace(tmp, OUT / f"{tag}.pt")
+    sync()
+    budget.update({"epochs": epoch_times, "arm_wall_seconds": time.time() - arm_started,
+                   "vram_peak_allocated_arm_bytes": torch.cuda.max_memory_allocated() if dev == "cuda" else None,
+                   "vram_peak_reserved_arm_bytes": torch.cuda.max_memory_reserved() if dev == "cuda" else None,
+                   "ram_peak_process_so_far_gb": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e6,
+                   "checkpoint_bytes": (OUT / f"{tag}.pt").stat().st_size})
+    budgets[arm] = budget
     results[arm] = {**best, "horizon": 30, "sha256": sha(OUT / f"{tag}.pt"),
                     "trainable_parameters": int(sum(p.numel() for p in model.parameters() if p.requires_grad))}
     del model, opt
     torch.cuda.empty_cache()
 write_json({"technical_only": bool(SMOKE), "controls": controls, "val_images_measured": len(keep), "train_images": int(len(tr_idx)),
             **results, "grid": GRID, "note": "validation only; no test measure (amendment 4)"}, OUT / "e3.json")
-write_json({"ram_peak_gb": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e6,
-            "vram_peak_allocated_gb": torch.cuda.max_memory_allocated() / 1e9 if dev == "cuda" else None,
+write_json({"arms": budgets, "ram_peak_gb": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e6,
+            "ram_note": "ru_maxrss of the process (Linux: KiB), divided by 1e6: GB to 2.4 %",
+            "disk_free_before_gb": {k: v / 1e9 for k, v in disk_before.items()},
+            "disk_free_after_gb": {str(q): shutil.disk_usage(q).free / 1e9 for q in (OUT, Path("/tmp"))},
+            "outputs_bytes": int(sum(f.stat().st_size for f in OUT.rglob("*") if f.is_file())),
+            "resumption": "none inside a run: checkpoints are written atomically at each best epoch; a lost session is rerun from zero "
+                          "in a new output folder (the optimiser state is not saved, so a resumed run would not be the same run)",
             "wall_seconds": time.time() - started}, OUT / "budget.json")
 progress(f"done: {results}")

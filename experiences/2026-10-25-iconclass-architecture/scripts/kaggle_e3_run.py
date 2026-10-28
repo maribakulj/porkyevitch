@@ -8,7 +8,7 @@ import glob, hashlib, json, os, subprocess, sys, time
 MODE = "smoke"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
-SCRIPT_SHA256 = "db113ce902e6b7dcd4be9039a53205ce8f6ec850ce24115c5abc04b1f7e54975"  # sha256 of e3_spatial.py as reviewed
+SCRIPT_SHA256 = "1f2431378ecfbd3abc3c65e72af3fcac9bab6b61e45f8033a5fca469f2fd8844"  # sha256 of e3_spatial.py as reviewed
 ENCODER_SCRIPT = "c3f12bb71deda0b96bf3b8d015d9a79f4db666c234ad8edb0ff04633bd2bf1ca"
 TSTAR_SHA256 = "5a1b3041c0d9aab0e3403182b0881272a02f395542fe8414dc54b4fc7fa045ea"
 
