@@ -350,7 +350,7 @@ for arm, make, tag in (("T-D", TD, "t_d"), ("T-Z", TZ, "t_z")):
     budgets[arm] = budget
     results[arm] = {**best, "horizon": 30, "sha256": sha(OUT / f"{tag}.pt"),
                     "trainable_parameters": int(sum(p.numel() for p in model.parameters() if p.requires_grad))}
-    del model, opt
+    del loss, xb, yb, model, opt  # the last batch's graph would otherwise keep the arm's parameters alive into the next arm
     torch.cuda.empty_cache()
 write_json({"technical_only": bool(SMOKE), "controls": controls, "val_images_measured": len(keep), "train_images": int(len(tr_idx)),
             **results, "grid": GRID, "note": "validation only; no test measure (amendment 4)"}, OUT / "e3.json")
