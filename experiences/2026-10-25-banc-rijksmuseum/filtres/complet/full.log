@@ -1,0 +1,58 @@
+     17 s  preflight ok: 7647 eligible objects, 87004 reference vectors
+     24 s  reference dHash test-00000-of-00001: done
+     44 s  reference dHash train-00000-of-00011: done
+     75 s  reference dHash train-00001-of-00011: done
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+    102 s  reference dHash train-00002-of-00011: done
+    127 s  reference dHash train-00003-of-00011: done
+    153 s  reference dHash train-00004-of-00011: done
+    178 s  reference dHash train-00005-of-00011: done
+    203 s  reference dHash train-00006-of-00011: done
+    227 s  reference dHash train-00007-of-00011: done
+    250 s  reference dHash train-00008-of-00011: done
+    272 s  reference dHash train-00009-of-00011: done
+    291 s  reference dHash train-00010-of-00011: done
+    292 s  reference dHash: 87004 rows, 0 undecodable
+    498 s  images 200/7647
+    699 s  images 400/7647
+    901 s  images 600/7647
+   1104 s  images 800/7647
+   1307 s  images 1000/7647
+   1509 s  images 1200/7647
+   1712 s  images 1400/7647
+   1916 s  images 1600/7647
+   2123 s  images 1800/7647
+   2325 s  images 2000/7647
+   2530 s  images 2200/7647
+   2733 s  images 2400/7647
+   2937 s  images 2600/7647
+   3138 s  images 2800/7647
+   3348 s  images 3000/7647
+   3562 s  images 3200/7647
+   3772 s  images 3400/7647
+   3975 s  images 3600/7647
+   4176 s  images 3800/7647
+   4379 s  images 4000/7647
+   4598 s  images 4200/7647
+   4801 s  images 4400/7647
+   5005 s  images 4600/7647
+   5212 s  images 4800/7647
+   5428 s  images 5000/7647
+   5639 s  images 5200/7647
+   5849 s  images 5400/7647
+   6085 s  images 5600/7647
+   6300 s  images 5800/7647
+   6522 s  images 6000/7647
+   6744 s  images 6200/7647
+   6958 s  images 6400/7647
+   7194 s  images 6600/7647
+   7413 s  images 6800/7647
+   7649 s  images 7000/7647
+   7886 s  images 7200/7647
+   8122 s  images 7400/7647
+   8346 s  images 7600/7647
+   8399 s  images: 7644 kept, 3 excluded
+Loading weights:   0%|          | 0/343 [00:00<?, ?it/s]Loading weights:  73%|███████▎  | 249/343 [00:00<00:00, 2478.06it/s]Loading weights: 100%|██████████| 343/343 [00:00<00:00, 2475.35it/s]
+   8445 s  encoder control: {'rows': 64, 'min_cosine': 1.0, 'max_abs_diff': 0.0, 'passed': True}
+   8877 s  rijks vectors: 7644 rows
+   8911 s  done: {'eligible': 7647, 'images_kept': 7644, 'images_excluded': 3, 'reference_rows': 87004, 'reference_undecodable': 0, 'below_50_bits': 700, 'below_64_bits': 2581, 'cos_ge_095': 677, 'cos_ge_092': 2433, 'internal_pairs': 21259, 'dhash_histogram': [222, 128, 350, 1881, 3578, 1485, 0], 'cos_histogram': [0, 18, 1482, 3711, 1756, 677], 'smoke': 0}
