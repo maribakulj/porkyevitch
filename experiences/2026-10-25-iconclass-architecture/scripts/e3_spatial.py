@@ -6,8 +6,8 @@ Usage: e3_spatial.py OUT ENC TSTAR MLDEC
 ENC: the `full/` folder of kernel caypollard-encode-cradio version 3 (grid/<shard>.npy: float16 (n, 64, 1024), C-RADIO patch tokens
 only, 28 x 28 -> adaptive average 8 x 8; feats/ for the md5 of the split). TSTAR: the `full/` folder of E0 (t_long.pt: vocabulary).
 MLDEC: ml_decoder.py of Alibaba-MIIL/ML_Decoder at commit 8a9e984f671c9c30c98d2c45dfcaf4383381c254 (MIT licence, (c) Alibaba-MIIL;
-sha256 below), used unchanged; one compatibility shim: recent torch passes tgt_is_causal / memory_is_causal to decoder layers, which
-the 2022 layer does not accept; the shim drops these two keyword arguments only.
+sha256 below), used unchanged; one compatibility shim for recent torch: nn.TransformerDecoder passes tgt_is_causal / memory_is_causal
+to its layers (dropped, the 2022 layer does not accept them) and reads layers[0].self_attn (exposed as the layer's multihead_attn).
 ENV E3_SMOKE=N trains N epochs per arm on the first N x 2048 training rows and measures the first N x 100 validation images with a
 non-empty projected truth (dry run: technical only); E3_SMOKE=0 is the full run.
 
@@ -94,6 +94,9 @@ def _forward(self, tgt, memory, tgt_mask=None, memory_mask=None, tgt_key_padding
 
 
 mld.TransformerDecoderLayerOptimal.forward = _forward
+# torch >= 2.1: nn.TransformerDecoder reads layers[0].self_attn.batch_first before calling the layer; the 2022 layer names its
+# attention multihead_attn. Expose it under that name too (batch_first False, as the official (length, batch, dim) tensors).
+mld.TransformerDecoderLayerOptimal.self_attn = property(lambda self: self.multihead_attn)
 
 PART = re.compile(r"\d\d?[A-Z]{0,2}\d*(?:\([^)]*\)\d*)*")
 TOKEN = re.compile(r"\([^)]*\)|[A-Z]{1,2}|\d")
