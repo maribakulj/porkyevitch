@@ -4,11 +4,11 @@
 # which must be its version 3 (full run of encode_cradio.py c3f12bb7..., T0 control passed). Stops at the first failure, non-zero.
 import glob, hashlib, json, os, subprocess, sys, time
 
-MODE = "smoke"
+MODE = "full"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
 SCRIPT_SHA256 = "e0fb13ff2fa1b4747a4cc02d1a31589761e83f0266a7133c81f7bb5de2beaa25"  # sha256 of filtres_distances.py as reviewed
-ELIG_SHA256 = "eef74b15c84a0d3e28cf1fcee518102a49aee51d16c0f5aa329be44f7e20a5f0"  # sha256 of eligibles.jsonl (smoke: the dry-run list; full: the list of the complete collection)
+ELIG_SHA256 = "74ced8642ef32e29b0af9b78c2a90b223ad6be6ff2d9e7fe8698838e42c8ef51"  # sha256 of eligibles.jsonl (smoke: the dry-run list; full: the list of the complete collection)
 ENCODER_SCRIPT = "c3f12bb71deda0b96bf3b8d015d9a79f4db666c234ad8edb0ff04633bd2bf1ca"
 
 
