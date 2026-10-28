@@ -6,8 +6,8 @@ import glob, hashlib, json, os, subprocess, sys, time
 W = "/kaggle/working"
 SCRIPT_SHA256 = "0e13c7214a636a7c0b6d198c433884c14bbd01e6cb589d6a2174af123c11ec17"  # planche_images.py as reviewed
 PLANCHE = "planche.json"  # or planche_repli.json, set before the push
-PLANCHE_SHA256 = "TO_FILL"  # sha256 of that file, written by composantes_reserve.py
-FILTRES_SCRIPT = "TO_FILL"  # sha256 of filtres_distances.py of the full run
+PLANCHE_SHA256 = "d7292419c0edd92c5796d4fbea2c8985900f9129707d001f35b8b7c5cb16efcf"  # sha256 of that file, written by composantes_reserve.py
+FILTRES_SCRIPT = "e0fb13ff2fa1b4747a4cc02d1a31589761e83f0266a7133c81f7bb5de2beaa25"  # sha256 of filtres_distances.py of the full run
 
 
 def log(m):
