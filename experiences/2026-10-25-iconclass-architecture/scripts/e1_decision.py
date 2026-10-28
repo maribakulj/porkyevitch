@@ -19,7 +19,7 @@ threshold 0.60), checked against e0.json.
   notation (a top-level code has depth 1); slices 1-2, 3-4, 5 and more. Start: the three thresholds at T*'s threshold; coordinate
   search on the grid, slices in the order 1-2, 3-4, 5+, three passes; at each step the value that maximises the validation score;
   ties: the current value is kept, otherwise the smallest.
-- TK-niv: TK with its chosen a, then the T-niv search on s_c, same procedure. Its parameters are computed here; whether it counts in
+- TK-niv: TK with its chosen a, then the T-niv search on s_c, same procedure (start at T*'s threshold). Its parameters are computed here; whether it counts in
   the family follows the preregistered condition (TK and T-niv both retained), decided only when the verdicts are opened.
 Outputs: e1.json (chosen parameters, validation scores, the full TK grid, the T-niv search path, controls), run.json, budget.json.
 """
@@ -227,7 +227,7 @@ def niv_search(S, start):
 niv_th, niv_val, niv_path = niv_search(P, t_star)
 progress(f"T-niv: {niv_th} {niv_val:.4f}")
 S_tk = best_a * P + (1 - best_a) * V
-tkniv_th, tkniv_val, tkniv_path = niv_search(S_tk, best_t)
+tkniv_th, tkniv_val, tkniv_path = niv_search(S_tk, t_star)  # same procedure as T-niv: starts at T*'s threshold
 progress(f"TK-niv: alpha {best_a}, {tkniv_th} {tkniv_val:.4f}")
 
 out = {"technical_only": bool(SMOKE), "controls": controls, "val_images_measured": len(keep), "tstar": {"threshold": t_star, "val": tstar_val},

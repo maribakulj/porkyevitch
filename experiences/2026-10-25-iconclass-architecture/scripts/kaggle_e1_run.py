@@ -7,7 +7,7 @@ import glob, hashlib, json, os, subprocess, sys, time
 MODE = "smoke"
 assert MODE in ("smoke", "full"), MODE
 W = "/kaggle/working"
-SCRIPT_SHA256 = "TO_FILL_AFTER_REVIEW"  # sha256 of e1_decision.py as reviewed
+SCRIPT_SHA256 = "f33681ea1bbec2fe9a5eda3b9ae00b3720b136d276489ecbfbacdc58a654f227"  # sha256 of e1_decision.py as reviewed
 ENCODER_SCRIPT = "c3f12bb71deda0b96bf3b8d015d9a79f4db666c234ad8edb0ff04633bd2bf1ca"
 TSTAR_SHA256 = "5a1b3041c0d9aab0e3403182b0881272a02f395542fe8414dc54b4fc7fa045ea"
 
