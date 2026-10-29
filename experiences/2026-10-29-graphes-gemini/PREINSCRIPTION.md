@@ -55,6 +55,20 @@ La passe Gemini, le tirage et la règle de décision ci-dessous ne changent pas.
   premier.
 - Masques hors git (`~/porkyevitch-donnees/graphes-gemini/`) ; dans git : script relu, appariements, IoU, `run.json`.
 
+## Amendement 3 (29/10, demande de Marcel, avant tout regard sur les graphes) : bras Haiku, test de 20 images
+
+Un agent Claude Haiku (« annotateur », onglet herdr `wA:pE`) produit des graphes avec **la même consigne** (`consigne.md`) et le même
+schéma, à l'aveugle (images seules, copiées dans `~/porkyevitch-donnees/graphes-haiku/test20/images/`, jamais `verite.json`).
+Images : les 12 de la planche Gemini et 8 autres des 200 tirées par `default_rng(31)` (`selection.json`). Un graphe par image,
+`graphes/pNNN.json`, durée notée.
+
+Vérification par l'orchestrateur wA:p1, image par image, avant tout chiffre agrégé : objets présents ou absents, objets inventés,
+cadres faux, relations fausses. **Validation de Haiku** (règle de Marcel : « si les objets sont là, les relations aussi, on valide »)
+si : ≥ 19 graphes valides sur 20 ; en moyenne au plus 1 objet inventé et au plus 2 relations fausses par image ; les objets
+principaux (figures, animaux, objets saillants) présents sur au moins 18 images. Sur les 12 images communes, comparaison descriptive
+avec Gemini (objets en plus, en moins), sans verdict. Si validé, Haiku devient une source d'étiquettes candidate pour le passage à
+l'échelle, à côté de Gemini, avec son débit mesuré.
+
 ## Ce qu'on regarde, dans l'ordre
 
 1. **Planche avant tout chiffre** : 12 images tirées par `default_rng(30)` parmi les 200, avec cadres et relations dessinés.
