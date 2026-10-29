@@ -1,0 +1,9 @@
+{
+  "status": "Écrit pour relecture, aucune exécution",
+  "files": {
+    "PREINSCRIPTION.md": "971378e11c3d5535d8ae1591c51c3072f216d6263d1fccc91e6ef165416c18c5",
+    "ENTREES.json": "caa6723c335fac20093dae3f95b616352cb8f4a3b93c0ec77074b288977436ab",
+    "scripts/kaggle_diagnostic.py": "a8f119b9c0c3dd4921a6362a5c37300bed88187e29529c31639d301516d2e05e",
+    "scripts/diag_metrics.py": "d520e5bcc975e57c21d7bd788cd1c33c3716970a5dff9682ace099071f6df38a"
+  }
+}
