@@ -2,7 +2,8 @@
 
 Demande de Marcel (29/10) : produire des graphes de scène (objets, cadres, relations) avec un VLM plutôt qu'avec un modèle entraîné
 sur des photos, pour s'en servir ensuite comme données d'entraînement (distillation) et pour la recherche par objets et relations.
-Agent : Gemini, onglet herdr `wA:p8` (« gemini porkyevitch »). Orchestrateur : wA:p1. Relecture : Grok wA:p2 puis Codex wA:p4.
+Gemini est appelé en mode non interactif (`agy -p`, modèle gemini-3.8-flash-medium), une session neuve par image, par
+`scripts/graphes_agy.py` (amendement 2, 29/10, demande de Marcel : pas de mode sans confirmation dans l'onglet interactif `wA:p8`). Orchestrateur : wA:p1. Relecture : Grok wA:p2 puis Codex wA:p4.
 
 Ce pilote est **un essai de faisabilité et de qualité**, pas une mesure d'utilité pour Iconclass. Il répond à trois questions :
 Gemini produit-il des graphes lisibles et justes à l'œil sur nos images ? Combien de temps et de quota par image ? Le format tient-il
@@ -27,7 +28,11 @@ Gemini produit-il des graphes lisibles et justes à l'œil sur nos images ? Comb
   cadre `[x0, y0, x1, y1]` en millièmes de la largeur et de la hauteur, et des attributs visibles (posture, geste, vêtement) ; puis les
   relations `[sujet, prédicat, objet]` entre identifiants déclarés. Ne nommer ni personnage ni sujet iconographique (pas « la Vierge »,
   « saint Jérôme ») : seulement ce qui se voit (« woman », « old man », « lion »). Sortie : un JSON par image, `g000.json`…
-- Pas de commande système pour Gemini ; il lit les images et écrit les JSON dans le dossier de sortie, rien d'autre.
+- Pas de commande ni d'outil pour Gemini autre que la lecture de l'image jointe ; chaque appel tourne dans un dossier qui ne contient
+  qu'une copie de l'image (jamais `verite.json` ni `tirage.json`). Structure imposée par `graphe.schema.json` (`--json-schema`).
+- Réponse acceptée seulement si le statut est SUCCESS, le JSON se lit, et le journal d'agy (lecture seule) montre que l'image a été
+  ouverte (Gemini a déjà inventé des réponses sans ouvrir l'image, BBVLM 18/10) ; au plus 3 essais, sinon l'image compte comme échec
+  (au dénominateur). 3 appels en parallèle.
 - Modèle et réglage notés (nom exact du modèle affiché par l'agent) ; temps par image noté.
 
 ## Amendement 1 (29/10, demande de Marcel, avant tout envoi à Gemini) : passe SAM 3 après Gemini
