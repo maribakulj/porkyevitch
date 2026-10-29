@@ -26,6 +26,13 @@ Les annotateurs ne voient que les images de leur dossier ; jamais `verite.json`,
   d'exhaustivité (5-20 objets, 3-15 relations, contenu de chaque image d'une page, sculpture nommée comme telle) ; S2b = v2b + exemples.
   Motif : S1 a produit 4,6 objets et 1,6 relation par image contre 6,5 et 5,5 pour S0, en perdant des objets et actions visibles.
 
+- **Regard de réglage du 29/10 (10 premières images)** : S0 6,5 objets / 5,5 relations, S1 4,6 / 1,6, S2 5,1 / 2,3, S1b 12,3 /
+  9,2, S2b 10,3 / 8,7 par image (30 images). Au regard, S1b et S2b dominent nettement S0-S2 en objets justes ; S1b invente un peu plus
+  (« airship », « horn », bateaux) et multiplie les objets « text » ; S2b donne plus d'actions et nomme les sculptures comme telles,
+  mais sort du vocabulaire (« worn by », « on », « held by »). Les deux ratent encore les petites gravures d'une page (Nativité de p031).
+  Les briques suivantes sont donc construites sur **S2b** (et non S2) : **S3b** = S2b + passe de vérification et de normalisation
+  des prédicats au vocabulaire ; **S5b** = vote sur trois passes S2b indépendantes ; **S4b** = S2b + quarts agrandis.
+
 ## Procédure
 
 1. **Réglage** : S0, S1, S2 en parallèle sur les 30 images de réglage (un annotateur par système), puis S3, S4, S5. Mesure de wA:p1
