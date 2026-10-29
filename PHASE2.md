@@ -59,6 +59,10 @@ Particularités de départ, à préciser par Codex :
 Livrable d'abord : un document de recherche (2-3 méthodes neuves, chacune avec son idée, ce qui la distingue de l'existant, le
 plus petit essai qui la réfuterait, son coût), pas de code lancé.
 
+## Priorités de Marcel (29/10)
+
+**Iconclass et le graphe de scène.** La détection de copies et de reprises (mission régions R1, méthode P9-B) n'est pas une priorité : mise de côté. Les régions servent Iconclass (P9-A, contrôle CSRA) et le graphe de scène (pilote Gemini + SAM 3).
+
 ## Ordre recommandé par wA:p1 (à confirmer par Marcel)
 
 1. **P1, audit des métadonnées ICARUS** (sans images) : le plus gros levier probable, et il ne coûte presque rien.
