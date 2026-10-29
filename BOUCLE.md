@@ -22,6 +22,17 @@ Architecture visée (hypothèse de travail, révisable par la boucle) : un encod
 (image, objets). Apprises par **distillation** d'un VLM professeur (Gemini en `agy -p`, Opus) sur un grand corpus d'images ouvertes,
 plus les vérités existantes (ICAI, IconArt, ArtDL…). Le professeur ne voit jamais les codes de l'image quand il écrit le graphe.
 
+## Rôle de Codex maths (wA:p6), précisé par Marcel le 29/10
+
+Marcel a créé l'agent maths pour trouver des **algorithmes compétitifs qui ne passent pas par un VLM ni par un gros réseau**, ou qui
+n'utilisent l'IA que pour optimiser. SegSwap était cité non pour son mécanisme, mais comme exemple d'une méthode **conçue pour un
+problème précis** et qui y répond bien. Pistes de ce type à explorer en continu (chacune challengée par Grok p7, avec antériorité) :
+décision optimale pour la mesure (choisir l'ensemble de codes qui maximise l'H-F1 attendu à partir des probabilités, au lieu d'un
+seuil) ; décodage exact sous contraintes de l'arbre Iconclass ; cascades (filtre bon marché, calcul coûteux seulement si
+incertain) ; index et quantification pour la recherche à grande échelle ; appariement de graphes de scène par transport optimal ;
+compression et accélération des têtes (quantification, élagage, distillation) ; tout algorithme géométrique ou combinatoire qui
+remplace un appel de modèle.
+
 ## Jalons (dans l'ordre, chacun préinscrit et relu)
 
 1. **Phase 1 close** : prédictions des sept essais sur test ICAI + dev/test Rijksmuseum, verdicts, fiche HF mise à jour, fusion
