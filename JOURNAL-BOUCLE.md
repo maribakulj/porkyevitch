@@ -19,3 +19,5 @@
 - 29/10 : challenge Grok p7 des algos A1-A5 reçu ; pH prépare préinscription A1 et script A3 en attendant la contre-expertise Codex p4.
 - 30/10 : banc Haiku : contre-regard Grok p3 confirme S1b (2,37/image contre -0,50) ; S1b retenu comme système d'annotation.
 - 30/10 : A3 exactitude exécuté localement (58 s, après feu vert Grok p2 ; diagnostic CPU léger) : borne conforme (0 violation sur 15 753 paires x 4 couplages) ; top-10 identique sur 166/178 requêtes seulement → selon la règle, écart = erreur de code ; diagnostic demandé à wA:pH.
+- 30/10 : avis Grok p7 sur D2 : ne pas annoter 5 000 tout de suite ; petit élève d'abord sur les graphes Gemini existants, puis tranche S1b de quelques centaines stratifiée si signal. Contre-expertise Codex p4 à son retour.
+- 30/10 : A3 passage 2 (script 9deca3e8, feu vert Grok p2) : borne conforme, top-10 identique 178/178 ; A3 exact sur le pilote. Vitesse : après le jalon 4.
