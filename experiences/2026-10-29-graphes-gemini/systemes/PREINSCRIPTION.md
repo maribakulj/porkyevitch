@@ -22,6 +22,10 @@ Les annotateurs ne voient que les images de leur dossier ; jamais `verite.json`,
 - **S4** : S2 + quatre quarts agrandis de l'image fournis avec l'image entière.
 - **S5** : S2 exécuté trois fois ; on garde les objets (même nom, rectangles IoU ≥ 0,5) et relations présents au moins deux fois.
 
+- **S1b / S2b** (briques ajoutées le 29/10 après le premier regard sur S0/S1, réglage seulement) : consigne v2b = v2 + exigence
+  d'exhaustivité (5-20 objets, 3-15 relations, contenu de chaque image d'une page, sculpture nommée comme telle) ; S2b = v2b + exemples.
+  Motif : S1 a produit 4,6 objets et 1,6 relation par image contre 6,5 et 5,5 pour S0, en perdant des objets et actions visibles.
+
 ## Procédure
 
 1. **Réglage** : S0, S1, S2 en parallèle sur les 30 images de réglage (un annotateur par système), puis S3, S4, S5. Mesure de wA:p1
