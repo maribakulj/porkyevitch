@@ -28,6 +28,26 @@ Gemini produit-il des graphes lisibles et justes à l'œil sur nos images ? Comb
 - Pas de commande système pour Gemini ; il lit les images et écrit les JSON dans le dossier de sortie, rien d'autre.
 - Modèle et réglage notés (nom exact du modèle affiché par l'agent) ; temps par image noté.
 
+## Amendement 1 (29/10, demande de Marcel, avant tout envoi à Gemini) : passe SAM 3 après Gemini
+
+Gemini dit *quoi* et *à peu près où* ; SAM 3 place des rectangles précis à partir de ces noms et sert de contrôle indépendant.
+La passe Gemini, le tirage et la règle de décision ci-dessous ne changent pas.
+
+- **Outil** : SAM 3 (Meta), segmentation guidée par un texte, sur Kaggle T4, révision des poids épinglée. **Préalable** : licence
+  et accès aux poids vérifiés par Grok wA:p7. S'ils ne conviennent pas, repli décidé d'avance : SAM 2.1 guidé par le rectangle de
+  Gemini (masque et rectangle serré seulement, sans contrôle du nom), noté comme tel.
+- **Entrée** : pour chaque objet d'un graphe valide, l'image et le nom donné par Gemini (texte seul, jamais les codes).
+- **Appariement** : parmi les instances rendues par SAM 3 pour ce nom, celle dont le rectangle a le plus grand recouvrement (IoU)
+  avec le rectangle de Gemini. Objet **retrouvé** si cet IoU ≥ 0,3 ; sinon **non retrouvé** (ni instance, ou aucune assez proche).
+- **Mesures, descriptives** (elles ne décident pas du passage à l'échelle, SAM 3 pouvant lui-même rater sur des œuvres) :
+  part des objets retrouvés, par type de nom ; distribution de l'IoU entre rectangles de Gemini et de SAM 3 sur les objets retrouvés.
+- **Usage décidé d'avance** : si l'IoU médian des objets retrouvés est ≥ 0,7, les rectangles de Gemini sont gardés à l'échelle ;
+  sinon, à l'échelle, le rectangle de SAM 3 remplace celui de Gemini pour les objets retrouvés, et les autres gardent celui de Gemini
+  avec la marque « non retrouvé ».
+- **Planche** : les mêmes 12 images montrent les deux rectangles (Gemini et SAM 3) ; les objets non retrouvés sont regardés en
+  premier.
+- Masques hors git (`~/porkyevitch-donnees/graphes-gemini/`) ; dans git : script relu, appariements, IoU, `run.json`.
+
 ## Ce qu'on regarde, dans l'ordre
 
 1. **Planche avant tout chiffre** : 12 images tirées par `default_rng(30)` parmi les 200, avec cadres et relations dessinés.
