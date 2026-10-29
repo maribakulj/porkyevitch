@@ -1,0 +1,10 @@
+{
+  "encoder_root": "/kaggle/input/REPLACE-cradio-v3/full",
+  "baseline_pt": "/kaggle/input/REPLACE-e3-full/full/t_z.pt",
+  "e3_json": "/kaggle/input/REPLACE-e3-full/full/e3.json",
+  "e3_run_json": "/kaggle/input/REPLACE-e3-full/full/run.json",
+  "iconclass_root": "/kaggle/input/REPLACE-iconclass-737ce365",
+  "hf_cache": "/kaggle/input/REPLACE-minilm-cache/hub",
+  "image_cache": "/kaggle/input/REPLACE-initial-12-images",
+  "image_manifest_sha256": "REPLACE_reviewed_manifest_SHA256"
+}
