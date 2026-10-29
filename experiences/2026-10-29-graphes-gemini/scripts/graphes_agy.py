@@ -149,14 +149,19 @@ def one(image, root, consigne, schema_path, keys):
 
 
 def summary(root, images):
-    accepted, failed, seconds, calls = [], [], 0.0, 0
+    """Counts over every recorded attempt. A started attempt without a result line (interrupted run) consumed a call whose duration
+    and usage are unknown: it is counted in `unfinished`, and the recorded seconds are then marked incomplete (never read as zero)."""
+    accepted, failed, seconds, calls, unfinished = [], [], 0.0, 0, 0
     for im in images:
         log = root / "graphes" / im.stem / "attempts.jsonl"
         recs = [json.loads(line) for line in log.read_text().splitlines()] if log.exists() else []
-        calls += sum(1 for r in recs if r.get("phase") == "started")
+        started = {r["attempt"] for r in recs if r.get("phase") == "started"}
+        results = {r["attempt"] for r in recs if r.get("phase") == "result"}
+        calls += len(started)
+        unfinished += len(started - results)
         seconds += sum(r.get("seconds", 0) for r in recs if r.get("phase") == "result")
         (accepted if any(r.get("accepted") for r in recs if r.get("phase") == "result") else failed).append(im.stem)
-    return accepted, failed, seconds, calls
+    return accepted, failed, seconds, calls, unfinished
 
 
 root, consigne_path, schema_path = Path(sys.argv[1]).resolve(), Path(sys.argv[2]), Path(sys.argv[3]).resolve()
@@ -168,8 +173,9 @@ assert len(images) == 200, len(images)
 t0 = time.time()
 with ThreadPoolExecutor(jobs) as ex:
     list(ex.map(lambda im: one(im, root, consigne, schema_path, keys), images))
-accepted, failed, seconds, calls = summary(root, images)
+accepted, failed, seconds, calls, unfinished = summary(root, images)
 write_atomic(root / "graphes" / "run.json", json.dumps(dict(keys, script_sha256=sha(Path(__file__).read_bytes()), images=len(images),
-             accepted=len(accepted), failed=failed, calls=calls, call_seconds_all_attempts=round(seconds, 1),
+             accepted=len(accepted), failed=failed, calls=calls, calls_without_result=unfinished,
+             recorded_call_seconds=round(seconds, 1), cost_complete=unfinished == 0,
              wall_seconds_this_invocation=round(time.time() - t0, 1), jobs=jobs), indent=1))
-print(f"accepted {len(accepted)}/200, failed {len(failed)}, calls {calls}")
+print(f"accepted {len(accepted)}/200, failed {len(failed)}, calls {calls}, without result {unfinished}")
