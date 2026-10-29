@@ -15,6 +15,9 @@ import subprocess
 import sys
 import time
 
+KAGGLE_INPUT = Path("/kaggle/input")
+KAGGLE_WORKING = Path("/kaggle/working")
+
 
 def require(ok):
     if not ok:
@@ -31,8 +34,29 @@ def sha(path):
 
 def bound(path):
     p = Path(path).resolve(strict=True)
-    require(Path("/kaggle/input") in p.parents)
+    require(KAGGLE_INPUT in p.parents)
     return p
+
+
+def retract(out, prior_seal):
+    # A seal that existed before this attempt is never touched, whatever the refusal point.
+    # Only a manifest published by this attempt, in a folder that was not sealed, is revoked.
+    if prior_seal is None:
+        (out / "MANIFEST.json").unlink(missing_ok=True)
+
+
+def accept(out, mode, prior_seal):
+    if prior_seal is not None:
+        require(sha(out / "MANIFEST.json") == prior_seal)  # resume = verification only, no rewrite
+    final = json.loads((out / "MANIFEST.json").read_text())
+    expected_banks = {"icai_validation_smoke", "rijks_dev_smoke"} if mode == "smoke" else {"icai_test", "rijks_dev", "rijks_test"}
+    systems = {"T0", "T_star", "TK", "T-niv", "TK-niv", "T-H", "T-Z", "T-D"}
+    require(final["mode"] == mode and final["predictions_frozen"] == (mode == "freeze"))
+    require({(v["bank"], v["system"]) for v in final["files"].values()} ==
+            {(bank, system) for bank in expected_banks for system in systems})
+    require({p.name for p in out.iterdir()} == set(final["files"]) | {"MANIFEST.json"})
+    for filename, info in final["files"].items():
+        require(sha(out / filename) == info["sha256"])
 
 
 def main(args):
@@ -72,8 +96,12 @@ def main(args):
                 smoke["run_identity"]["versions"] == config["approved_versions"] and
                 smoke["run_identity"]["binding_sha256"] == config["binding_sha256"])
     out = Path(config["output"]).resolve()
-    require(Path("/kaggle/working") in out.parents)
-    require(shutil.disk_usage("/kaggle/working").free >= 6_000_000_000)
+    require(KAGGLE_WORKING in out.parents)
+    require(shutil.disk_usage(KAGGLE_WORKING).free >= 6_000_000_000)
+    # Ownership of the seal is fixed before launch: an existing seal belongs to an earlier run.
+    seal = out / "MANIFEST.json"
+    require(not seal.is_symlink())
+    prior_seal = sha(seal) if seal.exists() else None
     workspace = out / ".work"
     env = dict(os.environ, CUDA_VISIBLE_DEVICES="0", PYTHONHASHSEED="0", OMP_NUM_THREADS="4", MKL_NUM_THREADS="4",
                PHASE1_REVIEWED_MODE=args.mode, PHASE1_CODE_SHA256=config["code_manifest_sha256"],
@@ -119,18 +147,12 @@ def main(args):
             except subprocess.TimeoutExpired:
                 os.killpg(child.pid, signal.SIGKILL)
                 child.wait(timeout=10)
-    if failed or child.returncode != 0 or time.monotonic() - start > limit:
-        (out / "MANIFEST.json").unlink(missing_ok=True)  # never accept a failed pilot's seal
-        require(False)
-    final = json.loads((out / "MANIFEST.json").read_text())
-    expected_banks = {"icai_validation_smoke", "rijks_dev_smoke"} if args.mode == "smoke" else {"icai_test", "rijks_dev", "rijks_test"}
-    systems = {"T0", "T_star", "TK", "T-niv", "TK-niv", "T-H", "T-Z", "T-D"}
-    require(final["mode"] == args.mode and final["predictions_frozen"] == (args.mode == "freeze"))
-    require({(v["bank"], v["system"]) for v in final["files"].values()} ==
-            {(bank, system) for bank in expected_banks for system in systems})
-    require({p.name for p in out.iterdir()} == set(final["files"]) | {"MANIFEST.json"})
-    for filename, info in final["files"].items():
-        require(sha(out / filename) == info["sha256"])
+    try:
+        require(not failed and child.returncode == 0 and time.monotonic() - start <= limit)
+        accept(out, args.mode, prior_seal)
+    except Exception:
+        retract(out, prior_seal)  # never accept a failed pilot's seal, never erase an earlier one
+        raise
     print("PHASE1_TECHNICAL_SMOKE_COMPLETE" if args.mode == "smoke" else "PHASE1_PREDICTIONS_FROZEN_NO_MEASURES")
 
 
