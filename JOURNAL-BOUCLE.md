@@ -4,3 +4,7 @@
 - 29/10 it.1 : p6 → script de gel des prédictions phase 1 ; p3 → vérification E3 complet ; Gemini 107 acceptés / 214 réponses ; p4 audite le code P9-A ; p7 revue cap production.
 - 29/10 : Marcel précise le rôle de Codex maths (algorithmes compétitifs sans VLM) ; BOUCLE.md mis à jour ; tâche envoyée à p6 après le script phase 1.
 - 29/10 : E3 complet vérifié CONFORME par Grok p3.
+- 29/10 : rapport challenger cap production (Grok p7) reçu ; contre-expertise demandée à Codex p4 (p6 occupé).
+- 29/10 : cache 12 images P9-A feu vert Grok p2 ; audit p4 demandé. Haiku test20 relancé (liste d'images manquante dans ma consigne).
+- 29/10 : Haiku test20 validé (20/20 valides, 0,2 objet faux et 0,1 relation fausse par image, ≈ 6 s/image).
+- 29/10 : décision D1 (cap production, ordre des jalons) consignée.
