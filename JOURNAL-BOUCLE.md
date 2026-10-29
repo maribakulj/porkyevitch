@@ -8,3 +8,6 @@
 - 29/10 : cache 12 images P9-A feu vert Grok p2 ; audit p4 demandé. Haiku test20 relancé (liste d'images manquante dans ma consigne).
 - 29/10 : Haiku test20 validé (20/20 valides, 0,2 objet faux et 0,1 relation fausse par image, ≈ 6 s/image).
 - 29/10 : décision D1 (cap production, ordre des jalons) consignée.
+- 29/10 : Marcel demande d'améliorer Haiku (consigne, exemples, vocabulaire) → étape préinscrite après le schéma de relations de Grok p7 (référence Opus de 30 images, comparaison de consignes, deux passes, zooms, vote). Cache 12 images P9-A : feu vert p4.
+- 29/10 : gel phase 1 feu vert Grok p2, audit p4 demandé. Marcel : tester plusieurs systèmes Haiku jusqu'au meilleur avant l'échelle (+2 Haiku ensuite).
+- 29/10 : passe Gemini finie : 178/200 acceptés (89 %, entre 80 et 95 : pas d'échelle selon la règle). Contre-regard Grok p3 sur Haiku : 0 inventé, 1 mal nommé, 4 rectangles, 3 relations ; validation confirmée. Banc des systèmes Haiku préinscrit (amendement 4). Codex p4/p6 à court de crédits jusqu'à 1 h 37 ; Claude wA:pH remplace p6.
