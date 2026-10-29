@@ -41,6 +41,24 @@ Coûts : Codex wA:p6, `~/Documents/reviews/porkyevitch-phase2-couts-codex.md` (2
 | P7 | **Graphe de scène** comme entrées : OvSGTR (Apache 2.0, photos), relations de DEArt 2025 (art, générées automatiquement), SemArt-HOI (14 187 peintures, non publié), CompoVista / VisTCP (peinture chinoise) ; graphes « danse / spectacle » à rechercher | Revue du 17/10 : pas de vérité terrain de relations sur l'art ; Qwen 7B sans entraînement décrit surtout la disposition ; ici le juge est Iconclass, pas les relations | `experiences/2026-10-17-graphe-de-scene/` | | OvSGTR : pilote 1,5–6 h, complet 9–50 h T4 |
 | P8 | **Adapter l'encodeur** (LoRA sur C-RADIO) | Écarté en phase 1 sauf si E3 montre une limite de l'encodeur ; à rediscuter après les verdicts | préinscription architecture | | pilote 3–10 h T4 ; complet 12–140 h, pas avant un débit mesuré |
 
+## P9 : recherche de méthodes d'apprentissage propres à notre cas (demande de Marcel, 29/10)
+
+Les pistes P1-P8 appliquent surtout des outils existants. P9 est un travail de recherche : partir de ce que notre cas a de
+particulier et concevoir des méthodes d'apprentissage nouvelles, puis les construire et les tester sur des données réelles
+(train et validation ICAI, Emblematica, dev Rijksmuseum après son gel). Responsable : Codex wA:p6 (maths, calcul) avec Grok wA:p7
+(littérature, antériorité). Même discipline : problème formulé, hypothèse et règle de décision écrites avant le calcul.
+
+Particularités de départ, à préciser par Codex :
+- une seule étiquette par image (des codes) mais aucune zone : apprentissage à instances multiples sur les 64 zones ;
+- une hiérarchie profonde et une très longue traîne (7 907 codes, beaucoup rares) : partage entre codes voisins, prototypes ;
+- le changement de support (peinture, gravure, dessin, photo) : ce qui doit rester invariant et ce qui ne doit pas l'être ;
+- les copies, en miroir ou non, et les chaînes de reprises : des paires positives gratuites pour un apprentissage contrastif ;
+- les notices de musée (titres, descriptions, créateurs) comme supervision faible et bruitée ;
+- le texte des emblèmes et les descriptions des codes : apprentissage conjoint image-texte sur notre domaine.
+
+Livrable d'abord : un document de recherche (2-3 méthodes neuves, chacune avec son idée, ce qui la distingue de l'existant, le
+plus petit essai qui la réfuterait, son coût), pas de code lancé.
+
 ## Ordre recommandé par wA:p1 (à confirmer par Marcel)
 
 1. **P1, audit des métadonnées ICARUS** (sans images) : le plus gros levier probable, et il ne coûte presque rien.
