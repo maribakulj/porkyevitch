@@ -1,0 +1,12 @@
+{
+  "reference_json": "/kaggle/input/REPLACE-config/reference.json",
+  "t0_root": "/kaggle/input/REPLACE-caypollard-iconclass-t0",
+  "e0_root": "/kaggle/input/REPLACE-porky-e0-run/full",
+  "e1_root": "/kaggle/input/REPLACE-porky-e1-run/full",
+  "e2_root": "/kaggle/input/REPLACE-porky-e2-run/full",
+  "e3_root": "/kaggle/input/REPLACE-porky-e3-run/full",
+  "encoder_root": "/kaggle/input/REPLACE-caypollard-encode-cradio-v3/full",
+  "frozen_json": "/kaggle/input/REPLACE-rijks-gel/frozen.json",
+  "mldec_py": "/kaggle/input/REPLACE-pinned-mldec/ml_decoder.py",
+  "radio_hf_cache": "/kaggle/input/REPLACE-pinned-radio-cache/hub"
+}
