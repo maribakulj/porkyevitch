@@ -18,3 +18,4 @@
 - 29/10 : correctif descriptions P9-A : feu vert Grok p2 (93759a2, manifeste 8438cdae). File d'attente Codex p4 (retour 1 h 37) : contre-vérif B1 gel phase 1 (5b2750a) ; contre-vérif P9-A descriptions (93759a2) ; contre-expertise algos production.
 - 29/10 : challenge Grok p7 des algos A1-A5 reçu ; pH prépare préinscription A1 et script A3 en attendant la contre-expertise Codex p4.
 - 30/10 : banc Haiku : contre-regard Grok p3 confirme S1b (2,37/image contre -0,50) ; S1b retenu comme système d'annotation.
+- 30/10 : A3 exactitude exécuté localement (58 s, après feu vert Grok p2 ; diagnostic CPU léger) : borne conforme (0 violation sur 15 753 paires x 4 couplages) ; top-10 identique sur 166/178 requêtes seulement → selon la règle, écart = erreur de code ; diagnostic demandé à wA:pH.
