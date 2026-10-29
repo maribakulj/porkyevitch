@@ -152,12 +152,14 @@ def ranks(x):
     return r
 
 
-def filter_and_refine(lb_row, s_row, k):
+def filter_and_refine(lb_row, s_row, k, tol=TOL_BOUND):
     # Multi-step k-NN: refine candidates by increasing LB until the next LB exceeds the k-th best S.
+    # The bound is certified only up to tol (LB <= S + tol), so pruning needs LB > k-th S + tol: where the
+    # bound is tight, LB exceeds S by a few ulps and a strict test drops a candidate tied with the k-th S.
     order = sorted(range(len(lb_row)), key=lambda j: (lb_row[j], j))
     best, refined = [], 0
     for j in order:
-        if len(best) == k and lb_row[j] > best[-1][0]:
+        if len(best) == k and lb_row[j] > best[-1][0] + tol:
             break
         refined += 1
         best = sorted(best + [(s_row[j], j)])[:k]

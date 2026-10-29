@@ -98,6 +98,23 @@ class BoundTest(unittest.TestCase):
         top, _ = a3.filter_and_refine([0.0] * 13, s, 10)
         self.assertEqual(top, [12] + list(range(9)))
 
+    def test_tight_bound_one_ulp_above_kth_score_not_pruned(self):
+        # Case of the first run (12/178 queries): LB = S mathematically, LB − S = 2.2e-16 in floating point,
+        # and S equals the 10th best score. The candidate with the smaller index must stay in the top-10.
+        kth = 0.99999999999999978
+        s = [0.5] * 9 + [kth] * 3
+        lb = [0.5] * 9 + [kth + 2.220446049250313e-16, kth, kth]
+        top, _ = a3.filter_and_refine(lb, s, 10)
+        self.assertEqual(top, list(range(10)))
+
+    def test_filter_exact_when_bound_holds_only_within_tolerance(self):
+        rng = np.random.default_rng(4)
+        for _ in range(500):
+            s = np.round(rng.random(60), 2)  # many exact ties, as in the pilot
+            lb = np.minimum(s, s * rng.random(60) + (rng.random(60) < 0.5) * s) + rng.uniform(-1, 1, 60) * a3.TOL_BOUND
+            top, _ = a3.filter_and_refine(list(lb), list(s), 10)
+            self.assertEqual(top, [j for _, j in sorted((s[j], j) for j in range(60))[:10]])
+
     def test_output_refused_inside_forbidden_repositories(self):
         with self.assertRaisesRegex(RuntimeError, "output_in_forbidden_repository"):
             a3.main(type("A", (), {"out": str(Path.home() / "porkyevitch/x"), "pilot": "."}))

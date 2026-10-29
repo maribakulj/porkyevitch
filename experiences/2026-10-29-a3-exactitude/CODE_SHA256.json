@@ -1,7 +1,8 @@
 {
-  "status": "Écrit pour relecture, aucune exécution",
+  "status": "Passage 1 exécuté (166/178, erreur de code diagnostiquée) ; correctif de l'arrêt du filtrage, passage 2 non lancé",
   "files": {
-    "scripts/a3_exactitude.py": "f28b1b9cb20fcaea1c17841e69b3b2d26eb05b7b0f7f5f000fb51d60a12fa1ff",
-    "README.md": "a81b82cc3949aba4fa0f34665c14d9e95cca88398277abad6469f187ec60ab55"
+    "scripts/a3_exactitude.py": "9deca3e86a1aa389288144186b5079092be6c19e5229cbe1d843589ee76fd273",
+    "README.md": "2aafdd2d26e6c498ff94463d6d5b29f9c50d32df31f07c2c17e6ad66b116bbf4",
+    "DIAGNOSTIC-passage1-ecarts.json": "14d688185063ddf7dd2e9f446fc3306d10c191d35631c8f2625410dea172307a"
   }
 }
