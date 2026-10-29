@@ -6,6 +6,11 @@ avancer intelligemment, optimiser le temps ; **Kaggle et Colab utilisables libre
 challenger** qui vérifie chaque nouvelle piste par des revues et des propositions ; **Codex fait une contre-expertise de Grok avant
 de se lancer**. La mission 3D2D (wA:pC) est un autre chantier : ne pas la piloter, seulement lui répondre (créneaux, données gelées).
 
+## Priorité immédiate (Marcel, 29/10)
+
+**D'abord un article publiable, preuve de concept.** La licence n'est pas une porte pour l'instant (on note les licences, on ne
+s'arrête pas dessus). Les exigences de production restent le cap, mesurées dans l'article (débit, latence), sans en bloquer les essais.
+
 ## Cap : un « dots.mocr » de l'iconographie
 
 Ce qu'un VLM fait bien (lire une image d'œuvre, nommer et situer les objets et figures, dire leurs relations, donner les codes

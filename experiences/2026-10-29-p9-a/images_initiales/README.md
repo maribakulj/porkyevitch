@@ -1,0 +1,15 @@
+# P9-A — cache distant des douze images initiales
+
+Petit complément autonome, **écrit sans exécution**, à faire relire. Il ne modifie aucun des six fichiers Python ni le manifeste du lot `8974afe`, déjà relu. Le manifeste de ce complément lie leurs empreintes à celles de `p9a_common.py`, de l'inventaire train et de la préinscription approuvés.
+
+`p9a_image_cache.py` reconstitue le partage E3 sur les onze fragments train, puis V-réglage par le premier octet SHA256 de `p9-a/v1/validation/` + md5. Il choisit les douze premières lignes canoniques dont la vérité projetée sans 86 est non vide. Aucun vecteur x ni grille n'est décompressé ; les npz sont hachés, seul leur membre md5 est lu. Les étiquettes train servent uniquement à reproduire l'éligibilité préinscrite, jamais à produire un score.
+
+Il télécharge uniquement les **fragments train nécessaires**, à la révision Brillfull `8045366…`, sur Kaggle. Un parquet peut devoir être téléchargé en entier : taille distante vérifiée avant téléchargement, plafond 4 Go par fragment et espace libre suffisant ; lecture des seules colonnes image et des groupes contenant les lignes demandées, par lots de 32. Chaque image est extraite à son indice exact, conservée **sans transformation**, contrôlée par md5 contre les features et écrite en `<md5>.image`. Un échec diffère la préparation, sans remplacer une ligne. Le parquet et le cache HF appartiennent au répertoire `.scratch` de cette exécution, supprimé après extraction ; aucun `/tmp` durable.
+
+Entrée `sources_images.json` : un objet contenant seulement `encoder_root`, chemin monté du `full/` C-RADIO v3. Le fichier `PILOTE.example.json` doit être complété après relecture du complément. Point d'entrée futur : `kaggle_p9a_images_run.py --config /kaggle/input/<configuration réelle>/pilote_images.json`. Aucun lancement n'a eu lieu ici.
+
+Le pilote impose **CPU seul**, aucun GPU visible, délai externe d'une heure, versions et SHA explicites, sans installation de dépendances ni jeton HF. Le processus vérifie RAM, disque et temps entre étapes ; l'appel HF lui-même reste sous le watchdog externe. Aucun fichier test ICAI, Rijksmuseum, modèle ou score. Aucun identifiant ni vérité n'est imprimé ; seul un état technique constant est émis.
+
+Sortie : douze lignes dans `manifest.json` et les fichiers d'octets originaux ; deux lignes peuvent pointer vers les mêmes octets si la sélection canonique contient une copie exacte. Format compatible avec `initial_board()` du préparateur P9-A approuvé. Le manifeste ajoute la provenance des parquets, les SHA des images et les ressources consommées. Après rapatriement/montage par l'orchestrateur, renseigner `image_cache` et le SHA de ce `manifest.json` dans les liaisons existantes. Ce complément **ne lance ni préparation de prototypes, ni planche, ni blanc**.
+
+Vérifications de rédaction : AST/compilation en mémoire et cohérence des empreintes seulement ; aucun import ni appel des scripts. La préparation P9-A garde son enveloppe CPU globale : ajouter le temps de ce cache au temps des autres préparations, et arrêter/amender si la somme dépasse 1 h CPU distante.
