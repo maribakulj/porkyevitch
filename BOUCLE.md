@@ -47,6 +47,10 @@ remplace un appel de modèle.
    l'encodeur, ICARUS.
 4. **Données de distillation à l'échelle** : graphes Gemini sur 5 000 puis davantage d'images ouvertes (licences vérifiées).
 5. **Élève multi-tâche** : objets + relations + Iconclass sur encodeur partagé ; mesure contre le professeur et contre les vérités.
+   Trois régimes comparés (demande de Marcel, 29/10), encodeur figé d'abord : **séparé**, **séparé puis assemblé** (Iconclass profite
+   des objets/relations), **entraînement commun** (pertes masquées selon les étiquettes disponibles) ; adaptation de l'encodeur
+   seulement pour le meilleur régime. Coût estimé : 10-20 h T4 en plus. Goulot : le débit des étiquettes Gemini (≈ 40 h pour
+   5 000 images au rythme du pilote) : étudier parallélisme, mode par lots, modèle plus rapide, Opus en complément.
 6. **Production** : export (ONNX/TensorRT si utile), traitement par lots, débit mesuré, paquet lermolieff, documentation.
 
 ## Protocole de décision
