@@ -3,7 +3,7 @@
 import glob, hashlib, os, subprocess, sys, time
 
 W = "/kaggle/working"
-SCRIPT_SHA256 = "e39dd217fa89f15721755224920e9bbcce090c247a48ead1d5b548c97a90ed9f"  # tirage_pilote.py as reviewed
+SCRIPT_SHA256 = "42e6efc46daabdc22acbc919d624ef802e390815cc721abab73ea0dba1c540b5"  # tirage_pilote.py as reviewed
 
 
 def log(m):

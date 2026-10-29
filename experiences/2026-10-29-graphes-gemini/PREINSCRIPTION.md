@@ -12,7 +12,9 @@ Gemini produit-il des graphes lisibles et justes à l'œil sur nos images ? Comb
 
 - **Apprentissage ICAI seulement** : `davanstrien/iconclass-vlm-brillfull` révision 8045366, fragments `train-*`, hors validation
   (groupes md5 de la série architecture : `default_rng(0).random(len(groups)) < 0.05` sur les md5 triés, comme `e0_reference.py`).
-  Ni validation, ni test ICAI, ni Emblematica, ni banc Rijksmuseum.
+  Ni validation, ni test ICAI, ni Emblematica, ni banc Rijksmuseum. Les groupes dont le md5 est aussi une image du test (copies
+  exactes, 3 connues) sont retirés **après** le tirage de la validation, qui reste celui de la série (correction B1 de Codex wA:p4,
+  29/10, avant tout tirage) ; seul le champ md5 du fragment test est lu.
 - **200 images**, tirées par `default_rng(29)` parmi les groupes md5 d'apprentissage (une image par groupe). Le tirage, ses md5 et
   ses identifiants sont écrits avant tout envoi à Gemini.
 - Images copiées sur le Mac (≈ 50 Mo, `df` avant) dans `~/porkyevitch-donnees/graphes-gemini/pilote/images/`, renommées `p000.jpg`
