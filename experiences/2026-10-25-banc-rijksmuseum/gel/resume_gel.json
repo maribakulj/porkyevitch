@@ -1,0 +1,91 @@
+{
+ "date_utc": "2026-10-29T19:52:40Z",
+ "feasibility": {
+  "test_images": 1201,
+  "test_components": 908,
+  "dev_images": 301,
+  "dev_components": 239,
+  "removed_components": 84,
+  "removed_objects": 5912,
+  "thresholds": {
+   "dhash_lt": 50,
+   "cos_ge": 0.95
+  }
+ },
+ "audit": {
+  "first_sheet": {
+   "counts": {
+    "painting/cos": {
+     "copie": 1,
+     "incertain": 0,
+     "non-copie": 9
+    },
+    "painting/dhash": {
+     "copie": 0,
+     "incertain": 0,
+     "non-copie": 10
+    },
+    "print/cos": {
+     "copie": 0,
+     "incertain": 0,
+     "non-copie": 10
+    },
+    "print/dhash": {
+     "copie": 0,
+     "incertain": 0,
+     "non-copie": 10
+    },
+    "drawing/dhash": {
+     "copie": 0,
+     "incertain": 0,
+     "non-copie": 10
+    },
+    "drawing/cos": {
+     "copie": 0,
+     "incertain": 1,
+     "non-copie": 9
+    }
+   },
+   "triggered_by": []
+  }
+ },
+ "by_support": {
+  "test": {
+   "painting": 402,
+   "print": 462,
+   "drawing": 337
+  },
+  "dev": {
+   "painting": 109,
+   "print": 97,
+   "drawing": 95
+  }
+ },
+ "inputs_sha256": {
+  "notices": "a3154743f3c02e31d5a868e8382cf166620b99518fdf68610275d3a6a52a8b93",
+  "groupes": "b7ba6419aa89c89c29d789c93cc04484ea55053eb5c0d19a0c717ed27cd3dae9",
+  "planche.json": "d7292419c0edd92c5796d4fbea2c8985900f9129707d001f35b8b7c5cb16efcf",
+  "audit.json": "56ebd4b845065a79655c103d265bdcdcd89f07fcb7327b35fac23797eabfd2c3",
+  "images.jsonl": "e945156036077d8de8f40f10750df0c48c3b6f367e92e9d1c4b48195581bc057",
+  "voisins.jsonl": "6ff785c3fa4bfa1ae69e8650c9fe891a34b6e6eedb41225ef0f1a3b29e19ffdf",
+  "internes.jsonl": "8296a6507c52757cd428c876cfa42c178f41aea6ed61400edbca08a7c0d83dd1",
+  "run.json": "8118444baa7acfb9808072f51a3d93bc29f81740e44076d00f75f40de50a7bd2",
+  "rijks.json": "67558020f90c190c46652007bce28945a9aeca137119df0543e1b8bad4c8f7f7"
+ },
+ "scripts_sha256": {
+  "collecte_notices.py": "ede3bb97591a81940a200b604e04dfada5e2dac68947fa809868d42f066971e2",
+  "liste_eligibles.py": "d31992f0ada5e29a3ec97649ffc46103da22ad900bac614367dfae775d78b238",
+  "filtres_distances.py": "e0fb13ff2fa1b4747a4cc02d1a31589761e83f0266a7133c81f7bb5de2beaa25",
+  "composantes_reserve.py": "8d8bbf7b3c04a63afc9a5eb89bab59752f812cc91c7687cee106366dadec3473",
+  "planche_images.py": "0e13c7214a636a7c0b6d198c433884c14bbd01e6cb589d6a2174af123c11ec17",
+  "tirage_gel.py": "3339e99cfdf11102b3d66563a856992d0424fb6d7df5e51ce7346775350483c5"
+ },
+ "reference": {
+  "dataset": "davanstrien/iconclass-vlm-brillfull@8045366ff092a06e8e1c4e47f1eb43cb2a54d732",
+  "rows": 87004,
+  "encoder_output": "kernel mabaku/caypollard-encode-cradio v3 (encode_cradio.py c3f12bb7…)"
+ },
+ "rights": "metadata CC0 (record subject_of); reproductions PDM (digital object or visual item) under the Rijksmuseum information and data policy, §1.1 and §3.7",
+ "frozen_sha256": "2424b778d0a3e7c36e0aeea7ce5db60fcc52bc1eaa6c52a057fd957b142de0ca",
+ "note": "résumé sans les listes test et dev (tests fermés) ; frozen.json complet hors git dans ~/porkyevitch-donnees/rijks-gel"
+}
