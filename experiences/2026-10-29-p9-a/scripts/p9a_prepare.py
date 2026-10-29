@@ -40,9 +40,12 @@ MINILM_FILES = {
 }
 
 
-def descriptions(root):
+def descriptions(root, vocab):
+    # Rule fixed before use: a key with two different official descriptions is dropped and logged
+    # when it is outside V (texts only ever look up V and its ancestors, which are in V); a conflict
+    # on a key of V stops the preparation. Identical duplicates are kept once.
     root = input_path(root)
-    result, provenance = {}, []
+    result, provenance, seen = {}, [], {}
     for relative, expected in ENGLISH_BLOBS.items():
         p = input_path(root / relative)
         require(p.is_relative_to(root), "description symlink escape")
@@ -50,14 +53,19 @@ def descriptions(root):
         gitsha = hashlib.sha1(b"blob " + str(len(content)).encode() + b"\0" + content).hexdigest()
         require(gitsha == expected, f"pinned Iconclass blob mismatch: {relative}")
         provenance.append({"path": relative, "git_blob": gitsha, "sha256": sha(p)})
-        for line in content.decode("utf-8-sig").splitlines():
+        for number, line in enumerate(content.decode("utf-8-sig").splitlines(), 1):
             if not line:
                 continue
             code, sep, description = line.partition("|")
             require(sep == "|" and bool(code) and bool(description), "invalid official description line")
-            require(code not in result or result[code] == description, f"conflicting exact description: {code}")
-            result[code] = description
-    return result, provenance
+            seen.setdefault(code, []).append({"path": relative, "line": number,
+                                              "description_sha256": hashlib.sha256(description.encode()).hexdigest()})
+            result.setdefault(code, set()).add(description)
+    conflicts = sorted(code for code, texts in result.items() if len(texts) > 1)
+    for code in conflicts:
+        require(code not in vocab, f"conflicting exact description in vocabulary: {code}")
+    dropped = [{"code": code, "occurrences": seen[code]} for code in conflicts]
+    return {code: texts.pop() for code, texts in result.items() if len(texts) == 1}, provenance, dropped
 
 
 def texts_for_vocab(data, dictionary):
@@ -193,7 +201,7 @@ def prepare(args):
     baseline_checkpoint(binding, data)  # vocabulary equality before any text preparation
     manifest = data.manifest()
     write_json(out / "donnees.json", manifest)
-    dictionary, dictionary_sources = descriptions(binding["iconclass_root"])
+    dictionary, dictionary_sources, dictionary_conflicts = descriptions(binding["iconclass_root"], set(data.vocab))
     records = texts_for_vocab(data, dictionary)
     e, d, model_sources = prototypes(data, records, binding["hf_cache"], budget, args.device)
     np.savez(out / "prototypes.npz", e=e, d=d)
@@ -208,7 +216,8 @@ def prepare(args):
               "donnees_sha256": sha(out / "donnees.json"), "prototypes_sha256": sha(out / "prototypes.npz"),
               "texts_sha256": sha(out / "textes.json"), "initial_board_manifest_sha256": board_sha,
               "text_model": [TEXT_MODEL, TEXT_REV], "iconclass_revision": ICON_REV,
-              "dictionary_sources": dictionary_sources, "model_sources": model_sources,
+              "dictionary_sources": dictionary_sources, "dictionary_conflicts_dropped_outside_vocab": dictionary_conflicts,
+              "model_sources": model_sources,
               "coverage": {"exact": sum(r["exact"] for r in records),
                            "fallback": sum(r["fallback"] for r in records),
                            "truncated": sum(r["truncated"] for r in records)},
