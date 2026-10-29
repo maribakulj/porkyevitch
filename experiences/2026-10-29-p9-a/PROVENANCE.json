@@ -1,0 +1,76 @@
+{
+  "date_utc": "2026-10-29T20:35:56.878131+00:00",
+  "status": "Préinscription documentaire seulement ; aucun préparateur, script, blanc ou calcul expérimental lancé",
+  "decisions_source": "Messages explicites wA:p1 relayant Marcel du 29/10/2026 ; ces messages priment sur les anciens cadrages",
+  "decisions": {
+    "priority": "Iconclass et graphe de scène",
+    "aside": [
+      "R1",
+      "P9-B"
+    ],
+    "R3": "absorbé dans P9-A, aucun bras séparé",
+    "primary": "H-F1",
+    "rare_secondary": "macro-F1 exact par code, n_brut apprentissage 5–20, gain strictement positif avec perte H-F1 au plus 0,005, sans sélection sur ce juge"
+  },
+  "preregistration": {
+    "path": "/Users/marcel/porkyevitch-maths/experiences/2026-10-29-p9-a/PREINSCRIPTION.md",
+    "sha256": "25f1040f5b657d7b94896cba41852f59c2f6e3042a555f798c126ca8698d3585"
+  },
+  "documentary_sources": [
+    {
+      "path": "/Users/marcel/porkyevitch/PHASE2.md",
+      "sha256": "7c6d39921c8d8bee3f2a1ed01a2f5eda0cb15acdd027738f901d6ecb4e204003"
+    },
+    {
+      "path": "/Users/marcel/porkyevitch-maths/docs/phase2-recherche.md",
+      "sha256": "7fce9c38a08f23363773fe464a9886b2aafa869f425d113e7cd74e8c12a240eb"
+    },
+    {
+      "path": "/Users/marcel/Documents/reviews/porkyevitch-phase2-recherche-anteriorites-grok.md",
+      "sha256": "92c5127d7286b0ccd5eed998c8cd94f5d6ea41c893c7357154d4a7c81e8654f6"
+    },
+    {
+      "path": "/Users/marcel/porkyevitch/experiences/2026-10-25-iconclass-architecture/PREINSCRIPTION.md",
+      "sha256": "5115c3a5654f303723161c1eed0bd0dc3dac98c54ba8a5f21df384a6337186cb"
+    },
+    {
+      "path": "/Users/marcel/porkyevitch/experiences/2026-10-25-iconclass-architecture/scripts/e3_spatial.py",
+      "sha256": "b20b98f16613e3df7c81677b65780b500b8ac292f4b1ca8016c3d449c700c031"
+    },
+    {
+      "path": "/Users/marcel/porkyevitch/experiences/2026-10-25-iconclass-architecture/essais/e3-complet/full/e3.json",
+      "sha256": "c954947c098621f053966e3023264fb6b716c169e5b5b653db68556976bb7f3a"
+    },
+    {
+      "path": "/Users/marcel/porkyevitch/experiences/2026-10-25-iconclass-architecture/essais/e3-complet/full/run.json",
+      "sha256": "8ad8479a9a24831ac78fb1ca0ba2bb32b4c989c82cba8f0e82cc4c1adb6046ec"
+    },
+    {
+      "path": "/Users/marcel/porkyevitch/experiences/2026-10-25-iconclass-architecture/essais/e3-complet/full/budget.json",
+      "sha256": "ff255e8ca890594e7aa44874209b891bb9c2b5b316f66734f03aee49e003ada3"
+    }
+  ],
+  "frozen_public_metadata": {
+    "iconclass_data_revision": "737ce365e3e6ab5302bafc22428ee37e57becee1",
+    "iconclass_license": "CC0-1.0",
+    "text_encoder": "sentence-transformers/all-MiniLM-L6-v2",
+    "text_encoder_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "text_encoder_license_declared": "apache-2.0",
+    "note": "Seules les petites métadonnées et documents ont été lus ; aucun poids ni corpus téléchargé"
+  },
+  "reference_expected": {
+    "name": "T-Z",
+    "epoch": 29,
+    "threshold": 0.65,
+    "validation_hf1": 0.5890847528448202,
+    "weights_sha256": "06e3de0fa7c2871f6ff132791aa7594ce22614a13dc5609cebf2c2a33019bcd6",
+    "weights_not_loaded_for_this_document": true
+  },
+  "runtime_manifests": "À produire par les scripts relus avant les essais : pas encore générés, aucun tenseur revalidé ici",
+  "arithmetical_shapes": {
+    "fields_trainable": 1201252,
+    "csra_trainable": 1200227,
+    "B64_field_matrix_fp32_bytes": 129548288,
+    "validation_probabilities_fp32_bytes": 134893420
+  }
+}
