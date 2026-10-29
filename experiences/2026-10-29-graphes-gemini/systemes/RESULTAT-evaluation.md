@@ -58,3 +58,12 @@ S3b 30/30, 0,17 et 0,07, 30/30.
   (fuite, pendaison, main divine) ; ils sont bons sur les portraits, les objets portés et les scènes simples.
 - La variance d'une passe à l'autre est forte (réglage : 6,6 à 13,8 objets par image selon la passe S2b).
 - Un seul regard pour ce tableau ; le contre-regard dira si les comptes tiennent.
+
+## Contre-regard de Grok wA:p3 et verdict
+
+Grok wA:p3 (`~/Documents/reviews/porkyevitch-haiku-eval-contre-regard-grok.md`), sans avoir lu ce tableau : S1b A 98, I 1, R 10,
+M 5, score 71 (2,37 par image), sujet 30/30, valide 30/30 ; S3b A 26, I 6, R 6, M 17, score −15 (−0,50 par image), sujet 29/30
+(S3b décrit une autre page sur p052). Grok compte plus d'actions justes que wA:p1 (98 contre 47), mais les deux regards donnent
+le même ordre et la même validation.
+
+**Verdict préinscrit : S1b est le système retenu** (score moyen le plus haut aux deux regards, dans la bande de validation).

@@ -11,3 +11,10 @@
 - 29/10 : Marcel demande d'améliorer Haiku (consigne, exemples, vocabulaire) → étape préinscrite après le schéma de relations de Grok p7 (référence Opus de 30 images, comparaison de consignes, deux passes, zooms, vote). Cache 12 images P9-A : feu vert p4.
 - 29/10 : gel phase 1 feu vert Grok p2, audit p4 demandé. Marcel : tester plusieurs systèmes Haiku jusqu'au meilleur avant l'échelle (+2 Haiku ensuite).
 - 29/10 : passe Gemini finie : 178/200 acceptés (89 %, entre 80 et 95 : pas d'échelle selon la règle). Contre-regard Grok p3 sur Haiku : 0 inventé, 1 mal nommé, 4 rectangles, 3 relations ; validation confirmée. Banc des systèmes Haiku préinscrit (amendement 4). Codex p4/p6 à court de crédits jusqu'à 1 h 37 ; Claude wA:pH remplace p6.
+- 29/10 : préparation P9-A refusée par le pilote (image CPU = torch 2.11.0+cpu, versions auditées = +cu128) ; relancée sur machine T4 (préparation en CPU, versions conformes), aucun calcul fait au 1er essai.
+- 29/10 : rapport algos production (wA:pH, 5 algos) → challenge Grok p7.
+- 29/10 : préparation P9-A arrêtée par le garde-fou (descriptions Iconclass en conflit, 83(SHAKESPEARE…)) ; correctif demandé à wA:pH.
+- 29/10 : correctif B1 du gel phase 1 : feu vert Grok p2 (5b2750a) ; contre-vérification Codex p4 à envoyer après 1 h 37 (retour de crédits).
+- 29/10 : correctif descriptions P9-A : feu vert Grok p2 (93759a2, manifeste 8438cdae). File d'attente Codex p4 (retour 1 h 37) : contre-vérif B1 gel phase 1 (5b2750a) ; contre-vérif P9-A descriptions (93759a2) ; contre-expertise algos production.
+- 29/10 : challenge Grok p7 des algos A1-A5 reçu ; pH prépare préinscription A1 et script A3 en attendant la contre-expertise Codex p4.
+- 30/10 : banc Haiku : contre-regard Grok p3 confirme S1b (2,37/image contre -0,50) ; S1b retenu comme système d'annotation.
