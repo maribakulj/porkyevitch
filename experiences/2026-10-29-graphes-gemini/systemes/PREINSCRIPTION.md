@@ -33,6 +33,12 @@ Les annotateurs ne voient que les images de leur dossier ; jamais `verite.json`,
   Les briques suivantes sont donc construites sur **S2b** (et non S2) : **S3b** = S2b + passe de vérification et de normalisation
   des prédicats au vocabulaire ; **S5b** = vote sur trois passes S2b indépendantes ; **S4b** = S2b + quarts agrandis.
 
+- **Fin du réglage (29/10, avant toute image d'évaluation)** : vote S5b/S5c écarté (4,8-6,5 objets et 1,1-1,9 relations par image :
+  les trois passes S2b divergent trop, 6,6 à 13,8 objets en moyenne selon la passe). Vocabulaire et actions sur 30 images : S0 26
+  prédicats hors vocabulaire, 0,5 action/contact par image ; S1b 0 hors vocabulaire, 4,1 actions ; S2b 51 hors vocabulaire, 1,1 ;
+  S3b 0, 3,0 (S3b retrouve la Nativité de p031 mais garde « airship »). **Retenus pour l'évaluation : S1b et S3b**, sans modification.
+  S4b (quarts) non testé, reporté.
+
 ## Procédure
 
 1. **Réglage** : S0, S1, S2 en parallèle sur les 30 images de réglage (un annotateur par système), puis S3, S4, S5. Mesure de wA:p1
