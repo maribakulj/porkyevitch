@@ -25,8 +25,8 @@ plus les vérités existantes (ICAI, IconArt, ArtDL…). Le professeur ne voit j
 ## Rôle de Codex maths (wA:p6), précisé par Marcel le 29/10
 
 Marcel a créé l'agent maths pour trouver des **algorithmes compétitifs qui ne passent pas par un VLM ni par un gros réseau**, ou qui
-n'utilisent l'IA que pour optimiser. SegSwap était cité non pour son mécanisme, mais comme exemple d'une méthode **conçue pour un
-problème précis** et qui y répond bien. Pistes de ce type à explorer en continu (chacune challengée par Grok p7, avec antériorité) :
+n'utilisent l'IA que pour optimiser. SegSwap était cité non pour son mécanisme, mais parce qu'il **répond efficacement à un besoin grâce à un
+algorithme mathématique nouveau** (mot de Marcel). Le but est donc d'inventer de tels algorithmes, pas seulement d'en appliquer. Pistes de ce type à explorer en continu (chacune challengée par Grok p7, avec antériorité) :
 décision optimale pour la mesure (choisir l'ensemble de codes qui maximise l'H-F1 attendu à partir des probabilités, au lieu d'un
 seuil) ; décodage exact sous contraintes de l'arbre Iconclass ; cascades (filtre bon marché, calcul coûteux seulement si
 incertain) ; index et quantification pour la recherche à grande échelle ; appariement de graphes de scène par transport optimal ;
