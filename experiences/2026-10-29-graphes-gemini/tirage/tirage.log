@@ -1,0 +1,2 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+done 200 images; planche ['p017.jpg', 'p019.jpg', 'p038.jpg', 'p044.jpg', 'p047.jpg', 'p077.jpg', 'p082.jpg', 'p116.jpg', 'p124.jpg', 'p144.jpg', 'p154.jpg', 'p173.jpg']

@@ -1,0 +1,1227 @@
+{
+ "dataset": [
+  "davanstrien/iconclass-vlm-brillfull",
+  "8045366ff092a06e8e1c4e47f1eb43cb2a54d732"
+ ],
+ "train_rows": 86216,
+ "train_groups": 81881,
+ "validation_groups": 4264,
+ "test_copy_groups_excluded": 3,
+ "disjoint_from_validation_and_test": true,
+ "picks": [
+  {
+   "file": "p000.jpg",
+   "md5": "c207ad2cce2a4829f6a128b9d95f747b",
+   "shard": "train-00008-of-00011",
+   "row": 3496
+  },
+  {
+   "file": "p001.jpg",
+   "md5": "344c1fea63028dda98003a88be4396b6",
+   "shard": "train-00000-of-00011",
+   "row": 6186
+  },
+  {
+   "file": "p002.jpg",
+   "md5": "0c8bb830fdec4c6c5a4a378117496219",
+   "shard": "train-00006-of-00011",
+   "row": 1728
+  },
+  {
+   "file": "p003.jpg",
+   "md5": "9cfdc1ee05c0475310ba92fea1713dfe",
+   "shard": "train-00009-of-00011",
+   "row": 1372
+  },
+  {
+   "file": "p004.jpg",
+   "md5": "f6caa6627365806740f36e55c4012b42",
+   "shard": "train-00001-of-00011",
+   "row": 1012
+  },
+  {
+   "file": "p005.jpg",
+   "md5": "9c33b54a2c298297f372e861d5bf79e9",
+   "shard": "train-00002-of-00011",
+   "row": 3563
+  },
+  {
+   "file": "p006.jpg",
+   "md5": "e7a61321a8c015445f6b7728337b6db0",
+   "shard": "train-00002-of-00011",
+   "row": 2741
+  },
+  {
+   "file": "p007.jpg",
+   "md5": "0bc84734585199ce53c41670c8735b7f",
+   "shard": "train-00009-of-00011",
+   "row": 1784
+  },
+  {
+   "file": "p008.jpg",
+   "md5": "f18518003b136d80a6f0375b165dfbef",
+   "shard": "train-00002-of-00011",
+   "row": 2511
+  },
+  {
+   "file": "p009.jpg",
+   "md5": "7d390b8c47de2daee3badd56932d1e7b",
+   "shard": "train-00005-of-00011",
+   "row": 6166
+  },
+  {
+   "file": "p010.jpg",
+   "md5": "a48f80fb01ecf17195d66662fabd9456",
+   "shard": "train-00010-of-00011",
+   "row": 1509
+  },
+  {
+   "file": "p011.jpg",
+   "md5": "04af8fb7034583c5c5c437ebd42dcffc",
+   "shard": "train-00008-of-00011",
+   "row": 5047
+  },
+  {
+   "file": "p012.jpg",
+   "md5": "2b6a73506004df868a135dc68e6d6d6c",
+   "shard": "train-00007-of-00011",
+   "row": 695
+  },
+  {
+   "file": "p013.jpg",
+   "md5": "1680d5e07daced03074a4fb7aa726414",
+   "shard": "train-00009-of-00011",
+   "row": 2865
+  },
+  {
+   "file": "p014.jpg",
+   "md5": "3bd407535fa36ab1c7d4166bda8dbc7b",
+   "shard": "train-00002-of-00011",
+   "row": 3079
+  },
+  {
+   "file": "p015.jpg",
+   "md5": "4dd4dce2d56fb55a50e748110a61fb07",
+   "shard": "train-00006-of-00011",
+   "row": 6817
+  },
+  {
+   "file": "p016.jpg",
+   "md5": "1d4e83761fd7b731316790dcd8ff0e90",
+   "shard": "train-00005-of-00011",
+   "row": 3674
+  },
+  {
+   "file": "p017.jpg",
+   "md5": "bb4537d7551d36afe025d9250be63f57",
+   "shard": "train-00003-of-00011",
+   "row": 4578
+  },
+  {
+   "file": "p018.jpg",
+   "md5": "fe11b2fc819bce96948deb4fb38d6040",
+   "shard": "train-00001-of-00011",
+   "row": 3024
+  },
+  {
+   "file": "p019.jpg",
+   "md5": "c29454d36895a344ab5f03923576e521",
+   "shard": "train-00001-of-00011",
+   "row": 6220
+  },
+  {
+   "file": "p020.jpg",
+   "md5": "f17cb94938aca9746b69e36b27817d11",
+   "shard": "train-00004-of-00011",
+   "row": 409
+  },
+  {
+   "file": "p021.jpg",
+   "md5": "9dc3f44d0f8275f8a71137964779241f",
+   "shard": "train-00005-of-00011",
+   "row": 3197
+  },
+  {
+   "file": "p022.jpg",
+   "md5": "e7636bc6f082fc5c78e7bf0028aac678",
+   "shard": "train-00006-of-00011",
+   "row": 4859
+  },
+  {
+   "file": "p023.jpg",
+   "md5": "bc12933a57e5f41627e1d05c755ecdc6",
+   "shard": "train-00008-of-00011",
+   "row": 282
+  },
+  {
+   "file": "p024.jpg",
+   "md5": "f843479e9e62c337c2d98f622483db88",
+   "shard": "train-00001-of-00011",
+   "row": 5630
+  },
+  {
+   "file": "p025.jpg",
+   "md5": "0ff0577c7fcc2412e0ba2092c7e660fa",
+   "shard": "train-00004-of-00011",
+   "row": 3448
+  },
+  {
+   "file": "p026.jpg",
+   "md5": "93e4fdb8fcafbc8b26fb321ec0d26c6c",
+   "shard": "train-00006-of-00011",
+   "row": 5362
+  },
+  {
+   "file": "p027.jpg",
+   "md5": "1ec19c10886a264460c5fb3e2cea5450",
+   "shard": "train-00001-of-00011",
+   "row": 717
+  },
+  {
+   "file": "p028.jpg",
+   "md5": "7d4c34202126ed2d3957ca34e3691d98",
+   "shard": "train-00002-of-00011",
+   "row": 3414
+  },
+  {
+   "file": "p029.jpg",
+   "md5": "c5b43c813e46e23bffb0abf7eaf79b46",
+   "shard": "train-00010-of-00011",
+   "row": 854
+  },
+  {
+   "file": "p030.jpg",
+   "md5": "d1fdf1cd75ac369987363244e05722b5",
+   "shard": "train-00002-of-00011",
+   "row": 7657
+  },
+  {
+   "file": "p031.jpg",
+   "md5": "02a5a2cb389168e31769b96e997325fc",
+   "shard": "train-00000-of-00011",
+   "row": 2643
+  },
+  {
+   "file": "p032.jpg",
+   "md5": "23ff218cdece9084c99e329ab00f56d8",
+   "shard": "train-00003-of-00011",
+   "row": 48
+  },
+  {
+   "file": "p033.jpg",
+   "md5": "81025d6e29e0617e1d32ba67e1587d4c",
+   "shard": "train-00002-of-00011",
+   "row": 1931
+  },
+  {
+   "file": "p034.jpg",
+   "md5": "05a7c7fa9012b24538fbfc032a785ed6",
+   "shard": "train-00007-of-00011",
+   "row": 5603
+  },
+  {
+   "file": "p035.jpg",
+   "md5": "3a8f8936f8930afafaf2e7ee6b44e080",
+   "shard": "train-00002-of-00011",
+   "row": 4861
+  },
+  {
+   "file": "p036.jpg",
+   "md5": "09a52f38fc87b925ca169dd236afe6a2",
+   "shard": "train-00002-of-00011",
+   "row": 939
+  },
+  {
+   "file": "p037.jpg",
+   "md5": "2dd7e2d4f98ccb7d42fe879e710ac02f",
+   "shard": "train-00002-of-00011",
+   "row": 2822
+  },
+  {
+   "file": "p038.jpg",
+   "md5": "19e8d197fd31cdcbdc977b4550f1e5f7",
+   "shard": "train-00001-of-00011",
+   "row": 6514
+  },
+  {
+   "file": "p039.jpg",
+   "md5": "88166c140e41a06bf0bdec5ad33c5cb6",
+   "shard": "train-00008-of-00011",
+   "row": 5220
+  },
+  {
+   "file": "p040.jpg",
+   "md5": "b993bb78483b4ba8ff75716944013c75",
+   "shard": "train-00000-of-00011",
+   "row": 3083
+  },
+  {
+   "file": "p041.jpg",
+   "md5": "1ac9727b200fd8c84e2e654ec37558c4",
+   "shard": "train-00004-of-00011",
+   "row": 2757
+  },
+  {
+   "file": "p042.jpg",
+   "md5": "4fff0c3e5cb4e16e7a91d4691f44369d",
+   "shard": "train-00000-of-00011",
+   "row": 3268
+  },
+  {
+   "file": "p043.jpg",
+   "md5": "d0b0b075c4df521549f90f6af583d9e7",
+   "shard": "train-00005-of-00011",
+   "row": 298
+  },
+  {
+   "file": "p044.jpg",
+   "md5": "6a6577a8ca750ea53acf688df4f04ad1",
+   "shard": "train-00007-of-00011",
+   "row": 4202
+  },
+  {
+   "file": "p045.jpg",
+   "md5": "c2bff9fb07c2bcbff51164480fa3d364",
+   "shard": "train-00004-of-00011",
+   "row": 3990
+  },
+  {
+   "file": "p046.jpg",
+   "md5": "b2f4065dd9492f991f505cb656151743",
+   "shard": "train-00007-of-00011",
+   "row": 63
+  },
+  {
+   "file": "p047.jpg",
+   "md5": "1f7090c124b1090abd2d3c05a42c23e7",
+   "shard": "train-00001-of-00011",
+   "row": 4120
+  },
+  {
+   "file": "p048.jpg",
+   "md5": "20ad33a6be142336049cc2cd5cde1809",
+   "shard": "train-00008-of-00011",
+   "row": 6275
+  },
+  {
+   "file": "p049.jpg",
+   "md5": "d1c38faeac9eb622592a205fd45aa81b",
+   "shard": "train-00005-of-00011",
+   "row": 3572
+  },
+  {
+   "file": "p050.jpg",
+   "md5": "15d7df5b050ffeb55e704bb6ddd7aaae",
+   "shard": "train-00005-of-00011",
+   "row": 6610
+  },
+  {
+   "file": "p051.jpg",
+   "md5": "c3c70b3052158d853ec4a8a743d45465",
+   "shard": "train-00000-of-00011",
+   "row": 5116
+  },
+  {
+   "file": "p052.jpg",
+   "md5": "97be72a46a63e31197309f0b5bb8fbea",
+   "shard": "train-00002-of-00011",
+   "row": 7966
+  },
+  {
+   "file": "p053.jpg",
+   "md5": "2a54271d4c9f3003988b263b05a50319",
+   "shard": "train-00007-of-00011",
+   "row": 5136
+  },
+  {
+   "file": "p054.jpg",
+   "md5": "0bc81aa8db91211e6672e5bb96ca7329",
+   "shard": "train-00003-of-00011",
+   "row": 7280
+  },
+  {
+   "file": "p055.jpg",
+   "md5": "4338adbbb6deb21b50873d477e3a960f",
+   "shard": "train-00000-of-00011",
+   "row": 2207
+  },
+  {
+   "file": "p056.jpg",
+   "md5": "7dd88d30c1c12e233684929cf2482673",
+   "shard": "train-00010-of-00011",
+   "row": 5945
+  },
+  {
+   "file": "p057.jpg",
+   "md5": "debda4837b2a665d65f11cd9c39e0a86",
+   "shard": "train-00009-of-00011",
+   "row": 4031
+  },
+  {
+   "file": "p058.jpg",
+   "md5": "aa9564fa395ebeebb59ddf13bca39b3c",
+   "shard": "train-00005-of-00011",
+   "row": 7438
+  },
+  {
+   "file": "p059.jpg",
+   "md5": "f769fbdfaccb46a8323e80fd9fdb95db",
+   "shard": "train-00007-of-00011",
+   "row": 964
+  },
+  {
+   "file": "p060.jpg",
+   "md5": "6b5ff3c69aadb116bee6815fec540005",
+   "shard": "train-00005-of-00011",
+   "row": 2924
+  },
+  {
+   "file": "p061.jpg",
+   "md5": "d5134d86131f59e83ff3da7359eede68",
+   "shard": "train-00010-of-00011",
+   "row": 2824
+  },
+  {
+   "file": "p062.jpg",
+   "md5": "229dcdbfbf2776e9348cb0e0e890f039",
+   "shard": "train-00005-of-00011",
+   "row": 5342
+  },
+  {
+   "file": "p063.jpg",
+   "md5": "5b7b3ae5d7f07427667c584a127cfd29",
+   "shard": "train-00002-of-00011",
+   "row": 7003
+  },
+  {
+   "file": "p064.jpg",
+   "md5": "fbe46a6064fd566daf38b2a49be35246",
+   "shard": "train-00000-of-00011",
+   "row": 1076
+  },
+  {
+   "file": "p065.jpg",
+   "md5": "44a68243b794ecfba290b62eaca7facc",
+   "shard": "train-00000-of-00011",
+   "row": 4796
+  },
+  {
+   "file": "p066.jpg",
+   "md5": "9f37bc2a9925b26dc66c28f12665d621",
+   "shard": "train-00006-of-00011",
+   "row": 6542
+  },
+  {
+   "file": "p067.jpg",
+   "md5": "d452c7fc440b7c650146e8bed3937416",
+   "shard": "train-00002-of-00011",
+   "row": 6287
+  },
+  {
+   "file": "p068.jpg",
+   "md5": "faec81af65781b2bd00db24dc290e700",
+   "shard": "train-00004-of-00011",
+   "row": 1837
+  },
+  {
+   "file": "p069.jpg",
+   "md5": "1302d4ebe0bda66e06774d668d790eed",
+   "shard": "train-00005-of-00011",
+   "row": 4684
+  },
+  {
+   "file": "p070.jpg",
+   "md5": "1d7480d20b7ffb4f4f2aa6c47dce9f4d",
+   "shard": "train-00010-of-00011",
+   "row": 4398
+  },
+  {
+   "file": "p071.jpg",
+   "md5": "60f3511d90a71be9eda021d75c334e87",
+   "shard": "train-00006-of-00011",
+   "row": 1855
+  },
+  {
+   "file": "p072.jpg",
+   "md5": "88adf45e9ad81e720d40c3e8f051026c",
+   "shard": "train-00005-of-00011",
+   "row": 962
+  },
+  {
+   "file": "p073.jpg",
+   "md5": "936904ac437aac2360a301f5c5ca6d90",
+   "shard": "train-00003-of-00011",
+   "row": 3915
+  },
+  {
+   "file": "p074.jpg",
+   "md5": "2638289d532fe3344c490465b59f9f06",
+   "shard": "train-00004-of-00011",
+   "row": 6238
+  },
+  {
+   "file": "p075.jpg",
+   "md5": "5c5428b458dc92d3e6d20669a7ce7727",
+   "shard": "train-00003-of-00011",
+   "row": 827
+  },
+  {
+   "file": "p076.jpg",
+   "md5": "60a2c48b339139d5350dfcbe8b47f98b",
+   "shard": "train-00005-of-00011",
+   "row": 7479
+  },
+  {
+   "file": "p077.jpg",
+   "md5": "f613ece9bde3bcddf000de50e593db69",
+   "shard": "train-00009-of-00011",
+   "row": 982
+  },
+  {
+   "file": "p078.jpg",
+   "md5": "3e40f2ead450773063022bdba0c62626",
+   "shard": "train-00010-of-00011",
+   "row": 3445
+  },
+  {
+   "file": "p079.jpg",
+   "md5": "c664fc5c86a7e4c5abed347b0fdebd99",
+   "shard": "train-00000-of-00011",
+   "row": 4470
+  },
+  {
+   "file": "p080.jpg",
+   "md5": "219ad70f0a6ddbbbaa1d5db21f0dffc0",
+   "shard": "train-00000-of-00011",
+   "row": 7597
+  },
+  {
+   "file": "p081.jpg",
+   "md5": "a728d8b4ab35b5c6e6d634cce607ddc9",
+   "shard": "train-00004-of-00011",
+   "row": 4901
+  },
+  {
+   "file": "p082.jpg",
+   "md5": "57d60b8980e4e394767f23fc8ea9faa0",
+   "shard": "train-00006-of-00011",
+   "row": 6608
+  },
+  {
+   "file": "p083.jpg",
+   "md5": "a9a2a5e06fb39d64b266bb5d0dc6e7ae",
+   "shard": "train-00000-of-00011",
+   "row": 2536
+  },
+  {
+   "file": "p084.jpg",
+   "md5": "85145a1053c0ff6916b18af30d06e7ee",
+   "shard": "train-00005-of-00011",
+   "row": 3930
+  },
+  {
+   "file": "p085.jpg",
+   "md5": "92aabf4fed58fea04e1fc26d8a0497c7",
+   "shard": "train-00006-of-00011",
+   "row": 7633
+  },
+  {
+   "file": "p086.jpg",
+   "md5": "a040c97042d0c4b122f9d3e3f31afcff",
+   "shard": "train-00007-of-00011",
+   "row": 2718
+  },
+  {
+   "file": "p087.jpg",
+   "md5": "9970b64a37fca12b98e6349f181f8995",
+   "shard": "train-00008-of-00011",
+   "row": 2821
+  },
+  {
+   "file": "p088.jpg",
+   "md5": "2e266c83f76de728b3c24528a9cfb76a",
+   "shard": "train-00000-of-00011",
+   "row": 1917
+  },
+  {
+   "file": "p089.jpg",
+   "md5": "b09e47fc9eaedbd6521f8059357f98d1",
+   "shard": "train-00006-of-00011",
+   "row": 4378
+  },
+  {
+   "file": "p090.jpg",
+   "md5": "9dea2ecbc393fee2d15ff1e3f5116c92",
+   "shard": "train-00001-of-00011",
+   "row": 7470
+  },
+  {
+   "file": "p091.jpg",
+   "md5": "22d0419cbd7439b3c484f87b66216279",
+   "shard": "train-00004-of-00011",
+   "row": 6434
+  },
+  {
+   "file": "p092.jpg",
+   "md5": "3732336a8c58268493031a47aa11013c",
+   "shard": "train-00007-of-00011",
+   "row": 7663
+  },
+  {
+   "file": "p093.jpg",
+   "md5": "60fa30cd68a1566e01fad8e5324c0ee3",
+   "shard": "train-00006-of-00011",
+   "row": 4240
+  },
+  {
+   "file": "p094.jpg",
+   "md5": "2f1ac905c0b2b8916a7b1b4adc27c412",
+   "shard": "train-00007-of-00011",
+   "row": 2761
+  },
+  {
+   "file": "p095.jpg",
+   "md5": "73c14ecfcd57b998dc3a44696aa79dda",
+   "shard": "train-00010-of-00011",
+   "row": 2161
+  },
+  {
+   "file": "p096.jpg",
+   "md5": "f96654a13ae9a681b32c1f884a774d32",
+   "shard": "train-00007-of-00011",
+   "row": 7429
+  },
+  {
+   "file": "p097.jpg",
+   "md5": "3368667e988f8a55787f8ef9c1d008c4",
+   "shard": "train-00009-of-00011",
+   "row": 3960
+  },
+  {
+   "file": "p098.jpg",
+   "md5": "0508f417f104cb4650b9b244d297b592",
+   "shard": "train-00009-of-00011",
+   "row": 6209
+  },
+  {
+   "file": "p099.jpg",
+   "md5": "bcf6e23ffddc6eddb93e32bdba2b5717",
+   "shard": "train-00010-of-00011",
+   "row": 5758
+  },
+  {
+   "file": "p100.jpg",
+   "md5": "c94051181da18a83e8f7887c93864c31",
+   "shard": "train-00005-of-00011",
+   "row": 2758
+  },
+  {
+   "file": "p101.jpg",
+   "md5": "9026a6d4bef7a87042edcedce55c2455",
+   "shard": "train-00009-of-00011",
+   "row": 7221
+  },
+  {
+   "file": "p102.jpg",
+   "md5": "eeac4d0d90e01ece996dcc5d3d29e012",
+   "shard": "train-00009-of-00011",
+   "row": 6167
+  },
+  {
+   "file": "p103.jpg",
+   "md5": "9d86a1d644c7c750a2ba6030f58c892b",
+   "shard": "train-00006-of-00011",
+   "row": 2155
+  },
+  {
+   "file": "p104.jpg",
+   "md5": "44100f5bbc9b0f1327ca71571ff3e05f",
+   "shard": "train-00004-of-00011",
+   "row": 1082
+  },
+  {
+   "file": "p105.jpg",
+   "md5": "b53787c8dd9f765cb53ce46fac260d2a",
+   "shard": "train-00001-of-00011",
+   "row": 7299
+  },
+  {
+   "file": "p106.jpg",
+   "md5": "73d3453566475cc939687dbca74300c4",
+   "shard": "train-00001-of-00011",
+   "row": 5057
+  },
+  {
+   "file": "p107.jpg",
+   "md5": "f8c8cd66fc8136e0fc920726666eb164",
+   "shard": "train-00004-of-00011",
+   "row": 2966
+  },
+  {
+   "file": "p108.jpg",
+   "md5": "a1a65894893a289b1a3e22517705fcf3",
+   "shard": "train-00005-of-00011",
+   "row": 325
+  },
+  {
+   "file": "p109.jpg",
+   "md5": "abe8282f205bba623062b30f06c528bb",
+   "shard": "train-00008-of-00011",
+   "row": 4230
+  },
+  {
+   "file": "p110.jpg",
+   "md5": "fddb11fa642be6977f2faa18548c7b8c",
+   "shard": "train-00006-of-00011",
+   "row": 1670
+  },
+  {
+   "file": "p111.jpg",
+   "md5": "28b36cb8f9ab40017034725d79d89bde",
+   "shard": "train-00006-of-00011",
+   "row": 2704
+  },
+  {
+   "file": "p112.jpg",
+   "md5": "7b7e86732d54655c2622e4318f78d497",
+   "shard": "train-00008-of-00011",
+   "row": 5035
+  },
+  {
+   "file": "p113.jpg",
+   "md5": "76e5af0cc9ea7b757e57b12d1992dc0b",
+   "shard": "train-00004-of-00011",
+   "row": 2492
+  },
+  {
+   "file": "p114.jpg",
+   "md5": "903431b4f71686088256a37511e26a51",
+   "shard": "train-00001-of-00011",
+   "row": 4042
+  },
+  {
+   "file": "p115.jpg",
+   "md5": "da8a82783b6148f4625fb481a9e1853e",
+   "shard": "train-00001-of-00011",
+   "row": 4318
+  },
+  {
+   "file": "p116.jpg",
+   "md5": "844956dcdf3e9be8b04b31f1cafe4392",
+   "shard": "train-00007-of-00011",
+   "row": 4356
+  },
+  {
+   "file": "p117.jpg",
+   "md5": "4882df235bee2e0bf6d6a982ba723f75",
+   "shard": "train-00008-of-00011",
+   "row": 7731
+  },
+  {
+   "file": "p118.jpg",
+   "md5": "6cdf5fff55e22451fc6a8fba2b1b89a9",
+   "shard": "train-00008-of-00011",
+   "row": 2958
+  },
+  {
+   "file": "p119.jpg",
+   "md5": "ae938eb2beccb7f2f5b8307e7c0956e4",
+   "shard": "train-00005-of-00011",
+   "row": 4985
+  },
+  {
+   "file": "p120.jpg",
+   "md5": "f10d10b3aa9cebe38bbe2f4f51dd67f2",
+   "shard": "train-00008-of-00011",
+   "row": 7763
+  },
+  {
+   "file": "p121.jpg",
+   "md5": "1e2213da277abd2043ac9bb37f303509",
+   "shard": "train-00009-of-00011",
+   "row": 2426
+  },
+  {
+   "file": "p122.jpg",
+   "md5": "519e89f2916b45e9a538a5be1bfe8864",
+   "shard": "train-00010-of-00011",
+   "row": 1371
+  },
+  {
+   "file": "p123.jpg",
+   "md5": "6a069668e9f77d7a3fb9dcd3caff7387",
+   "shard": "train-00002-of-00011",
+   "row": 411
+  },
+  {
+   "file": "p124.jpg",
+   "md5": "0abb923b5bc64aecd96bc3de19b80dd4",
+   "shard": "train-00006-of-00011",
+   "row": 666
+  },
+  {
+   "file": "p125.jpg",
+   "md5": "81639ad5c9dbe02331a4b1fd377ec57f",
+   "shard": "train-00003-of-00011",
+   "row": 6912
+  },
+  {
+   "file": "p126.jpg",
+   "md5": "3b8f36f9e211c061e5e90a16c88f297c",
+   "shard": "train-00002-of-00011",
+   "row": 6072
+  },
+  {
+   "file": "p127.jpg",
+   "md5": "0edbb2e84ddbe41ee0c3b5a6685d4a12",
+   "shard": "train-00004-of-00011",
+   "row": 1591
+  },
+  {
+   "file": "p128.jpg",
+   "md5": "caa513febb588842e0fec15398476c05",
+   "shard": "train-00010-of-00011",
+   "row": 2034
+  },
+  {
+   "file": "p129.jpg",
+   "md5": "5d908c1a578c7b123db7072ee6859227",
+   "shard": "train-00002-of-00011",
+   "row": 6295
+  },
+  {
+   "file": "p130.jpg",
+   "md5": "8b696fbf518ac1bb803dd75015262d61",
+   "shard": "train-00007-of-00011",
+   "row": 6303
+  },
+  {
+   "file": "p131.jpg",
+   "md5": "f9b5e015992f31f5eaaf5bb4b61d31ed",
+   "shard": "train-00002-of-00011",
+   "row": 1
+  },
+  {
+   "file": "p132.jpg",
+   "md5": "1848151b57ff17fbc171e9d6e5c124fa",
+   "shard": "train-00002-of-00011",
+   "row": 7151
+  },
+  {
+   "file": "p133.jpg",
+   "md5": "cca8bf8694f9c70c103e0d5df639088f",
+   "shard": "train-00001-of-00011",
+   "row": 4740
+  },
+  {
+   "file": "p134.jpg",
+   "md5": "7d008725ef449932fb1772a0236c6205",
+   "shard": "train-00001-of-00011",
+   "row": 3433
+  },
+  {
+   "file": "p135.jpg",
+   "md5": "051c2feaf35ba0f53c38a963786e96b2",
+   "shard": "train-00008-of-00011",
+   "row": 5368
+  },
+  {
+   "file": "p136.jpg",
+   "md5": "5178dc9d4112e174268b5b6da244b648",
+   "shard": "train-00004-of-00011",
+   "row": 4345
+  },
+  {
+   "file": "p137.jpg",
+   "md5": "e2c75c2b82591cf0e51e6aac134886f7",
+   "shard": "train-00006-of-00011",
+   "row": 3054
+  },
+  {
+   "file": "p138.jpg",
+   "md5": "0d7df666331db9ee3de1ccf636f03a42",
+   "shard": "train-00005-of-00011",
+   "row": 1694
+  },
+  {
+   "file": "p139.jpg",
+   "md5": "fbe43bef07bada6dcf8f3035c8a41683",
+   "shard": "train-00003-of-00011",
+   "row": 3416
+  },
+  {
+   "file": "p140.jpg",
+   "md5": "29675d77a639066268cb5d27d9bbad6f",
+   "shard": "train-00009-of-00011",
+   "row": 1225
+  },
+  {
+   "file": "p141.jpg",
+   "md5": "7d37decd4d3607e8cc7e165a981793cb",
+   "shard": "train-00001-of-00011",
+   "row": 6823
+  },
+  {
+   "file": "p142.jpg",
+   "md5": "8fac2f0f5549ef7e47b9942019b0422f",
+   "shard": "train-00007-of-00011",
+   "row": 3984
+  },
+  {
+   "file": "p143.jpg",
+   "md5": "8abf44d4b7913198cfee1630c18e4ba7",
+   "shard": "train-00005-of-00011",
+   "row": 5089
+  },
+  {
+   "file": "p144.jpg",
+   "md5": "3a12371731b68b9eb12b53fcec32725c",
+   "shard": "train-00000-of-00011",
+   "row": 7092
+  },
+  {
+   "file": "p145.jpg",
+   "md5": "6dff9491b1d14f992bd57ddc5861c535",
+   "shard": "train-00002-of-00011",
+   "row": 1078
+  },
+  {
+   "file": "p146.jpg",
+   "md5": "a862a85e531f089fccefafa11000afbc",
+   "shard": "train-00001-of-00011",
+   "row": 7775
+  },
+  {
+   "file": "p147.jpg",
+   "md5": "5eba1e53b6e5db524d4f95d7f2892545",
+   "shard": "train-00009-of-00011",
+   "row": 1294
+  },
+  {
+   "file": "p148.jpg",
+   "md5": "329b53be75569c7ed4574ac16a40c6a0",
+   "shard": "train-00003-of-00011",
+   "row": 7411
+  },
+  {
+   "file": "p149.jpg",
+   "md5": "62716a592ba96869a469e093dea7428e",
+   "shard": "train-00006-of-00011",
+   "row": 5770
+  },
+  {
+   "file": "p150.jpg",
+   "md5": "b63e37600e5dced3a1d909b63bd74ab6",
+   "shard": "train-00001-of-00011",
+   "row": 6748
+  },
+  {
+   "file": "p151.jpg",
+   "md5": "163863c9fb1261333d58bdf666be8ecb",
+   "shard": "train-00009-of-00011",
+   "row": 4759
+  },
+  {
+   "file": "p152.jpg",
+   "md5": "6a4b97f34cb7cf01d16ddf35417ac029",
+   "shard": "train-00008-of-00011",
+   "row": 5921
+  },
+  {
+   "file": "p153.jpg",
+   "md5": "5a657a0fafd28a060da0ba803cc9e36e",
+   "shard": "train-00007-of-00011",
+   "row": 1512
+  },
+  {
+   "file": "p154.jpg",
+   "md5": "fe81724dbf9b84283b834b2ffc44c4ed",
+   "shard": "train-00004-of-00011",
+   "row": 621
+  },
+  {
+   "file": "p155.jpg",
+   "md5": "f9fcc0e262ace6f6e06ff1a3a6e87a6e",
+   "shard": "train-00007-of-00011",
+   "row": 1094
+  },
+  {
+   "file": "p156.jpg",
+   "md5": "3ff550b385a9be07237fcf7a8c4ffee0",
+   "shard": "train-00004-of-00011",
+   "row": 2910
+  },
+  {
+   "file": "p157.jpg",
+   "md5": "f6ce30fc21c584793d4c7ca92ee6058a",
+   "shard": "train-00003-of-00011",
+   "row": 6158
+  },
+  {
+   "file": "p158.jpg",
+   "md5": "3755d72fbbf1efaeec127065bae6ad05",
+   "shard": "train-00002-of-00011",
+   "row": 3517
+  },
+  {
+   "file": "p159.jpg",
+   "md5": "f16e201fbd93adea9cda346be121cf45",
+   "shard": "train-00000-of-00011",
+   "row": 3899
+  },
+  {
+   "file": "p160.jpg",
+   "md5": "06f5ecd38c0e5768318544d67e8e1353",
+   "shard": "train-00009-of-00011",
+   "row": 605
+  },
+  {
+   "file": "p161.jpg",
+   "md5": "3c5018be740dd400cac7d645f43ee693",
+   "shard": "train-00002-of-00011",
+   "row": 4831
+  },
+  {
+   "file": "p162.jpg",
+   "md5": "1188d0c5c956e9a63665e44a9c37f606",
+   "shard": "train-00010-of-00011",
+   "row": 1896
+  },
+  {
+   "file": "p163.jpg",
+   "md5": "91887f6009525147dcd2fd842a96db06",
+   "shard": "train-00009-of-00011",
+   "row": 4608
+  },
+  {
+   "file": "p164.jpg",
+   "md5": "847125d5da2555aa4e884d4d72819d91",
+   "shard": "train-00007-of-00011",
+   "row": 2402
+  },
+  {
+   "file": "p165.jpg",
+   "md5": "d222beb7bd77fe9d32ea6632306113f9",
+   "shard": "train-00006-of-00011",
+   "row": 1463
+  },
+  {
+   "file": "p166.jpg",
+   "md5": "a34d96721b44b8b337d17e62c810d947",
+   "shard": "train-00000-of-00011",
+   "row": 5737
+  },
+  {
+   "file": "p167.jpg",
+   "md5": "878b2596bde1bc7464457845f8ec9b56",
+   "shard": "train-00002-of-00011",
+   "row": 2779
+  },
+  {
+   "file": "p168.jpg",
+   "md5": "dba4a2b6dab1fd51ac67dbf3568235a5",
+   "shard": "train-00000-of-00011",
+   "row": 2092
+  },
+  {
+   "file": "p169.jpg",
+   "md5": "bc2ea9d28a5ecf7e4801c3f06127356e",
+   "shard": "train-00001-of-00011",
+   "row": 498
+  },
+  {
+   "file": "p170.jpg",
+   "md5": "d2f92648de75d565f4736cf9672945ee",
+   "shard": "train-00005-of-00011",
+   "row": 4389
+  },
+  {
+   "file": "p171.jpg",
+   "md5": "79b61b2b9455eb8958b2977a8fe6ed7a",
+   "shard": "train-00006-of-00011",
+   "row": 6229
+  },
+  {
+   "file": "p172.jpg",
+   "md5": "63a5c3bbdf3d5430d1f55e2f64060069",
+   "shard": "train-00003-of-00011",
+   "row": 3274
+  },
+  {
+   "file": "p173.jpg",
+   "md5": "9bc2f7f3f0685019c83ca2dbad99cc9b",
+   "shard": "train-00009-of-00011",
+   "row": 5285
+  },
+  {
+   "file": "p174.jpg",
+   "md5": "d6d83cb4990ea5864a7cd8c9561b7164",
+   "shard": "train-00001-of-00011",
+   "row": 3925
+  },
+  {
+   "file": "p175.jpg",
+   "md5": "8fa82dded694441e59d56b19e8c24428",
+   "shard": "train-00005-of-00011",
+   "row": 4421
+  },
+  {
+   "file": "p176.jpg",
+   "md5": "12b452beada27fa43852d4dad2a39875",
+   "shard": "train-00005-of-00011",
+   "row": 2741
+  },
+  {
+   "file": "p177.jpg",
+   "md5": "66aeffd873e3b2c6f3b08d8e579dd57c",
+   "shard": "train-00009-of-00011",
+   "row": 6747
+  },
+  {
+   "file": "p178.jpg",
+   "md5": "6a2899273bdacda7d8ec924d91999347",
+   "shard": "train-00000-of-00011",
+   "row": 5515
+  },
+  {
+   "file": "p179.jpg",
+   "md5": "f31892aa25916083e2d09012cdcba151",
+   "shard": "train-00003-of-00011",
+   "row": 7197
+  },
+  {
+   "file": "p180.jpg",
+   "md5": "04ba8e9616005916da567683dbf6650e",
+   "shard": "train-00002-of-00011",
+   "row": 3041
+  },
+  {
+   "file": "p181.jpg",
+   "md5": "013106152feeadc7b08af85da8cc755d",
+   "shard": "train-00004-of-00011",
+   "row": 1579
+  },
+  {
+   "file": "p182.jpg",
+   "md5": "4d1ae4e461dfd641e40be0fd82dadc82",
+   "shard": "train-00003-of-00011",
+   "row": 886
+  },
+  {
+   "file": "p183.jpg",
+   "md5": "75e86f4260dc348430b3dd3b75d3fd4f",
+   "shard": "train-00002-of-00011",
+   "row": 3540
+  },
+  {
+   "file": "p184.jpg",
+   "md5": "0af89671867708764b30f9fba7072fda",
+   "shard": "train-00005-of-00011",
+   "row": 1182
+  },
+  {
+   "file": "p185.jpg",
+   "md5": "0248ad4dc32860d2ff023315ccb4074b",
+   "shard": "train-00010-of-00011",
+   "row": 1230
+  },
+  {
+   "file": "p186.jpg",
+   "md5": "9ea4e6b74ca51950abb472058ee4e55b",
+   "shard": "train-00008-of-00011",
+   "row": 6139
+  },
+  {
+   "file": "p187.jpg",
+   "md5": "b86a57279dbb03fe2191a1d4e510f797",
+   "shard": "train-00006-of-00011",
+   "row": 5771
+  },
+  {
+   "file": "p188.jpg",
+   "md5": "fa8a6ae8e86411963da8e7de53e91142",
+   "shard": "train-00001-of-00011",
+   "row": 5648
+  },
+  {
+   "file": "p189.jpg",
+   "md5": "fefa0158a6e9f384e96d609ade704b2d",
+   "shard": "train-00006-of-00011",
+   "row": 2231
+  },
+  {
+   "file": "p190.jpg",
+   "md5": "e5316433f4a1b7c71fc088bdd05fe927",
+   "shard": "train-00005-of-00011",
+   "row": 8
+  },
+  {
+   "file": "p191.jpg",
+   "md5": "5fe9d5737d759c6d5a80116b46b4d718",
+   "shard": "train-00002-of-00011",
+   "row": 4754
+  },
+  {
+   "file": "p192.jpg",
+   "md5": "64229f1a5d612db936eb1c092e069ef8",
+   "shard": "train-00003-of-00011",
+   "row": 5406
+  },
+  {
+   "file": "p193.jpg",
+   "md5": "4541200c7f65d0eaf3b6427423048783",
+   "shard": "train-00001-of-00011",
+   "row": 2202
+  },
+  {
+   "file": "p194.jpg",
+   "md5": "51b3111b45d2cdee466b1452158822fe",
+   "shard": "train-00010-of-00011",
+   "row": 1000
+  },
+  {
+   "file": "p195.jpg",
+   "md5": "b7d479cad26e93419dda9d357efc4a12",
+   "shard": "train-00005-of-00011",
+   "row": 1104
+  },
+  {
+   "file": "p196.jpg",
+   "md5": "9202373d0935a1ce06b6b686e7fd9971",
+   "shard": "train-00002-of-00011",
+   "row": 7824
+  },
+  {
+   "file": "p197.jpg",
+   "md5": "df0324a6be8996205ada4c63dd5b27b8",
+   "shard": "train-00004-of-00011",
+   "row": 7962
+  },
+  {
+   "file": "p198.jpg",
+   "md5": "0ff6e64e1cf1c745017552b4397664f6",
+   "shard": "train-00001-of-00011",
+   "row": 4290
+  },
+  {
+   "file": "p199.jpg",
+   "md5": "ed4543ef7772ebd7c0d005e1b2f56b7b",
+   "shard": "train-00000-of-00011",
+   "row": 3944
+  }
+ ],
+ "planche": [
+  "p017.jpg",
+  "p019.jpg",
+  "p038.jpg",
+  "p044.jpg",
+  "p047.jpg",
+  "p077.jpg",
+  "p082.jpg",
+  "p116.jpg",
+  "p124.jpg",
+  "p144.jpg",
+  "p154.jpg",
+  "p173.jpg"
+ ]
+}
