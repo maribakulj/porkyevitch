@@ -83,3 +83,16 @@
 - 30/10 : passe Gemini val60 arrêtée avant tout appel (assertion 200 images codée en dur) ; diff --expected demandé à pH.
 - 30/10 : blancs A1 (CPU, pilote cea9e5a4, paquet e5e3f761) et D3 (T4, pilote d592e8e8, paquet dabcbd1a) lancés après feux verts Grok p2 et Codex p4.
 - 30/10 : INCIDENT consigné (wA:pH, préparation D10) : affichage des 400 premiers octets de frozen.json → métadonnées d'UNE image du test Rijks (pid, IIIF, support, composante), sans vérité ni prédiction ; après l'ouverture et les verdicts de la phase 1, donc sans effet sur eux ; écrit dans la préinscription du diagnostic, section 1. Règle rappelée : ne jamais afficher le contenu brut de frozen.json.
+- 30/10 : devis P9-A 0b PASSÉ (WITHIN_12H, graine 2,0 h estimée ; sauts AMP G 1 / A 2) ; relecture des sorties par Grok p7, puis Codex.
+- 30/10 : smoke petit élève relancé sur 0315a1d (feux verts Grok p2 + Codex) ; devis P9-A : CONFORME Grok p7, audit Codex demandé avant seed.
+- 30/10 : Codex FEU VERT seed graine 0 P9-A ; préparation du lancement demandée à pH.
+- 30/10 : seed graine 0 P9-A lancé (noyau porky-p9a-seed, config 014ebccc, plafond 43 000 s).
+- 30/10 : passe Gemini val60 (D9) : 53/60 graphes acceptés (7 échecs après 3 essais : réponses SUCCESS non analysables ou sans preuve d'image, comme au pilote 89 %) ; juge principal = 26 + 53 = 79 images ; figé avant toute sortie d'entraînement. Données ~/porkyevitch-donnees/graphes-gemini/val60.
+- 30/10 : diagnostic de non-transfert (D10) lancé (feux verts Grok p3 + Codex, paquet 093d29bc).
+- 30/10 : D10 échoué avant mesure (single_visible_T4_required : 2 T4 visibles probablement) → correctif pilote demandé à pH.
+- 30/10 : structure d'article proposée par Grok p7 (porkyevitch-article-structure-grok.md) : titre « recettes exploratoires… aucune brique retenue » ; cases vides = non-transfert, P9-A, A1, D3, petit élève. À reprendre quand ces résultats arrivent ; contre-expertise Codex en basse priorité.
+- 30/10 : A1 RÉGLAGE lancé (CPU, pilote c2dec20a, paquet aa08303d, feux verts Grok p3 + Codex). D3 complet (feu vert Codex) attend un créneau GPU après D10 ; petit élève full attend Grok p2.
+- 30/10 : D10 relancé (ba4f338, feux verts Grok p3 + Codex).
+- 30/10 : petit élève FULL : feux verts Grok p2 + Codex (efe22e81, pilote f92a0c91) ; dataset mis à jour ; lancement au premier T4 libre (après D10). D3 complet ensuite (après la graine 0 P9-A).
+- 30/10 : D10 relance : échec à l'écriture finale (int64 non sérialisable) → pH. Petit élève FULL lancé sur le T4 libéré.
+- 30/10 : D11 : Kaggle a supprimé les datasets porky-* (nom jugé NSFW, dit Marcel) ; l'hypothèse « images de nus » était fausse. Survivants : porky-e0..e3-entree + les noyaux. A1 réglage COMPLETE : rapatriement en cours. Graine 0 P9-A et petit élève full tournent (entrées déjà montées).

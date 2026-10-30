@@ -75,3 +75,10 @@ Le reste de la v3 est adopté. La préinscription viendra après la porte D2 (co
    validation seulement, selon le protocole de Codex (R_tête contre R_vote pondéré, table appariée, contrôle de prévalence,
    croisement fréquence × profondeur), script audité avant lancement.
 4. Priorités : ce diagnostic et le petit élève, puis les sondes P9-A / A1 / D3 déjà prêtes.
+
+## D11 (30/10/2026) : noms Kaggle
+
+Kaggle a supprimé les jeux de données mabaku/porky-* (nom pris pour NSFW ; c'est une référence à Pynchon). Ce n'était pas la
+modération des images de planches, contrairement à l'hypothèse du journal. Désormais tout jeu de données ou noyau Kaggle se
+nomme **pkyevitch-*** ; les noyaux porky-* encore vivants sont rapatriés puis recréés sous le nouveau nom quand on les relance.
+Les pilotes qui citent un chemin /kaggle/input/…/porky-… doivent être amendés (relecture) avant toute relance.
