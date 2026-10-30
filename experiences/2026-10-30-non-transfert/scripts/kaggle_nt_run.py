@@ -6,6 +6,8 @@
 # validation cache of porky-diag-run v3, and this folder (nt_run.py, nt_core.py, mesure_metrics.py). A global monitor
 # as for A1 / D3: one session of at most 3 600 s from the pilot start, outputs <= 200 MB, machine guards, refusal of a
 # non-empty output before the child starts. Nothing of the test is read; the diagnostic writes no row of it.
+# Amendment (30/10, after the first launch stopped on single_visible_T4_required: the Kaggle T4 machine shows two T4):
+# the child sees only GPU 0 (CUDA_VISIBLE_DEVICES=0, as kaggle_gel_run.py); the pilot logs how many GPUs it sees.
 import glob, hashlib, importlib.metadata, json, os, shutil, signal, subprocess, sys, time
 
 STAGE = "diagnostic"
@@ -162,7 +164,8 @@ def t4_identity():
     import torch
     if not torch.cuda.is_available() or "T4" not in torch.cuda.get_device_name(0):
         fail("one T4 required, no CPU fallback")
-    return {"torch": torch.__version__, "cuda": torch.version.cuda, "gpu": torch.cuda.get_device_name(0)}
+    return {"torch": torch.__version__, "cuda": torch.version.cuda, "gpu": torch.cuda.get_device_name(0),
+            "gpus_seen_by_pilot": torch.cuda.device_count(), "child_visible_devices": "0"}
 
 
 def one(pattern, digest=None):
@@ -200,10 +203,12 @@ def main():
     out = f"{W}/non-transfert"
     cmd = [sys.executable, "-I", os.path.join(here, "nt_run.py"), "--gel-code", gel, "--binding", binding,
            "--inventory", inventory, "--seal", seal, "--diag", diag, "--out", out]
-    env = dict(os.environ, PYTHONHASHSEED="0", NT_REVIEWED_STAGE="diagnostic", CUBLAS_WORKSPACE_CONFIG=":4096:8")
+    env = dict(os.environ, PYTHONHASHSEED="0", NT_REVIEWED_STAGE="diagnostic", CUBLAS_WORKSPACE_CONFIG=":4096:8",
+               CUDA_VISIBLE_DEVICES="0")
     for name in ("HF_TOKEN", "HUGGING_FACE_HUB_TOKEN", "HUGGINGFACEHUB_API_TOKEN", "KAGGLE_KEY"):
         env.pop(name, None)
-    log(f"stage {STAGE} versions {json.dumps(versions)} gpu {gpu['gpu']} wall limit {WALL_SECONDS[STAGE]} s")
+    log(f"stage {STAGE} versions {json.dumps(versions)} gpu {gpu['gpu']} gpus seen by pilot {gpu['gpus_seen_by_pilot']} "
+        f"child CUDA_VISIBLE_DEVICES=0 wall limit {WALL_SECONDS[STAGE]} s")
     record = run_child(cmd, env, out, start, WALL_SECONDS[STAGE], W, extra={"device": gpu, "versions": versions})
     if record["status"] != "passed":
         fail(f"{record['failure']} after {record['elapsed_s']:.0f} s; see driver.json")

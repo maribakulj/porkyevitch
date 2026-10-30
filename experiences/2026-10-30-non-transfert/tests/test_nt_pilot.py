@@ -52,6 +52,16 @@ class PilotTest(unittest.TestCase):
             self.assertEqual(hashlib.sha256((gel / name).read_bytes()).hexdigest(), want)
         self.assertEqual(k.WALL_SECONDS, {"diagnostic": 3600})
 
+    def test_child_sees_one_gpu(self):
+        # first launch: two T4 visible, nt_run requires exactly one (single_visible_T4_required)
+        src = (Path(__file__).resolve().parents[1] / "scripts" / "kaggle_nt_run.py").read_text()
+        env_line = src[src.index("    env = dict(os.environ"):src.index("    for name in (\"HF_TOKEN\"")]
+        self.assertIn('CUDA_VISIBLE_DEVICES="0"', env_line)
+        self.assertIn('"gpus_seen_by_pilot": torch.cuda.device_count()', src)
+        self.assertLess(src.index('CUDA_VISIBLE_DEVICES="0"'), src.index("record = run_child(cmd, env"))
+        run = (Path(__file__).resolve().parents[1] / "scripts" / "nt_run.py").read_text()
+        self.assertIn("torch.cuda.device_count() == 1", run)  # the child's own gate, unchanged
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
