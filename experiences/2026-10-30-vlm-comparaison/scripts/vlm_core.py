@@ -1,9 +1,10 @@
-"""VLM comparison (PREINSCRIPTION-v2.1.md): pure rules, no network, no model call. numpy only (plus the pinned copies
+"""VLM comparison (PREINSCRIPTION-v2.2.md): pure rules, no network, no model call. numpy only (plus the pinned copies
 a1_core.py and pe_common.py, imported by the scripts that need them).
 
 Everything a score depends on is here and frozen by SHA-256 in the preparation seal: the prompts, the notation syntax,
 the chain classes, the call states, the samples, the bootstrap and the reading.
 """
+import contextlib
 import hashlib
 import json
 import re
@@ -21,6 +22,9 @@ CAP_FACTOR = 1.15  # hard cap on attempts per stage, relative to the planned cal
 BUDGET_USD = 30.0  # total for the Claude calls (H and O), all stages (v2.1)
 S1_WALL_SECONDS = 6 * 3600  # v2.1
 PARALLEL = 3  # per system (v2.1)
+CLAUDE_IN_FLIGHT = 3  # H and O together (v2.2)
+COST_MARGIN = 1.2  # extrapolation from S0 (v2.2)
+UNKNOWN_CHARGE_USD = 1.0  # prudent charge when no Claude cost has been observed yet (v2.2)
 MAX_BOXES = 30
 RETRYABLE = ("illisible", "image_non_lue", "echec_technique")  # one new attempt; "refus" is final
 
@@ -136,8 +140,9 @@ def parse_answer(kind, text):
 def parse_claude_stream(stdout, image_path):
     """Final text, whether a Read tool call opened exactly image_path, refusal stop reason, cost and usage."""
     out = {"text": None, "image_read": False, "refusal": False, "cost_usd": None, "usage": None, "duration_ms": None,
-           "is_error": None, "model": None, "events": 0}
+           "is_error": None, "model": None, "events": 0, "read_errors": 0}
     target = str(Path(image_path).resolve())
+    reads, results = set(), {}  # ids of Read calls on the image; tool_result is_error by id (v2.2: an errored Read is no read)
     for line in (stdout or "").splitlines():
         try:
             ev = json.loads(line)
@@ -155,7 +160,11 @@ def parse_claude_stream(stdout, image_path):
                 if isinstance(block, dict) and block.get("type") == "tool_use" and block.get("name") == "Read":
                     path = (block.get("input") or {}).get("file_path")
                     if path and str(Path(path).resolve()) == target:
-                        out["image_read"] = True
+                        reads.add(block.get("id"))
+        elif ev.get("type") == "user":
+            for block in (ev.get("message") or {}).get("content") or []:
+                if isinstance(block, dict) and block.get("type") == "tool_result":
+                    results[block.get("tool_use_id")] = bool(block.get("is_error"))
         elif ev.get("type") == "result":
             out["text"] = ev.get("result")
             out["cost_usd"] = ev.get("total_cost_usd")
@@ -164,6 +173,8 @@ def parse_claude_stream(stdout, image_path):
             out["is_error"] = ev.get("is_error")
             if ev.get("stop_reason") == "refusal":
                 out["refusal"] = True
+    out["image_read"] = any(i in results and not results[i] for i in reads)
+    out["read_errors"] = sum(1 for i in reads if results.get(i))
     return out
 
 
@@ -189,7 +200,7 @@ def observed_paths(conversation_id, history=AGY_HISTORY):
     if not db.exists():
         return []
     found = set()
-    with sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True) as con:
+    with contextlib.closing(sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True)) as con:
         for (payload,) in con.execute("SELECT step_payload FROM steps"):
             if payload:
                 text = payload.decode("utf-8", "ignore") if isinstance(payload, bytes) else str(payload)
@@ -253,7 +264,8 @@ def draw_whole_groups(groups, min_images, seed):
 # ---- measures (section 3.5) ----
 def paired_bootstrap(per_image, groups, draws=DRAWS, seed=SEED):
     """per_image: {name: array over images}; groups: one label per image. Resamples groups with replacement; the statistic
-    is the mean over the resampled images. Returns mean, 2.5th and 97.5th percentiles (numpy 'linear')."""
+    is the mean over the resampled images. Returns the mean, the Bonferroni bounds of the family (1.25th and 98.75th
+    percentiles, two contrasts, v2.2) and the uncorrected 95 % interval (2.5th, 97.5th), numpy 'linear'."""
     labels = sorted(set(groups))
     gi = np.array([labels.index(g) for g in groups])
     counts = np.bincount(gi, minlength=len(labels)).astype(float)
@@ -265,16 +277,17 @@ def paired_bootstrap(per_image, groups, draws=DRAWS, seed=SEED):
         v = np.asarray(values, float)
         sums = np.bincount(gi, weights=v, minlength=len(labels))
         stat = sums[idx].sum(axis=1) / n
-        lo, hi = np.percentile(stat, [2.5, 97.5])
-        out["contrasts"][name] = {"mean": float(v.mean()), "q2_5": float(lo), "q97_5": float(hi)}
+        b_lo, lo, hi, b_hi = np.percentile(stat, [1.25, 2.5, 97.5, 98.75])
+        out["contrasts"][name] = {"mean": float(v.mean()), "q1_25": float(b_lo), "q98_75": float(b_hi),
+                                  "q2_5": float(lo), "q97_5": float(hi)}
     return out
 
 
 def reading(contrast):
-    """Section 3.5, written beforehand, for the family H - T* and G - T* on the dev (Bonferroni over 2, one-sided 97.5 %)."""
-    if contrast["q2_5"] > 0:
+    """Section 3.5, written beforehand, for the family H - T* and G - T* on the dev: two-sided Bonferroni over 2."""
+    if contrast["q1_25"] > 0:
         return "dépasse T* sur le dev, en accord de catalogue"
-    if contrast["q97_5"] < 0:
+    if contrast["q98_75"] < 0:
         return "sous T* sur le dev"
     return "pas de différence établie"
 
@@ -293,3 +306,54 @@ def graph_boxes(path, clean_box):
     """Reference boxes of a teacher graph exactly as the petit élève's load_graph keeps them (clean_box not None)."""
     g = json.loads(Path(path).read_text())
     return [b for b in (clean_box(o["box"]) for o in g["objects"]) if b is not None]
+
+
+# ---- budget (v2.2) ----
+def budget_charge(cost, observed):
+    """What a Claude attempt costs the budget: its total_cost_usd, or, when absent (time-out, failure), twice the largest
+    cost observed for this system, or UNKNOWN_CHARGE_USD when none is observed yet."""
+    if isinstance(cost, (int, float)) and not isinstance(cost, bool):
+        return float(cost)
+    return 2 * max(observed) if observed else UNKNOWN_CHARGE_USD
+
+
+def plan_s1(s0_records, sizes, vdiag_groups, spent_s0, budget=None):
+    """Section 6, extrapolation rule, applied once after S0. s0_records: S0 journal records; sizes: n_dev, n_repeat,
+    n_graphs, n_opus; vdiag_groups: [(group, n_images)] in draw order. Returns the plan with its arithmetic."""
+    budget = BUDGET_USD if budget is None else budget
+    obs = {}
+    for r in s0_records:
+        if r["system"] in CLAUDE_SYSTEMS and isinstance(r.get("cost_usd"), (int, float)):
+            obs.setdefault((r["system"], r["kind"]), []).append(float(r["cost_usd"]))
+    by_sys = {s: [c for (x, _), v in obs.items() if x == s for c in v] for s in CLAUDE_SYSTEMS}
+
+    def unit(system, kind):
+        v = obs.get((system, kind))
+        return float(np.mean(v)) if v else budget_charge(None, by_sys[system])
+    c_h, c_hb, c_o = unit("H", "codes"), unit("H", "boites"), unit("O", "codes")
+
+    def cost(n):
+        return COST_MARGIN * (c_h * (sizes["n_dev"] + n + sizes["n_repeat"]) + c_hb * sizes["n_graphs"] + c_o * sizes["n_opus"])
+    available = budget - spent_s0
+    kept, n = [], 0
+    for g, k in vdiag_groups:
+        if cost(n + k) > available:
+            break
+        kept.append(g)
+        n += k
+    full = len(kept) == len(vdiag_groups)
+    return {"units_usd": {"H_codes": c_h, "H_boites": c_hb, "O_codes": c_o}, "margin": COST_MARGIN,
+            "available_usd": available, "predicted_full_usd": cost(sum(k for _, k in vdiag_groups)),
+            "predicted_kept_usd": cost(n), "vdiag_groups_kept": kept, "vdiag_images_kept": n, "reduced": not full,
+            "launch": cost(0) <= available}
+
+
+# ---- isolation of claude -p (v2.2) ----
+USER_CLAUDE_MD = Path.home() / ".claude" / "CLAUDE.md"
+
+
+def claude_isolation_ok(workdir, home=Path.home(), user_md=None):
+    """No user CLAUDE.md, and a working folder outside the home folder (no project memory, no CLAUDE.md discovery)."""
+    user_md = USER_CLAUDE_MD if user_md is None else user_md
+    w = Path(workdir).resolve()
+    return not Path(user_md).exists() and Path(home).resolve() not in w.parents and w != Path(home).resolve()

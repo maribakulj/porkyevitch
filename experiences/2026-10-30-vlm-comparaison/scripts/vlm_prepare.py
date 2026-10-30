@@ -1,4 +1,4 @@
-"""VLM comparison, step 1 (PREINSCRIPTION-v2.1.md section 6): samples, images, truths, B and T* references, identity
+"""VLM comparison, step 1 (PREINSCRIPTION-v2.2.md section 6): samples, images, truths, B and T* references, identity
 controls, call plan and preparation seal. No model call, no score of a VLM.
 
 Reads only validation rows of the ICAI train shards (never data/test-*), the "dev" member of the Rijksmuseum frozen bank
@@ -246,18 +246,25 @@ def pe_evaluation(pe, out_dir):
 
 
 # ---------------------------------------------------------------- plan
+BLOCKS = ("dev", "opus", "vdiag", "graphes")  # S1 order (v2.2, B2): the family first
+
+
 def plan_calls(vdiag, dev, opus, repeat, pe):
-    """Call specs per stage. S0: 5 dev images per system and 2 graph images for H and G (never scored)."""
+    """Call specs per stage. S0: 5 dev images per system and 2 graph images for H and G (never scored). S1 in blocks,
+    in the order of BLOCKS; vdiag items are given in the draw order of their groups."""
     calls = {"S0": [], "S1": [], "R": []}
     for s in vc.MAIN_SYSTEMS:
-        calls["S1"] += [{"system": s, "kind": "codes", "bank": "icai_vdiag", "item": x} for x in vdiag]
-        calls["S1"] += [{"system": s, "kind": "codes", "bank": "rijks_dev", "item": x} for x in dev]
-        calls["S1"] += [{"system": s, "kind": "boites", "bank": "pe_eval", "item": x} for x in pe]
-        calls["R"] += [{"system": s, "kind": "codes", "bank": "rijks_dev", "item": x} for x in repeat]
-        calls["S0"] += [{"system": s, "kind": "codes", "bank": "rijks_dev", "item": x} for x in dev[:5]]
-        calls["S0"] += [{"system": s, "kind": "boites", "bank": "pe_eval", "item": x} for x in pe[:2]]
-    calls["S1"] += [{"system": "O", "kind": "codes", "bank": "rijks_dev", "item": x} for x in opus]
-    calls["S0"] += [{"system": "O", "kind": "codes", "bank": "rijks_dev", "item": x} for x in dev[:5]]
+        calls["S1"] += [{"system": s, "kind": "codes", "bank": "rijks_dev", "item": x, "block": "dev"} for x in dev]
+    calls["S1"] += [{"system": "O", "kind": "codes", "bank": "rijks_dev", "item": x, "block": "opus"} for x in opus]
+    for s in vc.MAIN_SYSTEMS:
+        calls["S1"] += [{"system": s, "kind": "codes", "bank": "icai_vdiag", "item": x, "block": "vdiag"} for x in vdiag]
+    for s in vc.MAIN_SYSTEMS:
+        calls["S1"] += [{"system": s, "kind": "boites", "bank": "pe_eval", "item": x, "block": "graphes"} for x in pe]
+    for s in vc.MAIN_SYSTEMS:
+        calls["R"] += [{"system": s, "kind": "codes", "bank": "rijks_dev", "item": x, "block": "repet"} for x in repeat]
+        calls["S0"] += [{"system": s, "kind": "codes", "bank": "rijks_dev", "item": x, "block": "s0"} for x in dev[:5]]
+        calls["S0"] += [{"system": s, "kind": "boites", "bank": "pe_eval", "item": x, "block": "s0"} for x in pe[:2]]
+    calls["S0"] += [{"system": "O", "kind": "codes", "bank": "rijks_dev", "item": x, "block": "s0"} for x in dev[:5]]
     for stage, lst in calls.items():
         for c in lst:
             c["id"] = f"{stage}:{c['system']}:{c['bank']}:{c['item']}"
@@ -278,7 +285,7 @@ def main(a):
     for k in evaluable:
         groups.setdefault(ids[k]["md5"], []).append(k)
     chosen_groups = vc.draw_whole_groups(groups, vc.MIN_IMAGES["vdiag"], vc.SEED)
-    vdiag_rows = sorted(k for g in chosen_groups for k in groups[g])
+    vdiag_rows = [k for g in chosen_groups for k in sorted(groups[g])]  # draw order of the groups (v2.2 reduction rule)
     files = icai_images(ids, vdiag_rows, shards, out / "images" / "icai")
 
     dev, items = dev_items(a.frozen)
@@ -296,17 +303,20 @@ def main(a):
     repeat = sorted(p for c in vc.draw_whole_groups(comps, vc.MIN_IMAGES["repeat"], vc.SEED_REPEAT) for p in comps[c])
     pe = pe_evaluation(a.pe, out / "images" / "pe")
 
+    rank = {g: i for i, g in enumerate(chosen_groups)}
     icai = [{"key": f"v{k}", "row": k, "md5": ids[k]["md5"], "image": f"icai/{files[k]}", "truth": truth[k],
-             "group": ids[k]["md5"], "B": preds["B_TZ"][k], "T_star": preds["T_star"][k]} for k in vdiag_rows]
+             "group": ids[k]["md5"], "draw_rank": rank[ids[k]["md5"]], "B": preds["B_TZ"][k], "T_star": preds["T_star"][k]}
+            for k in vdiag_rows]
     rijks = [{"key": it["pid"], "image": f"rijks/{it['pid']}.jpg", "image_sha256": it["image_sha256"],
               "truth": it["truth_projected"], "group": str(it["component"]), "B": sealed["T-Z"][i],
               "T_star": sealed["T_star"][i]} for i, it in enumerate(items)]
     calls = plan_calls([x["key"] for x in icai], [x["key"] for x in rijks], opus, repeat, [x["name"] for x in pe])
-    prep = {"preinscription": "PREINSCRIPTION-v2.1.md", "models": vc.MODELS, "seed": vc.SEED, "seed_repeat": vc.SEED_REPEAT,
+    prep = {"preinscription": "PREINSCRIPTION-v2.2.md", "models": vc.MODELS, "seed": vc.SEED, "seed_repeat": vc.SEED_REPEAT,
             "vocabulary": vocab, "prompts_sha256": vc.prompts_sha256(vocab),
             "code_sha256": {n: sha(HERE / n) for n in CODE},
             "banks": {"icai_vdiag": icai, "rijks_dev": rijks, "pe_eval": pe},
-            "samples": {"vdiag_groups": len(chosen_groups), "vdiag_images": len(icai), "dev_images": len(rijks),
+            "samples": {"vdiag_groups": len(chosen_groups), "vdiag_images": len(icai),
+                        "vdiag_groups_order": [[g, len(groups[g])] for g in chosen_groups], "dev_images": len(rijks),
                         "dev_components": len(comps), "opus": opus, "repeat": repeat},
             "calls": calls, "planned": {k: len(v) for k, v in calls.items()},
             "controls": {"vdiag_evaluable": 2100, "vdiag_B_H": VDIAG_B_H, "dev_H": DEV_H, "decisions": "cache sha256 equal",

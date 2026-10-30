@@ -1,6 +1,8 @@
-"""VLM comparison, measures (PREINSCRIPTION-v2.1.md sections 3.5, 3.6, 4, 5). Runs only after the plate receipt.
+"""VLM comparison, measures (PREINSCRIPTION-v2.2.md sections 3.5, 3.6, 4, 5). Runs only after the plate receipt.
 
-The receipt (recu.json) names the SHA-256 of the three journals and of status_S1.json; nothing is measured if one differs.
+The receipt (recu.json) names the SHA-256 of the journals of S1 and R and of status_S1.json, and at least two distinct looks;
+every raw output must still match the SHA-256 written in its journal record. Nothing is measured otherwise. V-diagnostic is
+measured on the groups kept by plan_S1.json (extrapolation rule, v2.2).
 The call kept for each image is the final attempt of S1 (the repeat stage R only feeds the repeatability table). An image
 whose final state is not "reponse" counts with an empty set (H-F1 0) and stays in the denominator.
 
@@ -19,6 +21,10 @@ import a1_core as a1  # noqa: E402
 import pe_common as pc  # noqa: E402
 import vlm_core as vc  # noqa: E402
 from vlm_call import require, sha  # noqa: E402
+
+
+def vm_read(path):
+    return [json.loads(l) for l in path.read_text().splitlines()] if path.exists() else []
 
 
 def final_records(root, stage):
@@ -61,6 +67,7 @@ def bank_measure(prep, last, bank, systems, keys=None):
         exact[s] = [a1.exact_e(t, p) for t, p in zip(truth, preds)]
         tot = {k: sum(c[k] for c in counts) for k in ("valide", "hors_V", "invalide")}
         info[s] = {"missing_records": sum(r is None for r in recs), "states": states({i: r for i, r in enumerate(recs) if r}),
+                   "refusals_without_image_read": sum(1 for r in recs if r and r["state"] == "refus" and not r.get("image_read")),
                    "chains": tot, "invalid_rate": vc.invalid_rate(tot),
                    "cardinality_mean": float(np.mean([len(p) for p in preds])) if preds else None}
     groups = [x["group"] for x in rows]
@@ -141,15 +148,23 @@ def main(a):
     for stage in ("S1", "R"):
         require(receipt["journals_sha256"][stage] == sha(root / "journal" / f"{stage}.jsonl"), f"receipt_journal_{stage}")
     require(receipt["status_S1_sha256"] == sha(root / "status_S1.json"), "receipt_status")
-    require(len(receipt.get("regards", [])) >= 2, "receipt_two_looks")
+    require(len(set(receipt.get("regards", []))) >= 2, "receipt_two_distinct_looks")
+    for stage in ("S0", "S1", "R"):
+        for rec in vm_read(root / "journal" / f"{stage}.jsonl"):
+            require(sha(root / "raw" / rec["raw_file"]) == rec["raw_sha256"], f"raw_changed_{rec['raw_file']}")
+    plan = json.loads((root / "plan_S1.json").read_text())
+    kept = set(plan["vdiag_groups_kept"])
     s1, r = final_records(root, "S1"), final_records(root, "R")
     status = json.loads((root / "status_S1.json").read_text())
     dev = bank_measure(prep, s1, "rijks_dev", vc.MAIN_SYSTEMS)
     family = {s: {**dev["bootstrap"]["contrasts"][f"{s}-T_star"],
                   "reading": vc.reading(dev["bootstrap"]["contrasts"][f"{s}-T_star"])} for s in vc.MAIN_SYSTEMS}
     out = {"preinscription": prep["preinscription"], "complete": status["complete"], "stopped_by": status["stopped_by"],
-           "family_dev_vs_T_star": family, "family_level": "Bonferroni sur 2, unilatéral 97,5 % (q2_5 / q97_5)",
-           "rijks_dev": dev, "icai_vdiag": bank_measure(prep, s1, "icai_vdiag", vc.MAIN_SYSTEMS),
+           "family_dev_vs_T_star": family,
+           "family_level": "Bonferroni bilatéral sur 2 : q1_25 / q98_75 ; q2_5 / q97_5 = IC95 non corrigé, descriptif",
+           "plan_S1": plan,
+           "rijks_dev": dev, "icai_vdiag": bank_measure(prep, s1, "icai_vdiag", vc.MAIN_SYSTEMS,
+                                      keys={x["key"] for x in prep["banks"]["icai_vdiag"] if x["group"] in kept}),
            "opus_slice_descriptive": bank_measure(prep, s1, "rijks_dev", ("H", "G", "O"), keys=set(prep["samples"]["opus"])),
            "repeatability": repeatability(prep, s1, r, vc.MAIN_SYSTEMS), "graphs": graphs(prep, s1, vc.MAIN_SYSTEMS),
            "costs_and_time": costs(root), "test_rows": 0}
