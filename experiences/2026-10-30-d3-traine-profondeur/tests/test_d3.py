@@ -2,6 +2,7 @@
 import ast
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -66,6 +67,32 @@ class CoreTest(unittest.TestCase):
                   0.6: {"precision": 0.8, "total_recall": 0.4}}
         self.assertEqual(d3.choose_t(curves, 0.65, (0.3, 0.5, 0.6)), (0.6, False))
         self.assertEqual(d3.choose_t(curves, 0.9, (0.3, 0.5, 0.6)), (0.95, True))
+        # B emits no child: its precision is None; reproduced TypeError of Codex p4, now the flagged 0.95
+        self.assertEqual(d3.choose_t(curves, None, (0.3, 0.5, 0.6)), (0.95, True))
+
+    def test_identity_with_closed_gate(self):
+        # true children but the gate always closed: coverage 0, conditional None (reproduced TypeError of Codex p4)
+        c = d3.child_counts([["11H1"], ["11H2"]], [[], []], ["11H1", "11H2"], [set(), set()])
+        self.assertEqual((c["gate_coverage"], c["conditional_recall"], c["total_recall"]), (0.0, None, 0.0))
+        run.check_identity(c, "closed")
+        run.check_identity(d3.child_counts([[]], [[]], ["11H1"], [set()]), "no_true_child")
+        bad = dict(c, hits=1)
+        with self.assertRaises(RuntimeError):
+            run.check_identity(bad, "closed_but_hit")
+        with self.assertRaises(RuntimeError):
+            run.check_identity(dict(c, gate_coverage=0.5, conditional_recall=0.5, total_recall=0.3), "broken")
+
+    def test_no_silent_cpu_fallback(self):
+        import torch
+        saved = os.environ.pop(run.CPU_TEST_FLAG, None)
+        try:
+            if torch.cuda.is_available() and "T4" in torch.cuda.get_device_name(0):
+                self.skipTest("a T4 is present")
+            with self.assertRaises(RuntimeError):
+                run.device()
+        finally:
+            if saved is not None:
+                os.environ[run.CPU_TEST_FLAG] = saved
 
     def test_judges(self):
         self.assertTrue(d3.rule_g(0.596, 0.59, 0.30, 0.305))
@@ -124,6 +151,7 @@ class RunTest(unittest.TestCase):
     def setUp(self):
         self.saved = {k: getattr(run, k) for k in ("Data", "EPOCHS", "DECISIONS_SHA256")}
         self.fake = FakeData()
+        os.environ[run.CPU_TEST_FLAG] = "1"
         run.Data = lambda *a: self.fake
         run.EPOCHS = 2
         run.DECISIONS_SHA256 = run.legacy_sha([sorted(q) for q in self.fake.b_pred])
@@ -131,6 +159,7 @@ class RunTest(unittest.TestCase):
     def tearDown(self):
         for k, v in self.saved.items():
             setattr(run, k, v)
+        os.environ.pop(run.CPU_TEST_FLAG, None)
 
     def test_blank_then_complete(self):
         root = Path(tempfile.mkdtemp())
@@ -140,6 +169,9 @@ class RunTest(unittest.TestCase):
         info = json.loads(blank.read_text())
         self.assertEqual(info["weight_zero_identity_rows"], 80)
         self.assertIsNone(info["scores"])
+        self.assertEqual(info["environment"]["device"], "cpu")
+        self.assertTrue(info["environment"]["local_cpu_test"])
+        self.assertIn("numpy float32 on CPU", info["environment"]["neighbours"])
         blank.write_text(json.dumps({**info, "status": "WITHIN_2H"}))
         run.stage_complet(A(out=str(root / "complet"), blank=str(blank),
                             blank_sha256=hashlib.sha256(blank.read_bytes()).hexdigest()))
@@ -148,6 +180,15 @@ class RunTest(unittest.TestCase):
         self.assertIn("G", b1["verdict"])
         self.assertEqual(sorted(b2["seeds"]), ["0", "1", "2"])
         self.assertTrue(all(s["t"] in run.THRESHOLDS + (0.95,) for s in b2["seeds"].values()))
+        self.assertIn("not concept recognition", b2["counting"])
+        # a blank from another environment is refused by the complete stage
+        other = root / "blanc" / "other.json"
+        info2 = json.loads(blank.read_text())
+        info2["environment"] = dict(info2["environment"], torch="0.0")
+        other.write_text(json.dumps(info2))
+        with self.assertRaises(RuntimeError):
+            run.stage_complet(A(out=str(root / "complet2"), blank=str(other),
+                                blank_sha256=hashlib.sha256(other.read_bytes()).hexdigest()))
 
 
 if __name__ == "__main__":

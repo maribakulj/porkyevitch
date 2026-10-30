@@ -1,11 +1,12 @@
 {
-  "status": "Préinscription (feu vert Grok p2) ; code et blanc écrits pour relecture, aucune exécution",
+  "status": "Préinscription : feux verts Grok p2 et Codex p4 ; code : correctifs de l'audit Codex p4 (moniteur du pilote, T4 exigé, voisins CPU déclarés, None du complet, comptes de descente déclarés) ; à relire ; aucune exécution",
   "files": {
     "PREINSCRIPTION.md": "4a4c0c630ee58be873ddc6377fdca9d3241dab1afe256b1f71b154e86f1f783b",
-    "CODE.md": "59deaf22760882581b4b126bcdbd002a3e10c7549a5c680d41e17fe6319823a0",
-    "scripts/d3_core.py": "10805ec7cce6495529d2fa3ca1a83c47c3417c96e5f2c1883b2649a1bfeb236a",
-    "scripts/d3_run.py": "050d00309ea7f05141b30e80bf3212c15faa35a928d7aec8f205b1d1256d51b9",
-    "scripts/kaggle_d3_run.py": "8f8176e083dc3730b1e0ed816a3ba76ec92ed9823cfdc6208e6c00962672c170",
-    "tests/test_d3.py": "ee52fe37b7761da56dfb83746a87521dae6cad59847baa95c0014315ce825f8d"
+    "CODE.md": "d5f1d97da5a88f08eae31b53216701c153d2bbaa731dd5c817a03d9468583154",
+    "scripts/d3_core.py": "8a31d87b4364980bbf9e9ffb552c2bf622920ec03444cdadcb67f0dd3ab85039",
+    "scripts/d3_run.py": "2529107d7a16f08f2441bba81f5d7613e264b6232cc102f7cf783cbb25bf913a",
+    "scripts/kaggle_d3_run.py": "d1765e86d8ea52080f82d8f63de479135ba6a0ff6f1fc240544356da84cb7ef2",
+    "tests/test_d3.py": "a1c98785ce5de2d612674247f9c90a708ccca9def2439411443be9966d3f644f",
+    "tests/test_d3_pilot.py": "7ac71c3f58e056b1a99aa9917f6611f98f3cceb8a35a4e77db153cb13773f8ff"
   }
 }

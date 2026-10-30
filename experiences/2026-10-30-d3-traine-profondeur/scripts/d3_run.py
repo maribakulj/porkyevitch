@@ -33,6 +33,14 @@ K, VOTE_WEIGHT, PERM_SEED = 20, 0.25, 3030
 EPOCHS, BATCH, LR, WD, SEEDS = 20, 1024, 1e-3, 1e-4, (0, 1, 2)
 THRESHOLDS = tuple(round(0.05 * k, 2) for k in range(1, 20))
 BOOT_SEED = 20261030  # fixed here, percentile method, descriptive [G6]
+CPU_TEST_FLAG = "D3_CPU_FOR_LOCAL_TESTS"  # local tests only; the Kaggle pilot removes it from the child's environment
+NEIGHBOURS_DEVICE = ("numpy float32 on CPU, blocks of 256 validation rows; declared derogation from preregistration "
+                     "section 5, which announced the GPU (Codex p4, 30/10); a GPU version would be new bytes to review")
+COUNTING = ("exact raw codes after most_specific and drop86, every image of the lot, one t for all families; not concept "
+            "recognition through the closure: truth 11H and output 11H1 count zero exact success for 11H, although H-F1 "
+            "credits the concept. A descent result is therefore not a general causal proof about deep information in the "
+            "features; H-F1 stays the judge of the pipeline")
+CONDITIONAL_READING = "conditional_recall None = not applicable (gate closed for every true child); never a support"
 
 
 def require(ok, code):
@@ -232,8 +240,34 @@ def measures(data, rows, preds, rare):
 
 # ---------------------------------------------------------------- arm 2
 def device():
+    """One T4, never a silent CPU fallback; CPU only under the explicit local-test flag."""
     import torch
-    return "cuda" if torch.cuda.is_available() else "cpu"
+    if os.environ.get(CPU_TEST_FLAG) == "1":
+        return "cpu"
+    require(torch.cuda.is_available() and "T4" in torch.cuda.get_device_name(0), "one_T4_required_no_cpu_fallback")
+    return "cuda"
+
+
+def environment():
+    import scipy
+    import torch
+    dev = device()
+    return {"device": dev, "gpu": torch.cuda.get_device_name(0) if dev == "cuda" else None,
+            "local_cpu_test": dev == "cpu", "python": sys.version.split()[0], "numpy": np.__version__,
+            "scipy": scipy.__version__, "torch": torch.__version__, "cuda": torch.version.cuda,
+            "neighbours": NEIGHBOURS_DEVICE}
+
+
+def check_identity(c, name):
+    """total = coverage x conditional where the conditional is defined; with the gate closed for every true child,
+    coverage and hits must be 0 and the conditional is published as not applicable."""
+    if not c["true_children"]:
+        return
+    if c["conditional_recall"] is None:
+        require(c["gate_coverage"] == 0 and c["hits"] == 0 and c["total_recall"] == 0, f"identity_closed_gate_{name}")
+    else:
+        require(abs(c["total_recall"] - c["gate_coverage"] * c["conditional_recall"]) <= 1e-12,
+                f"identity_total_equals_coverage_times_conditional_{name}")
 
 
 def arm2_structures(data):
@@ -362,8 +396,7 @@ def stage_blanc(a):
     est = (info["setup_s"] + info["S0_s"] + info["neighbours_64_s"] / 64 * 4265 * 2 +
            info["one_epoch_s"] * EPOCHS * len(SEEDS) + 600)
     info.update({"estimate_hours": est / 3600, "status": "WITHIN_2H" if est <= 2 * 3600 else "AMENDMENT_REQUIRED",
-                 "technical_only": True, "scores": None, "device": device(),
-                 "versions": {"python": sys.version.split()[0], "numpy": np.__version__}})
+                 "technical_only": True, "scores": None, "environment": environment()})
     write_json(out / "blanc.json", info)
     print("D3_BLANC_DONE_NO_SCORE")
 
@@ -371,6 +404,9 @@ def stage_blanc(a):
 def stage_complet(a):
     blank = json.loads(Path(a.blank).read_text())
     require(sha(a.blank) == a.blank_sha256 and blank["status"] == "WITHIN_2H", "reviewed blank missing")
+    env = environment()
+    tested = {k: blank["environment"][k] for k in ("device", "gpu", "torch", "cuda", "numpy", "scipy", "python")}
+    require(tested == {k: env[k] for k in tested}, "complet_environment_differs_from_the_reviewed_blank")
     data = Data(a.encoder, a.inventory, a.diag)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=False)
@@ -425,6 +461,8 @@ def stage_complet(a):
     b_lec_gates = gates_for(data, lec, children, parent_of)
     b_lec = d3.child_counts([data.truth[k] for k in lec], [data.b_pred[k] for k in lec], children, b_lec_gates)
     b_lec_h = measures(data, lec, [data.b_pred[k] for k in lec], rare)
+    check_identity(b_reg, "B_Vreg")
+    check_identity(b_lec, "B_Vlec")
     seeds = {}
     for seed in SEEDS:
         layer, hist = train_head(data.xf, mask, y, seed, x_reg=data.xv[reg], mask_reg=mreg, y_reg=yreg)
@@ -433,18 +471,22 @@ def stage_complet(a):
         for t in THRESHOLDS:
             o, gts = arm2_outputs(data, reg, sc_reg, children, parent_of, t)
             curves[t] = d3.child_counts([data.truth[k] for k in reg], o, children, gts)
+            check_identity(curves[t], f"seed{seed}_t{t}")
         t_star, flagged = d3.choose_t(curves, b_reg["precision"], THRESHOLDS)
         o_lec, g_lec = arm2_outputs(data, lec, sc_lec, children, parent_of, t_star)
         c_lec = d3.child_counts([data.truth[k] for k in lec], o_lec, children, g_lec)
-        if c_lec["true_children"]:
-            require(abs(c_lec["total_recall"] - c_lec["gate_coverage"] * c_lec["conditional_recall"]) <= 1e-12,
-                    "identity_total_equals_coverage_times_conditional")
+        check_identity(c_lec, f"seed{seed}_Vlec")
         m_lec = measures(data, lec, o_lec, rare)
         seeds[seed] = {"history": hist, "t": t_star, "t_flagged_no_precision": flagged,
+                       "t_flag_reason": None if not flagged else ("B_emits_no_child_precision_undefined"
+                                                                  if b_reg["precision"] is None else
+                                                                  "no_t_reaches_B_precision"),
                        "Vreg_curves": {str(t): v for t, v in curves.items()}, "Vlec_children": c_lec,
                        "Vlec_pipeline": strip(m_lec), "freq_depth": freq_depth(data, lec, o_lec, g_lec, children),
                        "G": d3.rule_g(m_lec["H"], b_lec_h["H"], m_lec["E"], b_lec_h["E"])}
-    descent = all(s["Vlec_children"]["conditional_recall"] is not None and b_lec["conditional_recall"] is not None and
+    # an undefined conditional or precision (None) never establishes an improved descent
+    descent = all(None not in (s["Vlec_children"]["conditional_recall"], b_lec["conditional_recall"],
+                               s["Vlec_children"]["precision"], b_lec["precision"]) and
                   s["Vlec_children"]["conditional_recall"] - b_lec["conditional_recall"] >= 0.02 and
                   s["Vlec_children"]["precision"] >= b_lec["precision"] - 0.01 for s in seeds.values())
     write_json(out / "bras2.json", {
@@ -453,7 +495,7 @@ def stage_complet(a):
                                                                        b_lec_gates, children),
         "seeds": seeds, "descent_improved_descriptive": descent,
         "G_retained_all_three_seeds": all(s["G"] for s in seeds.values()),
-        "counting": "exact codes after most_specific and drop86, every image of the lot, one t for all families"})
+        "counting": COUNTING, "conditional_reading": CONDITIONAL_READING, "environment": env})
     print("D3_COMPLET_DONE")
 
 

@@ -211,7 +211,10 @@ def child_counts(truths, outputs, children, gates_open):
 
 
 def choose_t(curves, b_precision, grid):
-    """Largest total recall among t with precision >= B's; ties: larger t; none: 0.95, flagged."""
+    """Largest total recall among t with precision >= B's; ties: larger t; none: 0.95, flagged.
+    B's precision is None when B emits no child: there is no precision to reach, so the same flagged 0.95 applies."""
+    if b_precision is None:
+        return 0.95, True
     ok = [t for t in grid if curves[t]["precision"] is not None and curves[t]["precision"] >= b_precision]
     if not ok:
         return 0.95, True
