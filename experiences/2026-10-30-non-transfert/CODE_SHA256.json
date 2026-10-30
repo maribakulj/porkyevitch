@@ -1,12 +1,13 @@
 {
-  "status": "Préinscription et code du diagnostic de non-transfert (D10), descriptif, dev Rijksmuseum et validation ICAI seulement ; à relire (Grok p2 puis Codex p4) ; aucune exécution",
+  "status": "Préinscription D10 (favorable Codex p4) ; code : correctif B1 (vote effectif de TK au seuil, oracle gardé), tk_above_threshold, tirages indéfinis comptés ; à contre-vérifier ; aucune exécution",
   "files": {
+    "CORRECTIF-B1.md": "16380a1fa2d5a0046dae990143f3395deb7d58fdd8e40aee0ad13e3c7407b91e",
     "PREINSCRIPTION.md": "4dca2435eb3723cfdf46256b434351d80f778e2212d3b55c9896088ad72d9257",
-    "scripts/nt_core.py": "42236e0c61678108a2d7fc75e2e099c0e98bc611672606992ec97acc919d3ae3",
-    "scripts/nt_run.py": "4eb28eddafc1a039a25dbd3a29112a8b4856e423fa9349e8403a63de6bfaa7c4",
+    "scripts/kaggle_nt_run.py": "8734d3ff5811c6a6fb4b8793fca5a683c4b1c8df3dd9f9ac12031cb92e7b1be1",
     "scripts/mesure_metrics.py": "9a9d452676e7dd7717d4fab0aa00d11c2a1da5169913d03a80e0ccb5416df895",
-    "scripts/kaggle_nt_run.py": "65ea9452fd4200620b3335115784b68de6be9b3b1e142a0094a9ba9780e20207",
-    "tests/test_nt.py": "d6cead50e85c157309b60028730d15a3b3a8d1fd3dbd84781c4b883ada813a85",
+    "scripts/nt_core.py": "d6761ae9a69f2836f9e3a13a45a0252d3b483f8027aa85089761e5154da7f987",
+    "scripts/nt_run.py": "7cafcb1ba8077c876d3c57b049e2cbef2c3e03eab5561166f379280da5fc93a9",
+    "tests/test_nt.py": "9560330a0a9aa466e682e9b3d62cd63cd6f59437f2271b93548cad2d4db6b7b1",
     "tests/test_nt_pilot.py": "380add34685cbac160d5a58ebf6332ec756aedda6705c361a8c70f2395c746ef"
   }
 }

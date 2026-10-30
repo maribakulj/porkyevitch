@@ -21,6 +21,17 @@ def closure_idx(codes):
     return {VI[a] for c in codes for a in nt.mm.ancestors(c) if a in VI}
 
 
+def gel_votes(weights, indices, anc, classes):
+    """The accumulation of gel_predictions.votes, in numpy: float32 matrix, clamped weights / python-float total."""
+    out = np.zeros((len(weights), classes), dtype=np.float32)
+    for row, (w, idx) in enumerate(zip(weights, indices)):
+        w = np.asarray(w, dtype=np.float32).clip(min=0)
+        total = max(float(w.sum()), 1e-9)
+        for x, i in zip(w, idx):
+            out[row, sorted(anc[i])] += x / total
+    return out
+
+
 def bank():
     """Two query images; four training rows; counts make 11H and 11H1 frequent (> 100), 25F mid (21-100)."""
     fit = [["11H1"], ["25F"], ["11"], ["11H"]]
@@ -37,6 +48,7 @@ def bank():
          "rand_index": [np.array([1, 2]), np.array([3, 1])],
          "groups": ["a", "b"]}
     b["tk_score"][1, VI["11H"]] = 0.6
+    b["vote"] = gel_votes(b["nn_weight"], b["nn_index"], anc, len(VOCAB))
     return b, anc, counts
 
 
@@ -101,9 +113,22 @@ class CoreTest(unittest.TestCase):
         y = nt.bootstrap(recs, 2, b["groups"], 200, 7)
         self.assertEqual(x, y)
         self.assertEqual(x["groups"], 2)
-        lo, hi = x["ci95"]["head_closure"]
+        h = x["intervals"]["head_closure"]
+        lo, hi = h["ci95"]
         self.assertTrue(0 <= lo <= hi <= 1)
-        self.assertIn("vote_available-random_available", x["ci95"])
+        self.assertEqual(h["defined_draws"] + h["undefined_draws"], 200)
+        self.assertIn("vote_available-random_available", x["intervals"])
+        self.assertIn("linear", x["method"])
+
+    def test_bootstrap_counts_undefined_draws(self):
+        # one image without any target pair in its group: draws that pick only it have no denominator
+        b, anc, counts = bank()
+        recs = [r for r in nt.pair_records(b, VOCAB, counts, anc, 0.5, 0.6) if r["image"] == 0]
+        x = nt.bootstrap(recs, 2, b["groups"], 400, 3)
+        h = x["intervals"]["head_closure"]
+        self.assertGreater(h["undefined_draws"], 0)
+        self.assertEqual(h["defined_draws"] + h["undefined_draws"], 400)
+        self.assertEqual(nt.bootstrap([], 2, b["groups"], 400, 3)["intervals"], {})
 
     def test_bank_report(self):
         b, anc, counts = bank()
@@ -112,6 +137,38 @@ class CoreTest(unittest.TestCase):
         self.assertEqual(rep["main"]["pairs"], 2)
         self.assertEqual(rep["images_without_main_target"], 0)
         self.assertEqual(rep["outside_vocabulary_pairs"], 1)
+
+
+class ThresholdVoteTest(unittest.TestCase):
+    """B1 (Codex p4): the threshold event follows TK's effective float32 vote, the reconstruction is only an oracle."""
+
+    def case(self, carriers, n=20):
+        vocab = ["1", "11", "11H"]
+        vi = {c: j for j, c in enumerate(vocab)}
+        anc = [{vi["1"], vi["11"], vi["11H"]} if k < carriers else {vi["1"]} for k in range(n)]
+        w = np.full(n, 0.7, dtype=np.float32)
+        b = {"truths": [["11H"]], "star": [[]], "star_prob": np.zeros((1, 3), dtype=np.float32), "tk": [[]],
+             "tk_score": np.zeros((1, 3), dtype=np.float32), "nn_weight": [w], "nn_index": [np.arange(n)],
+             "rand_index": [np.arange(n)], "groups": ["g"]}
+        b["vote"] = gel_votes(b["nn_weight"], b["nn_index"], anc, 3)
+        r = nt.pair_records(b, vocab, {"11H": 101}, anc, 0.5, 0.6)[0]
+        return r, b["vote"][0, vi["11H"]]
+
+    def test_balanced_ten_of_twenty(self):
+        r, v = self.case(10)
+        self.assertTrue(r["main"])
+        self.assertLess(r["vote_reconstructed"], 0.5)            # 0.49999999999999994 in float64
+        self.assertEqual(r["vote_alone_at_tk_threshold"], bool(v >= np.float32(0.5)))  # follows TK's matrix
+        self.assertTrue(r["vote_alone_at_tk_threshold"])         # 0.5000000596 in float32
+        self.assertAlmostEqual(r["vote"], float(v))
+        self.assertEqual(nt.summary([r])["vote_oracle"]["threshold_decisions_differing"], 1)
+
+    def test_either_side_of_the_threshold(self):
+        for carriers, expected in ((9, False), (11, True), (0, False), (20, True)):
+            r, v = self.case(carriers)
+            self.assertEqual(r["vote_alone_at_tk_threshold"], expected, carriers)
+            self.assertEqual(r["vote_alone_at_tk_threshold"], bool(v >= np.float32(0.5)))
+            self.assertLess(abs(r["vote"] - r["vote_reconstructed"]), 1e-5)
 
 
 class DevOnlyTest(unittest.TestCase):

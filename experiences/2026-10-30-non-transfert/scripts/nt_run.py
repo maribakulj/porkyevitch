@@ -222,8 +222,11 @@ def main(a):
     for name, bank in banks.items():
         records, rep = nt.bank_report(bank, vocab, counts, anc, rec, DRAWS, BOOT_SEED[name])
         vi = {c: j for j, c in enumerate(vocab)}
-        gap = max((abs(r["vote"] - float(bank["vote"][r["image"]][vi[r["code"]]])) for r in records), default=0.0)
-        require(gap <= 1e-5, "vote_recomputation")  # the per-pair vote equals the vote matrix of TK
+        # independent oracle: the reconstruction from the 20 weights stays close to TK's effective vote (the threshold
+        # events themselves use the effective vote, B1 of Codex p4)
+        gap = max((abs(r["vote_reconstructed"] - float(bank["vote"][r["image"]][vi[r["code"]]])) for r in records),
+                  default=0.0)
+        require(gap <= 1e-5, "vote_recomputation")
         rep["vote_recomputation_max_gap"] = gap
         reports[name], codes[name] = rep, rep["per_code_main"]
         monitor.check(f"nt_measures_{name}")

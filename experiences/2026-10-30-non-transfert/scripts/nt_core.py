@@ -38,7 +38,10 @@ def neighbour_available(code_index, neighbour_sets, weights):
 
 def pair_records(bank, vocab, counts, ancestor_sets, tk_threshold, star_threshold):
     """One record per (image, distinct projected truth code in V). bank keys: truths, star, star_prob, tk, tk_score,
-    nn_weight, nn_index, rand_index, groups. Probabilities and scores are rows over vocab (float32)."""
+    nn_weight, nn_index, rand_index, groups, vote. Probabilities, scores and votes are rows over vocab (float32).
+    Threshold events use the EFFECTIVE vote of TK (bank["vote"], gel_predictions.votes, float32) against the threshold
+    in its dtype (B1, Codex p4: a float64 reconstruction of 10 equal weights out of 20 gives 0.49999999999999994 where
+    TK's float32 matrix gives 0.5000000596); the independent reconstruction is kept apart as an oracle."""
     vi = {c: j for j, c in enumerate(vocab)}
     vset = set(vocab)
     star_t = np.float32(star_threshold)
@@ -55,13 +58,15 @@ def pair_records(bank, vocab, counts, ancestor_sets, tk_threshold, star_threshol
             if k is None:
                 continue
             j = vi[c]
-            vote = sum(max(x, 0.0) / total for x, s in zip(w, nsets) if j in s)
+            reconstructed = sum(max(x, 0.0) / total for x, s in zip(w, nsets) if j in s)
+            effective = bank["vote"][i][j]
             records.append({
                 "image": i, "group": bank["groups"][i], "code": c, "cell": k, "main": in_main(k),
                 "head_closure": c in star_cl, "head_exact": c in star,
                 "head_above_threshold": bool(bank["star_prob"][i][j] >= star_t),
-                "vote_available": neighbour_available(j, nsets, w), "vote": vote,
-                "vote_alone_at_tk_threshold": vote >= tk_threshold,
+                "vote_available": neighbour_available(j, nsets, w), "vote": float(effective),
+                "vote_reconstructed": reconstructed, "vote_reconstructed_at_tk_threshold": reconstructed >= tk_threshold,
+                "vote_alone_at_tk_threshold": bool(effective >= np.asarray(tk_threshold, dtype=np.asarray(effective).dtype)),
                 "tk_closure": c in tk_cl, "tk_exact": c in tk,
                 "tk_above_threshold": bool(bank["tk_score"][i][j] >= np.float32(tk_threshold)),
                 "random_available": any(j in s for s in rsets),
@@ -71,7 +76,7 @@ def pair_records(bank, vocab, counts, ancestor_sets, tk_threshold, star_threshol
 
 
 EVENTS = ("head_closure", "head_exact", "head_above_threshold", "vote_available", "vote_alone_at_tk_threshold",
-          "tk_closure", "tk_exact", "random_available")
+          "tk_closure", "tk_exact", "tk_above_threshold", "random_available")
 
 
 def summary(records):
@@ -93,7 +98,13 @@ def summary(records):
         "above_threshold": sum(r["head_above_threshold"] for r in records),
         "above_threshold_not_emitted_exactly": sum(r["head_above_threshold"] and not r["head_exact"] for r in records),
         "emitted_exactly": sum(r["head_exact"] for r in records),
-        "reached_by_closure_only": sum(r["head_closure"] and not r["head_exact"] for r in records)}
+        "reached_by_closure_only": sum(r["head_closure"] and not r["head_exact"] for r in records),
+        "tk_above_threshold": sum(r["tk_above_threshold"] for r in records),
+        "tk_above_threshold_not_emitted_exactly": sum(r["tk_above_threshold"] and not r["tk_exact"] for r in records)}
+    out["vote_oracle"] = {"max_gap": max(abs(r["vote"] - r["vote_reconstructed"]) for r in records),
+                          "threshold_decisions_differing": sum(r["vote_reconstructed_at_tk_threshold"] != r["vote_alone_at_tk_threshold"]
+                                                               for r in records),
+                          "read_as": "events use TK's effective float32 vote; the float64 reconstruction is an oracle"}
     return out
 
 
@@ -144,9 +155,15 @@ def bootstrap(records, n_images, groups_of_images, draws, seed, events=("head_cl
             acc[e].append(vals[e])
         acc["vote_available-head_closure"].append(vals["vote_available"] - vals["head_closure"])
         acc["vote_available-random_available"].append(vals["vote_available"] - vals["random_available"])
-    ci = lambda v: [float(np.nanquantile(v, 0.025)), float(np.nanquantile(v, 0.975))]
+    def ci(v):
+        v = np.asarray(v, dtype=float)
+        ok = v[np.isfinite(v)]
+        interval = ([float(np.quantile(ok, 0.025, method="linear")), float(np.quantile(ok, 0.975, method="linear"))]
+                    if len(ok) else None)
+        return {"ci95": interval, "defined_draws": int(len(ok)), "undefined_draws": int(len(v) - len(ok))}
+    # a draw with no target pair has an undefined ratio: counted and left out, never read as a value
     return {"unit": "group", "groups": int(len(uniq)), "images": int(n_images), "draws": draws, "seed": seed,
-            "method": "percentile, descriptive", "ci95": {k: ci(v) for k, v in acc.items()}}
+            "method": "percentile, numpy quantile method linear, descriptive", "intervals": {k: ci(v) for k, v in acc.items()}}
 
 
 def bank_report(bank, vocab, counts, ancestor_sets, recipe, draws, seed):
