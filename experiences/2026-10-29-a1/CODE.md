@@ -22,6 +22,33 @@
 
 Sans E1, ces deux défauts auraient pu passer pour un « mécanisme » ou une erreur du tri. Ils sont consignés pour l'audit.
 
+### Reproduire le cas du prétraitement (réponse à Grok p7, 30/10)
+
+**Environnement où le défaut apparaît** : Python 3.12.13, macOS 26.4.1 arm64, numpy 2.5.4, **scipy 1.18.1, HiGHS 1.12.0** (embarqué dans scipy, lu dans `scipy.optimize._highspy._core`).
+
+**Le problème est figé** dans `tests/fixtures/highs_presolve_case.json` : 19 variables binaires, Σx = 13, 29 contraintes de fermeture x_b ≤ x_a, et l'objectif w(13). Le fichier contient aussi l'ensemble du tri et sa valeur. Le cas vient des données factices (graine 0, image 36, K = 4, τ = 0,05, η = 1, π₀ = 0,25, k = 13). Rejouer le fichier évite toute différence dans la génération de ces données.
+
+**Commande** (n'appelle aucun code d'A1, seulement scipy sur le fichier) :
+
+```
+python -I tests/repro_highs_presolve.py
+```
+
+**Sortie chez moi :**
+
+| objectif | presolve | valeur rendue | écart dual |
+|---|---|---:|---:|
+| **non mis à l'échelle (−w, tel que trouvé)** | **oui** | **0,45380111659678546** | 0 |
+| non mis à l'échelle | non | 0,4553204656876363 | 0 |
+| mis à l'échelle (max w = 10⁶, `a1_core` actuel) | oui | 0,45532046568763623 | 0 |
+| mis à l'échelle | non | 0,4553204656876363 | 0 |
+
+L'ensemble du tri vaut 0,4553204656876362 et il est faisable : le script vérifie qu'il respecte toutes les contraintes. **Le faux optimum n'apparaît donc qu'avec le prétraitement ET l'objectif non mis à l'échelle.**
+
+Si l'on rejoue le cas à travers le `milp_k` actuel, la mise à l'échelle est déjà appliquée, et le prétraitement redonne la bonne valeur. C'est l'explication la plus probable de la non-reproduction chez Grok p7. Une autre plateforme ou une autre version de HiGHS peut aussi suffire à le faire disparaître.
+
+**Le contournement reste en place** (prétraitement coupé ET mise à l'échelle) : chacun suffit sur ce cas, mais ni l'un ni l'autre n'est une garantie générale. Le test de non-régression (`tests/test_a1_run.py`) passe par le code actuel. Il garantit donc que **nos** appels donnent la bonne valeur, et le script de reproduction documente le défaut lui-même.
+
 ## Les notes de Grok p2 (section 7.3), reprises dans le code
 
 | Note | Où |
