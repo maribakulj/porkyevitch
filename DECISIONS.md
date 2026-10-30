@@ -113,3 +113,11 @@ autorisé sur B seul) ; aucun score de bras (A, C, F, contrôle) n'y figure, et 
 
 Règle préinscrite §9.4 appliquée mécaniquement : aucun bras G/R à la graine 0 (verdicts.json 6a026547…) ⇒ graines 1 et 2
 non lancées ; graine 0 publiée comme résultat exploratoire négatif. (Relu par Sonnet ; Codex contre-vérifiera.)
+
+## D16 (30/10/2026) : suite du petit élève après D2 (Grok p7 challenger, contre-expertise Codex p4)
+
+Le petit élève v1 (tête sur C-RADIO gelé) s'arrête là (D2 « pas de signal »). Une seule brique suivante, préinscrite :
+**transfert de YOLOE-v8-S**, couches de localisation explicitement entraînées sur les 106 graphes Gemini, budget global
+écrit d'avance, même règle Loc/AP/D, mêmes 26 images (donc exploratoire : ces 26 ont déjà servi de juge). Aucune ouverture
+automatique de la campagne Haiku (300) ; OWLv2 n'est pas « adopté » par défaut. Si encore Loc−, la piste élève s'arrête.
+Rapports : porkyevitch-apres-d2-grok.md, porkyevitch-apres-d2-codex.md. Licence AGPL de YOLOE notée, pas une porte.
