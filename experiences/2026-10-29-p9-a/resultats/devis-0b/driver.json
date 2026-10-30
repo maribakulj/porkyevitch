@@ -1,0 +1,64 @@
+{
+  "stage": "devis",
+  "seed": 0,
+  "config_sha256": "8a5782fc65da7edfc1d01d25bd9cbf6fb78591bfe158c8be6d3338e8178478d1",
+  "source_manifest_sha256": "3b2662173d8edbec59dc8c2481483d0769366788bb1126707aba868347999be2",
+  "versions": {
+    "safetensors": "0.8.0",
+    "torch": "2.11.0+cu128",
+    "pyarrow": "23.0.1",
+    "tokenizers": "0.23.1",
+    "Pillow": "13.0.0",
+    "numpy": "2.1.3",
+    "huggingface-hub": "1.29.0",
+    "transformers": "5.16.1",
+    "psutil": "5.9.5",
+    "scipy": "1.16.3"
+  },
+  "python": "3.13.15",
+  "approval": {
+    "grok_p2_report": "porkyevitch-p9a-code-grok.md section 16 (correctif GradScaler, relance devis graine 0, paquet 3b266217)",
+    "codex_p4_report": "porkyevitch-p9a-codex.md, D7 29faa62 (relance devis graine 0, paquet 3b266217)",
+    "slot_granted_by": "wA:p1",
+    "slot_id": "p9a-devis-0b-2026-10-30",
+    "seeds_1_2_decision": null
+  },
+  "wall_limit_seconds": 3600,
+  "status": "passed",
+  "no_automatic_continuation": true,
+  "exit_code": 0,
+  "elapsed_s": 319.337714116,
+  "failure": null,
+  "monitor_samples": [
+    {
+      "elapsed_s": 4.273961208000003,
+      "aggregate_rss_bytes": 638976,
+      "output_bytes": 19021
+    },
+    {
+      "elapsed_s": 64.28771451699998,
+      "aggregate_rss_bytes": 2795773952,
+      "output_bytes": 39668
+    },
+    {
+      "elapsed_s": 124.29952060699998,
+      "aggregate_rss_bytes": 6796468224,
+      "output_bytes": 78121
+    },
+    {
+      "elapsed_s": 184.31067081700002,
+      "aggregate_rss_bytes": 10165551104,
+      "output_bytes": 111509
+    },
+    {
+      "elapsed_s": 244.32204437399997,
+      "aggregate_rss_bytes": 13750669312,
+      "output_bytes": 210429
+    },
+    {
+      "elapsed_s": 304.334382993,
+      "aggregate_rss_bytes": 13780799488,
+      "output_bytes": 307981
+    }
+  ]
+}

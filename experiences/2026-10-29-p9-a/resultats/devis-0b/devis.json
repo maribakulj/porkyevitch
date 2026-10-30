@@ -1,0 +1,151 @@
+{
+  "technical_only": true,
+  "seed": 0,
+  "scores_kept": false,
+  "setup_s": 181.44863094800002,
+  "B_s": 5.434821685000031,
+  "arms": {
+    "F": {
+      "warm_update_s_mean": 0.05836691755000913,
+      "cold_update_s": 1.3329832690000103,
+      "train_s": 747.680213815617,
+      "per_epoch_selection_s": 17.52576827899992,
+      "Vreg_pass_s": 1.0910991129999843,
+      "grid_57_s": 16.230118911999966,
+      "checkpoint_s": 0.10227512699998442,
+      "checkpoint_bytes": 27033391,
+      "freeze_pass_s": 2.342835249000018,
+      "peak_allocated_bytes": 788460032,
+      "amp": {
+        "skips": 0,
+        "by_epoch": {},
+        "records": [],
+        "updates": 21,
+        "scale_end": 65536.0
+      }
+    },
+    "controle_global": {
+      "warm_update_s_mean": 0.06698617699998408,
+      "cold_update_s": 0.46854181800006245,
+      "train_s": 858.092927369796,
+      "per_epoch_selection_s": 22.698022341999945,
+      "Vreg_pass_s": 1.1325208219999467,
+      "grid_57_s": 21.368750915999954,
+      "checkpoint_s": 0.0983753020000222,
+      "checkpoint_bytes": 27034891,
+      "freeze_pass_s": 2.480129193000039,
+      "peak_allocated_bytes": 788460032,
+      "amp": {
+        "skips": 1,
+        "by_epoch": {
+          "1": 1
+        },
+        "records": [
+          {
+            "arm": "controle_global",
+            "epoch": 1,
+            "step": 11,
+            "scale_before": 65536.0,
+            "n_inf": 1528,
+            "n_nan": 12,
+            "most_affected_parameter": "U",
+            "most_affected_counts": [
+              1524,
+              12
+            ]
+          }
+        ],
+        "updates": 21,
+        "scale_end": 32768.0
+      }
+    },
+    "A": {
+      "warm_update_s_mean": 0.2928040872499992,
+      "cold_update_s": 0.39064577300007386,
+      "train_s": 3750.8203576724895,
+      "per_epoch_selection_s": 20.454389315999947,
+      "Vreg_pass_s": 2.002092392999998,
+      "grid_57_s": 18.232244025,
+      "checkpoint_s": 0.11002644899997449,
+      "checkpoint_bytes": 27033391,
+      "freeze_pass_s": 4.224489971000025,
+      "peak_allocated_bytes": 1441210880,
+      "amp": {
+        "skips": 2,
+        "by_epoch": {
+          "1": 2
+        },
+        "records": [
+          {
+            "arm": "A",
+            "epoch": 1,
+            "step": 11,
+            "scale_before": 65536.0,
+            "n_inf": 2292,
+            "n_nan": 18,
+            "most_affected_parameter": "U",
+            "most_affected_counts": [
+              2286,
+              18
+            ]
+          },
+          {
+            "arm": "A",
+            "epoch": 1,
+            "step": 17,
+            "scale_before": 32768.0,
+            "n_inf": 382,
+            "n_nan": 3,
+            "most_affected_parameter": "U",
+            "most_affected_counts": [
+              381,
+              3
+            ]
+          }
+        ],
+        "updates": 21,
+        "scale_end": 16384.0
+      }
+    },
+    "C": {
+      "warm_update_s_mean": 0.07270110774998102,
+      "cold_update_s": 0.07993549499997243,
+      "train_s": 931.3011902772569,
+      "per_epoch_selection_s": 13.890620095000031,
+      "Vreg_pass_s": 1.2865790060000108,
+      "grid_57_s": 12.407264748999978,
+      "checkpoint_s": 0.09838817000002109,
+      "checkpoint_bytes": 27019015,
+      "freeze_pass_s": 2.7887136189999637,
+      "peak_allocated_bytes": 1441210880,
+      "amp": {
+        "skips": 0,
+        "by_epoch": {},
+        "records": [],
+        "updates": 21,
+        "scale_end": 65536.0
+      }
+    }
+  },
+  "per_arm_total_s": {
+    "F": 925.2807318546162,
+    "controle_global": 1087.5532799827954,
+    "A": 3959.588740803489,
+    "C": 1072.9961048462571
+  },
+  "seed_estimate_hours": 2.008972863922266,
+  "mesures_cpu_bootstrap_estimate_hours": 0.00775437795833385,
+  "disk_estimate_bytes": 1189327568,
+  "B_reference": {
+    "H_F1": 0.5890847528448202,
+    "eligible": 4241,
+    "seconds": 2.149095437000028
+  },
+  "amp_skip_rules": {
+    "min_scale": 1.0,
+    "max_skips_per_arm_epoch": 12.81,
+    "decided_by": "wA:p1, 30/10, before the rerun"
+  },
+  "status": "WITHIN_12H",
+  "note": "Extrapolation from 20 warm updates, one V-reglage pass and one 57-candidate grid per arm; not a mathematical bound. The CPU measures stage is budgeted by its own timings."
+}
