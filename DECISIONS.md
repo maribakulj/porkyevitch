@@ -108,3 +108,8 @@ gel.json porte B_reference {H_F1 0,58908 sur 4 241 éligibles}, alors que RUNNER
 non bloquant. Ce score est celui de la référence B (T-Z), déjà publié par le devis et le diagnostic (contrôle d'intégrité
 autorisé sur B seul) ; aucun score de bras (A, C, F, contrôle) n'y figure, et la sélection est scellée avant le gel
 (selection_sha256 repris dans gel.json). Écart déclaré au RUNNER ; Codex le contre-vérifiera. gel.json = 13f75f3a….
+
+## D15 (30/10/2026) : P9-A, graines 1 et 2 non lancées
+
+Règle préinscrite §9.4 appliquée mécaniquement : aucun bras G/R à la graine 0 (verdicts.json 6a026547…) ⇒ graines 1 et 2
+non lancées ; graine 0 publiée comme résultat exploratoire négatif. (Relu par Sonnet ; Codex contre-vérifiera.)
