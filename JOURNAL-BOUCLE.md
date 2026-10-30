@@ -75,3 +75,5 @@
 - 30/10 : devis P9-A ÉCHOUÉ (nonfinite gradients dans update, 184 s) → diagnostic pH.
 - 30/10 : petit élève smoke OK (overfit passed, 27,5 img/s) ; Florence-2 indisponible (transformers) ; relecture des sorties par Grok p3. M0 fait : Dice conjoint 0,596, IoU seul 0,657, accord catégories 0,891, relations 0,537.
 - 30/10 : PHASE 1 CLOSE : aucune brique retenue (verdicts commités) ; vérification Grok p3 + audit Codex demandés. D8 (YOLOE-v8-S ajouté). B3 A1/D3 en relecture.
+- 30/10 : smoke petit élève CONFORME (Grok p3) ; complet attend : révisions épinglées, correctifs Codex (chrono, Florence-2, planche), YOLOE-v8-S, puis relectures.
+- 30/10 : verdicts phase 1 : audit Codex CONFORME (5a4193cc). Vérif Grok p3 attendue, puis carte HF et fusion travail→main.
