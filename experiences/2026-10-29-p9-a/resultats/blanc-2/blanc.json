@@ -1,0 +1,1191 @@
+{
+  "technical_only": true,
+  "passed": true,
+  "scientific_verdict": null,
+  "no_full_runner_or_automatic_continuation": true,
+  "seed": 0,
+  "canonical_fit_rows": [
+    [
+      "train-00000-of-00011",
+      0,
+      "3b39c77e247acd70b18f3550c044ac3e"
+    ],
+    [
+      "train-00000-of-00011",
+      1,
+      "bc9b904d55add155c0de6b114814d423"
+    ],
+    [
+      "train-00000-of-00011",
+      2,
+      "fe3dbc8c9e54cdc03cccff1eeb04a1c1"
+    ],
+    [
+      "train-00000-of-00011",
+      3,
+      "f0a99703a1bddeeb215c5d3e11aae312"
+    ],
+    [
+      "train-00000-of-00011",
+      4,
+      "89fa881b5b29ade322060880721de8e1"
+    ],
+    [
+      "train-00000-of-00011",
+      5,
+      "2f81afdeb0d4ff53edb912fd2193f489"
+    ],
+    [
+      "train-00000-of-00011",
+      6,
+      "60ef69dfe455d46d78e521b2d10bb584"
+    ],
+    [
+      "train-00000-of-00011",
+      7,
+      "157fbb26dcac28d688e21d0b30512fe9"
+    ],
+    [
+      "train-00000-of-00011",
+      8,
+      "1ff3ba3a6ad25d541b17debace4f92e4"
+    ],
+    [
+      "train-00000-of-00011",
+      9,
+      "1d8b1e92e979fdf92c03a756998f0066"
+    ],
+    [
+      "train-00000-of-00011",
+      10,
+      "4353124f2bbc5b25682ee0ed0f1c87c6"
+    ],
+    [
+      "train-00000-of-00011",
+      11,
+      "ff136a700aaef320a484e33b801477b7"
+    ],
+    [
+      "train-00000-of-00011",
+      12,
+      "80ae5edfcb0676ac1a32503e2e53b889"
+    ],
+    [
+      "train-00000-of-00011",
+      13,
+      "328c27aca350cd26d77366bfe28ed5e0"
+    ],
+    [
+      "train-00000-of-00011",
+      14,
+      "ecb9f3571ade7aac5024de8bc567d5f2"
+    ],
+    [
+      "train-00000-of-00011",
+      15,
+      "0bab58cae37d2734c17014ee6cfb9906"
+    ],
+    [
+      "train-00000-of-00011",
+      16,
+      "30ffc0b6d03fdf8efb85cf5d52f724a7"
+    ],
+    [
+      "train-00000-of-00011",
+      17,
+      "907180f3217b1cd553e3f630a18d461c"
+    ],
+    [
+      "train-00000-of-00011",
+      18,
+      "64db2cda948cfe0f19e8ff10948885ab"
+    ],
+    [
+      "train-00000-of-00011",
+      19,
+      "cf09fc5eaa8bdd8c7a381372c0ca1da9"
+    ],
+    [
+      "train-00000-of-00011",
+      20,
+      "ca077203eeb44a428f35f05b5625d7d7"
+    ],
+    [
+      "train-00000-of-00011",
+      21,
+      "7fdbdcdcb75bf0c719115dcac0449f4a"
+    ],
+    [
+      "train-00000-of-00011",
+      22,
+      "976dea76762dd3c17d27954ec59c789a"
+    ],
+    [
+      "train-00000-of-00011",
+      23,
+      "c303b2645bfb96e67f85ec717068e2c1"
+    ],
+    [
+      "train-00000-of-00011",
+      24,
+      "0ef5a6571bee4cfaf32f806d89e3d8e5"
+    ],
+    [
+      "train-00000-of-00011",
+      25,
+      "d889cf66f5ad95729870f5f4629ae257"
+    ],
+    [
+      "train-00000-of-00011",
+      26,
+      "db075875c8fc4bd2c3d471165bbc07ab"
+    ],
+    [
+      "train-00000-of-00011",
+      27,
+      "3d0be8ec457825a71f89e4c4e82ab314"
+    ],
+    [
+      "train-00000-of-00011",
+      28,
+      "30b33b8db0175cc7fb2f91283798b9d4"
+    ],
+    [
+      "train-00000-of-00011",
+      29,
+      "15b2f953c53edee4bbb930ef7b5694d4"
+    ],
+    [
+      "train-00000-of-00011",
+      30,
+      "c3ce3ff6540ba61ebc2ef09ff3627bb3"
+    ],
+    [
+      "train-00000-of-00011",
+      31,
+      "a4487a8501359889be845d7dc86dd4bb"
+    ],
+    [
+      "train-00000-of-00011",
+      32,
+      "9f48b1e95ff79e1c094f68be484d2ec7"
+    ],
+    [
+      "train-00000-of-00011",
+      33,
+      "11fd4efeae5228d64916d93f26940d7e"
+    ],
+    [
+      "train-00000-of-00011",
+      34,
+      "902ce305f086665a3ccfbc3fd3b7b727"
+    ],
+    [
+      "train-00000-of-00011",
+      35,
+      "c1ccdfb5c84272c0834651b8e46ab4de"
+    ],
+    [
+      "train-00000-of-00011",
+      36,
+      "868f775680dc2a99d26ce2c7de158723"
+    ],
+    [
+      "train-00000-of-00011",
+      37,
+      "b6f77984ffc13e25273e8ef014b0391c"
+    ],
+    [
+      "train-00000-of-00011",
+      38,
+      "b3757a636b21e3391109aba853683732"
+    ],
+    [
+      "train-00000-of-00011",
+      39,
+      "4dc0fb99f4d50784f42357307e4e7a48"
+    ],
+    [
+      "train-00000-of-00011",
+      40,
+      "78e19982bf57f8f6208d3eefcc8e8d5b"
+    ],
+    [
+      "train-00000-of-00011",
+      41,
+      "cff0dec6848dbae1230915bb8d2ab20e"
+    ],
+    [
+      "train-00000-of-00011",
+      42,
+      "b15121b9690200a6bfbacad69363ea74"
+    ],
+    [
+      "train-00000-of-00011",
+      43,
+      "fb00e605477432f0a0237b90dd4c28ca"
+    ],
+    [
+      "train-00000-of-00011",
+      44,
+      "6721ca959a427a4b655503d3e74d85fe"
+    ],
+    [
+      "train-00000-of-00011",
+      45,
+      "b5b6ca2a37ee1790aa7891fa272e3d5c"
+    ],
+    [
+      "train-00000-of-00011",
+      46,
+      "8ca29ed79dfad2149f38a9fc8fcada42"
+    ],
+    [
+      "train-00000-of-00011",
+      47,
+      "ba9cf7ee16c78143e29a7131b4b36f78"
+    ],
+    [
+      "train-00000-of-00011",
+      48,
+      "bb028b320c481bd5c4f75da87ab6586f"
+    ],
+    [
+      "train-00000-of-00011",
+      49,
+      "a529feff9ebe8f611424618ce3d4e5fa"
+    ],
+    [
+      "train-00000-of-00011",
+      50,
+      "186654c68a8e0dd7fdbe2cba69f8fd01"
+    ],
+    [
+      "train-00000-of-00011",
+      51,
+      "a7298a34fe515a24eccc3f90737a1da0"
+    ],
+    [
+      "train-00000-of-00011",
+      52,
+      "947b4a893544973bfe467fa3a1283b1f"
+    ],
+    [
+      "train-00000-of-00011",
+      53,
+      "dde315f352f69f1c007eef836960f29e"
+    ],
+    [
+      "train-00000-of-00011",
+      54,
+      "e0e449eca0b454cb9b8f35268b12f121"
+    ],
+    [
+      "train-00000-of-00011",
+      55,
+      "a5ff409627bff6f70ba0d52d8d048c13"
+    ],
+    [
+      "train-00000-of-00011",
+      56,
+      "077aea943ff8ea7ea139e23aa96648e5"
+    ],
+    [
+      "train-00000-of-00011",
+      57,
+      "434bca3e4b7c0e1ae239b436ac29733f"
+    ],
+    [
+      "train-00000-of-00011",
+      58,
+      "7859d3c8092e59c97ce593238c23f0ab"
+    ],
+    [
+      "train-00000-of-00011",
+      59,
+      "ff1edbd6353d22342239410fe837a9e2"
+    ],
+    [
+      "train-00000-of-00011",
+      60,
+      "05dab45b413b3d258a92d66e8de52788"
+    ],
+    [
+      "train-00000-of-00011",
+      61,
+      "73e6691f06eb4eaa0d1fdf5d8684266d"
+    ],
+    [
+      "train-00000-of-00011",
+      62,
+      "044715480f1c3970466583893c196679"
+    ],
+    [
+      "train-00000-of-00011",
+      63,
+      "83647745ecb0c8a96c7e14e57009c8e1"
+    ],
+    [
+      "train-00000-of-00011",
+      65,
+      "1857ef55eb7b4acb7cf282c59e7c2206"
+    ],
+    [
+      "train-00000-of-00011",
+      66,
+      "c18f9990b15b4a0ea373caca951c613d"
+    ],
+    [
+      "train-00000-of-00011",
+      67,
+      "6e8cd2f7cc25c82b8754e0219ff52db5"
+    ],
+    [
+      "train-00000-of-00011",
+      68,
+      "5019c8679092a92fc90b30a84c9e8872"
+    ],
+    [
+      "train-00000-of-00011",
+      69,
+      "94c7dcbb925c756c48ee0a6570047764"
+    ],
+    [
+      "train-00000-of-00011",
+      70,
+      "2bc1f72de170b65fb32f78e349cae982"
+    ],
+    [
+      "train-00000-of-00011",
+      71,
+      "0abe127e5d495c0a648b794fdeb014c8"
+    ],
+    [
+      "train-00000-of-00011",
+      72,
+      "da7819db4d26f0c30812f123ae65b7ad"
+    ],
+    [
+      "train-00000-of-00011",
+      73,
+      "681151a48932888930a05c7241e2eea6"
+    ],
+    [
+      "train-00000-of-00011",
+      74,
+      "537b27465d4393bbb3e43c3b4c768ac8"
+    ],
+    [
+      "train-00000-of-00011",
+      75,
+      "79e3226c2a0a2feefd0ee9c832c44a09"
+    ],
+    [
+      "train-00000-of-00011",
+      76,
+      "2b57a7dd3922e92d923c69f34153880b"
+    ],
+    [
+      "train-00000-of-00011",
+      77,
+      "014bf39497ebd6819a4847805e011c4e"
+    ],
+    [
+      "train-00000-of-00011",
+      78,
+      "6d9d7d61923e47963974116824b35e3c"
+    ],
+    [
+      "train-00000-of-00011",
+      81,
+      "8dd58778f09c72b4b125c3c21962fba6"
+    ],
+    [
+      "train-00000-of-00011",
+      82,
+      "fff180ea2e3a3cfc3fc56a4533613ba7"
+    ],
+    [
+      "train-00000-of-00011",
+      83,
+      "c590b79e0abb94057fa19726a134bff3"
+    ],
+    [
+      "train-00000-of-00011",
+      84,
+      "907bef7a4fd8ea4d0a7289514b42a8ee"
+    ],
+    [
+      "train-00000-of-00011",
+      85,
+      "47dd71813d0d4b44b969eea9d4315261"
+    ],
+    [
+      "train-00000-of-00011",
+      86,
+      "8b37d19cd6cd6bc5e149afe426b432f9"
+    ],
+    [
+      "train-00000-of-00011",
+      87,
+      "5233ee4f09e93bde93e0e3cd98b8eab1"
+    ],
+    [
+      "train-00000-of-00011",
+      88,
+      "13713bea99e697e275842b2d6d93169d"
+    ],
+    [
+      "train-00000-of-00011",
+      89,
+      "8e6885b2bc23a526a8eb2799153b2835"
+    ],
+    [
+      "train-00000-of-00011",
+      90,
+      "6e5adb512f5563b672e726bc7a25ea7e"
+    ],
+    [
+      "train-00000-of-00011",
+      91,
+      "0aff95a1d6e51a86fd48b959401ea032"
+    ],
+    [
+      "train-00000-of-00011",
+      92,
+      "9e085722da2b43a539444300493a0f3b"
+    ],
+    [
+      "train-00000-of-00011",
+      93,
+      "d50902cc32ba06524429f270debb51f1"
+    ],
+    [
+      "train-00000-of-00011",
+      94,
+      "4d39bd2461e0b6953f6d7d8937711992"
+    ],
+    [
+      "train-00000-of-00011",
+      95,
+      "4bf4427fe0cfb29ef0fc3cd2ccefdada"
+    ],
+    [
+      "train-00000-of-00011",
+      96,
+      "8a045bf1f5a0c5c90fb670755d18ab19"
+    ],
+    [
+      "train-00000-of-00011",
+      97,
+      "fa7ee617bb503776982dc11b36386abd"
+    ],
+    [
+      "train-00000-of-00011",
+      98,
+      "09599e18671f7702dab4a8aa9ac95927"
+    ],
+    [
+      "train-00000-of-00011",
+      99,
+      "9b38803f475afbdf1861f0f9ad987265"
+    ],
+    [
+      "train-00000-of-00011",
+      100,
+      "5a086e8d3fd490d87823a34c73dd8684"
+    ],
+    [
+      "train-00000-of-00011",
+      101,
+      "f5206139e7187e3fab63ff1a74906a7f"
+    ],
+    [
+      "train-00000-of-00011",
+      102,
+      "9114d93fef5688ecee62bb910387f8f8"
+    ],
+    [
+      "train-00000-of-00011",
+      103,
+      "ad88fd626656157a6a532e992a6141b3"
+    ],
+    [
+      "train-00000-of-00011",
+      104,
+      "b5fdfcbc98dbcb6f21aa8c7d51db5351"
+    ],
+    [
+      "train-00000-of-00011",
+      105,
+      "e27dfb29758d667c2fae824eddafaee4"
+    ],
+    [
+      "train-00000-of-00011",
+      106,
+      "2328d915030d6e6b7c155e187d563f65"
+    ],
+    [
+      "train-00000-of-00011",
+      107,
+      "7ce677a413838979e36ac09038e383d4"
+    ],
+    [
+      "train-00000-of-00011",
+      108,
+      "877ed07ef05f5e52c8e1d8d1ca45f787"
+    ],
+    [
+      "train-00000-of-00011",
+      109,
+      "ae1895fa0c934c6bc621b06fdf4faa3a"
+    ],
+    [
+      "train-00000-of-00011",
+      110,
+      "0228fb88f8aaeffb085e1f798617d53b"
+    ],
+    [
+      "train-00000-of-00011",
+      111,
+      "0202bf8e7577a942cbf991d6d85fa28c"
+    ],
+    [
+      "train-00000-of-00011",
+      112,
+      "cf0184a81b5221074bda6892ca93a207"
+    ],
+    [
+      "train-00000-of-00011",
+      113,
+      "35369f854200432260b93b79a9e2f399"
+    ],
+    [
+      "train-00000-of-00011",
+      114,
+      "93ff303a5378a87ec9813bfd1001c17e"
+    ],
+    [
+      "train-00000-of-00011",
+      115,
+      "a99373cc2b28b71fce7126c6117b7aa0"
+    ],
+    [
+      "train-00000-of-00011",
+      116,
+      "a0016549daa6e9a49e4810512896489f"
+    ],
+    [
+      "train-00000-of-00011",
+      117,
+      "94cb4478b27d2bd0b88b39484b03458b"
+    ],
+    [
+      "train-00000-of-00011",
+      118,
+      "29aca9b67bb731a93a0d9de2f39b6dcc"
+    ],
+    [
+      "train-00000-of-00011",
+      119,
+      "bdc6f6a2521154cadad909059a5e2021"
+    ],
+    [
+      "train-00000-of-00011",
+      120,
+      "ac506fb470b8d270cc35118857956d53"
+    ],
+    [
+      "train-00000-of-00011",
+      121,
+      "489fdf759088a400439d041c86889904"
+    ],
+    [
+      "train-00000-of-00011",
+      122,
+      "f0a76065f6ebf0a9152d35f428f23cfa"
+    ],
+    [
+      "train-00000-of-00011",
+      123,
+      "5e44182959eb196d48f996b579c99a04"
+    ],
+    [
+      "train-00000-of-00011",
+      124,
+      "34c1e1b65adca02218c6997563bc7d20"
+    ],
+    [
+      "train-00000-of-00011",
+      125,
+      "436f6c7239d8f4495d6813404df74b37"
+    ],
+    [
+      "train-00000-of-00011",
+      126,
+      "dad3ccaf73dfc268f6bbcf29813481b5"
+    ],
+    [
+      "train-00000-of-00011",
+      127,
+      "f6f29804ff1662a57369e07b1024d873"
+    ],
+    [
+      "train-00000-of-00011",
+      128,
+      "c7c63cf5fb691f4e29da8b4130bad1fd"
+    ],
+    [
+      "train-00000-of-00011",
+      129,
+      "7dae2371b2151784ba07a3d99e11bb75"
+    ],
+    [
+      "train-00000-of-00011",
+      130,
+      "62a8769daaa3233a7f8b6746913b382c"
+    ]
+  ],
+  "canonical_Vreg_rows": [
+    [
+      "train-00000-of-00011",
+      64,
+      "acefcd7321c72acedb91decf8f8b37ba"
+    ],
+    [
+      "train-00000-of-00011",
+      79,
+      "e939b1253d247080e97087e175f0b38a"
+    ],
+    [
+      "train-00000-of-00011",
+      80,
+      "2d5e855ec5934e48ef93412859526086"
+    ],
+    [
+      "train-00000-of-00011",
+      148,
+      "3bb91a1d74738d05c62bf2b3c7590afd"
+    ],
+    [
+      "train-00000-of-00011",
+      184,
+      "854a785836313fe33f08d7cb1dacf695"
+    ],
+    [
+      "train-00000-of-00011",
+      224,
+      "c9274ba43e2856769dc70ebb03a323cf"
+    ],
+    [
+      "train-00000-of-00011",
+      225,
+      "0702ebcf1b4681aaf9a47d1fcada85f9"
+    ],
+    [
+      "train-00000-of-00011",
+      261,
+      "9fd3ea62a9b8e62bec036d3045d4a405"
+    ],
+    [
+      "train-00000-of-00011",
+      324,
+      "263cc7a1440917fab4e7ca5c46e073e4"
+    ],
+    [
+      "train-00000-of-00011",
+      377,
+      "35611178b294cd77d3f067da3942cf3d"
+    ],
+    [
+      "train-00000-of-00011",
+      381,
+      "106d60bee6162def42aa0c04f310b190"
+    ],
+    [
+      "train-00000-of-00011",
+      546,
+      "66d871be2d91856340327ed40fe42b83"
+    ],
+    [
+      "train-00000-of-00011",
+      561,
+      "f8de9051c00cafe60ae15f134ad8a635"
+    ],
+    [
+      "train-00000-of-00011",
+      660,
+      "6f057b46d40d2b427a5c5072c6eb9e86"
+    ],
+    [
+      "train-00000-of-00011",
+      676,
+      "0eaf247f9bdd0f769d313931206ab184"
+    ],
+    [
+      "train-00000-of-00011",
+      742,
+      "83cb001685952fcf60c20fed9e4c2cb0"
+    ],
+    [
+      "train-00000-of-00011",
+      776,
+      "68ec8620642d85293564788da158d080"
+    ],
+    [
+      "train-00000-of-00011",
+      783,
+      "e89fb79c821e822927ada45ca11d0567"
+    ],
+    [
+      "train-00000-of-00011",
+      810,
+      "c7fcc3e9bda09b3cf910ff7b659d456e"
+    ],
+    [
+      "train-00000-of-00011",
+      865,
+      "d11eea36d00ca1dce2ad265b95d73353"
+    ],
+    [
+      "train-00000-of-00011",
+      868,
+      "b62c4373f31168160926204638773978"
+    ],
+    [
+      "train-00000-of-00011",
+      895,
+      "c9078cb191a7947e23e5a71e90c22f10"
+    ],
+    [
+      "train-00000-of-00011",
+      997,
+      "3eaebe811632ce073e552a048329797d"
+    ],
+    [
+      "train-00000-of-00011",
+      1045,
+      "c0b4d7052d494ef26f3b68e7225cbc55"
+    ],
+    [
+      "train-00000-of-00011",
+      1066,
+      "ce7183480486616e4fc908f24dc08db6"
+    ],
+    [
+      "train-00000-of-00011",
+      1067,
+      "4b16520b74ccdc00ea152e7d30052001"
+    ],
+    [
+      "train-00000-of-00011",
+      1109,
+      "a60ec364a2af6e7aad320f356836348c"
+    ],
+    [
+      "train-00000-of-00011",
+      1112,
+      "5df02ac15d7ef1ebe29e582ff9b527ae"
+    ],
+    [
+      "train-00000-of-00011",
+      1116,
+      "f0a5ad65d975dfed14a74d25c2409fa8"
+    ],
+    [
+      "train-00000-of-00011",
+      1239,
+      "42492ff4129fbe73d317bc8046bd5ee6"
+    ],
+    [
+      "train-00000-of-00011",
+      1334,
+      "252aef1662a65b650063296c94cf02ae"
+    ],
+    [
+      "train-00000-of-00011",
+      1424,
+      "e18ba887c3571591595b98ead8a01f73"
+    ],
+    [
+      "train-00000-of-00011",
+      1489,
+      "65962f3b03f1da0e003894d110905db0"
+    ],
+    [
+      "train-00000-of-00011",
+      1542,
+      "33af937fc88fb0cb5fa094090741da0a"
+    ],
+    [
+      "train-00000-of-00011",
+      1563,
+      "bfcca0d41095f8bc98233f7878a9288e"
+    ],
+    [
+      "train-00000-of-00011",
+      1617,
+      "a4de60d1ee32bb12c02a6b007127ea58"
+    ],
+    [
+      "train-00000-of-00011",
+      1619,
+      "03dbb51accdafaf75185efe8a8093d45"
+    ],
+    [
+      "train-00000-of-00011",
+      1641,
+      "892976c39102cbf113c4442c042be444"
+    ],
+    [
+      "train-00000-of-00011",
+      1656,
+      "5b2c451522a2ef09d595acd5ab961949"
+    ],
+    [
+      "train-00000-of-00011",
+      1660,
+      "b4e3114ccf94116c393d1c7ed2b4458d"
+    ],
+    [
+      "train-00000-of-00011",
+      1683,
+      "606d4e568b374333b9bd90b5df973740"
+    ],
+    [
+      "train-00000-of-00011",
+      1711,
+      "02269918dca17ab5c98e4fe51fb0aae1"
+    ],
+    [
+      "train-00000-of-00011",
+      1732,
+      "9103d5b382827afaec723fd905df4b7a"
+    ],
+    [
+      "train-00000-of-00011",
+      1782,
+      "f6db8a7f1b4beba0120b8c638021e6f8"
+    ],
+    [
+      "train-00000-of-00011",
+      1834,
+      "ba034800b5eb2f9d1cb9e8719614ae82"
+    ],
+    [
+      "train-00000-of-00011",
+      1844,
+      "6e2cad181a09783992410bac94925516"
+    ],
+    [
+      "train-00000-of-00011",
+      1904,
+      "4e129e63ac0f2251d115dda5bdbcc1c1"
+    ],
+    [
+      "train-00000-of-00011",
+      1906,
+      "772167ca3cbde79e7b570f9b8e4aeeeb"
+    ],
+    [
+      "train-00000-of-00011",
+      1914,
+      "84be36fe301aa4ccdb7befa80da7dbe5"
+    ],
+    [
+      "train-00000-of-00011",
+      1991,
+      "f43d506ffad931a96b12f9fcb6c3fcf8"
+    ],
+    [
+      "train-00000-of-00011",
+      2034,
+      "ecd29f2ab793264cd8a18bcb1dc3c1cf"
+    ],
+    [
+      "train-00000-of-00011",
+      2053,
+      "5ac2d60c824760b5129606c2c8b6a7fd"
+    ],
+    [
+      "train-00000-of-00011",
+      2113,
+      "5184131c481c4b37ffd8bc7990ee1261"
+    ],
+    [
+      "train-00000-of-00011",
+      2125,
+      "409822721ca529bc4ddf3a6abe53ba37"
+    ],
+    [
+      "train-00000-of-00011",
+      2204,
+      "bfc57fd3fac261e48d65eadef08c7683"
+    ],
+    [
+      "train-00000-of-00011",
+      2222,
+      "754638c6ac016a627eda8bc10b645b5f"
+    ],
+    [
+      "train-00000-of-00011",
+      2281,
+      "74c047f8b92611cd8ad7758506de6517"
+    ],
+    [
+      "train-00000-of-00011",
+      2386,
+      "bd983320e37abcaa3464b8a07e69ae04"
+    ],
+    [
+      "train-00000-of-00011",
+      2429,
+      "625e1bdbbcdb18bf7032c42f30db4cb4"
+    ],
+    [
+      "train-00000-of-00011",
+      2464,
+      "4e1771845311b1a227e9d53d0355bac4"
+    ],
+    [
+      "train-00000-of-00011",
+      2504,
+      "92d19522b322d97aa91e5fd486160abe"
+    ],
+    [
+      "train-00000-of-00011",
+      2525,
+      "24c83875a7e246ed07c0c67a71889c55"
+    ],
+    [
+      "train-00000-of-00011",
+      2551,
+      "cfe2c4128b16f5b12a8f414f7ac833b6"
+    ],
+    [
+      "train-00000-of-00011",
+      2562,
+      "e2a8e0249e9bdae2341311e521ad9097"
+    ]
+  ],
+  "new_head_Vdiag_inferences": 0,
+  "attempts": [
+    {
+      "micro_batch": 64,
+      "status": "passed_all_four"
+    }
+  ],
+  "chosen_common_micro_batch": 64,
+  "effective_batch": 64,
+  "arms": {
+    "F": {
+      "technical_only": true,
+      "initial_prior_max_error": 5.960464477539063e-08,
+      "initial_W_sha256": "4c757eb4ab7e10de556ec7acbab63b054e8f5ca89b3bb3fbbd34307b29070048",
+      "target_sha256": "c24939b1b2eae5de323120960f04e070ab2eeb1bd07024c80e8475fe8d271653",
+      "rows_sha256": "6ffc9571cba346cb0533480fbedfdaad35c00d4705ba8c7c91933fd6c9135467",
+      "cold_update": {
+        "wall_s": 0.47275652000001855,
+        "ASL": 57.606605529785156,
+        "regularization": 0.0,
+        "grad_norm_before_clip": 238.20037841796875
+      },
+      "warm_update": {
+        "wall_s": 0.06001328000002104,
+        "ASL": 58.566009521484375,
+        "regularization": 2.5257379547838354e-06,
+        "grad_norm_before_clip": 214.6361083984375
+      },
+      "replay_update": {
+        "wall_s": 0.061548250000043936,
+        "ASL": 58.566009521484375,
+        "regularization": 2.5257379547838354e-06,
+        "grad_norm_before_clip": 214.6361083984375
+      },
+      "technical_validation_seconds": 0.0357675089999816,
+      "technical_threshold_not_selected": 0.65,
+      "rare_metric_control": {
+        "codes": 4073,
+        "supported_codes": 24,
+        "positive_occurrences": 24,
+        "TP": 0,
+        "FP": 0,
+        "FN": 24,
+        "macro_F1": 0.0,
+        "micro_F1": 0.0
+      },
+      "checks": {},
+      "resume_probability_max_error": 0.0,
+      "checkpoint_after2_sha256": "a983aafd0b058faa8b79f013850ee3d3ceed554685a475da61f639ef643b3f97",
+      "trainable_parameters": 1201252
+    },
+    "controle_global": {
+      "technical_only": true,
+      "initial_prior_max_error": 1.1920928955078125e-07,
+      "initial_W_sha256": "4c757eb4ab7e10de556ec7acbab63b054e8f5ca89b3bb3fbbd34307b29070048",
+      "target_sha256": "c24939b1b2eae5de323120960f04e070ab2eeb1bd07024c80e8475fe8d271653",
+      "rows_sha256": "6ffc9571cba346cb0533480fbedfdaad35c00d4705ba8c7c91933fd6c9135467",
+      "cold_update": {
+        "wall_s": 0.18492240099999435,
+        "ASL": 57.606605529785156,
+        "regularization": 0.0,
+        "grad_norm_before_clip": 238.28121948242188
+      },
+      "warm_update": {
+        "wall_s": 0.0700137229999882,
+        "ASL": 58.09238815307617,
+        "regularization": 2.4996134015964344e-06,
+        "grad_norm_before_clip": 214.115234375
+      },
+      "replay_update": {
+        "wall_s": 0.06943024200000991,
+        "ASL": 58.09238815307617,
+        "regularization": 2.4996134015964344e-06,
+        "grad_norm_before_clip": 214.115234375
+      },
+      "technical_validation_seconds": 0.0344252599999777,
+      "technical_threshold_not_selected": 0.65,
+      "rare_metric_control": {
+        "codes": 4073,
+        "supported_codes": 24,
+        "positive_occurrences": 24,
+        "TP": 0,
+        "FP": 0,
+        "FN": 24,
+        "macro_F1": 0.0,
+        "micro_F1": 0.0
+      },
+      "checks": {
+        "hierarchy_probability_violation": -5.820766091346741e-11,
+        "hierarchy_intensity_violation": -5.820766091346741e-11,
+        "weighted_cell_duplication_max_probability_error/float64_cpu": 1.6653345369377348e-16,
+        "weighted_cell_duplication_max_probability_error/float32_gpu_descriptive": 7.450580596923828e-08,
+        "weighted_cell_duplication_max_probability_error/production_fp16_gpu_descriptive": 7.450580596923828e-08,
+        "one_level_max_intensity_error": 5.960464477539063e-08,
+        "after_training/hierarchy_probability_violation": -9.458744898438454e-11,
+        "after_training/hierarchy_intensity_violation": -9.458744898438454e-11,
+        "after_training/weighted_cell_duplication_max_probability_error/float64_cpu": 2.220446049250313e-16,
+        "after_training/weighted_cell_duplication_max_probability_error/float32_gpu_descriptive": 5.960464477539063e-08,
+        "after_training/weighted_cell_duplication_max_probability_error/production_fp16_gpu_descriptive": 8.344650268554688e-07,
+        "after_training/one_level_max_intensity_error": 5.960464477539063e-08
+      },
+      "resume_probability_max_error": 0.0,
+      "checkpoint_after2_sha256": "cf4890e4517fc095030a7be4f3c22d4719b7abe9d90261769be0743e0c9ba60b",
+      "trainable_parameters": 1201252
+    },
+    "A": {
+      "technical_only": true,
+      "initial_prior_max_error": 5.960464477539063e-08,
+      "initial_W_sha256": "4c757eb4ab7e10de556ec7acbab63b054e8f5ca89b3bb3fbbd34307b29070048",
+      "target_sha256": "c24939b1b2eae5de323120960f04e070ab2eeb1bd07024c80e8475fe8d271653",
+      "rows_sha256": "6ffc9571cba346cb0533480fbedfdaad35c00d4705ba8c7c91933fd6c9135467",
+      "cold_update": {
+        "wall_s": 0.384865714,
+        "ASL": 57.606605529785156,
+        "regularization": 0.0,
+        "grad_norm_before_clip": 238.28121948242188
+      },
+      "warm_update": {
+        "wall_s": 0.28829301099995064,
+        "ASL": 58.09238052368164,
+        "regularization": 2.4996134015964344e-06,
+        "grad_norm_before_clip": 214.115234375
+      },
+      "replay_update": {
+        "wall_s": 0.2843568449999907,
+        "ASL": 58.09238052368164,
+        "regularization": 2.4996134015964344e-06,
+        "grad_norm_before_clip": 214.115234375
+      },
+      "technical_validation_seconds": 0.05893618800001832,
+      "technical_threshold_not_selected": 0.65,
+      "rare_metric_control": {
+        "codes": 4073,
+        "supported_codes": 24,
+        "positive_occurrences": 24,
+        "TP": 0,
+        "FP": 0,
+        "FN": 24,
+        "macro_F1": 0.0,
+        "micro_F1": 0.0
+      },
+      "checks": {
+        "hierarchy_probability_violation": -5.820766091346741e-11,
+        "hierarchy_intensity_violation": -5.820766091346741e-11,
+        "hierarchy_local_violation": -6.548361852765083e-11,
+        "weighted_cell_duplication_max_probability_error/float64_cpu": 5.551115123125783e-17,
+        "weighted_cell_duplication_max_probability_error/float32_gpu_descriptive": 2.9802322387695312e-08,
+        "weighted_cell_duplication_max_probability_error/production_fp16_gpu_descriptive": 2.9802322387695312e-08,
+        "one_level_max_intensity_error": 5.960464477539063e-08,
+        "after_training/hierarchy_probability_violation": -8.731149137020111e-11,
+        "after_training/hierarchy_intensity_violation": -8.731149137020111e-11,
+        "after_training/hierarchy_local_violation": -8.003553375601768e-11,
+        "after_training/weighted_cell_duplication_max_probability_error/float64_cpu": 1.1102230246251565e-16,
+        "after_training/weighted_cell_duplication_max_probability_error/float32_gpu_descriptive": 5.960464477539063e-08,
+        "after_training/weighted_cell_duplication_max_probability_error/production_fp16_gpu_descriptive": 1.1622905731201172e-06,
+        "after_training/one_level_max_intensity_error": 5.960464477539063e-08
+      },
+      "resume_probability_max_error": 0.0,
+      "checkpoint_after2_sha256": "064a6bfedbff5c374511492aa307b6c9de2ec0d283376124954488fb9ca8bbab",
+      "trainable_parameters": 1201252
+    },
+    "C": {
+      "technical_only": true,
+      "initial_prior_max_error": 5.960464477539063e-08,
+      "initial_W_sha256": "4c757eb4ab7e10de556ec7acbab63b054e8f5ca89b3bb3fbbd34307b29070048",
+      "target_sha256": "c24939b1b2eae5de323120960f04e070ab2eeb1bd07024c80e8475fe8d271653",
+      "rows_sha256": "6ffc9571cba346cb0533480fbedfdaad35c00d4705ba8c7c91933fd6c9135467",
+      "cold_update": {
+        "wall_s": 0.06547824699998728,
+        "ASL": 57.606605529785156,
+        "regularization": 0.0,
+        "grad_norm_before_clip": 2.0158166885375977
+      },
+      "warm_update": {
+        "wall_s": 0.06534614000003103,
+        "ASL": 61.677513122558594,
+        "regularization": 2.5388462745468132e-06,
+        "grad_norm_before_clip": 1.9990590810775757
+      },
+      "replay_update": {
+        "wall_s": 0.06549855000002935,
+        "ASL": 61.677513122558594,
+        "regularization": 2.5388462745468132e-06,
+        "grad_norm_before_clip": 1.9990590810775757
+      },
+      "technical_validation_seconds": 0.0356957080000484,
+      "technical_threshold_not_selected": 0.65,
+      "rare_metric_control": {
+        "codes": 4073,
+        "supported_codes": 24,
+        "positive_occurrences": 24,
+        "TP": 0,
+        "FP": 0,
+        "FN": 24,
+        "macro_F1": 0.0,
+        "micro_F1": 0.0
+      },
+      "checks": {},
+      "resume_probability_max_error": 0.0,
+      "checkpoint_after2_sha256": "25220c3409247a389d75562b4c202a9539305b381c160cfc5e5f3bb462ea0320",
+      "trainable_parameters": 1200227
+    }
+  },
+  "raw_closed_frequency_differences": 4928,
+  "train_only_timing_extrapolation_hours": 1.7210453979833014,
+  "extrapolation_includes_selection_grid": false,
+  "full_run_budget_status": "REVIEW_REQUIRED",
+  "full_run_budget_note": "Training lower bound only; selection + full validation must be budgeted separately.",
+  "preparation_sha256": "b16b06d1a84fbedc175b0bb7b326be18d302dd65a7313c97c71c803a3b607b46",
+  "prereg_sha256": "25f1040f5b657d7b94896cba41852f59c2f6e3042a555f798c126ca8698d3585",
+  "source_sha256": {
+    "p9a_common.py": "7eb79cfc18acec12cfb68f176007a5a6bbce7956c301980599c538fdf6a03479",
+    "p9a_heads.py": "2ca395904a2c2bef830f57dff0a34a723921e690ef21b677cafc1dbee2756f38",
+    "p9a_inputs.py": "11016edf026175042fe8b57285f0989cc669b8bbf65b6fa8100173cad48c317f",
+    "p9a_prepare.py": "0ec1679d76c2197fde7c8ba7ffbdb3a8605a735229e902ecafe60e02762fdc3b",
+    "p9a_smoke.py": "7bb798b3cb6d47df8f36de2420c0d564d591ead91773ac4841233f89c7effa2b"
+  },
+  "gpu": "Tesla T4",
+  "torch": "2.11.0+cu128",
+  "numpy": "2.1.3"
+}
