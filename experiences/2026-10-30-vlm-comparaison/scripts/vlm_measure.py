@@ -1,4 +1,4 @@
-"""VLM comparison, measures (PREINSCRIPTION-v2.2.md sections 3.5, 3.6, 4, 5). Runs only after the plate receipt.
+"""VLM comparison, measures (PREINSCRIPTION-v2.3.md sections 3.5, 3.6, 4, 5). Runs only after the plate receipt.
 
 The receipt (recu.json) names the SHA-256 of the journals of S1 and R and of status_S1.json, and at least two distinct looks;
 every raw output must still match the SHA-256 written in its journal record. Nothing is measured otherwise. V-diagnostic is
@@ -67,6 +67,7 @@ def bank_measure(prep, last, bank, systems, keys=None):
         exact[s] = [a1.exact_e(t, p) for t, p in zip(truth, preds)]
         tot = {k: sum(c[k] for c in counts) for k in ("valide", "hors_V", "invalide")}
         info[s] = {"missing_records": sum(r is None for r in recs), "states": states({i: r for i, r in enumerate(recs) if r}),
+                   "commands_executed": sum(1 for r in recs if r and r["state"] == "commande_executee"),
                    "refusals_without_image_read": sum(1 for r in recs if r and r["state"] == "refus" and not r.get("image_read")),
                    "chains": tot, "invalid_rate": vc.invalid_rate(tot),
                    "cardinality_mean": float(np.mean([len(p) for p in preds])) if preds else None}

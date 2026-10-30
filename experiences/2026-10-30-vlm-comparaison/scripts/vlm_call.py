@@ -1,4 +1,4 @@
-"""VLM comparison, calls (PREINSCRIPTION-v2.2.md sections 2, 3.4, 5, 6). Computes NO score.
+"""VLM comparison, calls (PREINSCRIPTION-v2.3.md sections 2, 3.4, 5, 6). Computes NO score.
 
 One image per call, a fresh session per call, in a new temporary folder (outside the home folder) that holds only the image.
 Every attempt is appended to journal/<stage>.jsonl with its raw output (raw/<id>.<attempt>.txt), state, time, cost or usage
@@ -105,7 +105,8 @@ def one_attempt(spec, image_src, vocab, history):
             parsed = vc.parse_agy(out, image, history)
             state, payload = ("echec_technique", None) if timed_out else vc.agy_state(spec["kind"], parsed)
             extra = {"cost_usd": None, "usage": parsed["usage"], "status": parsed["status"],
-                     "conversation_id": parsed["conversation_id"], "image_read": parsed["image_read"]}
+                     "conversation_id": parsed["conversation_id"], "image_read": parsed["image_read"],
+                     "commands": parsed["commands"]}
         return {"state": state, "payload": payload, "seconds": round(seconds, 3), "timed_out": timed_out, "raw": out, **extra}
     finally:
         shutil.rmtree(work, ignore_errors=True)

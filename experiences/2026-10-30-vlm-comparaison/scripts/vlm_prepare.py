@@ -1,4 +1,4 @@
-"""VLM comparison, step 1 (PREINSCRIPTION-v2.2.md section 6): samples, images, truths, B and T* references, identity
+"""VLM comparison, step 1 (PREINSCRIPTION-v2.3.md section 6): samples, images, truths, B and T* references, identity
 controls, call plan and preparation seal. No model call, no score of a VLM.
 
 Reads only validation rows of the ICAI train shards (never data/test-*), the "dev" member of the Rijksmuseum frozen bank
@@ -311,7 +311,7 @@ def main(a):
               "truth": it["truth_projected"], "group": str(it["component"]), "B": sealed["T-Z"][i],
               "T_star": sealed["T_star"][i]} for i, it in enumerate(items)]
     calls = plan_calls([x["key"] for x in icai], [x["key"] for x in rijks], opus, repeat, [x["name"] for x in pe])
-    prep = {"preinscription": "PREINSCRIPTION-v2.2.md", "models": vc.MODELS, "seed": vc.SEED, "seed_repeat": vc.SEED_REPEAT,
+    prep = {"preinscription": "PREINSCRIPTION-v2.3.md", "models": vc.MODELS, "seed": vc.SEED, "seed_repeat": vc.SEED_REPEAT,
             "vocabulary": vocab, "prompts_sha256": vc.prompts_sha256(vocab),
             "code_sha256": {n: sha(HERE / n) for n in CODE},
             "banks": {"icai_vdiag": icai, "rijks_dev": rijks, "pe_eval": pe},

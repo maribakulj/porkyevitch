@@ -220,7 +220,7 @@ def fake_prep(root, n_dev=6):
         (root / "images" / x["image"]).write_bytes(x["key"].encode())
     opus, repeat = [x["key"] for x in rijks[:4]], [x["key"] for x in rijks[:2]]
     calls = prep.plan_calls([x["key"] for x in icai], [x["key"] for x in rijks], opus, repeat, [x["name"] for x in pe])
-    p = {"preinscription": "PREINSCRIPTION-v2.2.md", "vocabulary": VOCAB, "prompts_sha256": vc.prompts_sha256(VOCAB),
+    p = {"preinscription": "PREINSCRIPTION-v2.3.md", "vocabulary": VOCAB, "prompts_sha256": vc.prompts_sha256(VOCAB),
          "code_sha256": {n: sha(ROOT / "scripts" / n) for n in prep.CODE},
          "banks": {"icai_vdiag": icai, "rijks_dev": rijks, "pe_eval": pe},
          "samples": {"opus": opus, "repeat": repeat, "vdiag_groups_order": [["m0", 2], ["m1", 2]]},
@@ -441,6 +441,38 @@ class V22Test(unittest.TestCase):
         blocks = [c["block"] for c in calls["S1"]]
         self.assertEqual(blocks, sorted(blocks, key=call.S1_BLOCKS.index))
         self.assertEqual([c["item"] for c in calls["S1"] if c["block"] == "vdiag" and c["system"] == "H"], ["v1", "v0"])
+
+
+class AgyCommandTest(unittest.TestCase):
+    """v2.3: a command call in agy's database discards the answer (state commande_executee, no new attempt)."""
+    def db(self, payloads):
+        hist = Path(tempfile.mkdtemp())
+        with sqlite3.connect(hist / "c.db") as con:
+            con.execute("CREATE TABLE steps (step_type INTEGER, step_payload BLOB)")
+            for st, pl in payloads:
+                con.execute("INSERT INTO steps VALUES (?, ?)", (st, pl))
+        return hist
+
+    def setUp(self):
+        self.img = Path(tempfile.mkdtemp()) / "a.jpg"
+        self.img.write_bytes(b"x")
+        self.view = (15, json.dumps({"view_file": {"AbsolutePath": str(self.img.resolve())}}, separators=(",", ":")).encode())
+        self.env = json.dumps({"response": '{"codes": ["2"]}', "status": "SUCCESS", "conversation_id": "c"})
+
+    def test_declaration_and_reasoning_are_not_calls(self):
+        declaration = (14, b"\x0brun_command\x10\x01\x1a\x0fRuns a command")  # tool list, in every conversation
+        reasoning = (15, "the prompt forbids `run_command` and bash".encode())
+        hist = self.db([declaration, reasoning, self.view])
+        p = vc.parse_agy(self.env, self.img, hist)
+        self.assertEqual((p["commands"], vc.agy_state("codes", p)), (0, ("reponse", ["2"])))
+
+    def test_command_call_discards_the_answer(self):
+        call_step = (132, b'\x0bcall_1\x12\x0brun_command\x1aW{"CommandLine":"sips -g pixelWidth a.jpg"}')
+        hist = self.db([self.view, call_step])
+        p = vc.parse_agy(self.env, self.img, hist)
+        self.assertEqual(p["commands"], 1)
+        self.assertEqual(vc.agy_state("codes", p), ("commande_executee", None))
+        self.assertNotIn("commande_executee", vc.RETRYABLE)  # final: no new attempt
 
 
 class FakeExecutableTest(unittest.TestCase):

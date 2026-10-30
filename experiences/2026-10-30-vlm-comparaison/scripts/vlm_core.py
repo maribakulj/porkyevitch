@@ -1,4 +1,4 @@
-"""VLM comparison (PREINSCRIPTION-v2.2.md): pure rules, no network, no model call. numpy only (plus the pinned copies
+"""VLM comparison (PREINSCRIPTION-v2.3.md): pure rules, no network, no model call. numpy only (plus the pinned copies
 a1_core.py and pe_common.py, imported by the scripts that need them).
 
 Everything a score depends on is here and frozen by SHA-256 in the preparation seal: the prompts, the notation syntax,
@@ -209,8 +209,28 @@ def observed_paths(conversation_id, history=AGY_HISTORY):
     return sorted(found)
 
 
+# A real command call in agy's database: the tool name followed by its JSON arguments (v2.3). It does not match the tool
+# declaration present in every conversation, nor the model's reasoning when it merely names the tool.
+COMMAND_CALL = re.compile(r'(?:run_command|send_command_input)[^{]{0,8}\{"CommandLine"')
+
+
+def commands_requested(conversation_id, history=AGY_HISTORY):
+    """Number of steps holding a command call (requested, executed or refused by the guard), read-only."""
+    db = Path(history) / f"{conversation_id}.db"
+    if not db.exists():
+        return 0
+    n = 0
+    with contextlib.closing(sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True)) as con:
+        for (payload,) in con.execute("SELECT step_payload FROM steps"):
+            if payload:
+                text = payload.decode("utf-8", "ignore") if isinstance(payload, bytes) else str(payload)
+                n += bool(COMMAND_CALL.search(text))
+    return n
+
+
 def parse_agy(stdout, image_path, history=AGY_HISTORY):
-    out = {"text": None, "status": None, "usage": None, "conversation_id": None, "image_read": False, "opened": []}
+    out = {"text": None, "status": None, "usage": None, "conversation_id": None, "image_read": False, "opened": [],
+           "commands": 0}
     s = (stdout or "").strip()
     try:
         env = json.loads(s) if s.startswith("{") else {}
@@ -220,6 +240,7 @@ def parse_agy(stdout, image_path, history=AGY_HISTORY):
     out["conversation_id"] = env.get("conversation_id")
     if out["conversation_id"]:
         out["opened"] = observed_paths(out["conversation_id"], history)
+        out["commands"] = commands_requested(out["conversation_id"], history)
         out["image_read"] = str(Path(image_path).resolve()) in {str(Path(p).resolve()) for p in out["opened"]}
     return out
 
@@ -228,6 +249,8 @@ SAFETY_STATUSES = ("BLOCKED", "SAFETY", "BLOCKED_SAFETY")  # [à vérifier en S0
 
 
 def agy_state(kind, parsed):
+    if parsed.get("commands"):
+        return "commande_executee", None  # v2.3: answer discarded and counted, no new attempt
     if parsed["status"] in SAFETY_STATUSES:
         return "refus", f"status {parsed['status']}"
     if not parsed["text"] or parsed["status"] != "SUCCESS":
