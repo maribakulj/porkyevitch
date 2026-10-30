@@ -1,0 +1,12 @@
+{
+  "status": "A1-dev (D17) : préinscription (corrections Codex) et code écrits pour relecture Sonnet puis audit Codex ; aucune exécution",
+  "files": {
+    "PREINSCRIPTION.md": "bb956db1ef763be863553fe33d0ac4a18beafbed83cf137c5b9978770c3a6745",
+    "scripts/a1dev_run.py": "d26c4b0f3f7811740d7f96b93823835e6adb2b0def87f62a72526227c8e30247",
+    "scripts/a1dev_core.py": "2da71468255293ba7dfb602c1bffd78cf5ee590d43afe9720f1490fcfdf8cc81",
+    "scripts/kaggle_a1dev_run.py": "ccd152f740436cb1a80537362ca5b917bee945de9fc47e825cdc02df2c946c8c",
+    "scripts/a1_core.py": "177ef54243fd6dfed0aa557561aa365f41b2c992379aef6d4fab4c5e27ab205a",
+    "scripts/a1_run.py": "78b1ed982ae9b2e59624a30b83675703e156b92a1d45309b6089162c9dcee597",
+    "tests/test_a1dev.py": "79b3795206adbcafd332aef78c79374beb06f6dd9762280231cee61d3e2a5c15"
+  }
+}
