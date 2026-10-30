@@ -1,6 +1,12 @@
 {
-  "status": "Version 2 écrite pour relecture (contre-expertise Codex p4 intégrée), aucun code, aucune exécution",
+  "status": "Préinscription v2 (feu vert Grok p2) ; code et blanc écrits pour relecture, aucune exécution",
   "files": {
-    "PREINSCRIPTION.md": "ed452dc3218028e33759151cbd0d8dd21038cd105b45492cb77964a673d3f383"
+    "PREINSCRIPTION.md": "ed452dc3218028e33759151cbd0d8dd21038cd105b45492cb77964a673d3f383",
+    "CODE.md": "6e79cbd8e3812c6c125fc96a330160dcbdb4155162651f28435ca63898703831",
+    "scripts/a1_core.py": "177ef54243fd6dfed0aa557561aa365f41b2c992379aef6d4fab4c5e27ab205a",
+    "scripts/a1_run.py": "78b1ed982ae9b2e59624a30b83675703e156b92a1d45309b6089162c9dcee597",
+    "scripts/kaggle_a1_run.py": "f349f577560abdb52e97cf99fb2dc28aebddfb783824152af18ca71427cc40da",
+    "tests/test_a1_core.py": "0254bc2d532eb4be901b0480a71d2e7ba89b2c31e6b1d5e75395ebde4e8b87f6",
+    "tests/test_a1_run.py": "0e40a115ccb7950035ca85eb5846ee062069f4d868f579de4f1efe54f026a984"
   }
 }
