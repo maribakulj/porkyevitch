@@ -1,0 +1,7 @@
+{
+ "stage": "plan",
+ "script_sha256": "d1fd87c19ae6637c8952e4d1aba59e94f7a1e71b2b901985c16cdaf97ea9d74c",
+ "pilot_sha256": "6f618135db479c6842b36fc6fb7a4b20ee7543e8bcc6b11d77847c3d04836749",
+ "numpy": "2.1.3",
+ "python": "3.13.15"
+}
