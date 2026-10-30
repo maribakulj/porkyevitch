@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import resource
 import sys
 import time
 
@@ -156,10 +157,20 @@ def probabilities(model, source, batch):
 
 def journal_spread(path, last):
     # Not a seed spread: phase 1 trained one seed (0). Spread of validation H-F1 over the last epochs.
+    # The journal is not pinned by the inventory: its sha and the full rows (thresholds included) are published.
     rows = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
     vals = [r["val"] for r in rows[-last:]]
-    return {"epochs": [r["epoch"] for r in rows[-last:]], "val": vals, "range": max(vals) - min(vals),
+    return {"journal_sha256": sha(path), "rows": rows[-last:], "epochs": [r["epoch"] for r in rows[-last:]],
+            "val": vals, "range": max(vals) - min(vals),
             "label": "variation between epochs of one seed, NOT a seed spread"}
+
+
+def peak_rss_mib():
+    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024  # Linux: KiB
+
+
+def decisions_sha(preds):
+    return legacy_sha([sorted(q) for q in preds])
 
 
 def main(args):
@@ -231,7 +242,8 @@ def main(args):
             "depth_nodes": dm.node_depth_table(gts, pred),
             "stop_depth_of_missed_codes": dm.stop_depths(gts, pred),
             "confident_absent_p_ge_0.9": dm.confident_absent(p[keep], vocab, gts, [identities[i] for i in keep]),
-            "tranche_threshold_upper_bound": dm.tranche_threshold_upper_bound(
+            # Tuned on the measured validation: optimistic, not an upper bound, never a threshold to ship.
+            "tranche_threshold_coordinate_ascent": dm.tranche_threshold_coordinate_ascent(
                 p[keep], vocab, code_tranche, gts, spec["threshold"], GRID),
             "global_threshold_grid": {str(t): dm.mean_hier(gts, dm.project(p[keep], vocab, t)) for t in GRID}}
         per_image[name + "_exact"] = e
@@ -240,6 +252,7 @@ def main(args):
         # Blank: inputs, split, vocabulary and historical reproduction only; no diagnostic measure.
         results["stage"] = "smoke_reproduction_only"
         results["wall_seconds"] = time.monotonic() - START
+        results["peak_rss_mib"] = peak_rss_mib()
         write_json(out / "blanc.json", results)
         print("DIAGNOSTIC_SMOKE_DONE_NO_MEASURE")
         return
@@ -252,13 +265,33 @@ def main(args):
         per_image["T_star"], per_image["B_TZ"])
     results["epoch_spread"] = {"T_star": journal_spread(bound(Path(binding["e0_root"]) / "journal_t_long.jsonl"), 5),
                                "B_TZ": journal_spread(bound(Path(binding["e3_root"]) / "journal_t_z.jsonl"), 5)}
-    # Validation probabilities kept for later reviewed work (A1 needs B's); fp16, rows = validation order.
-    np.savez_compressed(out / "probabilites_validation.npz", **{k: v.astype(np.float16) for k, v in probs.items()})
+    # Validation probabilities kept for later reviewed work (A1 needs B's). FLOAT32, exactly the arrays the
+    # measures used (Codex p4, D2: fp16 can flip decisions at the threshold). Rows = identites_validation.json
+    # order, columns = vocabulaire.json order. Reloaded and checked: identical arrays and identical decisions.
+    require(all(v.dtype == np.float32 for v in probs.values()), "probabilities_not_float32")
+    np.savez_compressed(out / "probabilites_validation.npz", **probs)
     write_json(out / "identites_validation.json", identities)
-    results["files_sha256"] = {f: sha(out / f) for f in ("probabilites_validation.npz", "identites_validation.json")}
+    write_json(out / "vocabulaire.json", vocab)
+    with np.load(out / "probabilites_validation.npz", allow_pickle=False) as z:
+        for name, (_, digest, spec, *_rest) in systems.items():
+            back = z[name]
+            require(back.dtype == np.float32 and np.array_equal(back, probs[name]), f"{name}_cache_roundtrip")
+            require(dm.project(back, vocab, spec["threshold"]) == preds[name], f"{name}_cache_decisions")
+    results["probability_cache"] = {
+        "dtype": "float32", "rows": "identites_validation.json order (validation, 4265 rows)",
+        "columns": "vocabulaire.json order (7907 codes)", "vocabulary_sha256": legacy_sha(vocab),
+        "projection": "p >= threshold, most_specific, drop86",
+        "systems": {name: {"checkpoint_sha256": digest, "epoch": spec["epoch"], "threshold": spec["threshold"],
+                           "shape": list(probs[name].shape), "decisions_sha256": decisions_sha(preds[name]),
+                           "reproduced_hf1": results["systems"][name]["reproduced_hf1"]}
+                    for name, (_, digest, spec, *_rest) in systems.items()},
+        "use": "CPU float32 recomputation; decisions equal to this run, not proven equal to the historical T4 run"}
+    results["files_sha256"] = {f: sha(out / f) for f in
+                               ("probabilites_validation.npz", "identites_validation.json", "vocabulaire.json")}
     results["script_sha256"] = {f: sha(here / f) for f in ("kaggle_diagnostic.py", "diag_metrics.py")}
     results["versions"] = {"python": sys.version.split()[0], "numpy": np.__version__, "torch": torch.__version__}
     results["wall_seconds"] = time.monotonic() - START
+    results["peak_rss_mib"] = peak_rss_mib()
     write_json(out / "diagnostic.json", results)
     print("DIAGNOSTIC_DONE_VALIDATION_ONLY")
 

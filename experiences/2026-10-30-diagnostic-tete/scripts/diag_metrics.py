@@ -184,9 +184,11 @@ def mean_hier(gts, preds):
     return float(np.mean([hier_f1(g, p) for g, p in zip(gts, preds, strict=True)]))
 
 
-def tranche_threshold_upper_bound(prob, vocab, code_tranche, gts, start, grid, passes=2):
-    """Optimistic upper bound: one threshold per frequency tranche, chosen ON the measured validation by
-    coordinate ascent (fixed tranche order, fixed grid, ties keep the current value). Not a recipe."""
+def tranche_threshold_coordinate_ascent(prob, vocab, code_tranche, gts, start, grid, passes=2):
+    """Score adjusted on the measured validation by coordinate ascent: one threshold per frequency tranche
+    (fixed tranche order, fixed grid, ties keep the current value). At least the starting score, but NOT an
+    upper bound: neither of the best point of the same grid nor of any future gain. Optimistic for
+    generalisation, since it is tuned on the set it scores. Never a production threshold."""
     tranche_of = np.array([TRANCHES.index(code_tranche[c]) for c in vocab])
     current = {t: start for t in TRANCHES}
     best = mean_hier(gts, project(prob, vocab, start))
@@ -202,7 +204,7 @@ def tranche_threshold_upper_bound(prob, vocab, code_tranche, gts, start, grid, p
                 if score > best:
                     best, current = score, trial
             trace.append({"step": f"pass{sweep}:{t}", "thresholds": dict(current), "hf1": best})
-    return {"hf1_upper_bound": best, "thresholds": current, "trace": trace}
+    return {"hf1_adjusted_coordinate_ascent": best, "thresholds": current, "trace": trace}
 
 
 def group_bootstrap(values_by_system, groups, draws=1000, seed=0):
@@ -233,7 +235,8 @@ def error_overlap(gts, preds_a, preds_b, h_a, h_b):
         fp_b |= {(i, c) for c in set(b) - g}
     jac = lambda x, y: len(x & y) / len(x | y) if x | y else "not_applicable"
     h_a, h_b = np.asarray(h_a), np.asarray(h_b)
-    return {"pearson_per_image_hf1": float(np.corrcoef(h_a, h_b)[0, 1]),
+    defined = h_a.std() > 0 and h_b.std() > 0
+    return {"pearson_per_image_hf1": float(np.corrcoef(h_a, h_b)[0, 1]) if defined else "not_defined_constant_scores",
             "jaccard_missed_codes": jac(fn_a, fn_b), "jaccard_false_codes": jac(fp_a, fp_b),
             "both_below_0.3": int(((h_a < 0.3) & (h_b < 0.3)).sum()),
             "only_a_below_0.3": int(((h_a < 0.3) & (h_b >= 0.3)).sum()),

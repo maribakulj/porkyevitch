@@ -1,5 +1,6 @@
 """Synthetic tests of diag_metrics. No ICAI data. Run: python3 -I tests/test_diag_metrics.py"""
 import ast
+import itertools
 from pathlib import Path
 import re
 import sys
@@ -82,17 +83,42 @@ class MetricsTest(unittest.TestCase):
         capped = dm.confident_absent(prob, vocab, [["11H(JEROME)"], ["11H"]], ids, size=10, per_image=1)
         self.assertEqual(len(capped["sample"]), 1)
 
-    def test_tranche_threshold_upper_bound_never_below_start(self):
+    def test_tranche_threshold_coordinate_ascent_never_below_start(self):
         rng = np.random.default_rng(1)
         vocab = ["1", "11", "11H", "2", "25", "25F"]
         gts = [list(rng.choice(vocab, 2)) for _ in range(60)]
         prob = rng.random((60, len(vocab)))
         code_tranche = {c: t for c, t in zip(vocab, ("0", "5-20", ">1000", "1-4", "5-20", "21-100"))}
         start = dm.mean_hier(gts, dm.project(prob, vocab, 0.65))
-        res = dm.tranche_threshold_upper_bound(prob, vocab, code_tranche, gts, 0.65, [0.3, 0.5, 0.65, 0.8])
-        self.assertGreaterEqual(res["hf1_upper_bound"], start)
+        res = dm.tranche_threshold_coordinate_ascent(prob, vocab, code_tranche, gts, 0.65, [0.3, 0.5, 0.65, 0.8])
+        self.assertGreaterEqual(res["hf1_adjusted_coordinate_ascent"], start)
         vector = np.array([res["thresholds"][code_tranche[c]] for c in vocab])
-        self.assertAlmostEqual(dm.mean_hier(gts, dm.project(prob, vocab, vector)), res["hf1_upper_bound"])
+        self.assertAlmostEqual(dm.mean_hier(gts, dm.project(prob, vocab, vector)), res["hf1_adjusted_coordinate_ascent"])
+
+    def test_coordinate_ascent_is_not_an_upper_bound_of_its_grid(self):
+        # Codex p4, D1: the adjusted score can stay below the exhaustive optimum of the same grid.
+        vocab, grid = ["1", "11", "2", "25"], [0.25, 0.5, 0.75]
+        ct = {"1": "5-20", "11": "5-20", "2": ">1000", "25": ">1000"}
+        gts = [["1", "2"], ["1", "11"], ["2"], ["1"], ["2"], ["2", "1"]]
+        prob = np.array([[0.2, 0.2, 0.2, 0.8], [0.6, 0.4, 0.4, 0.6], [0.8, 0.4, 0.8, 0.6],
+                         [0.8, 0.4, 0.4, 0.6], [0.6, 0.6, 0.6, 0.6], [0.8, 0.6, 0.6, 0.2]])
+        res = dm.tranche_threshold_coordinate_ascent(prob, vocab, ct, gts, 0.5, grid)
+        exhaustive = max(dm.mean_hier(gts, dm.project(prob, vocab, np.array([a if ct[c] == "5-20" else b for c in vocab])))
+                         for a, b in itertools.product(grid, grid))
+        self.assertAlmostEqual(res["hf1_adjusted_coordinate_ascent"], 19 / 36)
+        self.assertAlmostEqual(exhaustive, 20 / 36)
+
+    def test_pearson_not_defined_for_constant_scores(self):
+        res = dm.error_overlap([["a"], ["b"]], [["a"], ["b"]], [["a"], []], [1.0, 1.0], [1.0, 0.0])
+        self.assertEqual(res["pearson_per_image_hf1"], "not_defined_constant_scores")
+
+    def test_float32_cache_keeps_decisions_fp16_may_not(self):
+        # Codex p4, D2: 0.64999 and 0.65001 collapse to the same fp16 value; float32 keeps them apart.
+        p = np.array([[0.64999, 0.65001]], dtype=np.float32)
+        self.assertEqual(dm.project(p, ["1", "2"], 0.65), [["2"]])
+        p16 = p.astype(np.float16)
+        self.assertEqual(p16[0, 0], p16[0, 1])
+        self.assertNotEqual(dm.project(p16, ["1", "2"], 0.65), [["2"]])
 
     def test_group_bootstrap_deterministic_and_centred(self):
         values = {"x": [1.0, 0.0, 1.0, 0.0]}

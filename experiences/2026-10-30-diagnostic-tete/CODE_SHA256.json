@@ -1,9 +1,9 @@
 {
-  "status": "Écrit pour relecture, aucune exécution",
+  "status": "v1.1 : corrections D1/D2 de Codex p4 pour le passage complet ; le blanc a tourné avec la v1 (kaggle_diagnostic a8f119b9…, diag_metrics d520e5bc…)",
   "files": {
-    "PREINSCRIPTION.md": "971378e11c3d5535d8ae1591c51c3072f216d6263d1fccc91e6ef165416c18c5",
+    "PREINSCRIPTION.md": "e282a0749ee866538f0fa489da0fbda316734c5235a06a6580892680f57d0494",
     "ENTREES.json": "caa6723c335fac20093dae3f95b616352cb8f4a3b93c0ec77074b288977436ab",
-    "scripts/kaggle_diagnostic.py": "a8f119b9c0c3dd4921a6362a5c37300bed88187e29529c31639d301516d2e05e",
-    "scripts/diag_metrics.py": "d520e5bcc975e57c21d7bd788cd1c33c3716970a5dff9682ace099071f6df38a"
+    "scripts/kaggle_diagnostic.py": "5c662842212de3bf14632cc4bc6b2eb3f632c8295d748aa83fbd76ac71f16dd7",
+    "scripts/diag_metrics.py": "2287e1ea2c0ae02e1e917097231372f5a003f856426007fcb4d16caa27ebe964"
   }
 }
