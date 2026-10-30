@@ -18,3 +18,10 @@ projection dev seule, épinglée ; sinon, le désaccord reste consigné ici.
 Réponse de Grok p7 (30/10) : aucun chemin concret ; « mesure_phase1.py:141 ne garde que doc["dev"]["items"], la ligne 142 fait
 del doc, et les planches, dev.json et les journaux n'écrivent que des objets issus de cette liste ». **D4 maintenue** : le dev
 n'est pas refait ; le désaccord de principe reste consigné.
+
+## D5 (30/10/2026) : présentation des relectures et des regards dans l'article
+
+Toutes les relectures de code, les regards de planches et les audits sont faits par des modèles (Claude, Grok, Gemini, Codex),
+jamais par un humain : l'article le dit explicitement, en nommant les rôles et les modèles, et ne présente aucun regard comme
+une annotation experte. Pas de regard humain sur un sous-ensemble pour l'instant (Marcel n'annote pas) : c'est une limite écrite.
+Les comptes O/A/E sont présentés comme un audit par modèles, avec l'accord entre juges (53/100) et la règle écrite d'avance.
