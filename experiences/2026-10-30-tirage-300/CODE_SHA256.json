@@ -1,0 +1,9 @@
+{
+  "status": "Écrit pour relecture, aucune exécution",
+  "files": {
+    "PREINSCRIPTION.md": "b6a1d4c8455a60f8ec9075655ac80c27eea4bb35af382dbaeab85ea8d6c6c71f",
+    "scripts/tirage_300.py": "d1fd87c19ae6637c8952e4d1aba59e94f7a1e71b2b901985c16cdaf97ea9d74c",
+    "scripts/kaggle_tirage_300.py": "aaf60a8d65e006eed829466dfc535bc1beef9d58446915a9a2a7378a90e60f8e",
+    "tests/test_tirage_300.py": "a711d1bc7045d30d31c1cbccba29b66cc6f7ea2ee2b2a507f4d507c74e013006"
+  }
+}
