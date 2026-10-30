@@ -3,7 +3,7 @@
 # STAGE is "plan" for the blank (no image read); the only change allowed for the full run is STAGE = "full".
 import glob, hashlib, os, subprocess, sys, time
 
-STAGE = "plan"
+STAGE = "full"
 W = "/kaggle/working"
 SCRIPT_SHA256 = "d1fd87c19ae6637c8952e4d1aba59e94f7a1e71b2b901985c16cdaf97ea9d74c"  # tirage_300.py as reviewed
 PILOT_SHA256 = "6f618135db479c6842b36fc6fb7a4b20ee7543e8bcc6b11d77847c3d04836749"  # graphes-gemini tirage/tirage.json

@@ -27,3 +27,11 @@
 - 30/10 : petit élève v0.1 : feu vert Grok p2 (909f73ee) ; contre-expertise Codex p4 (D2 + brouillon) à son retour.
 - 30/10 01:40 : Codex p4 de retour ; file de 5 dossiers envoyée (B1 gel, P9-A descriptions, diagnostic, D2 + petit élève, A1-A5).
 - 30/10 : décision D2 consignée (petit élève v1 + tranche S1b de 300 en parallèle).
+- 30/10 : blanc du gel refusé par le pilote : open-clip-torch absent de l'image Kaggle actuelle (3.3.0 dans l'encodage historique) ; relancé avec réinstallation de 3.3.0 dans le lanceur (signalé aux relecteurs). Diagnostic complet lancé (v1.1).
+- 30/10 : diagnostic complet : longue traîne nulle sous 5 exemples (F1 ≈ 0), 0,20 pour 5-100, 0,33 pour 101-1000, 0,52 au-delà ; rappel 0,86 → 0,38 de la profondeur 1 à 6 ; seuil par tranche +0,0013 ; 765 « confiants absents » ; T-Z − T* = +0,011 [0,006 ; 0,016] ; erreurs T*/T-Z très corrélées (r = 0,82). Vérif p3/p4 demandée ; extraction des 100 images pour le regard demandée à pH.
+- 30/10 : blanc du gel : FEU VERT Codex p4 pour le gel complet (écart OpenCLIP accepté) ; attente relecture Grok p3 ; config freeze en préparation.
+- 30/10 : planche initiale P9-A regardée (12 images : portraits, gravures, lettrine, arbres, nature morte de gibier, page imprimée, décor peint) ; reçu signé ; blanc P9-A lancé sur T4.
+- 30/10 : GEL COMPLET phase 1 lancé (feux verts Codex p4 section 8, Grok p3 section 11 ; 24 fichiers + sceau, T4, plafond 4 h).
+- 30/10 : blanc P9-A échoué (invariant de conservation de masse après entraînement > 1e-6 ; B reproduit exactement) ; diagnostic demandé à pH.
+- 30/10 : 1er gel complet refusé à 7 s (jeu porky-gel-smoke non monté) ; manifeste du blanc déplacé dans porky-gel-config, sonde conforme ; gel relancé (phase1_freeze_2).
+- 30/10 : p7 → revue critique longue traîne + profondeur d'après le diagnostic.
