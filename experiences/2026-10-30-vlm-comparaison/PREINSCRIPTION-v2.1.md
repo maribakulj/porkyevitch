@@ -181,7 +181,7 @@ Les images de répétabilité sont appelées une seconde fois, après tout S1. O
 
 **Plafond dur** : `vlm_call.py` refuse d'appeler au-delà de 1,15 fois le nombre prévu par le sceau, ce qui laisse la place aux nouveaux essais.
 
-**Budget** : **30 USD au total** pour H et O ensemble (cumul des `total_cost_usd` de tous les essais, S0 compris), et **6 h** de temps réel pour S1. `vlm_call.py` vérifie le cumul **avant** chaque appel Claude et s'arrête dès qu'il atteint 30 USD ; l'appel en cours peut faire dépasser légèrement, et ce dépassement est publié. Au plafond, on arrête et on publie ce qui est fait comme **incomplet** ; jamais un sous-ensemble choisi après coup. Gemini n'a pas de coût rapporté : son plafond est le nombre d'appels et le temps.
+**Budget** : **30 USD au total** pour H et O ensemble (cumul des `total_cost_usd` de tous les essais, S0 compris), et **6 h** de temps réel pour S1. `vlm_call.py` vérifie le cumul **avant** chaque appel Claude et s'arrête dès qu'il atteint 30 USD ; les appels déjà en cours (au plus 3 par système Claude, parallélisme 3) peuvent faire dépasser légèrement, et ce dépassement est publié. Le budget n'arrête que H et O : G continue jusqu'à son propre plafond (appels, temps). Au plafond, on arrête et on publie ce qui est fait comme **incomplet** ; jamais un sous-ensemble choisi après coup. Gemini n'a pas de coût rapporté : son plafond est le nombre d'appels et le temps.
 
 **Parallélisme** : 3 appels simultanés par système, au plus, déclaré.
 
