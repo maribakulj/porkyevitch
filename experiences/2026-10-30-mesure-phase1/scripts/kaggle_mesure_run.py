@@ -5,7 +5,7 @@ import glob, hashlib, os, subprocess, sys, time
 
 STAGE = "dev"
 W = "/kaggle/working"
-SCRIPTS = {"mesure_phase1.py": "e5f073f5be5a54d216d97ad2177b5e33d914383d92b686272e3b5c71d46eda08", "mesure_metrics.py": "9a9d452676e7dd7717d4fab0aa00d11c2a1da5169913d03a80e0ccb5416df895"}
+SCRIPTS = {"mesure_phase1.py": "76f2643ae369faf5cb8b581af3b3c092ccf569355acb76d7f8c35e669fd7eb3b", "mesure_metrics.py": "9a9d452676e7dd7717d4fab0aa00d11c2a1da5169913d03a80e0ccb5416df895"}
 SEAL = "3c468faa7bec5ac7a98104a4ac47d3f7be24ec9ef76e0855f49b42aad12fad0c"
 FROZEN = "2424b778d0a3e7c36e0aeea7ce5db60fcc52bc1eaa6c52a057fd957b142de0ca"
 ENTREES = "6bde822932f9a288d9bd764cc950e160e16e1c78fb5456df28b51bfd6acd6604"
@@ -56,7 +56,8 @@ if STAGE == "test":
     if len(dev) != 1 or len(receipt) != 1:
         fail(f"test stage needs the dev output and the receipt exactly once: {dev} {receipt}")
     cmd += ["--dev", dev[0], "--receipt", receipt[0]]
-log(f"stage {STAGE}")
+import numpy  # noqa: E402
+log(f"stage {STAGE} python {sys.version.split()[0]} numpy {numpy.__version__}")
 with open(f"{W}/mesure.log", "w") as f:
     r = subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT)
 if r.returncode != 0:

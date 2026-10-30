@@ -101,129 +101,189 @@ def write(path, obj):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-class EndToEndTest(unittest.TestCase):
-    """Fake seal with patched constants: the dev stage must work with unreadable test files, the test stage needs a
-    receipt, writes verdicts before measures and opens TK-niv only when TK and T-niv are retained."""
+def sha_bytes(b):
+    return hashlib.sha256(b).hexdigest()
 
-    def build(self, tk_good):
+
+class EndToEndTest(unittest.TestCase):
+    """Fake seal in the REAL schema of the freeze (gel_predictions.py / gel_data.py), constants patched."""
+
+    def build(self, tk_good=True):
         rng = np.random.default_rng(1)
         root = Path(tempfile.mkdtemp())
         codes = ["11H", "11H(JEROME)", "25F", "25F23", "31A", "7", "71A"]
         icai_truth = [[str(c) for c in rng.choice(codes, 2, replace=False)] for _ in range(788)]
         icai_truth[5] = ["86(x)"]  # one image with an empty projected truth
         md5 = [f"{i:032x}" for i in range(788)]
-        def comp_items(n, comps):
-            return [{"pid": f"p{i:04d}", "component": int(i % comps), "support": ["print", "painting", "drawing"][i % 3],
-                     "truth": [str(c) for c in rng.choice(codes, 2, replace=False)], "iiif": "https://x/full/!800,800/0/default.jpg",
-                     "image_sha256": "0" * 64, "width": 10, "height": 10} for i in range(n)]
-        dev, test = comp_items(30, 12), comp_items(60, 25)
-        for it in dev + test:
-            it["truth_projected"] = list(dict.fromkeys(mm.drop86(it["truth"])))
-        frozen_sha = write(root / "frozen.json", {"dev": {"items": dev, "components": []}, "test": {"items": test, "components": []}})
-        def noisy(truths, good):
+
+        def items(n, comps, tag):
             out = []
-            for t in truths:
-                p = list(mm.drop86(t)) if rng.random() < good else [str(rng.choice(codes))]
-                out.append(p)
+            for i in range(n):
+                t = [str(c) for c in rng.choice(codes, 2, replace=False)]
+                out.append({"pid": f"https://id.rijksmuseum.nl/{tag}{i:04d}", "component": int(i % comps),
+                            "support": ["print", "painting", "drawing"][i % 3], "truth": t,
+                            "truth_projected": list(dict.fromkeys(mm.drop86(t))),
+                            "iiif": "https://iiif.micr.io/x/full/!800,800/0/default.jpg",
+                            "image_sha256": sha_bytes(f"{tag}{i}".encode()), "width": 10, "height": 10})
             return out
+        dev, test = items(30, 12, "d"), items(60, 25, "t")
+        self.frozen_sha = write(root / "frozen.json", {"dev": {"items": dev, "components": []},
+                                                       "test": {"items": test, "components": []}})
+
+        def noisy(truths, good):
+            return [list(mm.drop86(t)) if rng.random() < good else [str(rng.choice(codes))] for t in truths]
         quality = {"T0": 0.3, "T_star": 0.5, "TK": 0.9 if tk_good else 0.2, "T-niv": 0.9 if tk_good else 0.5,
                    "TK-niv": 0.95, "T-H": 0.4, "T-Z": 0.5, "T-D": 0.5}
         seal, files = root / "seal", {}
+        seal.mkdir()
+        rijks_ids = lambda its: [{"index": j, "id": it["pid"], "image_sha256": it["image_sha256"]} for j, it in enumerate(its)]
+        icai_ids = [{"index": j, "shard": mp.TEST, "row": j, "md5": m} for j, m in enumerate(md5)]
         for s, q in quality.items():
-            for bank, rows in (("icai_test", [{"index": j, "md5": md5[j], "codes": c} for j, c in enumerate(noisy(icai_truth, q))]),
-                               ("rijks_dev", [{"pid": it["pid"], "codes": c} for it, c in zip(dev, noisy([i["truth"] for i in dev], q))]),
-                               ("rijks_test", [{"pid": it["pid"], "codes": c} for it, c in zip(test, noisy([i["truth"] for i in test], q))])):
+            for bank, ids, truths in (("icai_test", icai_ids, icai_truth), ("rijks_dev", rijks_ids(dev), [i["truth"] for i in dev]),
+                                      ("rijks_test", rijks_ids(test), [i["truth"] for i in test])):
+                rows = [{**ident, "codes": c} for ident, c in zip(ids, noisy(truths, q))]
                 name = f"predictions__{bank}__{s}.json"
-                if bank != "rijks_dev":
-                    (seal).mkdir(parents=True, exist_ok=True)
-                    content = json.dumps({"bank": bank, "system": s, "rows": rows})
-                    (seal / name).write_text(content)
-                    files[name] = {"sha256": hashlib.sha256(content.encode()).hexdigest(), "rows": len(rows)}
-                else:
-                    files[name] = {"sha256": write(seal / name, {"bank": bank, "system": s, "rows": rows}), "rows": len(rows)}
-        self.test_names = [n for n in files if "rijks_dev" not in n]
-        seal_sha = write(seal / "MANIFEST.json", {"predictions_frozen": True, "mode": "freeze", "technical_pass": True,
-                         "systems": mp.SYSTEMS, "family": [list(x) for x in mm.FAMILY], "frozen_bench_sha256": frozen_sha,
-                         "vocabulary_sha256": "v", "files": files})
+                files[name] = {"sha256": write(seal / name, {"bank": bank, "system": s, "rows": rows}), "rows": len(rows),
+                               "bank": bank, "system": s, "identity_order_sha256": mp.object_sha(ids)}
+        self.files = files
         enc = root / "enc"
         (enc / "feats").mkdir(parents=True)
         lab_sha = write(enc / "grid" / f"{mp.TEST}.json", {"labels": icai_truth})
         np.savez(enc / "feats" / f"{mp.TEST}.npz", md5=np.array(md5))
         vec_sha = hashlib.sha256((enc / "feats" / f"{mp.TEST}.npz").read_bytes()).hexdigest()
-        entrees_sha = write(root / "entrees.json", {"frozen_sha256": frozen_sha, "architecture_protocol_sha256": mp.PROTOCOL_SHA256,
+        entrees_sha = write(root / "entrees.json", {"frozen_sha256": self.frozen_sha,
+                            "architecture_protocol_sha256": mp.PROTOCOL_SHA256,
                             "shards": {mp.TEST: {"grid_json_sha256": lab_sha, "vec_sha256": vec_sha}}})
-        keep = [g for g in (list(dict.fromkeys(mm.drop86(t))) for t in icai_truth) if g]
         t0 = json.loads((seal / "predictions__icai_test__T0.json").read_text())["rows"]
-        t0_mean = np.mean([mm.hier_f1(g, r["codes"]) for g, r in zip((list(dict.fromkeys(mm.drop86(t))) for t in icai_truth), t0) if g])
-        patch = {"SEAL_SHA256": seal_sha, "FROZEN_SHA256": frozen_sha, "VOCABULARY_SHA256": "v", "ENTREES_SHA256": entrees_sha,
-                 "ICAI_T0_HIST": float(t0_mean)}
-        return root, patch, len(keep)
+        proj = [list(dict.fromkeys(mm.drop86(t))) for t in icai_truth]
+        t0_mean = np.mean([mm.hier_f1(g, r["codes"]) for g, r in zip(proj, t0) if g])
+        self.root = root
+        self.patch = {"FROZEN_SHA256": self.frozen_sha, "VOCABULARY_SHA256": "v", "ENTREES_SHA256": entrees_sha,
+                      "ICAI_T0_HIST": float(t0_mean)}
+        self.reseal()
+        return sum(1 for g in proj if g)
 
-    def run_stage(self, root, patch, stage, out, **extra):
-        old = {k: getattr(mp, k) for k in patch}
+    def reseal(self):
+        self.patch["SEAL_SHA256"] = write(self.root / "seal" / "MANIFEST.json", {
+            "predictions_frozen": True, "mode": "freeze", "technical_pass": True, "systems": mp.SYSTEMS,
+            "family": [list(x) for x in mm.FAMILY], "frozen_bench_sha256": self.frozen_sha,
+            "vocabulary_sha256": "v", "files": self.files})
+
+    def run_stage(self, stage, out, **extra):
+        old = {k: getattr(mp, k) for k in self.patch}
         old_fetch, old_dict, old_counts = mp.fetch_image, mp.dictionary, mp.training_counts
+
+        def fake_fetch(it, folder):
+            name = hashlib.sha256(it["pid"].encode()).hexdigest()[:16] + ".jpg"
+            (folder / name).write_bytes(b"jpg")
+            return name
         try:
-            for k, v in patch.items():
+            for k, v in self.patch.items():
                 setattr(mp, k, v)
-            mp.fetch_image = lambda it, folder: "img.jpg"
-            mp.dictionary = lambda root: {}
+            mp.fetch_image, mp.dictionary = fake_fetch, (lambda root: {})
             mp.training_counts = lambda enc, entrees: ({"11H": 10, "25F": 50, "7": 200}, ["11H", "25F", "7"])
-            a = type("A", (), dict(stage=stage, seal=str(root / "seal"), frozen=str(root / "frozen.json"),
-                                   inputs=str(root / "entrees.json"), encoder=str(root / "enc"), iconclass=".",
-                                   out=str(out), **extra))
+            a = type("A", (), dict(stage=stage, seal=str(self.root / "seal"), frozen=str(self.root / "frozen.json"),
+                                   inputs=str(self.root / "entrees.json"), encoder=str(self.root / "enc"),
+                                   iconclass=".", out=str(out), **extra))
             mp.main(a)
         finally:
             for k, v in old.items():
                 setattr(mp, k, v)
             mp.fetch_image, mp.dictionary, mp.training_counts = old_fetch, old_dict, old_counts
 
-    def test_dev_never_parses_test_files_and_test_needs_receipt(self):
-        root, patch, kept = self.build(tk_good=True)
-        # Make every test prediction file unparsable while keeping its sha in the manifest: dev must not care.
-        manifest = json.loads((root / "seal" / "MANIFEST.json").read_text())
-        backup = {}
-        for n in self.test_names:
-            backup[n] = (root / "seal" / n).read_bytes()
-            (root / "seal" / n).write_bytes(b"\x00not json")
-            manifest["files"][n]["sha256"] = hashlib.sha256(b"\x00not json").hexdigest()
-        patch["SEAL_SHA256"] = write(root / "seal" / "MANIFEST.json", manifest)
-        self.run_stage(root, patch, "dev", root / "dev")
-        dev = json.loads((root / "dev" / "dev.json").read_text())
+    def receipt(self, dev, name="recu.json", looks=("wA:p1", "Grok p2")):
+        m = json.loads((dev / "MANIFEST_DEV.json").read_text())
+        return str(self.root / name), write(self.root / name, {
+            "stage": "planches_dev_regardees",
+            "dev_manifest_sha256": sha_bytes((dev / "MANIFEST_DEV.json").read_bytes()),
+            "regards": [{"viewer": v, "viewed_at": "t"} for v in looks],
+            "plates_html_sha256": {c: m["files"][p["html"]] for c, p in m["plates"].items()}})
+
+    def refused(self, dev, receipt, code):
+        with self.assertRaises(RuntimeError) as e:
+            self.run_stage("test", Path(tempfile.mkdtemp()) / "t", dev=str(dev), receipt=receipt)
+        self.assertEqual(str(e.exception), code)
+
+    def test_dev_ignores_unparsable_test_predictions(self):
+        self.build()
+        for n in [n for n in self.files if "rijks_dev" not in n]:
+            (self.root / "seal" / n).write_bytes(b"\x00not json")
+            self.files[n]["sha256"] = sha_bytes(b"\x00not json")
+        self.reseal()
+        self.run_stage("dev", self.root / "dev")
+        dev = json.loads((self.root / "dev" / "dev.json").read_text())
         self.assertEqual(len(dev["plates"]), 7)
         self.assertTrue(dev["plates"]["TK-niv-T_star"]["conditional"])
         self.assertTrue(all(len(v["images"]) == 12 for v in dev["plates"].values()))
-        # restore the real test files and manifest
-        for n, b in backup.items():
-            (root / "seal" / n).write_bytes(b)
-            manifest["files"][n]["sha256"] = hashlib.sha256(b).hexdigest()
-        patch["SEAL_SHA256"] = write(root / "seal" / "MANIFEST.json", manifest)
-        bad = write(root / "receipt_bad.json", {"stage": "planches_dev_regardees", "viewer": "x", "viewed_at": "t",
-                                                "dev_manifest_sha256": "0"})
-        with self.assertRaises(RuntimeError):
-            self.run_stage(root, patch, "test", root / "t1", dev=str(root / "dev"), receipt=str(root / "receipt_bad.json"))
-        good = hashlib.sha256((root / "dev" / "MANIFEST_DEV.json").read_bytes()).hexdigest()
-        write(root / "receipt.json", {"stage": "planches_dev_regardees", "viewer": "wA:p1", "viewed_at": "t",
-                                      "dev_manifest_sha256": good})
-        self.run_stage(root, patch, "test", root / "t2", dev=str(root / "dev"), receipt=str(root / "receipt.json"))
-        v = json.loads((root / "t2" / "verdicts.json").read_text())
+
+    def test_wrong_rijks_order_is_refused(self):
+        self.build()
+        name = "predictions__rijks_dev__T0.json"
+        obj = json.loads((self.root / "seal" / name).read_text())
+        obj["rows"][0], obj["rows"][1] = obj["rows"][1], obj["rows"][0]
+        self.files[name]["sha256"] = write(self.root / "seal" / name, obj)
+        self.reseal()
+        with self.assertRaises(RuntimeError) as e:
+            self.run_stage("dev", self.root / "dev")
+        self.assertEqual(str(e.exception), "rijks_order")
+
+    def test_full_run_and_every_refusal_before_test_truths(self):
+        kept = self.build(tk_good=True)
+        dev = self.root / "dev"
+        self.run_stage("dev", dev)
+        good, _ = self.receipt(dev)
+        # refusals, each before any test truth is read
+        (self.root / "empty").mkdir()
+        write(self.root / "empty" / "MANIFEST_DEV.json", {})
+        self.refused(self.root / "empty", good, "dev_manifest_identity")
+        self.refused(dev, self.receipt(dev, "r1.json", looks=("wA:p1",))[0], "both_looks_required")
+        m = json.loads((dev / "MANIFEST_DEV.json").read_text())
+        plate = dev / m["plates"]["TK-T_star"]["html"]
+        original = plate.read_bytes()
+        plate.write_bytes(b"changed")
+        self.refused(dev, good, "dev_file_missing_or_changed")
+        plate.write_bytes(original)
+        img = dev / m["plates"]["T-H-T_star"]["image_files"][0]
+        img_bytes = img.read_bytes()
+        img.unlink()
+        self.refused(dev, good, "dev_file_missing_or_changed")
+        img.write_bytes(img_bytes)
+        broken = json.loads(json.dumps(m))
+        del broken["plates"]["T-D-T_star"]
+        (self.root / "dev2").mkdir()
+        for rel in m["files"]:
+            (self.root / "dev2" / rel).parent.mkdir(parents=True, exist_ok=True)
+            (self.root / "dev2" / rel).write_bytes((dev / rel).read_bytes())
+        write(self.root / "dev2" / "MANIFEST_DEV.json", broken)
+        self.refused(self.root / "dev2", self.receipt(self.root / "dev2", "r2.json")[0], "dev_plates_incomplete")
+        self.refused(dev, self.receipt(self.root / "dev2", "r3.json")[0], "plates_not_viewed")  # receipt of another dev
+        # the real run
+        self.run_stage("test", self.root / "t2", dev=str(dev), receipt=good)
+        v = json.loads((self.root / "t2" / "verdicts.json").read_text())
         self.assertEqual(v["denominators"]["icai_test"], kept)
         self.assertEqual(v["denominators"]["icai_excluded_empty_projected_truth"], 1)
         self.assertTrue(v["verdicts"]["TK"]["retained"] and v["verdicts"]["T-niv"]["retained"])
-        self.assertIn("delta_icai", v["verdicts"]["TK-niv"])  # activated
+        self.assertIn("delta_icai", v["verdicts"]["TK-niv"])
         self.assertFalse(v["verdicts"]["T-H"]["retained"])
-        self.assertTrue((root / "t2" / "mesures_test.json").exists())
+        self.assertTrue((self.root / "t2" / "mesures_test.json").exists())
+
+    def test_dev_manifest_of_another_seal_is_refused(self):
+        self.build()
+        dev = self.root / "dev"
+        self.run_stage("dev", dev)
+        m = json.loads((dev / "MANIFEST_DEV.json").read_text())
+        m["seal_sha256"] = "0" * 64
+        write(dev / "MANIFEST_DEV.json", m)
+        self.refused(dev, self.receipt(dev)[0], "dev_manifest_identity")
 
     def test_tk_niv_not_opened_when_condition_fails(self):
-        root, patch, _ = self.build(tk_good=False)
-        self.run_stage(root, patch, "dev", root / "dev")
-        good = hashlib.sha256((root / "dev" / "MANIFEST_DEV.json").read_bytes()).hexdigest()
-        write(root / "receipt.json", {"stage": "planches_dev_regardees", "viewer": "wA:p1", "viewed_at": "t",
-                                      "dev_manifest_sha256": good})
-        self.run_stage(root, patch, "test", root / "t", dev=str(root / "dev"), receipt=str(root / "receipt.json"))
-        v = json.loads((root / "t" / "verdicts.json").read_text())
+        self.build(tk_good=False)
+        dev = self.root / "dev"
+        self.run_stage("dev", dev)
+        self.run_stage("test", self.root / "t", dev=str(dev), receipt=self.receipt(dev)[0])
+        v = json.loads((self.root / "t" / "verdicts.json").read_text())
         self.assertFalse(v["verdicts"]["TK-niv"]["executed"])
-        m = json.loads((root / "t" / "mesures_test.json").read_text())
-        self.assertNotIn("TK-niv", m["icai_test"])
+        self.assertNotIn("TK-niv", json.loads((self.root / "t" / "mesures_test.json").read_text())["icai_test"])
 
 
 if __name__ == "__main__":

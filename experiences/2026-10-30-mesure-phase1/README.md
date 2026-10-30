@@ -22,17 +22,28 @@ Toutes les règles viennent de la préinscription de l'architecture (`~/porkyevi
 - **D(5)**, le rang et la probabilité des codes profonds sous le seuil : le sceau ne contient que des ensembles prédits, aucune probabilité.
 - **La latence T4** : le sceau ne contient aucun chronométrage.
 
-Le D sur la validation ICAI vient du diagnostic de la tête (T* et T-Z), puisque le sceau ne contient pas de prédictions de validation.
+Le D sur la validation ICAI n'est **pas mesuré** ici pour les briques. Le sceau ne contient aucune prédiction de validation, et le diagnostic de la tête ne couvre que T* et T-Z. Ce manque reste ouvert : il demande à wA:p1 de décider s'il faut produire ces prédictions, ce qui n'ouvre aucun test. Ce paquet ne prétend donc pas couvrir toutes les mesures secondaires.
 
 ## Deux étapes séparées, chacune relue avant d'être lancée
 
 1. **`--stage dev`** : le dev du Rijksmuseum seulement.
-   - Il vérifie le SHA du sceau et celui de ses 24 fichiers. Les fichiers de test sont **hachés, jamais lus** : un test synthétique le prouve, l'étape dev passe même quand ils sont illisibles.
-   - `frozen.json` est chargé pour vérifier son SHA, puis seul le dev est gardé.
-   - Il ne lit aucune vérité ICAI de test.
-   - Il écrit `dev.json` (D sur le dev pour les huit systèmes), `planches/<comparaison>.html` avec ses images IIIF (SHA vérifié) et `MANIFEST_DEV.json`.
-2. **Regard des planches** par wA:p1 puis Grok. Le reçu `recu_planches.json` porte `{"stage": "planches_dev_regardees", "viewer": …, "viewed_at": …, "dev_manifest_sha256": <sha de MANIFEST_DEV.json>}`.
-3. **`--stage test`** : il refuse de démarrer sans ce reçu, s'il ne correspond pas au dev produit. L'**ordre d'ouverture** est le suivant :
+   - Il vérifie le SHA du sceau et celui de ses 24 fichiers. Les fichiers de **prédictions** de test sont **hachés, jamais analysés** : un test synthétique le prouve, l'étape dev passe même quand ils sont illisibles.
+   - En revanche, `frozen.json` est un seul fichier qui contient aussi les vérités du test Rijksmuseum. Il est entièrement analysé (`json.loads`) pour vérifier son SHA, puis seul le dev est gardé et la référence au reste est détruite. Aucun score, diagnostic ni sortie ne consulte un élément du test. Les vérités du test passent donc en mémoire sans être lues. Si l'on exige qu'elles n'y passent même pas, il faut une projection dev séparée et épinglée, qui n'existe pas encore. Le test des prédictions illisibles ne prouve rien sur ce fichier.
+   - Il n'ouvre aucune vérité ICAI de test.
+   - Il écrit `dev.json` (D sur le dev pour les huit systèmes), `planches/<comparaison>.html` avec ses images IIIF (SHA vérifié) et `MANIFEST_DEV.json`. Ce manifeste contient les identités du sceau, du banc, de la préinscription et des scripts, les versions, les sept planches (HTML, 12 identifiants, fichiers d'image) et le SHA de chaque fichier.
+2. **Regard des planches** par wA:p1 puis Grok. Le reçu `recu_planches.json` porte :
+   - `"stage": "planches_dev_regardees"` ;
+   - `"dev_manifest_sha256"` : le SHA de `MANIFEST_DEV.json` ;
+   - `"regards"` : `[{"viewer": "wA:p1", "viewed_at": …}, {"viewer": "Grok …", "viewed_at": …}]` ;
+   - `"plates_html_sha256"` : le SHA de chaque planche, pour les sept comparaisons.
+3. **`--stage test`** : **avant toute vérité de test**, il valide le dev et le reçu. Il refuse si l'une de ces conditions n'est pas remplie :
+   - le manifeste vient de ce sceau, de ce banc, de cette préinscription et de ces scripts ;
+   - chaque fichier listé est présent et inchangé, `dev.json` compris ;
+   - les sept comparaisons sont là, chacune avec 12 images distinctes et ses fichiers ;
+   - les deux regards sont présents ;
+   - les SHA des planches dans le reçu égalent ceux du manifeste.
+
+   L'**ordre d'ouverture** est le suivant :
    1. vérités ICAI de test ;
    2. vérités du test Rijksmuseum ;
    3. les six comparaisons sans condition, dans l'ordre de la famille, avec le contrôle T0 ;
@@ -54,7 +65,7 @@ Le pilote est `scripts/kaggle_mesure_run.py`. Entre les deux passages, seule la 
 
 ## Tests
 
-`python3 -I tests/test_mesure.py` lance 12 tests synthétiques :
+`python3 -I tests/test_mesure.py` lance les tests synthétiques :
 - parité du parseur et du H-F1 avec le gel et E3 ;
 - F1 exact micro ;
 - bootstrap par composantes, comparé à un calcul direct ;
@@ -62,4 +73,8 @@ Le pilote est `scripts/kaggle_mesure_run.py`. Entre les deux passages, seule la 
 - activation de TK-niv ;
 - ordre et égalités des planches ;
 - profondeur, codes rares, fréquence et couverture ;
-- deux essais de bout en bout sur un faux sceau aux constantes remplacées. Ils vérifient que le dev n'ouvre pas les fichiers de test, que le test refuse un mauvais reçu, que les verdicts sont écrits, qu'il reste 787 images ICAI, et que TK-niv est ouverte ou fermée selon la condition.
+- des essais de bout en bout sur un faux sceau au **schéma réel du gel** : lignes Rijks `{index, id, image_sha256, codes}`, lignes ICAI `{index, shard, row, md5, codes}`, empreintes d'ordre du manifeste. Les constantes sont remplacées. Ils vérifient que :
+  - le dev n'analyse pas les prédictions de test ;
+  - un ordre Rijks faux est refusé ;
+  - le test est refusé, avant les vérités, pour un manifeste dev vide, un autre sceau, un fichier manquant ou modifié, une comparaison absente, un regard manquant ou un reçu d'un autre dev ;
+  - les verdicts sont écrits, il reste 787 images ICAI, et TK-niv est ouverte ou fermée selon la condition.

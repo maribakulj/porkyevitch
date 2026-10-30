@@ -99,7 +99,16 @@ def read_predictions(seal, manifest, bank, system):
     obj = json.loads((seal / name).read_text())
     require(obj["bank"] == bank and obj["system"] == system and len(obj["rows"]) == meta["rows"], "prediction_identity")
     require(not any(c.strip().startswith("86") for r in obj["rows"] for c in r["codes"]), "prediction_86")
-    return obj["rows"]
+    return obj["rows"], meta
+
+
+def check_icai_rows(rows, meta, md5):
+    """Sealed ICAI rows are {index, shard, row, md5, codes} (gel_data.py)."""
+    for j, r in enumerate(rows):
+        require(set(r) == {"index", "shard", "row", "md5", "codes"} and r["index"] == j and r["row"] == j and
+                r["shard"] == TEST and r["md5"] == md5[j], "icai_prediction_schema_or_order")
+    require(object_sha([{k: r[k] for k in ("index", "shard", "row", "md5")} for r in rows]) ==
+            meta["identity_order_sha256"], "icai_identity_order_sha")
 
 
 def training_counts(enc, entrees):
@@ -137,8 +146,14 @@ def rijks_split(frozen, split):
     return items
 
 
-def align_rijks(rows, items):
-    require([r["pid"] for r in rows] == [it["pid"] for it in items], "rijks_order")
+def align_rijks(rows, items, meta):
+    """Sealed Rijksmuseum rows are {index, id, image_sha256, codes} (gel_predictions.py); the bench item key is pid."""
+    require(len(rows) == len(items), "rijks_row_count")
+    for j, (r, it) in enumerate(zip(rows, items)):
+        require(set(r) == {"index", "id", "image_sha256", "codes"}, "rijks_prediction_schema")
+        require(r["index"] == j and r["id"] == it["pid"] and r["image_sha256"] == it["image_sha256"], "rijks_order")
+    require(object_sha([{k: r[k] for k in ("index", "id", "image_sha256")} for r in rows]) ==
+            meta["identity_order_sha256"], "rijks_identity_order_sha")
     return [r["codes"] for r in rows]
 
 
@@ -199,14 +214,17 @@ def fetch_image(it, folder):
 
 def stage_dev(a, seal, manifest, counts, vocab, out):
     items = rijks_split(a.frozen, "dev")
-    preds = {s: align_rijks(read_predictions(seal, manifest, "rijks_dev", s), items) for s in SYSTEMS}
+    preds = {}
+    for system in SYSTEMS:
+        rows, meta = read_predictions(seal, manifest, "rijks_dev", system)
+        preds[system] = align_rijks(rows, items, meta)
     gts = [it["truth_projected"] for it in items]
     f = {s: [mm.hier_f1(g, p) for g, p in zip(gts, preds[s], strict=True)] for s in SYSTEMS}
     supports = [it["support"] for it in items]
     result = {"stage": "dev_only", "images": len(items), "components": len({it["component"] for it in items}),
               "systems": {s: diagnostic(gts, preds[s], counts, vocab, supports, f[s]) for s in SYSTEMS},
-              "D_validation_icai": "given by the head diagnostic (porky-diag-run, validation only) for T* and T-Z; "
-                                   "the seal holds no validation predictions", "plates": {}}
+              "D_validation_icai": "not measured here for the bricks: the seal holds no validation predictions; "
+                                   "the head diagnostic (porky-diag-run) covers T* and T-Z only", "plates": {}}
     texts = dictionary(Path(a.iconclass))
     (out / "planches" / "images").mkdir(parents=True)
     ids = [it["pid"] for it in items]
@@ -215,20 +233,55 @@ def stage_dev(a, seal, manifest, counts, vocab, out):
         chosen = mm.planche(ids, f[brick], f[ref])
         files = {pid: fetch_image(items[ids.index(pid)], out / "planches" / "images") for pid in chosen}
         (out / "planches" / f"{comp}.html").write_text(plate_html(comp, brick, ref, chosen, items, preds, f, texts, files))
-        result["plates"][comp] = {"images": chosen, "conditional": brick == mm.CONDITIONAL}
+        result["plates"][comp] = {"images": chosen, "conditional": brick == mm.CONDITIONAL,
+                                  "html": f"planches/{comp}.html",
+                                  "image_files": [f"planches/images/{files[pid]}" for pid in chosen]}
     write_json(out / "dev.json", result)
     files = sorted(p for p in out.rglob("*") if p.is_file())
     write_json(out / "MANIFEST_DEV.json", {"seal_sha256": SEAL_SHA256, "frozen_sha256": FROZEN_SHA256,
-               "script_sha256": {n: sha(Path(__file__).parent / n) for n in ("mesure_phase1.py", "mesure_metrics.py")},
-               "files": {str(p.relative_to(out)): sha(p) for p in files}})
+               "protocol_sha256": PROTOCOL_SHA256, "script_sha256": script_shas(),
+               "versions": {"python": sys.version.split()[0], "numpy": np.__version__}, "plates": result["plates"], "files": {str(p.relative_to(out)): sha(p) for p in files}})
     print("PHASE1_DEV_DONE_NO_TEST_OPENED")
 
 
+def script_shas():
+    return {n: sha(Path(__file__).parent / n) for n in ("mesure_phase1.py", "mesure_metrics.py")}
+
+
+def check_dev_and_receipt(dev_dir, receipt_path):
+    """Before any test truth: the dev output of THIS seal, bench and scripts, its seven plates of twelve images with
+    their files, and a receipt that records both looks (wA:p1 then Grok) on exactly these plates."""
+    dev_dir = Path(dev_dir)
+    path = dev_dir / "MANIFEST_DEV.json"
+    m = json.loads(path.read_text())
+    require(m.get("seal_sha256") == SEAL_SHA256 and m.get("frozen_sha256") == FROZEN_SHA256 and
+            m.get("protocol_sha256") == PROTOCOL_SHA256, "dev_manifest_identity")
+    require(m.get("script_sha256") == script_shas(), "dev_produced_by_other_scripts")
+    files = m.get("files") or {}
+    for rel, digest in files.items():
+        require((dev_dir / rel).is_file() and sha(dev_dir / rel) == digest, "dev_file_missing_or_changed")
+    require("dev.json" in files, "dev_json_missing")
+    plates = m.get("plates") or {}
+    expected = [mm.comparison_name(b, r) for b, r in mm.FAMILY]
+    require(sorted(plates) == sorted(expected), "dev_plates_incomplete")
+    dev = json.loads((dev_dir / "dev.json").read_text())
+    require(dev.get("plates") == plates, "dev_json_plates_differ")
+    for comp in expected:
+        pl = plates[comp]
+        require(len(pl["images"]) == 12 == len(set(pl["images"])) == len(pl["image_files"]), "plate_not_twelve_images")
+        require(pl["html"] in files and all(f in files for f in pl["image_files"]), "plate_file_not_in_manifest")
+    receipt = json.loads(Path(receipt_path).read_text())
+    looks = receipt.get("regards") or []
+    viewers = [x.get("viewer", "") for x in looks if x.get("viewed_at")]
+    require(receipt.get("stage") == "planches_dev_regardees" and receipt.get("dev_manifest_sha256") == sha(path),
+            "plates_not_viewed")
+    require(any(v == "wA:p1" for v in viewers) and any(v.startswith("Grok") for v in viewers), "both_looks_required")
+    require(receipt.get("plates_html_sha256") == {c: files[plates[c]["html"]] for c in expected}, "receipt_plates_differ")
+    return receipt, sha(path)
+
+
 def stage_test(a, seal, manifest, counts, vocab, out, entrees):
-    dev_manifest = Path(a.dev) / "MANIFEST_DEV.json"
-    receipt = json.loads(Path(a.receipt).read_text())
-    require(receipt.get("stage") == "planches_dev_regardees" and receipt.get("viewer") and receipt.get("viewed_at")
-            and receipt.get("dev_manifest_sha256") == sha(dev_manifest), "plates_not_viewed")
+    receipt, dev_manifest_sha = check_dev_and_receipt(a.dev, a.receipt)
     # Order of opening: ICAI truths, Rijksmuseum test truths, then the six unconditional comparisons, then TK-niv.
     expected = entrees["shards"][TEST]
     require(sha(Path(a.encoder) / "grid" / f"{TEST}.json") == expected["grid_json_sha256"], "icai_test_label_sha")
@@ -248,9 +301,10 @@ def stage_test(a, seal, manifest, counts, vocab, out, entrees):
     gts_i = [gts_i_all[j] for j in keep]
 
     def bank_preds(system):
-        rows_i = read_predictions(seal, manifest, "icai_test", system)
-        require([r["md5"] for r in rows_i] == md5, "icai_order")
-        return [rows_i[j]["codes"] for j in keep], align_rijks(read_predictions(seal, manifest, "rijks_test", system), items)
+        rows_i, meta_i = read_predictions(seal, manifest, "icai_test", system)
+        check_icai_rows(rows_i, meta_i, md5)
+        rows_r, meta_r = read_predictions(seal, manifest, "rijks_test", system)
+        return [rows_i[j]["codes"] for j in keep], align_rijks(rows_r, items, meta_r)
 
     counts_i = mm.unit_draws(len(keep))           # ICAI: images, default_rng(0)
     counts_r = mm.unit_draws(len(comp_ids))       # Rijksmuseum: whole components, default_rng(0)
@@ -304,9 +358,9 @@ def stage_test(a, seal, manifest, counts, vocab, out, entrees):
                "latency_T4": "not measured by this script: the seal holds predictions, not timings"}
     write_json(out / "mesures_test.json", mesures)
     files = sorted(p for p in out.rglob("*") if p.is_file())
-    write_json(out / "MANIFEST_TEST.json", {"seal_sha256": SEAL_SHA256, "dev_manifest_sha256": sha(dev_manifest),
-               "receipt": receipt,
-               "script_sha256": {n: sha(Path(__file__).parent / n) for n in ("mesure_phase1.py", "mesure_metrics.py")},
+    write_json(out / "MANIFEST_TEST.json", {"seal_sha256": SEAL_SHA256, "dev_manifest_sha256": dev_manifest_sha,
+               "receipt": receipt, "script_sha256": script_shas(),
+               "versions": {"python": sys.version.split()[0], "numpy": np.__version__},
                "files": {str(p.relative_to(out)): sha(p) for p in files}})
     print("PHASE1_TEST_DONE_VERDICTS_WRITTEN")
 
