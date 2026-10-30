@@ -10,9 +10,10 @@
   - tri GFM, certificat, PLNE contraint exact avec départage, égalités résiduelles comptées ;
   - contrôle « même q, seuil ».
 - **`scripts/a1_run.py`** : les étapes `blanc`, `reglage` et `diagnostic`.
-- **`scripts/kaggle_a1_run.py`** : pilote CPU, un seul fil, SHA des scripts et des entrées vérifiés.
+- **`scripts/kaggle_a1_run.py`** : pilote CPU, un seul fil, SHA des scripts et des entrées vérifiés ; moniteur global (voir « Plafonds du pilote »).
 - Tests :
   - `tests/test_a1_core.py` (8) : parité E3, tri fermé et optimal pour chaque k (exhaustif), décodeur égal à l'exhaustif avec émission (branche du solveur exercée), PLNE de fermeture seule égal au tri, cas à maximal interdit, π₀ = 1, contrôle par seuil, projection `float32` ;
+  - `tests/test_a1_pilot.py` (7) : moniteur du pilote sur processus et horloges fictifs (voir « Plafonds du pilote ») ;
   - `tests/test_a1_run.py` (4) : E0 et E1 sur données factices, non-régression HiGHS, départages, et étapes `reglage` puis `diagnostic` de bout en bout, avec refus d'un reçu sans le regard de Grok.
 
 ## Deux défauts de HiGHS trouvés par E1 avant tout calcul réel
@@ -48,6 +49,22 @@ L'ensemble du tri vaut 0,4553204656876362 et il est faisable : le script vérifi
 Si l'on rejoue le cas à travers le `milp_k` actuel, la mise à l'échelle est déjà appliquée, et le prétraitement redonne la bonne valeur. C'est l'explication la plus probable de la non-reproduction chez Grok p7. Une autre plateforme ou une autre version de HiGHS peut aussi suffire à le faire disparaître.
 
 **Le contournement reste en place** (prétraitement coupé ET mise à l'échelle) : chacun suffit sur ce cas, mais ni l'un ni l'autre n'est une garantie générale. Le test de non-régression (`tests/test_a1_run.py`) passe par le code actuel. Il garantit donc que **nos** appels donnent la bonne valeur, et le script de reproduction documente le défaut lui-même.
+
+## Plafonds du pilote (correctif B1 de Codex p4, 30/10)
+
+Le blanc appelait `subprocess.run` sans délai : les 10 s par PLNE ne bornaient pas le passage. Le pilote surveille
+maintenant le processus enfant, sur le modèle de `kaggle_gel_run.py` :
+
+- **Temps** : compté depuis le départ du pilote, recherche des entrées comprise. Blanc ≤ 1 200 s (§7 : ≤ 20 min CPU) ; `reglage` et `diagnostic` ≤ 7 200 s chacun, la série entière restant ≤ 2 h.
+- **RAM** : la somme des RSS du groupe de processus doit rester ≤ 8·10⁹ octets (8 Go, lecture décimale, la plus stricte).
+- **Sorties** : tout `/kaggle/working` ≤ 10⁹ octets (1 Go) ; arrêt aussi si l'espace libre tombe sous 256 Mio.
+- **Arrêt** : au premier dépassement, SIGTERM au groupe de processus, puis SIGKILL après 10 s. `driver.json` porte `status: failed` et la raison, ainsi que les pics de RAM et de sortie.
+- **Blanc refusé** : un `blanc.json` écrit par un passage échoué est renommé `blanc.REFUSED.json`. L'étape `reglage` ne peut donc pas le trouver, en plus de l'exigence de `BLANK_SHA256` relu.
+- **Fin tardive** : un enfant qui termine normalement mais au-delà du plafond est aussi un échec.
+
+Les limites par PLNE et les critères mathématiques sont inchangés, ainsi que `a1_core.py` et `a1_run.py`. Les tests
+(`tests/test_a1_pilot.py`) exercent tous les cas sans attendre vingt minutes : dépassement de temps avec arrêt du groupe
+et refus du blanc, temps de préparation compté, RAM, sorties, disque, fin tardive, erreur de l'enfant, succès.
 
 ## Les notes de Grok p2 (section 7.3), reprises dans le code
 

@@ -1,12 +1,15 @@
 {
-  "status": "Préinscription v2 (feu vert Grok p2) ; code et blanc écrits pour relecture, aucune exécution",
+  "status": "Préinscription v2 (feux verts Grok p2 et Codex p4) ; code relu par Codex p4, blanc bloqué B1/B2 puis corrigé (moniteur global du pilote, manifeste régénéré) ; a1_core.py et a1_run.py inchangés ; aucune exécution",
   "files": {
     "PREINSCRIPTION.md": "ed452dc3218028e33759151cbd0d8dd21038cd105b45492cb77964a673d3f383",
-    "CODE.md": "6e79cbd8e3812c6c125fc96a330160dcbdb4155162651f28435ca63898703831",
+    "CODE.md": "d2aeb616a786c60c6d2e9ae4d5712cb1e389c468cef5facbba59c153693d7612",
     "scripts/a1_core.py": "177ef54243fd6dfed0aa557561aa365f41b2c992379aef6d4fab4c5e27ab205a",
     "scripts/a1_run.py": "78b1ed982ae9b2e59624a30b83675703e156b92a1d45309b6089162c9dcee597",
-    "scripts/kaggle_a1_run.py": "f349f577560abdb52e97cf99fb2dc28aebddfb783824152af18ca71427cc40da",
+    "scripts/kaggle_a1_run.py": "37f8a4454a432a1546f844e9402f44ec17d06a9d62b72ae8c49237262a96b275",
     "tests/test_a1_core.py": "0254bc2d532eb4be901b0480a71d2e7ba89b2c31e6b1d5e75395ebde4e8b87f6",
-    "tests/test_a1_run.py": "0e40a115ccb7950035ca85eb5846ee062069f4d868f579de4f1efe54f026a984"
+    "tests/test_a1_run.py": "0e40a115ccb7950035ca85eb5846ee062069f4d868f579de4f1efe54f026a984",
+    "tests/test_a1_pilot.py": "6a8ebc2b747739060be49f9093cd45c4714afe571853cb3a09b97e177f10463e",
+    "tests/repro_highs_presolve.py": "864748b20dc1cebd073880915a9985a45796b77e1024d78e059f48799191cada",
+    "tests/fixtures/highs_presolve_case.json": "6df6720fa4932098469aafaaf640dde025a409fc9ba822c1d43e54398f276aec"
   }
 }
