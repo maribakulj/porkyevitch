@@ -1,0 +1,12 @@
+{
+  "status": "Préinscription et code du diagnostic de non-transfert (D10), descriptif, dev Rijksmuseum et validation ICAI seulement ; à relire (Grok p2 puis Codex p4) ; aucune exécution",
+  "files": {
+    "PREINSCRIPTION.md": "4dca2435eb3723cfdf46256b434351d80f778e2212d3b55c9896088ad72d9257",
+    "scripts/nt_core.py": "42236e0c61678108a2d7fc75e2e099c0e98bc611672606992ec97acc919d3ae3",
+    "scripts/nt_run.py": "4eb28eddafc1a039a25dbd3a29112a8b4856e423fa9349e8403a63de6bfaa7c4",
+    "scripts/mesure_metrics.py": "9a9d452676e7dd7717d4fab0aa00d11c2a1da5169913d03a80e0ccb5416df895",
+    "scripts/kaggle_nt_run.py": "65ea9452fd4200620b3335115784b68de6be9b3b1e142a0094a9ba9780e20207",
+    "tests/test_nt.py": "d6cead50e85c157309b60028730d15a3b3a8d1fd3dbd84781c4b883ada813a85",
+    "tests/test_nt_pilot.py": "380add34685cbac160d5a58ebf6332ec756aedda6705c361a8c70f2395c746ef"
+  }
+}

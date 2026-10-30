@@ -77,3 +77,9 @@
 - 30/10 : PHASE 1 CLOSE : aucune brique retenue (verdicts commités) ; vérification Grok p3 + audit Codex demandés. D8 (YOLOE-v8-S ajouté). B3 A1/D3 en relecture.
 - 30/10 : smoke petit élève CONFORME (Grok p3) ; complet attend : révisions épinglées, correctifs Codex (chrono, Florence-2, planche), YOLOE-v8-S, puis relectures.
 - 30/10 : verdicts phase 1 : audit Codex CONFORME (5a4193cc). Vérif Grok p3 attendue, puis carte HF et fusion travail→main.
+- 30/10 : verdicts phase 1 vérifiés CONFORMES par Grok p3 et Codex p4 ; travail fusionné dans main (c30dd89, sans conflit). Carte HF (privée) à mettre à jour avec le score Rijks.
+- 30/10 : lecture challenger phase 1 (Grok p7) : non-transfert = codes fréquents profonds absents des notices Rijks ; P9-A/A1/D3 = sondes de validation (référence T-Z) ; contre-expertise Codex demandée.
+- 30/10 : D9 ; passe Gemini (pilote graphes_agy.py e32e854e, consigne et schéma du pilote) lancée sur les 60 de validation interne (~/porkyevitch-donnees/graphes-gemini/val60, t→p même numéro), avant toute sortie d'entraînement.
+- 30/10 : passe Gemini val60 arrêtée avant tout appel (assertion 200 images codée en dur) ; diff --expected demandé à pH.
+- 30/10 : blancs A1 (CPU, pilote cea9e5a4, paquet e5e3f761) et D3 (T4, pilote d592e8e8, paquet dabcbd1a) lancés après feux verts Grok p2 et Codex p4.
+- 30/10 : INCIDENT consigné (wA:pH, préparation D10) : affichage des 400 premiers octets de frozen.json → métadonnées d'UNE image du test Rijks (pid, IIIF, support, composante), sans vérité ni prédiction ; après l'ouverture et les verdicts de la phase 1, donc sans effet sur eux ; écrit dans la préinscription du diagnostic, section 1. Règle rappelée : ne jamais afficher le contenu brut de frozen.json.
