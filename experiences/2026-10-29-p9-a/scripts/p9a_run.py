@@ -7,8 +7,14 @@
   mesures  (CPU)        only after the plate viewing receipt: H/E/F_R, tranches, bootstrap 10 000 by md5 groups,
                         verdicts G then R, local-nesting mechanism on V-diagnostic
 
-Recipes reused unchanged from the reviewed blank: TrainData, Head, optimizer, update, probability_pass,
-invariants, load_preparation, extract. Preregistration sha 25f1040f..., sections 6 to 11.
+Recipes reused unchanged from the reviewed blank: TrainData, Head, optimizer, probability_pass, invariants,
+load_preparation, extract. Preregistration sha 25f1040f..., sections 6 to 11.
+Amendment (30/10, after devis-0 failed on "nonfinite gradients" at update 12 of arm controle_global): the blank's
+update() refused every non-finite gradient, including the overflow of the fp16 products that GradScaler is designed to
+skip. devis and seed now use update_amp(), the same recipe except that such a step is skipped by the scaler, logged,
+and bounded by two thresholds fixed by wA:p1 before any rerun: stop if the scale falls below 1 (divergence, not an fp16
+overflow), stop if the skips of one arm exceed 1 % of the updates of an epoch (amendment required, never relaxed after
+the fact). The blank's bytes (p9a_smoke.update) are unchanged; blank 2 had no skip, so it passes under this rule too.
 """
 import argparse
 import gc
@@ -30,6 +36,85 @@ import p9a_science as sc  # noqa: E402
 MICRO, EFFECTIVE = 64, 64          # fixed by the blank (chosen_common_micro_batch = 64), all four arms
 BLANC2_SHA256 = "a850389e41608c44dc663b9dc669735674ea82d6bc33e9f0f4f92ca2244ee82e"
 UPDATES_PER_EPOCH = -(-81951 // EFFECTIVE)  # last batch kept
+MIN_SCALE = 1.0                    # wA:p1 30/10: a scale below 1 is a divergence, the run stops
+MAX_SKIP_SHARE = 0.01              # wA:p1 30/10: skips of one arm in one epoch above 1 % of its updates stop the run
+MAX_SKIPS_PER_EPOCH = MAX_SKIP_SHARE * UPDATES_PER_EPOCH  # 12.81: the 13th skip of an epoch stops
+
+
+class SkipLog:
+    """Skipped AMP steps of one run: one record per skip, the two stopping rules applied at each skip."""
+    def __init__(self):
+        self.records, self.per_arm_epoch = [], {}
+
+    def add(self, record, scale_after):
+        self.records.append(record)
+        key = (record["arm"], record["epoch"])
+        self.per_arm_epoch[key] = self.per_arm_epoch.get(key, 0) + 1
+        print("AMP_SKIP " + json.dumps({**record, "scale_after": scale_after}), flush=True)
+        require(scale_after >= MIN_SCALE, f"divergence: GradScaler scale {scale_after} below {MIN_SCALE}")
+        require(self.per_arm_epoch[key] <= MAX_SKIPS_PER_EPOCH,
+                f"skips of arm {key[0]} in epoch {key[1]} above 1 % of {UPDATES_PER_EPOCH} updates: amendment required")
+
+    def summary(self, arm):
+        mine = [r for r in self.records if r["arm"] == arm]
+        return {"skips": len(mine), "by_epoch": {str(e): n for (a, e), n in sorted(self.per_arm_epoch.items()) if a == arm},
+                "records": mine}
+
+
+def update_amp(model, opt, scaler, data, rows, micro, budget, phase, skips, arm, epoch, step):
+    """p9a_smoke.update with one change: non-finite gradients after unscale_ are a skipped step (no clipping, scaler.step
+    skips, scaler.update halves the scale, weights checked unchanged), logged in skips; finite gradients take the
+    reviewed path unchanged, clipping with error_if_nonfinite included."""
+    import torch
+    from p9a_heads import asymmetric_loss
+    dev = next(model.parameters()).device
+    gpu = dev.type == "cuda"
+    model.train()
+    if gpu:
+        torch.cuda.synchronize()
+    start = time.monotonic()
+    opt.zero_grad(set_to_none=True)
+    loss_value = 0.0
+    for offset in range(0, len(rows), micro):
+        part = rows[offset:offset + micro]
+        x, y = data.batch(part).to(dev), data.targets(part).to(dev)
+        probability = model(x)
+        require(bool(torch.isfinite(probability).all()), "nonfinite probability")
+        loss = asymmetric_loss(probability, y)
+        require(bool(torch.isfinite(loss)), "nonfinite ASL")
+        scaler.scale(loss * (len(part) / len(rows))).backward()
+        loss_value += float(loss.detach()) * len(part) / len(rows)
+        del x, y, probability, loss
+        budget.check(f"{phase}/micro{offset}", gpu=gpu)
+    penalty = model.regularization()
+    scaler.scale(penalty).backward()
+    scaler.unscale_(opt)
+    finite = all(p.grad is None or bool(torch.isfinite(p.grad).all()) for p in model.parameters())
+    skipped = not finite
+    if finite:
+        norm = float(torch.nn.utils.clip_grad_norm_(model.parameters(), 5, error_if_nonfinite=True))
+        scaler.step(opt)
+        scaler.update()
+    else:
+        counts = {name: (int(torch.isinf(p.grad).sum()), int(torch.isnan(p.grad).sum()))
+                  for name, p in model.named_parameters() if p.grad is not None}
+        worst = max(counts, key=lambda n: sum(counts[n]))
+        before = [p.detach().clone() for p in model.parameters()]
+        scale_before = float(scaler.get_scale())
+        scaler.step(opt)    # skipped by GradScaler: inf/NaN were found by unscale_
+        scaler.update()     # scale *= backoff factor
+        require(all(torch.equal(a, p.detach()) for a, p in zip(before, model.parameters())), "skipped step changed weights")
+        norm = None
+        skips.add({"arm": arm, "epoch": epoch, "step": step, "scale_before": scale_before,
+                   "n_inf": sum(c[0] for c in counts.values()), "n_nan": sum(c[1] for c in counts.values()),
+                   "most_affected_parameter": worst, "most_affected_counts": list(counts[worst])},
+                  float(scaler.get_scale()))
+    require(all(bool(torch.isfinite(p).all()) for p in model.parameters()), "nonfinite model parameters")
+    budget.check(f"{phase}/updated", gpu=gpu)
+    if gpu:
+        torch.cuda.synchronize()
+    return {"wall_s": time.monotonic() - start, "ASL": loss_value, "regularization": float(penalty.detach()),
+            "grad_norm_before_clip": norm, "skipped": skipped}
 
 
 class Sampled:
@@ -131,18 +216,21 @@ def initial_w(seed):
     return torch.randn(128, 1024, generator=torch.Generator(device="cpu").manual_seed(seed)) / 32.0
 
 
-def train_epoch(model, opt, scaler, data, rows, budget, phase):
-    from p9a_smoke import update
-    stats = {"ASL": [], "grad_norm_before_clip": [], "wall_s": 0.0}
-    for start in range(0, len(rows), EFFECTIVE):
-        u = update(model, opt, scaler, data, rows[start:start + EFFECTIVE], MICRO, budget, phase)
+def train_epoch(model, opt, scaler, data, rows, budget, phase, skips, arm, epoch):
+    stats = {"ASL": [], "grad_norm_before_clip": [], "wall_s": 0.0, "skipped": 0}
+    for step, start in enumerate(range(0, len(rows), EFFECTIVE)):
+        u = update_amp(model, opt, scaler, data, rows[start:start + EFFECTIVE], MICRO, budget, phase, skips, arm,
+                       epoch, step)
         stats["ASL"].append(u["ASL"])
-        stats["grad_norm_before_clip"].append(u["grad_norm_before_clip"])
+        if u["grad_norm_before_clip"] is not None:
+            stats["grad_norm_before_clip"].append(u["grad_norm_before_clip"])
+        stats["skipped"] += u["skipped"]
         stats["wall_s"] += u["wall_s"]
     require(len(stats["ASL"]) == UPDATES_PER_EPOCH, "updates per epoch")
     return {"ASL_mean": float(np.mean(stats["ASL"])), "ASL_last": stats["ASL"][-1],
-            "grad_norm_max": float(np.max(stats["grad_norm_before_clip"])), "updates": len(stats["ASL"]),
-            "train_wall_s": stats["wall_s"], "regularization_last": u["regularization"]}
+            "grad_norm_max": float(np.max(stats["grad_norm_before_clip"])) if stats["grad_norm_before_clip"] else None,
+            "updates": len(stats["ASL"]), "skipped_updates": stats["skipped"], "train_wall_s": stats["wall_s"],
+            "regularization_last": u["regularization"], "scale_end": float(scaler.get_scale())}
 
 
 def atomic_torch(obj, path):
@@ -157,7 +245,7 @@ def atomic_torch(obj, path):
 def stage_devis(args):
     import torch
     from p9a_heads import Head, optimizer
-    from p9a_smoke import seed_all, update
+    from p9a_smoke import seed_all
     runtime_gate("devis")
     deterministic_t4()
     check_blank(args.blank)
@@ -172,14 +260,14 @@ def stage_devis(args):
     reg, _ = positions(data)
     truth = sc.Truth([data.labels[i] for i in data.val])
     perms = permutations(args.seed)
-    arms = {}
+    arms, skips = {}, SkipLog()
     for arm in sc.ARM_ORDER[args.seed]:
         seed_all(args.seed)
         model = Head(arm, data, prototypes, initial_w(args.seed)).cuda()
         opt, scaler = optimizer(model), torch.amp.GradScaler("cuda")
         rows = data.fit[perms[0]]
-        walls = [update(model, opt, scaler, data, rows[k * 64:(k + 1) * 64], MICRO, budget, f"devis/{arm}")["wall_s"]
-                 for k in range(21)]
+        walls = [update_amp(model, opt, scaler, data, rows[k * 64:(k + 1) * 64], MICRO, budget, f"devis/{arm}", skips,
+                            arm, 1, k)["wall_s"] for k in range(21)]
         t0 = time.monotonic()
         Lh = intensity_pass(model, data, data.val[reg], budget, f"devis/{arm}/Vreg")
         t_vreg = time.monotonic() - t0
@@ -200,7 +288,8 @@ def stage_devis(args):
                      "train_s": warm * UPDATES_PER_EPOCH * sc.EPOCHS,
                      "per_epoch_selection_s": t_vreg + t_grid + 2 * t_ckpt,
                      "Vreg_pass_s": t_vreg, "grid_57_s": t_grid, "checkpoint_s": t_ckpt, "checkpoint_bytes": size_ckpt,
-                     "freeze_pass_s": t_full, "peak_allocated_bytes": torch.cuda.max_memory_allocated()}
+                     "freeze_pass_s": t_full, "peak_allocated_bytes": torch.cuda.max_memory_allocated(),
+                     "amp": {**skips.summary(arm), "updates": 21, "scale_end": float(scaler.get_scale())}}
         del model, opt, scaler, Lh
         gc.collect()
         torch.cuda.empty_cache()
@@ -225,6 +314,8 @@ def stage_devis(args):
               "arms": arms, "per_arm_total_s": per_arm, "seed_estimate_hours": seed_total / 3600,
               "mesures_cpu_bootstrap_estimate_hours": mesures_s / 3600,
               "disk_estimate_bytes": disk, "B_reference": ref,
+              "amp_skip_rules": {"min_scale": MIN_SCALE, "max_skips_per_arm_epoch": MAX_SKIPS_PER_EPOCH,
+                                 "decided_by": "wA:p1, 30/10, before the rerun"},
               "status": "AMENDMENT_REQUIRED" if seed_total > 12 * 3600 else "WITHIN_12H",
               "note": "Extrapolation from 20 warm updates, one V-reglage pass and one 57-candidate grid per arm; "
                       "not a mathematical bound. The CPU measures stage is budgeted by its own timings."}
@@ -284,7 +375,7 @@ def stage_seed(args):
     identity = {"seed": args.seed, "data_sha256": data_sha, "permutations_sha256": perms_sha,
                 "preparation_sha256": args.preparation_sha256, "prereg_sha256": PREREG_SHA, "micro": MICRO}
     LB_reg = LB[reg]
-    first_outputs, arms = {}, {}
+    first_outputs, arms, skips = {}, {}, SkipLog()
     for arm in sc.ARM_ORDER[args.seed]:
         seed_all(args.seed)
         model = Head(arm, data, prototypes, initial_w(args.seed)).cuda()
@@ -311,7 +402,9 @@ def stage_seed(args):
             del state
         for epoch in range(len(record["epochs"]) + 1, sc.EPOCHS + 1):
             rows = data.fit[perms[epoch - 1]]
-            record["epochs"].append(train_epoch(model, opt, scaler, data, rows, budget, f"{arm}/epoch{epoch}"))
+            record["epochs"].append(train_epoch(model, opt, scaler, data, rows, budget, f"{arm}/epoch{epoch}", skips,
+                                                arm, epoch))
+            record.setdefault("amp_skips", []).extend(r for r in skips.records if r["arm"] == arm and r["epoch"] == epoch)
             wpath = out / f"{arm}_epoch{epoch:02d}_weights.pt"
             record["weights_sha256"][epoch] = atomic_torch(model.state_dict(), wpath)
             atomic_torch({"state": model.state_dict(), "optimizer": opt.state_dict(), "scaler": scaler.state_dict(),

@@ -92,3 +92,29 @@
 6. regard de wA:p1 puis Grok, et reçu ;
 7. `mesures` (CPU) ;
 8. relecture, puis décision sur les graines 1 et 2 (section 9.4).
+
+## Amendement du 30/10 : pas sautés par GradScaler (après l'échec du devis 0)
+
+**Constat.** Le devis 0 s'est arrêté après 184 s, sur `nonfinite gradients`. Le bras F avait fini ses 21 mises à jour. Le bras `controle_global` (G) en avait réussi 11 et a échoué à la 12e (lignes 704–767 de la permutation 0). À ce pas, les probabilités et l'ASL étaient finies, et les paramètres l'étaient au pas précédent : seuls les gradients après `unscale_` étaient non finis. C'est le cas que GradScaler sait traiter : un dépassement des produits fp16 sous une échelle de 2¹⁶, qui saute le pas et divise l'échelle par deux. Or `update()` du blanc (`p9a_smoke.py`) refusait tout gradient non fini. Le blanc 2 ne pouvait pas le voir : il ne fait que deux mises à jour par bras, depuis l'initialisation.
+
+**Correctif, dans `p9a_run.py` seulement.** Les octets du blanc sont inchangés (`p9a_smoke.py` `7bb798b3…`, manifeste `733a3f28…`). `update_amp()` reprend la recette de `update()` avec un seul changement : si des gradients sont non finis après `unscale_`, le pas est sauté.
+- Pas d'écrêtage ; `scaler.step` saute le pas et `scaler.update` divise l'échelle par deux.
+- On vérifie que les poids sont inchangés à l'octet.
+- Le saut est journalisé `{bras, époque, pas, échelle avant, n_inf, n_nan, paramètre le plus touché}`, dans `execution.log` (`AMP_SKIP`), dans `devis.json` (par bras) et dans `<bras>_seed.json` (par époque).
+
+Si les gradients sont finis, le chemin relu est inchangé, écrêtage `error_if_nonfinite` compris. Un test le compare à une étape AMP écrite à la main : mêmes poids à l'octet. Les étapes `devis` et `seed` utilisent `update_amp`.
+
+**Seuils fixés par wA:p1 avant toute relance**, jamais relâchés après coup :
+- **arrêt si l'échelle tombe sous 1**. Seize sauts de suite depuis 2¹⁶ ne sont plus un dépassement fp16 : c'est une divergence ;
+- **arrêt si les sauts d'un bras dépassent 1 % des mises à jour d'une époque**, soit 12,81 sur 1 281 : le 13e saut d'une époque arrête le passage, et un amendement est exigé. Pour le devis, ses 21 pas comptent comme l'époque 1.
+
+Le blanc 2 n'a eu aucun saut : il passe aussi sous cette règle.
+
+**Tests** (`tests/test_amp_skip.py`, 5 tests, CPU, inf injecté par un crochet sur le gradient) :
+- saut légitime : poids inchangés, échelle divisée par deux, journal complet, puis reprise normale au pas suivant ;
+- divergence : échelle 4 → 2 → 1 → 0,5, arrêt au 3e saut ;
+- plafond de 1 % : arrêt au 13e saut d'une époque, avec l'échelle restée ≥ 1 ;
+- plafond compté par bras et par époque ;
+- chemin fini identique à la recette.
+
+Ce que le correctif ne tranche pas : si le premier saut du devis corrigé est un NaN et que l'échelle s'effondre, la garde l'arrête. C'est alors une vraie divergence de G, à examiner sans changer de tolérance.
