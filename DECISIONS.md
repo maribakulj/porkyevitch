@@ -136,3 +136,14 @@ validé chez nous pour les graphes), **Gemini 3.8 Flash** (déjà dans le dispos
 seulement** (repère de plafond, pas candidat de production). Préinscription v1 de wA:pH (vocabulaire fermé principal,
 invalidité, refus, répétabilité, coûts et temps symétriques) à mettre en v2 avec ces trois systèmes ; famille ajustée.
 Images : Gemini a déjà reçu ces images ICAI/dev aux pilotes ; même pratique, déclarée. Relecture Sonnet puis audit Codex.
+
+## D19 (30/10/2026) : amendement données du test YOLOE (Marcel : 106 images trop peu ; Grok p7, contre-expertise Codex)
+
+Entraînement en deux temps (recommandation Codex) : pré-apprentissage externe sur DEArt (cc-by-nc-sa-4.0, usage interne,
+sans les 1 066 fichiers Rijksmuseum) et ODOR (cc-by-4.0, après jointure de source), puis adaptation sur 106 Gemini + 240
+S1b d'apprentissage. Avant tout usage : détection de copies entre DEArt/ODOR et nos réserves (ICAI, juges, banc gelé),
+recouvrement ICAI mesuré. Correspondance des 70 noms DEArt et 139 classes ODOR vers les 8 super-catégories GELÉE avant
+l'entraînement, supervision partielle explicite (ce que deviennent les boîtes « autre »). Juge = 79 images (26 + 53),
+références recalculées, 26 et 53 publiés séparément, lecture exploratoire ; les 60 de validation interne réservés entiers.
+Préparation des images sur Kaggle CPU seulement (~18,2 Go d'archives DEArt), jamais sur le Mac ; plafond 14 400 s T4 avec
+nouveau devis complet. Licence notée, pas une porte. Rapports porkyevitch-yoloe-donnees-grok.md / -codex.md.
