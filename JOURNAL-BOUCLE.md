@@ -57,3 +57,5 @@
 - 30/10 : A1 v2 code : feu vert Grok p7 pour le blanc (paquet 25f56a5f) ; faux optimum HiGHS non reproduit chez Grok (presolve ou non) — à vérifier par Codex ; blanc attend l'audit p4.
 - 30/10 : D3 code : feu vert Grok p2 pour le blanc (paquet 3bca548c) ; attend audit p4. File p4 au retour (6:40) : petit élève v1, P9-A devis (e08881c5) + diff 9044582, A1 v2 texte+code (25f56a5f), D3 texte+code (3bca548c), tranche300/M0.
 - 30/10 : D4 maintenue (Grok p7 : aucun chemin de fuite). Test phase 1 attend la relecture des sorties dev par Grok p3.
+- 30/10 : challenge Grok p7 de la note tranche 300 : ne pas préinscrire tel quel ; M0 descriptive sans choix de bras ; juge = 26 Gemini ; consensus Haiku en colonne de fidélité. Contre-expertise Codex p4 en file (n°5) ; décision ensuite.
+- 30/10 : note tranche 300 v2 (pH 75d86b0) : accepte M0 descriptive, juge = 26 Gemini, pas de porte d'achat sur +0,05, relations exclues ; option passe Gemini sur les 60 (juge à 86 images) : avis wA:p1 favorable, décision après Codex p4.
