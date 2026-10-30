@@ -19,6 +19,6 @@ Règle écrite d'avance par Grok wA:p3 (`~/Documents/reviews/porkyevitch-regle-O
 Sur les 47 : O 2, A 30, E 15 ; d'accord avec Grok sur 39, avec wA:p1 sur 5, avec aucun sur 3.
 **Comptes arbitrés (accord des deux premiers regards, sinon troisième regard) : O 29, A 46, E 25 → 75 % de prédictions vraies.**
 Réserves : la règle est celle du juge le plus strict, ce qui pousse l'arbitre vers lui ; les justifications de Gemini citent
-surtout les clauses de la règle, et la lecture effective de chaque image n'a pas été contrôlée dans ses journaux.
+surtout les clauses de la règle ; la lecture effective des 47 images est contrôlée dans ses journaux agy (Grok wA:p3, porkyevitch-troisieme-regard-controle-grok.md : 47/47 ouvertes).
 Lecture pour l'article : un quart des prédictions sûres « fausses » sont de vraies erreurs ; trois quarts sont vraies, dont
 environ 30 % d'oublis précis du catalogueur.
