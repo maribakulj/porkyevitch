@@ -1,0 +1,22 @@
+{
+ "stage": "planches_p9a_regardees",
+ "manifest_sha256": "ef3d9008b94f8cd12259b8e045188e04f864f121d6b0cc3c9d9aac7adde1a7f1",
+ "plates_html_sha256": {
+  "F": "84f1ad90caea9513eb7d22a1dc954474464dc5cfe2f436498ff28a691a40df8d",
+  "controle_global": "6ac3f4a55ae3ad940685d412bbf6f42df278cccc09034938de46dd2c0438962f",
+  "A": "9a13be4ef53709aa070d087848d763612bedda0532424de67669d853b6964b58",
+  "C": "12d6f0a98601966638ab7c6c442af379ebd995f78987828fb197a94bcbe092c1"
+ },
+ "regards": [
+  {
+   "viewer": "wA:p1",
+   "viewed_at": "2026-10-30T11:10:00+01:00",
+   "notes": "resultats/planches-0/REGARD_wA_p1.md"
+  },
+  {
+   "viewer": "Grok wA:p7",
+   "viewed_at": "2026-10-30T11:15:15+01:00",
+   "notes": "~/Documents/reviews/porkyevitch-p9a-planches-grok.md"
+  }
+ ]
+}
