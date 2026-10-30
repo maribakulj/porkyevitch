@@ -38,3 +38,6 @@
 - 30/10 : décision D3 (vote rare, tête des enfants) consignée.
 - 30/10 : blanc P9-A relancé (correctif invariant 733a3f28, feux verts Grok p2 section 12 et Codex p4).
 - 30/10 : GEL COMPLET phase 1 scellé : 24 fichiers, predictions_frozen true, 28 min sur T4, aucune mesure.
+- 30/10 : diagnostic complet vérifié CONFORME par Codex p4 ; cache de probabilités float32 (npz) rapatrié pour A1.
+- 30/10 : stabilité S1b sur 60 images (deux passes indépendantes) : Jaccard des noms d'objets 0,52, des relations 0,34, écart moyen 2,4 objets par image.
+- 30/10 : regard des 100 confiants absents (wA:p1) : 61 oublis plausibles, 27 vrais mais génériques, 12 vraies erreurs ; contre-regard Grok p3 demandé.
