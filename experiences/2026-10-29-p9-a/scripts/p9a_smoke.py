@@ -7,6 +7,7 @@ import argparse
 import copy
 import gc
 import hashlib
+import json
 import os
 from pathlib import Path
 import random
@@ -97,6 +98,31 @@ def probability_pass(model, data, rows, micro, budget, phase):
     return np.concatenate(outputs), time.monotonic() - start
 
 
+# Gate of the duplication (mass) invariant, written before the next attempt (30/10, after smoke-1):
+# exact in real arithmetic; checked on a float64 CPU copy, where both sides differ only by summation
+# order (bound ~1e-12, see CODE_REVIEW.md); a mass defect (one cell counted 1/64 instead of 1/128) gives >= ~1e-4.
+DUPLICATION_TOL_FLOAT64 = 1e-9
+
+
+def log_check(name, value):
+    print("INVARIANT " + json.dumps({"check": name, "value": value}), flush=True)
+
+
+def duplication_errors(model, x):
+    """Max |p(duplicated cell 0, weights 1/128 + 1/128) - p(x)| on three paths. Only the float64 one gates."""
+    duplicate = torch.cat((x[:, :1], x[:, :1], x[:, 1:]), dim=1)
+    weights = torch.full((x.shape[1] + 1,), 1 / x.shape[1], dtype=torch.float32)
+    weights[:2] = 1 / (2 * x.shape[1])
+    twin = copy.deepcopy(model).cpu().double().eval()
+    x64, d64 = x.detach().cpu().double(), duplicate.detach().cpu().double()
+    out = {"float64_cpu": float((twin(d64, weights, fp16=False) - twin(x64, fp16=False)).abs().max())}
+    del twin
+    w = weights.to(x.device)
+    for name, fp16 in (("float32_gpu_descriptive", False), ("production_fp16_gpu_descriptive", True)):
+        out[name] = float((model(duplicate, w, fp16=fp16) - model(x, fp16=fp16)).abs().max())
+    return out
+
+
 @torch.no_grad()
 def invariants(model, data, budget):
     model.eval()
@@ -106,15 +132,19 @@ def invariants(model, data, budget):
     if model.arm in ("A", "controle_global"):
         result["hierarchy_probability_violation"] = model.hierarchy.violation(p)
         result["hierarchy_intensity_violation"] = model.hierarchy.violation(intensity)
+        for k, v in result.items():
+            log_check(f"{model.arm}/{k}", v)
         require(max(result.values()) <= 1e-6, "hierarchy violation")
         if model.arm == "A":
             result["hierarchy_local_violation"] = model.hierarchy.violation(fields)
+            log_check(f"{model.arm}/hierarchy_local_violation", result["hierarchy_local_violation"])
             require(result["hierarchy_local_violation"] <= 1e-6, "local hierarchy violation")
-        duplicate = torch.cat((x[:, :1], x[:, :1], x[:, 1:]), dim=1)
-        weights = torch.full((65,), 1 / 64, device="cuda", dtype=torch.float32)
-        weights[:2] = 1 / 128
-        result["weighted_cell_duplication_max_probability_error"] = float((model(duplicate, weights) - p).abs().max())
-        require(result["weighted_cell_duplication_max_probability_error"] <= 1e-6, "mass conservation check")
+        require(x.shape[1] == 64, "grid cells")
+        for name, value in duplication_errors(model, x).items():
+            result[f"weighted_cell_duplication_max_probability_error/{name}"] = value
+            log_check(f"{model.arm}/weighted_cell_duplication/{name}", value)
+        require(result["weighted_cell_duplication_max_probability_error/float64_cpu"] <= DUPLICATION_TOL_FLOAT64,
+                "mass conservation check")
         # Both software paths receive gates/root from these same real grid cells.
         z, scores = model.linear_scores(x)
         root = torch.nn.functional.softplus(torch.nn.functional.linear(
@@ -125,6 +155,7 @@ def invariants(model, data, budget):
         mu = root.mean(1)
         global_ = shallow((root.unsqueeze(-1) * gates).mean(1) / mu.unsqueeze(-1), mu)
         result["one_level_max_intensity_error"] = float((local - global_).abs().max())
+        log_check(f"{model.arm}/one_level_max_intensity_error", result["one_level_max_intensity_error"])
         require(result["one_level_max_intensity_error"] <= 1e-6, "one-level A/G identity")
     budget.check(f"invariants/{model.arm}", gpu=True)
     return result

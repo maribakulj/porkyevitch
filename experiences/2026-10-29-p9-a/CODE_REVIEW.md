@@ -83,3 +83,30 @@ La préparation Kaggle s'est arrêtée dans `descriptions()` : `conflicting exac
 Règle déterministe, écrite avant usage : une clé qui a plusieurs descriptions différentes est **retirée du dictionnaire et journalisée** (`dictionary_conflicts_dropped_outside_vocab` dans `preparation.json` : chemins, lignes, SHA-256 des descriptions) si elle est hors de V. Un conflit sur une clé de V **arrête** la préparation. Les doublons identiques sont gardés une fois. V étant fermé par ancêtres, les textes ne consultent jamais une clé hors de V : aucun texte ni prototype ne dépend de ce retrait. Un test le vérifie. La préinscription est inchangée.
 
 Tests : `tests/test_descriptions.py`, hors manifeste. Les fonctions sont extraites par AST, sans torch. Cinq cas synthétiques plus un cas sur les fichiers publics épinglés et le vocabulaire E0 réels, tous OK. Aucun lancement.
+
+## Blanc smoke-1 (30/10) : « mass conservation check » après entraînement, diagnostic et correctif (wA:pH)
+
+**Constat.** B est reproduit exactement et les invariants initiaux passent. Après les deux mises à jour (bras A ou contrôle global, micro-lot 64), `weighted_cell_duplication_max_probability_error` dépasse 10⁻⁶. La valeur n'était pas journalisée.
+
+**Diagnostic : erreur numérique, pas défaut de l'imbrication.**
+
+- **En arithmétique exacte, l'identité tient.** Dupliquer la cellule 0 avec deux poids de 1/128 ne change rien : les champs de A sont calculés cellule par cellule, puis sommés avec les poids ω. G moyenne avant la hiérarchie, avec la même masse. Une copie float64 sur CPU donne un écart de 1,4·10⁻¹⁷ (A) et 3,5·10⁻¹⁷ (G), sur une tête synthétique dont U et delta ont été écartés de zéro (`tests/test_invariants.py`).
+- **Le contrôle comparait deux produits fp16 de formes différentes**, 2×65 lignes contre 2×64. Sur T4, cuBLAS peut choisir un autre algorithme selon la forme, y compris en mode déterministe. Le mode déterministe ne garantit l'identité qu'à forme égale.
+  - Avec |dot| ≈ 57, un ulp fp16 vaut 0,03, soit environ 2,7·10⁻³ sur le score après division par √128. L'arrondi fp16 complet décale les scores de 2,4·10⁻³ (mesure synthétique).
+  - Une probabilité varie d'environ (1−p)·Σ_u ω_u·r_u·g(1−g)·Δs. L'ordre de grandeur est 10⁻⁴ à 10⁻³, très au-dessus de 10⁻⁶.
+- **Pourquoi l'invariant initial passait.** À l'initialisation, U = 0 et delta = 0, donc `code = 0` et le produit fp16 vaut exactement 0 quelle que soit la forme. L'invariant initial passait trivialement. Il ne devient sensible qu'après la première mise à jour, ce qui explique l'échec à cet endroit précis.
+- **Les autres contrôles n'ont pas ce problème.** Les violations de hiérarchie (min × porte < 1) et l'identité à un niveau (mêmes scores réutilisés) ne comparent pas deux formes. Ils passent, et c'est attendu.
+
+**Correctif, écrit avant le prochain essai, sans changer la préinscription.**
+
+1. **Chemin de production inchangé.** `Head.linear_scores` et `Head.forward` reçoivent `fp16=True` par défaut, et le chemin d'entraînement et d'inférence est identique à l'octet. `fp16=False` garde le type des paramètres partout, autocast désactivé. Il ne sert qu'aux contrôles.
+2. **Le contrôle de duplication se fait sur une copie float64 de la tête, sur CPU**, avec les mêmes cellules réelles. Il porte donc sur l'identité mathématique, pas sur l'arrondi.
+   - Seuil : **10⁻⁹** (`DUPLICATION_TOL_FLOAT64`), plus strict que les 10⁻⁶ de la préinscription.
+   - Justification : en float64 (u = 1,1·10⁻¹⁶), les deux côtés ne diffèrent que par l'ordre des sommes. Cela donne au plus K·u·Σ|termes|, avec K ≤ 1 024 et |score| ≲ 10², soit environ 10⁻¹¹ sur les scores. La probabilité est lipschitzienne d'ordre r_max·¼ en Δs, donc l'erreur reste ≲ 10⁻¹⁰.
+   - Un vrai défaut de masse, par exemple une cellule comptée 1/64 au lieu de 1/128, donne au moins 10⁻⁶ dans le test, et en pratique environ 10⁻⁴.
+3. **Les deux chemins GPU sont mesurés et publiés, sans servir de porte** : float32 sans autocast, et production fp16.
+4. **Journalisation.** Chaque valeur d'invariant (hiérarchie, duplication sur les trois chemins, identité à un niveau) est écrite dans le journal (`INVARIANT {...}`) **avant** son `require`. Un échec laisse donc sa valeur.
+
+**Conséquence à noter.** En production, une probabilité dépend de la forme du lot fp16 au niveau 10⁻⁴. La reprise, qui se fait au même micro-lot, reste comparable à 10⁻⁶. En revanche, des décisions au seuil peuvent dépendre du micro-lot choisi : garder le micro-lot fixé et noté.
+
+Tests : `tests/test_invariants.py`, 4 tests avec torch sur CPU. Ils vérifient que le chemin de production est inchangé, que l'écart float64 reste sous 10⁻¹², qu'un défaut de masse est détecté, et le mécanisme : un arrondi fp16 décale les scores de plus de 10⁻⁴ après entraînement, et de 0 à l'initialisation.

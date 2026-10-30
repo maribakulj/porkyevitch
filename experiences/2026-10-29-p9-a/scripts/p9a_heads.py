@@ -100,19 +100,22 @@ class Head(nn.Module):
         want = 1200227 if arm == "C" else 1201252
         require(sum(p.numel() for p in self.parameters()) == want, "active parameter count")
 
-    def linear_scores(self, x):
+    def linear_scores(self, x, fp16=True):
         # No AMP context around normalization, roots, gates, reductions or exp/log.
-        z = F.layer_norm(x.float(), (1024,), eps=1e-5)
+        # fp16=True is the training/inference path (unchanged, float32 elsewhere). fp16=False keeps the
+        # parameters' own dtype everywhere: used only by the invariant checks on a float64 copy.
+        dtype = torch.float32 if fp16 else self.W.dtype
+        z = F.layer_norm(x.to(dtype), (1024,), eps=1e-5)
         # fp16 is allowed only for these three linear products, then cast to fp32.
-        with torch.autocast("cuda", dtype=torch.float16):
+        with torch.autocast("cuda", dtype=torch.float16, enabled=fp16):
             v = F.linear(z, self.W)
             code = F.linear(self.prototypes, self.U) + self.delta
             dot = v @ code.T
-        scores = dot.float() / math.sqrt(128) + self.b
+        scores = dot.to(dtype) / math.sqrt(128) + self.b
         return z, scores
 
-    def forward(self, x, weights=None, return_fields=False):
-        z, scores = self.linear_scores(x)
+    def forward(self, x, weights=None, return_fields=False, fp16=True):
+        z, scores = self.linear_scores(x, fp16)
         if weights is None:
             weights = torch.full((x.shape[1],), 1 / x.shape[1], device=x.device, dtype=torch.float32)
         require(weights.dtype == torch.float32 and weights.shape == (x.shape[1],), "cell weights")

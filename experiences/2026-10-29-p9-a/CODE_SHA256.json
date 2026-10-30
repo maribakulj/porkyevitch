@@ -1,13 +1,13 @@
 {
-  "status": "Code rédigé pour relecture, aucune exécution P9-A ; syntaxe vérifiée statiquement seulement ; correctif des descriptions en conflit (29/10, wA:pH), aucune exécution",
+  "status": "Code rédigé pour relecture, aucune exécution P9-A ; syntaxe vérifiée statiquement seulement ; correctif des descriptions en conflit (29/10, wA:pH), aucune exécution ; correctif de l'invariant de duplication après le blanc smoke-1 (30/10, wA:pH), aucune exécution",
   "files": {
     "ENCODAGE_TRAIN_V3.json": "ff424e6453192f6465e23e3cdf9acf29aa5827d84565deb329de4c1b891a65d9",
     "PREINSCRIPTION.md": "25f1040f5b657d7b94896cba41852f59c2f6e3042a555f798c126ca8698d3585",
     "scripts/kaggle_p9a_run.py": "7294a27adaebe3861a68a7e8d609d5ba9ce2a54a4d83c5a0bec2d0b82923c109",
     "scripts/p9a_common.py": "7eb79cfc18acec12cfb68f176007a5a6bbce7956c301980599c538fdf6a03479",
-    "scripts/p9a_heads.py": "8306995de18aaef06232c32e8128fdfc30faa3da6181d5f6607be00e75736194",
+    "scripts/p9a_heads.py": "2ca395904a2c2bef830f57dff0a34a723921e690ef21b677cafc1dbee2756f38",
     "scripts/p9a_inputs.py": "11016edf026175042fe8b57285f0989cc669b8bbf65b6fa8100173cad48c317f",
     "scripts/p9a_prepare.py": "0ec1679d76c2197fde7c8ba7ffbdb3a8605a735229e902ecafe60e02762fdc3b",
-    "scripts/p9a_smoke.py": "6b039f31fe6ddef7be3b689b2c6afc50ca29f027df7eb4d7c2dc89a58931d7a0"
+    "scripts/p9a_smoke.py": "7bb798b3cb6d47df8f36de2420c0d564d591ead91773ac4841233f89c7effa2b"
   }
 }
