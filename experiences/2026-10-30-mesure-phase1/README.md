@@ -78,3 +78,30 @@ Le pilote est `scripts/kaggle_mesure_run.py`. Entre les deux passages, seule la 
   - un ordre Rijks faux est refusé ;
   - le test est refusé, avant les vérités, pour un manifeste dev vide, un autre sceau, un fichier manquant ou modifié, une comparaison absente, un regard manquant ou un reçu d'un autre dev ;
   - les verdicts sont écrits, il reste 787 images ICAI, et TK-niv est ouverte ou fermée selon la condition.
+
+## Amendement du pilote, étape test seulement (30/10, demande de wA:p1)
+
+**Problème.** Kaggle supprime (403, puis jeu introuvable), trois fois de suite, tout jeu de données qui contient les images des planches du dev. C'est vraisemblablement une modération automatique, car il y a des nus dessinés. Le script et les JSON, eux, passent. Or `check_dev_and_receipt` a besoin des planches et du reçu.
+
+**Amendement** (`scripts/kaggle_mesure_run.py` seulement ; `mesure_phase1.py` et `mesure_metrics.py` ne changent pas d'un octet) :
+- À l'étape **test**, le pilote cherche **exactement une** `mesure-dev.bin`. C'est une archive tar **non compressée**, que Kaggle n'extrait pas. Elle contient `mesure-dev/` (`dev.json`, `MANIFEST_DEV.json`, `planches/`), `recu_planches.json`, `mesure_phase1.py` et `mesure_metrics.py`.
+- Il vérifie son SHA-256 contre `DEV_ARCHIVE_SHA256`. Cette constante vaut `None` tant que wA:p1 ne l'a pas fournie, et une valeur `None` ou différente est refusée.
+- Il l'extrait dans `/kaggle/working/dev-in`, qui ne doit pas exister avant. Avant toute écriture, il refuse :
+  - tout membre au nom absolu ou contenant `..` ;
+  - tout membre qui sortirait de `dev-in` une fois résolu ;
+  - tout lien, symbolique ou dur, et tout fichier spécial.
+
+  Seuls les fichiers ordinaires et les dossiers sont écrits, octet par octet.
+- `MANIFEST_DEV.json`, `recu_planches.json` et `mesure_phase1.py` sont ensuite cherchés **dans `dev-in` seulement**, jamais dans `/kaggle/input`, chacun exactement une fois. Les SHA des deux scripts sont vérifiés comme avant, puis le script est lancé depuis `dev-in`.
+- L'étape **dev** est inchangée.
+- Toutes les vérifications de `check_dev_and_receipt` (identités, sept planches de 12 images, fichiers et SHA, deux regards) s'appliquent ensuite comme avant.
+
+**Tests** : `python3 -I tests/test_pilote.py`. Les 8 tests vérifient les cas suivants :
+- archive valide, entrées trouvées dans `dev-in` seulement ;
+- SHA faux ou absent, refusé avant toute écriture ;
+- membre `../` refusé, sans fuite hors de `dev-in` ;
+- nom absolu refusé ;
+- lien symbolique et lien dur refusés ;
+- fichier spécial (FIFO) refusé ;
+- manifeste en double ou script modifié refusés ;
+- `dev-in` déjà présent refusé.
