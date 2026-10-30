@@ -41,3 +41,9 @@
 - 30/10 : diagnostic complet vérifié CONFORME par Codex p4 ; cache de probabilités float32 (npz) rapatrié pour A1.
 - 30/10 : stabilité S1b sur 60 images (deux passes indépendantes) : Jaccard des noms d'objets 0,52, des relations 0,34, écart moyen 2,4 objets par image.
 - 30/10 : regard des 100 confiants absents (wA:p1) : 61 oublis plausibles, 27 vrais mais génériques, 12 vraies erreurs ; contre-regard Grok p3 demandé.
+- 30/10 : P9-A blanc 2 CONFORME (Codex p4) ; passage scientifique : runner et devis complet à écrire (file de pH après les mesures de phase 1).
+- 30/10 : petit élève v1 : feu vert Grok p2 pour le blanc (59f56096) ; audit Codex p4 en file (après la mesure phase 1).
+- 30/10 : mesure phase 1 BLOQUÉE par Codex p4 (B1 pid/id, B2 reçu sans planches) ; correctif demandé à pH en priorité.
+- 30/10 : A1 v2 : feu vert Grok p2 (texte), audit p4 en file.
+- 30/10 : mesure phase 1 : correctifs B1/B2 (18702a0) en contre-vérification ; décision : D sur validation des autres briques = écart déclaré, sans effet sur les verdicts.
+- 30/10 : contre-regard Grok p3 des 100 confiants absents : O 29 / A 45 / E 26 (wA:p1 : 61/27/12), accord 53 % ; vrai (O+A) 74-88 %.
