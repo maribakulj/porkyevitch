@@ -1,0 +1,302 @@
+{
+ "V_diagnostic_images": 2111,
+ "eligible": 2100,
+ "groups": 2099,
+ "H": {
+  "A1": 0.6076207798199523,
+  "threshold_same_q": 0.6017100300250194,
+  "threshold_own_q": 0.6101628934369521,
+  "sort_unconstrained": 0.6076207798199523,
+  "B": 0.5860487335040372
+ },
+ "E": {
+  "A1": 0.34426362853571196,
+  "threshold_same_q": 0.3366511119262957,
+  "threshold_own_q": 0.35601727487510126,
+  "sort_unconstrained": 0.34426362853571196,
+  "B": 0.31040405952249156
+ },
+ "mechanism": {
+  "delta": 0.00591074979493289,
+  "ci95": [
+   0.0024982989323966173,
+   0.009423196628852633
+  ],
+  "case": "mecanisme_utile",
+  "order": "H<0.003, then delta>=0.003"
+ },
+ "product_rule_G": {
+  "delta_H": 0.02157204631591514,
+  "delta_E": 0.0338595690132204,
+  "ci95_H": [
+   0.016527566146785,
+   0.02658570190182756
+  ],
+  "ci95_E": [
+   0.02682410505461699,
+   0.04112812849472735
+  ],
+  "candidate": true
+ },
+ "proximity_stratum_cos_ge_0_95": {
+  "images": 625,
+  "share_images": 0.2976190476190476,
+  "weighted_contribution_near": 0.010362513012086395,
+  "weighted_contribution_far": 0.01120953330382877,
+  "gains_far": 547,
+  "losses_far": 488,
+  "gain_share": 0.480367641545497,
+  "gains": 217,
+  "losses": 124,
+  "not_recommended_if_candidate": false,
+  "reading": "strong proximity, not proof of copying"
+ },
+ "recommended": true,
+ "certification": {
+  "paths": {
+   "empty": 0,
+   "sort_certified": 2111,
+   "solver": 0,
+   "solver_empty": 0
+  },
+  "uncertified": 0,
+  "residual_ties": 0,
+  "reading": "on uncertified images the result is the executed decoder, not a certified optimum"
+ },
+ "sort_witness": {
+  "images_changed_by_emission_constraints": 0,
+  "H_sort_unconstrained": 0.6076207798199523
+ },
+ "always": {
+  "S_size_distribution": [
+   0,
+   17,
+   31,
+   71,
+   119,
+   100,
+   112,
+   95,
+   99,
+   86,
+   59,
+   85,
+   99,
+   96,
+   73,
+   79,
+   86,
+   54,
+   55,
+   51,
+   89,
+   70,
+   64,
+   43,
+   50,
+   24,
+   35,
+   26,
+   22,
+   25,
+   20,
+   20,
+   18,
+   14,
+   10,
+   14,
+   10,
+   4,
+   4,
+   8,
+   5,
+   4,
+   3,
+   6,
+   6,
+   3,
+   3,
+   1,
+   1,
+   2,
+   1,
+   3,
+   0,
+   1,
+   1,
+   0,
+   1,
+   1,
+   1,
+   4,
+   1,
+   0,
+   0,
+   2,
+   5,
+   2,
+   2,
+   1,
+   1,
+   2,
+   2,
+   1,
+   0,
+   1,
+   0,
+   0,
+   1,
+   0,
+   1,
+   2,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1
+  ],
+  "codes_emitted_mean": 4.567977261961156,
+  "share_modified_vs_B": 0.675035528185694,
+  "latency_s": {
+   "P50": 0.003353568000022733,
+   "P95": 0.00937910199999692,
+   "P99": 0.013405213399960309,
+   "threads": "1"
+  },
+  "tranches_F1": {
+   "0": {
+    "A1": {
+     "codes": 1199,
+     "macro_F1": 0.0
+    },
+    "threshold_same_q": {
+     "codes": 1199,
+     "macro_F1": 0.0
+    },
+    "threshold_own_q": {
+     "codes": 1199,
+     "macro_F1": 0.0
+    },
+    "sort_unconstrained": {
+     "codes": 1199,
+     "macro_F1": 0.0
+    },
+    "B": {
+     "codes": 1199,
+     "macro_F1": 0.0
+    }
+   },
+   "1-4": {
+    "A1": {
+     "codes": 21171,
+     "macro_F1": 4.723442444853809e-05
+    },
+    "threshold_same_q": {
+     "codes": 21171,
+     "macro_F1": 4.723442444853809e-05
+    },
+    "threshold_own_q": {
+     "codes": 21171,
+     "macro_F1": 4.723442444853809e-05
+    },
+    "sort_unconstrained": {
+     "codes": 21171,
+     "macro_F1": 4.723442444853809e-05
+    },
+    "B": {
+     "codes": 21171,
+     "macro_F1": 9.446884889707619e-05
+    }
+   },
+   "5-20": {
+    "A1": {
+     "codes": 4073,
+     "macro_F1": 0.04688138805386257
+    },
+    "threshold_same_q": {
+     "codes": 4073,
+     "macro_F1": 0.04940431121378826
+    },
+    "threshold_own_q": {
+     "codes": 4073,
+     "macro_F1": 0.05156146191223423
+    },
+    "sort_unconstrained": {
+     "codes": 4073,
+     "macro_F1": 0.04688138805386257
+    },
+    "B": {
+     "codes": 4073,
+     "macro_F1": 0.04075265172736324
+    }
+   },
+   "21-100": {
+    "A1": {
+     "codes": 1454,
+     "macro_F1": 0.14464716967558836
+    },
+    "threshold_same_q": {
+     "codes": 1454,
+     "macro_F1": 0.1454397763925806
+    },
+    "threshold_own_q": {
+     "codes": 1454,
+     "macro_F1": 0.1560708706808137
+    },
+    "sort_unconstrained": {
+     "codes": 1454,
+     "macro_F1": 0.14464716967558836
+    },
+    "B": {
+     "codes": 1454,
+     "macro_F1": 0.12355748092443573
+    }
+   },
+   ">100": {
+    "A1": {
+     "codes": 528,
+     "macro_F1": 0.3460693895516061
+    },
+    "threshold_same_q": {
+     "codes": 528,
+     "macro_F1": 0.3621550544247961
+    },
+    "threshold_own_q": {
+     "codes": 528,
+     "macro_F1": 0.35778293517697135
+    },
+    "sort_unconstrained": {
+     "codes": 528,
+     "macro_F1": 0.3460693895516061
+    },
+    "B": {
+     "codes": 528,
+     "macro_F1": 0.324156429885171
+    }
+   }
+  }
+ },
+ "bootstrap": {
+  "seed": 20261029,
+  "draws": 10000,
+  "unit": "md5 group",
+  "method": "percentile, numpy linear"
+ },
+ "exploratory": true,
+ "versions": {
+  "python": "3.13.15",
+  "numpy": "2.1.3",
+  "scipy": "1.16.3",
+  "highs": "bundled with scipy 1.16.3",
+  "omp_threads": "1"
+ }
+}
