@@ -1,0 +1,27 @@
+{
+ "cradio_vs_pe_spatial": "not_available: no PE-Spatial validation predictions were saved; the saved PE predictions are on the closed ICAI test and are not opened",
+ "population": {
+  "evaluable": 4241,
+  "train_rows": 81951,
+  "truth_codes": 18358,
+  "truth_codes_outside_vocabulary": 1717,
+  "universe": 28804,
+  "validation_rows": 4265,
+  "vocabulary": 7907
+ },
+ "seeds": "not_available: phase 1 trained one seed (0) per head",
+ "stage": "smoke_reproduction_only",
+ "systems": {
+  "B_TZ": {
+   "historical_hf1": 0.5890847528448202,
+   "reproduced_hf1": 0.5890847528448202,
+   "reproduction_delta": 0.0
+  },
+  "T_star": {
+   "historical_hf1": 0.5780389782560774,
+   "reproduced_hf1": 0.5780389782560774,
+   "reproduction_delta": 0.0
+  }
+ },
+ "wall_seconds": 217.089719033
+}
