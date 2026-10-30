@@ -47,3 +47,17 @@ Tout est figé avant les 26, sur le code et les seules entrées d'entraînement.
 ## Ordre
 
 Ces changements sont de nouveaux octets : relecture par Grok p2 puis Codex p4. Ensuite vient un **nouveau smoke**, qui doit montrer que Florence-2 se charge réellement et relever le SHA de `mobileclip_blt.ts`. Viennent enfin un commit relu qui épingle ce SHA, puis `full`, la planche regardée et le reçu, et enfin `mesures`. Restent à fixer, comme le demande Codex : la méthode des quantiles et les versions de l'environnement réellement éprouvé, à reprendre du smoke.
+
+## 7. Corrections B1 et B2 de Codex p4 (audit de `8768ff1`), avant le complet
+
+**B1 : le sceau doit être complet à la lecture.** `check_receipt` hachait seulement ce que le manifeste déclarait. Un manifeste avec douze planches, mais sans `run.json`, `timing.json` ni prédictions, passait, et ces fichiers pouvaient changer ensuite. Codex l'a reproduit. Désormais :
+- le manifeste doit avoir `stage = predictions_sealed`, le SHA des listes, et **les douze noms de planche de `listes.json`, dans leur ordre** ;
+- l'ensemble des fichiers scellés doit être **exactement** celui que les mesures lisent (`required_files`) : `run.json`, `timing.json`, l'a priori, OWLv2, YOLOE, les six bras de l'élève et le jeu des trente images S1b (JSON et relations), les douze planches, et `florence2.json` **si et seulement si** `run.json` déclare Florence-2 disponible. Il n'y a plus de lecture conditionnée par `is_file()` ;
+- un fichier manquant, en trop ou modifié est refusé, comme un manifeste vide ;
+- les longueurs des prédictions sont vérifiées (26 images, ou 30 pour S1b), sans troncature silencieuse par `zip`.
+
+**B2 : le débit « complet » inclut les relations.** `student_forward` n'appelait pas `model.rel`, alors que `predict` l'appelle sur les 870 paires ordonnées de chaque image. La colonne `student_full_b32`, qui sert à calculer D, exécute maintenant la tête de relations sur ces 870 paires, sous `no_grad` et fp16. La colonne `student_detector_only_b32` est publiée à part. Un test par crochet compte 870 entrées par image dans la colonne complète, comme `predict`, et aucune dans la colonne détecteur seul.
+
+La note du chronométrage dit maintenant que les colonnes ne couvrent pas la même portion du pipeline. YOLOE est chronométré avec son prétraitement, la NMS et les masques. L'élève et OWLv2 le sont sur leur forward seul, prétraitement à part. D est le rapport de deux forwards, pas un rapport de bout en bout.
+
+**Après le smoke** : `blanc.json` relève maintenant `clip_tokenizer`, c'est-à-dire la version et, pour une installation git, le commit du tokenizer CLIP qu'ultralytics peut installer au premier usage, en plus du SHA de `mobileclip_blt.ts`. Les deux seront figés par un commit relu avant le complet. Reste aussi à fixer la méthode des quantiles du bootstrap : le cœur utilise le défaut de numpy, linéaire, à déclarer.

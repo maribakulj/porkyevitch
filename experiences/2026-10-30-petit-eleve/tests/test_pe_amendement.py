@@ -52,27 +52,89 @@ class PaddingTest(unittest.TestCase):
         self.assertLessEqual(abs(first_white - expected), 1.0)
 
 
-class SealTest(unittest.TestCase):
-    def setUp(self):
-        self.root = Path(tempfile.mkdtemp())
-        (self.root / pk.PRED_DIR).mkdir()
-        (self.root / "planche").mkdir()
-        for n in ("p001", "p002"):
-            (self.root / "planche" / f"{n}.jpg").write_bytes(b"jpg " + n.encode())
-        self.preds = fake_preds(3, 0)
-        pk.save_student(self.root, "student_28x28_seed0", self.preds)
-        pk.write_json(self.root / "run.json", {"measures": None})
-        self.digest = pk.seal(self.root, {"stage": "predictions_sealed", "planche": ["p001", "p002"],
-                                          "script_sha256": {}})
+PLANCHE = [f"p{k:03d}" for k in range(12)]
+BOTH = [{"viewer": "wA:p1", "viewed_at": "2026-10-30T10:00:00Z"}, {"viewer": "Grok p2", "viewed_at": "2026-10-30T10:05:00Z"}]
 
-    def receipt(self, regards, manifest=None):
-        path = self.root.parent / f"recu_{len(regards)}_{manifest is None}.json"
-        path.write_text(json.dumps({"stage": "planche_petit_eleve_regardee", "manifest_sha256": manifest or self.digest,
-                                    "regards": regards}))
+
+class SealTest(unittest.TestCase):
+    """B1 (Codex p4): the reader requires exactly the files the measures consume, the twelve plate names in order."""
+
+    def build(self, florence=True, skip=(), extra=False, planche=PLANCHE):
+        root = Path(tempfile.mkdtemp())
+        (root / pk.PRED_DIR).mkdir()
+        (root / "planche").mkdir()
+        for n in PLANCHE:
+            (root / "planche" / f"{n}.jpg").write_bytes(b"jpg " + n.encode())
+        self.preds = fake_preds(3, 0)
+        for key in pk.STUDENT_KEYS:
+            pk.save_student(root, key, self.preds)
+        for name in ("a_priori", "owlv2", "yoloe") + (("florence2",) if florence else ()):
+            pk.write_json(root / pk.PRED_DIR / f"{name}.json", [])
+        pk.write_json(root / "timing.json", {"D": 1.0})
+        pk.write_json(root / "run.json", {"measures": None, "witnesses": {"florence2": None if florence else "unavailable: x"}})
+        for rel in skip:
+            (root / rel).unlink()
+        if extra:
+            (root / "planche" / "intrus.jpg").write_bytes(b"x")
+        digest = pk.seal(root, {"stage": "predictions_sealed", "planche": planche, "script_sha256": {},
+                                "listes_sha256": pk.LISTES_SHA256})
+        return root, digest
+
+    def receipt(self, root, digest, regards=BOTH):
+        path = root / "recu.json"
+        path.write_text(json.dumps({"stage": "planche_petit_eleve_regardee", "manifest_sha256": digest, "regards": regards}))
         return path
 
+    def check(self, root, digest, **kw):
+        return pk.check_receipt(root, self.receipt(root, digest, **kw), {"planche": PLANCHE})
+
+    def test_complete_seal_and_both_looks(self):
+        root, digest = self.build()
+        manifest, _ = self.check(root, digest)
+        self.assertTrue(manifest["florence_available"])
+        with self.assertRaisesRegex(RuntimeError, "both_looks_required"):
+            self.check(root, digest, regards=BOTH[:1])
+        with self.assertRaisesRegex(RuntimeError, "plate_not_viewed"):
+            self.check(root, "0" * 64)
+        (root / "planche" / "p001.jpg").write_bytes(b"changed")
+        with self.assertRaisesRegex(RuntimeError, "sealed_file_missing_or_changed"):
+            self.check(root, digest)
+
+    def test_florence_unavailable_must_not_be_sealed_nor_read(self):
+        root, digest = self.build(florence=False)
+        manifest, _ = self.check(root, digest)
+        self.assertFalse(manifest["florence_available"])
+
+    def test_codex_case_seal_without_the_consumed_files_is_refused(self):
+        # Codex p4 reproduction: twelve plates sealed, but run/timing/predictions absent from the manifest
+        root, digest = self.build(skip=["timing.json", f"{pk.PRED_DIR}/owlv2.json",
+                                        f"{pk.PRED_DIR}/student_28x28_seed0_rel.npy"])
+        with self.assertRaisesRegex(RuntimeError, "seal_incomplete_or_extra"):
+            self.check(root, digest)
+        root, digest = self.build(skip=["run.json"])
+        with self.assertRaisesRegex(RuntimeError, "seal_incomplete"):
+            self.check(root, digest)
+
+    def test_empty_extra_or_wrong_plate_list_refused(self):
+        root, digest = self.build(extra=True)
+        with self.assertRaisesRegex(RuntimeError, "seal_incomplete_or_extra"):
+            self.check(root, digest)
+        root, digest = self.build(planche=[])
+        with self.assertRaisesRegex(RuntimeError, "plate_names"):
+            self.check(root, digest)
+        root, digest = self.build(planche=list(reversed(PLANCHE)))
+        with self.assertRaisesRegex(RuntimeError, "plate_names"):
+            self.check(root, digest)
+        root, _ = self.build()
+        (root / "MANIFEST_PREDICTIONS.json").write_text(json.dumps({"stage": "predictions_sealed", "planche": PLANCHE,
+                                                                     "listes_sha256": pk.LISTES_SHA256, "files": {}}))
+        with self.assertRaises(RuntimeError):
+            pk.check_receipt(root, self.receipt(root, hashlib.sha256((root / "MANIFEST_PREDICTIONS.json").read_bytes())
+                                                .hexdigest()), {"planche": PLANCHE})
+
     def test_roundtrip_of_student_predictions(self):
-        back = pk.load_student(self.root, "student_28x28_seed0")
+        root, _ = self.build()
+        back = pk.load_student(root, "student_28x28_seed0")
         for a, b in zip(self.preds, back):
             self.assertEqual({k: a[k] for k in ("boxes", "score", "cat", "cat_score")},
                              {k: b[k] for k in ("boxes", "score", "cat", "cat_score")})
@@ -82,27 +144,38 @@ class SealTest(unittest.TestCase):
                  "relations": [(0, 2, 1)]}
         self.assertEqual(pk.relation_measures(self.preds[:1], [graph]), pk.relation_measures(back[:1], [graph]))
 
-    def test_receipt_of_both_looks_on_this_manifest(self):
-        both = [{"viewer": "wA:p1", "viewed_at": "2026-10-30T10:00:00Z"}, {"viewer": "Grok p2", "viewed_at": "2026-10-30T10:05:00Z"}]
-        manifest, _ = pk.check_receipt(self.root, self.receipt(both))
-        self.assertEqual(manifest["planche"], ["p001", "p002"])
-        with self.assertRaisesRegex(RuntimeError, "both_looks_required"):
-            pk.check_receipt(self.root, self.receipt(both[:1]))
-        with self.assertRaisesRegex(RuntimeError, "plate_not_viewed"):
-            pk.check_receipt(self.root, self.receipt(both, manifest="0" * 64))
-        (self.root / "planche" / "p001.jpg").write_bytes(b"changed")
-        with self.assertRaisesRegex(RuntimeError, "sealed_file_missing_or_changed"):
-            pk.check_receipt(self.root, self.receipt(both))
-
     def test_no_measure_before_the_receipt(self):
-        # the full stage writes no measure: the measures and the D2 reading live in mesures(), after check_receipt
         full = SRC[SRC.index("def main(a):"):SRC.index("def versions():")]
         for word in ("pooled_recall(", "average_precision(", "pc.states(", "pc.issue(loc", "bootstrap("):
             self.assertNotIn(word, full.split('if not overfit["passed"]:')[1].split("save_student")[0] + full.split("(9) plate")[1])
-        self.assertLess(SRC.index("manifest, receipt = check_receipt(root, a.receipt)"), SRC.index("counts_prior = pc.recall_counts"))
+        self.assertLess(SRC.index("manifest, receipt = check_receipt(root, a.receipt, listes)"),
+                        SRC.index("counts_prior = pc.recall_counts"))
+        self.assertNotIn("is_file() else None", SRC[SRC.index("def mesures(a):"):])
 
 
 class TimingAndPinsTest(unittest.TestCase):
+    def test_timed_student_runs_the_relation_head(self):
+        # B2 (Codex p4): the 'full' column runs model.rel on the 870 ordered pairs of every image, as predict()
+        model = pk.build_student(8, 0).eval()
+        calls = []
+        model.rel.register_forward_hook(lambda m, i, o: calls.append(i[0].shape[0]))
+
+        class Enc:
+            def tokens(self, px):
+                return px, None
+        tok = torch.randn(2, 64, 1024)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            outs, rel = pk.student_forward(model, Enc(), tokens=tok)
+            self.assertEqual(calls, [pk.NQ * (pk.NQ - 1)] * 2)
+            self.assertFalse(any(r.requires_grad for r in rel))
+            calls.clear()
+            pk.student_forward(model, Enc(), tokens=tok, relations=False)
+            self.assertEqual(calls, [])
+            calls.clear()
+            pk.predict(model, tok, [(640, 480), (640, 480)])
+            self.assertEqual(calls, [pk.NQ * (pk.NQ - 1)] * 2)
+
     def test_student_timed_without_graph(self):
         class Enc:
             def tokens(self, px):
@@ -110,8 +183,8 @@ class TimingAndPinsTest(unittest.TestCase):
         layer = torch.nn.Linear(4, 2)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            y = pk.student_forward(layer, Enc(), px=torch.ones(3, 4))
-            z = pk.student_forward(layer, Enc(), tokens=torch.ones(3, 4))
+            y = pk.student_forward(layer, Enc(), px=torch.ones(3, 4), relations=False)
+            z = pk.student_forward(layer, Enc(), tokens=torch.ones(3, 4), relations=False)
         self.assertFalse(y.requires_grad or z.requires_grad)
 
     def test_pins(self):

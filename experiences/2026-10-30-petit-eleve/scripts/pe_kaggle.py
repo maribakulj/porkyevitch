@@ -488,11 +488,24 @@ def yoloe_load(dev, work):
     ts = sorted(work.rglob("mobileclip_blt.ts"))
     require(len(ts) == 1, "yoloe_text_encoder_file")
     record = {"package": ultralytics.__version__, "weights_url": YOLOE_WEIGHTS[0], "weights_sha256": YOLOE_WEIGHTS[1],
+              "clip_tokenizer": installed_distribution("clip"),
               "text_model": text_model, "text_encoder_sha256": sha(ts[0]), "queries": texts,
               "text_preparation_seconds": prep, "conf": YOLOE_CONF, "nms_iou_per_class": YOLOE_IOU,
               "agnostic_nms_iou": NMS_IOU, "max_det": YOLOE_MAX_DET, "imgsz": YOLOE_IMGSZ, "fp16": dev == "cuda",
               "executed": "detection and segmentation heads (masks computed by the -seg checkpoint, not used)"}
     return model, record
+
+
+def installed_distribution(name):
+    """Version and, for a git install, the commit actually installed (ultralytics may install its CLIP tokenizer from
+    GitHub at first use, after the pilot's checks): recorded by the smoke, to be pinned for the full run."""
+    import importlib.metadata
+    try:
+        dist = importlib.metadata.distribution(name)
+    except importlib.metadata.PackageNotFoundError:
+        return None
+    direct = dist.read_text("direct_url.json")
+    return {"version": dist.version, "direct_url": json.loads(direct) if direct else None}
 
 
 def yoloe_detect(model, images, dev):
@@ -513,11 +526,21 @@ def yoloe_detect(model, images, dev):
     return out
 
 
-def student_forward(model, enc, px=None, tokens=None):
-    """The student as timed: no_grad and fp16 autocast around the encoder AND the head, as OWLv2 and YOLOE."""
+def student_forward(model, enc, px=None, tokens=None, relations=True):
+    """The student as timed: no_grad and fp16 autocast around the encoder AND the heads, as OWLv2 and YOLOE. With
+    relations (the product, B2 of Codex p4), the relation head runs on the 870 ordered pairs of every image, exactly
+    the pairs of predict(); relations=False is the detector-only column, published apart."""
     import torch
     with torch.no_grad(), torch.autocast("cuda", dtype=torch.float16):
-        return model(enc.tokens(px)[0] if tokens is None else tokens)
+        outs = model(enc.tokens(px)[0] if tokens is None else tokens)
+        if not relations:
+            return outs
+        _, boxes, z = outs[-1]
+        dev = boxes.device
+        qi, qj = torch.meshgrid(torch.arange(NQ, device=dev), torch.arange(NQ, device=dev), indexing="ij")
+        mask = qi != qj
+        rel = [model.rel(pair_features(z[b], boxes[b], qi[mask], qj[mask])).sigmoid() for b in range(len(z))]
+        return outs, rel
 
 
 def resolved_revision(repo):
@@ -634,20 +657,41 @@ def seal(out, record):
     return sha(out / "MANIFEST_PREDICTIONS.json")
 
 
-def check_receipt(root, receipt_path):
-    """Before any number: every sealed file present and unchanged, and a receipt of both looks (wA:p1 and a Grok, each
-    with viewed_at) on exactly this manifest, as phase 1 and P9-A."""
+STUDENT_KEYS = tuple(f"student_{s}x{s}_seed{k}" for s in (28, 8) for k in SEEDS) + ("student_28x28_seed0_s1b30",)
+
+
+def required_files(planche, florence_available):
+    """Every file the measures consume, and only those (B1, Codex p4): the seal must list exactly this set."""
+    files = {"run.json", "timing.json", f"{PRED_DIR}/a_priori.json", f"{PRED_DIR}/owlv2.json", f"{PRED_DIR}/yoloe.json"}
+    files |= {f"{PRED_DIR}/{k}{ext}" for k in STUDENT_KEYS for ext in (".json", "_rel.npy")}
+    files |= {f"planche/{n}.jpg" for n in planche}
+    if florence_available:
+        files.add(f"{PRED_DIR}/florence2.json")
+    return files
+
+
+def check_receipt(root, receipt_path, listes):
+    """Before any number: the complete seal (exactly the files the measures read, each present and unchanged, the
+    twelve plate names of listes.json in their order, stage and lists identity), and a receipt of both looks (wA:p1
+    and a Grok, each with viewed_at) on exactly this manifest, as phase 1 and P9-A."""
     manifest_path = root / "MANIFEST_PREDICTIONS.json"
     manifest = json.loads(manifest_path.read_text())
-    for rel, digest in manifest["files"].items():
+    require(manifest.get("stage") == "predictions_sealed" and manifest.get("listes_sha256") == LISTES_SHA256,
+            "seal_identity")
+    require(manifest.get("planche") == listes["planche"] and len(listes["planche"]) == 12, "plate_names")
+    files = manifest.get("files") or {}
+    for rel, digest in files.items():
         require((root / rel).is_file() and sha(root / rel) == digest, f"sealed_file_missing_or_changed_{rel}")
-    require(all(f"planche/{n}.jpg" in manifest["files"] for n in manifest["planche"]), "plate_not_sealed")
+    require("run.json" in files, "seal_incomplete")
+    florence_available = json.loads((root / "run.json").read_text())["witnesses"]["florence2"] is None
+    require(set(files) == required_files(listes["planche"], florence_available), "seal_incomplete_or_extra")
     receipt = json.loads(Path(receipt_path).read_text())
     looks = [x for x in receipt.get("regards") or [] if x.get("viewer") and x.get("viewed_at")]
     require(receipt.get("stage") == "planche_petit_eleve_regardee" and receipt.get("manifest_sha256") == sha(manifest_path),
             "plate_not_viewed")
     require(any(x["viewer"] == "wA:p1" for x in looks) and any(x["viewer"].startswith("Grok") for x in looks),
             "both_looks_required")
+    manifest["florence_available"] = florence_available
     return manifest, receipt
 
 
@@ -743,6 +787,8 @@ def main(a):
         shutil.rmtree(out / "yoloe-cache")
         px = enc.pixels([images[n] for n in ov]).to(dev)
         results["timing_smoke_student_full_b8"] = timing(lambda b: student_forward(model, enc, px=b), [px], reps=1)
+        results["timing_smoke_student_detector_only_b8"] = timing(
+            lambda b: student_forward(model, enc, px=b, relations=False), [px], reps=1)
         results["listes_sha256"], results["noms_sha256"] = sha(inp / "listes.json"), sha(inp / "noms.json")
         results["script_sha256"] = {f: sha(Path(__file__).parent / f) for f in ("pe_kaggle.py", "pe_common.py")}
         results["peak_rss_mib"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
@@ -819,9 +865,10 @@ def main(a):
     px = [x.to(dev) for x in px]
     timing_ = {"student_preprocess_cpu_images_per_second": len(tim) / (time.perf_counter() - t0)}
     tok_batches = [enc.tokens(b)[0] for b in px]
-    timing_["student_full_b32"] = timing(lambda b: student_forward(m0, enc, px=b), px)
+    timing_["student_full_b32"] = timing(lambda b: student_forward(m0, enc, px=b), px)  # objects + relations
     timing_["student_heads_only_b32"] = timing(lambda t: student_forward(m0, enc, tokens=t), tok_batches)
     timing_["student_full_b1"] = timing(lambda b: student_forward(m0, enc, px=b), list(px[0][:32].split(1)))
+    timing_["student_detector_only_b32"] = timing(lambda b: student_forward(m0, enc, px=b, relations=False), px)
     proc, owl_model = owl_models
     texts = [[pc.OWL_QUERIES[c] for c in pc.CATEGORIES]]
     owl_batch = None
@@ -856,9 +903,12 @@ def main(a):
 
         timing_["florence2_full_b8_with_preprocess"] = timing(flo_fwd, [tim[i:i + 8] for i in range(0, 32, 8)], reps=2)
     timing_["D"] = timing_["student_full_b32"]["images_per_second_median"] / timing_["owlv2_full"]["images_per_second_median"]
-    timing_["note"] = ("student batch 32, OWLv2 at the largest batch <= 32 that fits, YOLOE batch 32 through its own "
-                       "predictor (preprocessing, NMS and mask branch included); no_grad + fp16 for every system; images "
-                       "decoded beforehand; student and OWLv2 preprocessing timed apart on CPU")
+    timing_["note"] = ("student 'full' = encoder + object heads + relation head on the 870 ordered pairs per image (the "
+                       "product), detector-only apart; batch 32; OWLv2 at the largest batch <= 32 that fits, forward only; "
+                       "YOLOE batch 32 through its own predictor (preprocessing, NMS and mask branch included); no_grad + "
+                       "fp16 for every system; images decoded beforehand; student and OWLv2 preprocessing timed apart on "
+                       "CPU; post-processing outside the timed forward for the student and OWLv2. These columns are not "
+                       "the same portion of the pipeline: D is the ratio of the two forwards, not an end-to-end ratio")
     write_json(out / "timing.json", timing_)
     budget("timing")
 
@@ -908,12 +958,12 @@ def mesures(a):
     """CPU: the measures of PREINSCRIPTION.md and the D2 reading, from the sealed predictions, after the plate receipt."""
     inp, root, out = Path(a.inputs).resolve(), Path(a.predictions).resolve(), Path(a.out).resolve()
     require(not out.exists() or not any(out.iterdir()), "output_not_empty")
-    manifest, receipt = check_receipt(root, a.receipt)
+    require(sha(inp / "listes.json") == LISTES_SHA256 and sha(inp / "noms.json") == NOMS_SHA256, "lists_sha")
+    listes = json.loads((inp / "listes.json").read_text())
+    manifest, receipt = check_receipt(root, a.receipt, listes)
     require(manifest["script_sha256"] == {f: sha(Path(__file__).parent / f) for f in ("pe_kaggle.py", "pe_common.py")},
             "measures_with_other_scripts_than_the_sealed_run")
     out.mkdir(parents=True, exist_ok=True)
-    listes = json.loads((inp / "listes.json").read_text())
-    require(sha(inp / "listes.json") == LISTES_SHA256 and sha(inp / "noms.json") == NOMS_SHA256, "lists_sha")
     roles = preflight(inp, listes, "full")
     by_name = {r["name"]: r for role in roles.values() for r in role}
     run = json.loads((root / "run.json").read_text())
@@ -926,9 +976,9 @@ def mesures(a):
     protos, share = prior["protos"], prior["share"]
     rel_prior = {tuple(k): v for k, v in prior["rel_prior"]} | {"global": prior["rel_prior_global"]}
     owl = json.loads((root / PRED_DIR / "owlv2.json").read_text())
-    flo_path = root / PRED_DIR / "florence2.json"
-    flo = json.loads(flo_path.read_text()) if flo_path.is_file() else None
+    flo = json.loads((root / PRED_DIR / "florence2.json").read_text()) if manifest["florence_available"] else None
     yol = json.loads((root / PRED_DIR / "yoloe.json").read_text())
+    require(len(owl) == len(yol) == len(ev) and (flo is None or len(flo) == len(ev)), "witness_rows")
     timing_ = json.loads((root / "timing.json").read_text())
 
     # (5) measures on the 26 evaluation graphs (Gemini = reference of fidelity, not a human truth)
@@ -963,6 +1013,7 @@ def mesures(a):
     for side in (28, 8):
         for seed in SEEDS:
             p = load_student(root, f"student_{side}x{side}_seed{seed}")
+            require(len(p) == len(ev), "student_rows")
             imgs = student_images(p, ev_graphs)
             counts = pc.recall_counts(imgs, 30)
             cats = {c: student_images(p, ev_graphs, c) for c in judged}
@@ -988,6 +1039,7 @@ def mesures(a):
     # (6) agreement with S1b on the 30 evaluation images (26 with a Gemini graph, 4 without), descriptive
     s1b = {n: load_graph(inp / "s1b" / f"{n}.json") for n in allv}
     pa = load_student(root, "student_28x28_seed0_s1b30")
+    require(len(pa) == len(allv), "s1b_rows")
     agree = {"with_gemini_graph": [], "without_gemini_graph": []}
     for n, p in zip(allv, pa, strict=True):
         key = "with_gemini_graph" if by_name[n]["gemini_graph_sha256"] else "without_gemini_graph"

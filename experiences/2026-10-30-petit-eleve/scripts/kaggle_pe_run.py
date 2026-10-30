@@ -13,7 +13,7 @@ STAGE = "smoke"
 OPEN_CLIP = "open_clip_torch==3.3.0"
 ULTRALYTICS = "ultralytics==8.4.177"  # YOLOE-v8-S witness (D8), smoke and full only
 W = "/kaggle/working"
-SCRIPT_SHA256 = {"pe_kaggle.py": "e494a49db9b3fdba5ac0e7f3b1f4e9140e1c769d965da5c9618e5df66c589520", "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"}
+SCRIPT_SHA256 = {"pe_kaggle.py": "a6ae6582b7598bd86ae34027b5500d56dd79e323ffe198554bb20b9b7f729794", "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"}
 
 
 def log(m):
