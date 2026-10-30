@@ -38,7 +38,7 @@
 
 **4. Mesures, planches et verdicts après le gel, dans l'ordre préinscrit.**
 - **Étape `planches`** (CPU, réseau) : 12 lignes de validation par bras, où |H_i(bras) − H_i(B)| est le plus grand (égalités : fragment, ligne). On montre les octets Brillfull d'origine (md5 contrôlé par `extract`), la vérité projetée, B et le bras, avec les descriptions officielles. Les champs de preuve ne sont pas montrés, parce qu'ils demanderaient une nouvelle inférence, ce qui est écrit sur la planche. Aucun agrégat n'est calculé.
-- **Étape `mesures`** (CPU) : elle refuse de démarrer sans le reçu `{"stage": "planches_p9a_regardees", viewer, viewed_at, manifest_sha256}` des planches.
+- **Étape `mesures`** (CPU) : avant tout agrégat, elle vérifie les planches de **ce** gel, c'est-à-dire quatre bras de 12 lignes, chaque fichier présent et inchangé. Elle exige ensuite un reçu qui atteste **les deux regards**, wA:p1 **et** un Grok, chacun avec `viewed_at`, comme pour la mesure de la phase 1 : `{"stage": "planches_p9a_regardees", "manifest_sha256": …, "regards": [{"viewer": "wA:p1", "viewed_at": …}, {"viewer": "Grok …", "viewed_at": …}], "plates_html_sha256": {bras: sha}}`. Cette correction a été demandée par Grok p2 en blocage pour l'étape mesures (30/10). Elle est commitée à part, et ne change aucune ligne exécutée par le devis.
 - Mesures de la section 8 :
   - H et E sur les 4 241 lignes éligibles ;
   - F_R sur les 4 265 lignes, avec la liste R complète (4 073 codes), ses zéros et la convention du zéro ;

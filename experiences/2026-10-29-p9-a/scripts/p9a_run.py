@@ -421,15 +421,40 @@ def stage_planches(args):
 
 
 # ---------------------------------------------------------------- mesures
+def check_plate_receipt(plates_dir, receipt_path, gel_sha256):
+    """Before any aggregate: the plates of THIS freeze (four arms, 12 rows each, every file present and unchanged) and
+    a receipt recording both looks, wA:p1 and a Grok, each with viewed_at, on exactly these plates (as phase 1)."""
+    plates_dir = Path(plates_dir)
+    manifest_path = plates_dir / "MANIFEST_PLANCHES.json"
+    files = read_json(manifest_path).get("files") or {}
+    for rel, digest in files.items():
+        require((plates_dir / rel).is_file() and sha(plates_dir / rel) == digest, "plate file missing or changed")
+    require("planches.json" in files, "plates index missing")
+    index = read_json(plates_dir / "planches.json")
+    require(index.get("gel_sha256") == gel_sha256, "plates made from another freeze")
+    require(sorted(index.get("plates", {})) == sorted(ARMS), "plates of the four arms required")
+    for arm in ARMS:
+        rows = index["plates"][arm]
+        require(len(rows) == 12 and len({(r["shard"], r["row"]) for r in rows}) == 12, "plate is not 12 rows")
+        require(f"planche_{arm}.html" in files and all(f"images/{r['md5']}.image" in files for r in rows),
+                "plate file not in manifest")
+    receipt = read_json(receipt_path)
+    looks = [x for x in receipt.get("regards") or [] if x.get("viewer") and x.get("viewed_at")]
+    require(receipt.get("stage") == "planches_p9a_regardees" and receipt.get("manifest_sha256") == sha(manifest_path),
+            "plates not viewed")
+    require(any(x["viewer"] == "wA:p1" for x in looks) and any(x["viewer"].startswith("Grok") for x in looks),
+            "both looks required: wA:p1 and a Grok, each with viewed_at")
+    require(receipt.get("plates_html_sha256") == {arm: files[f"planche_{arm}.html"] for arm in ARMS},
+            "receipt plates differ")
+    return receipt
+
+
 def stage_mesures(args):
     from p9a_inputs import TrainData
     runtime_gate("mesures")
     out = output_dir(args.out)
     budget = Budget(out, 7000)
-    receipt = read_json(input_path(args.receipt))
-    plates = input_path(args.planches) / "MANIFEST_PLANCHES.json"
-    require(receipt.get("stage") == "planches_p9a_regardees" and receipt.get("viewer") and receipt.get("viewed_at")
-            and receipt.get("manifest_sha256") == sha(plates), "plates not viewed")
+    check_plate_receipt(input_path(args.planches), input_path(args.receipt), args.gel_sha256)
     binding = read_json(input_path(args.binding))
     data = TrainData(binding, input_path(args.inventory), budget)
     gel_dir = input_path(args.gel)
