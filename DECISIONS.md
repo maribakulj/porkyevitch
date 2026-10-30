@@ -25,3 +25,13 @@ Toutes les relectures de code, les regards de planches et les audits sont faits 
 jamais par un humain : l'article le dit explicitement, en nommant les rôles et les modèles, et ne présente aucun regard comme
 une annotation experte. Pas de regard humain sur un sous-ensemble pour l'instant (Marcel n'annote pas) : c'est une limite écrite.
 Les comptes O/A/E sont présentés comme un audit par modèles, avec l'accord entre juges (53/100) et la règle écrite d'avance.
+
+## D6 (30/10/2026) : usage de la tranche 300 S1b (après challenge Grok p7 et contre-expertise Codex p4)
+
+M0 est **descriptif, sans porte** (à lancer après l'audit Codex de ses octets). Les interrupteurs de la note v1 sont abandonnés.
+La v2 donne la direction (juge principal = 26 Gemini, consensus Haiku = colonne de fidélité, aucune décision d'achat sur +0,05),
+mais le devis est à préciser avant toute dépense (v3 de wA:pH) : aucune garantie de puissance sur 60 images ; Gemini et
+consensus mesurent la fidélité, pas la localisation ; les relations du petit élève v1 SONT entraînées, donc les retirer est une
+ablation nommée qui exige de réentraîner E0 ; poids objet ½ ≠ cible de probabilité ½ (préciser la perte, le « pas d'objet » et
+l'union au-delà de 30) ; E1′ ne sépare pas la quantité du professeur. L'entraînement sur les 300 reste conditionné par D2 (porte
+du petit élève). Rapports : porkyevitch-tranche300-grok.md, porkyevitch-tranche300-codex.md.
