@@ -1,0 +1,10 @@
+[{"stream_name":"stdout","time":3.572660981,"data":"stage smoke inputs /kaggle/input/datasets/mabaku/porky-petit-eleve-v1 /kaggle/input/notebooks/mabaku/caypollard-encode-cradio/full\n"}
+,{"stream_name":"stdout","time":11.913628688,"data":"installed open_clip_torch==3.3.0 ultralytics==8.4.177: versions {'open_clip_torch': '3.3.0', 'ultralytics': '8.4.177', 'torch': '2.11.0+cu128'}\n"}
+,{"stream_name":"stdout","time":304.36753663,"data":"CHAIN DONE petit eleve smoke ok\n"}
+,{"stream_name":"stderr","time":306.371917605,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":306.371950989,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":306.628735983,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":306.628762377,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":307.403903228,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":308.406865095,"data":"[NbConvertApp] Writing 292245 bytes to __results__.html\n"}
+]
