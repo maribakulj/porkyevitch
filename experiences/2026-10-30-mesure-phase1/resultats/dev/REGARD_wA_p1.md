@@ -16,3 +16,7 @@ Descriptif, aucune décision.
 - **T-H** gagne sur quelques sujets bibliques (saint Paul à 1,0) et perd par des ensembles vides ou génériques (ravin, rideaux).
 - Pas d'anomalie technique visible : images conformes aux identifiants, vérités et prédictions lisibles, descriptions Iconclass
   cohérentes.
+
+Erratum (après le regard de Grok wA:p3, 30/10) : sur la planche T-niv−T*, les douze écarts sont **nuls** (listes identiques à T*) ;
+la phrase « ses écarts viennent d'un petit nombre d'images » est fausse. Les paysages de Frans Post et les nus y figurent avec des
+scores égaux pour les deux systèmes. La planche TK-niv recopie TK sur ses douze extrêmes.
