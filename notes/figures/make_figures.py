@@ -225,16 +225,29 @@ def petit_eleve():
           f"{num(t['owlv2_full']['images_per_second_median'], 1)} img/s (D = {num(t['D'], 2)}). Florence-2 : rappel "
           f"{num(w['florence2_base_od']['recall_all_boxes'], 3)} sur toutes ses boîtes. ‡ Bras 8×8 : secondaire, non cité par "
           "Résultats v1 (à relire).")
-    fig, ax = plt.subplots(figsize=(6, 2.6))
+    prior = w["a_priori"]["recall_at_30"]
     main = {k: a for k, a in r["arms"].items() if k.startswith("28x28")}  # the D2 reading uses the 28×28 arms only
+    side = {k: a for k, a in r["arms"].items() if k.startswith("8x8")}  # shown apart: descriptive, outside the D2 rule
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(9, 3), sharey=True, gridspec_kw={"width_ratios": [6, 3]})
     names = [k.replace("28x28_seed", "élève 28×28, graine ") for k in main] + ["a priori", "OWLv2", "YOLOE (descriptif)"]
-    vals = [a["recall_at_30"] for a in main.values()] + [w["a_priori"]["recall_at_30"], w["owlv2_base"]["recall_at_30"],
+    vals = [a["recall_at_30"] for a in main.values()] + [prior, w["owlv2_base"]["recall_at_30"],
                                                          w["yoloe_v8s_text"]["recall_at_30"]]
     ax.bar(range(len(names)), vals, color=["0.35"] * len(main) + ["0.6", "0.8", "0.8"])
-    ax.axhline(w["a_priori"]["recall_at_30"], color="0.5", ls=":", lw=1)
     ax.set_xticks(range(len(names)), names, rotation=30, ha="right", fontsize=7)
     ax.set_ylabel("rappel@30 sans classe", fontsize=8)
-    ax.set_title("Figure 5 — Petit élève : l'élève ne bat pas l'a priori (fidélité à Gemini, 26 images)", fontsize=8)
+    ax.set_title("Règle D2 : bras 28×28 et témoins", fontsize=8)
+    bx.bar(range(len(side)), [a["recall_at_30"] for a in side.values()], color="white", edgecolor="0.35", hatch="//")
+    bx.set_xticks(range(len(side)), [k.replace("8x8_seed", "élève 8×8, graine ") for k in side], rotation=30, ha="right",
+                  fontsize=7)
+    above = [k.replace("8x8_seed", "graine ") for k, a in side.items() if a["recall_at_30"] > prior]
+    bx.set_title("Descriptif, hors règle D2 : bras 8×8", fontsize=8)
+    if above:
+        bx.text(0.5, 0.03, f"{len(above)} bras 8×8 ({', '.join(above)})\ndépasse l'a priori" if len(above) == 1 else
+                f"{len(above)} bras 8×8 ({', '.join(above)})\ndépassent l'a priori", transform=bx.transAxes, ha="center",
+                fontsize=7, color="0.2", bbox={"facecolor": "white", "edgecolor": "0.7"})
+    for a_ in (ax, bx):
+        a_.axhline(prior, color="0.5", ls=":", lw=1)
+    fig.suptitle("Figure 5 — Petit élève : les bras 28×28 ne battent pas l'a priori (fidélité à Gemini, 26 images)", fontsize=8)
     fig.tight_layout()
     fig.savefig(OUT / "figure5_petit_eleve.png", dpi=200)
     plt.close(fig)
