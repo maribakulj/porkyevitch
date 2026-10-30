@@ -171,6 +171,26 @@ class ThresholdVoteTest(unittest.TestCase):
             self.assertLess(abs(r["vote"] - r["vote_reconstructed"]), 1e-5)
 
 
+class JsonTest(unittest.TestCase):
+    def test_numpy_scalars_written_like_gel_write_json(self):
+        obj = {"a": np.int64(3), "b": np.float32(0.5), "c": np.bool_(True), "d": [np.int64(1), (np.float64(2.5),)],
+               np.int64(7): {"e": np.array([1, 2], dtype=np.int64)}, "f": "x", "g": None}
+        with self.assertRaises(TypeError):
+            json.dumps(obj, sort_keys=False)
+        clean = run.jsonable(obj)
+        text = json.dumps(clean, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
+        back = json.loads(text)
+        self.assertEqual(back, {"a": 3, "b": 0.5, "c": True, "d": [1, [2.5]], "7": {"e": [1, 2]}, "f": "x", "g": None})
+        self.assertIs(type(clean["a"]), int)
+        self.assertIs(type(clean["c"]), bool)
+        self.assertIs(type(clean["b"]), float)
+
+    def test_report_of_the_fixture_is_writable(self):
+        b, anc, counts = bank()
+        _, rep = nt.bank_report(b, VOCAB, counts, anc, {"alpha": 0.75, "tk_threshold": 0.5, "star_threshold": 0.6}, 50, 1)
+        json.dumps(run.jsonable(rep), sort_keys=True, allow_nan=False)
+
+
 class DevOnlyTest(unittest.TestCase):
     def frozen(self, test_bytes):
         dev = {"items": [{"pid": f"https://id/{k}", "truth": ["11H", "86A"], "truth_projected": ["11H"], "component": k,

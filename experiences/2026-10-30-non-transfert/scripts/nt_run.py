@@ -51,6 +51,26 @@ def dev_items(path, sha, require):
     return items
 
 
+def jsonable(obj):
+    """numpy scalars (np.integer, np.floating, np.bool_) and arrays to plain Python, recursively; non-text keys become
+    text as JSON writes them (so sort_keys stays valid); no value
+    is changed (the pinned gel_common.write_json, allow_nan=False, has no default= hook). Added after the relaunch
+    stopped at the write of diagnostic.json on an int64, after every identity control had passed."""
+    if isinstance(obj, dict):
+        return {k if isinstance(k, str) else str(jsonable(k)): jsonable(v) for k, v in obj.items()}  # JSON keys are text
+    if isinstance(obj, (list, tuple)):
+        return [jsonable(v) for v in obj]
+    if isinstance(obj, np.ndarray):
+        return jsonable(obj.tolist())
+    if isinstance(obj, np.bool_):
+        return bool(obj)
+    if isinstance(obj, np.integer):
+        return int(obj)
+    if isinstance(obj, np.floating):
+        return float(obj)
+    return obj
+
+
 def nt_frozen_sha():
     from gel_common import FROZEN_SHA
     return FROZEN_SHA
@@ -233,7 +253,7 @@ def main(a):
     common = {e: nt.common_codes(codes["rijks_dev"], codes["icai_validation"], e)
               for e in ("head_closure", "head_exact", "vote_available")}
     allowed = {it["pid"] for it in items}
-    write_json(out / "diagnostic.json", {
+    write_json(out / "diagnostic.json", jsonable({
         "stage": "diagnostic_non_transfert", "descriptive_only": True, "test_rows": 0,
         "banks": reports, "common_codes_main_macro": {"a": "rijks_dev", "b": "icai_validation", **common},
         "identity_controls_dev": controls, "recipe": {"T_star": recipe["T_star"], "TK": recipe["TK"], "K": K},
@@ -242,7 +262,7 @@ def main(a):
                    "frozen_sha256": nt_frozen_sha(), "radio_files_sha256": radio_sources,
                    "training_order_sha256": training.fit_order_sha},
         "versions": {"python": sys.version.split()[0], "numpy": np.__version__, "torch": torch.__version__},
-        "dev_identifiers_only": sorted(allowed) == sorted(r["id"] for r in dev["identities"])})
+        "dev_identifiers_only": sorted(allowed) == sorted(r["id"] for r in dev["identities"])}))
     import shutil
     shutil.rmtree(out / ".work" / "image_features", ignore_errors=True)
     monitor.check("nt_done")
