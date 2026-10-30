@@ -1,0 +1,4 @@
+/kaggle/input/datasets/mabaku/porky-a1-d3-code/d3/scripts/d3_run.py:322: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  total += float(loss) * int(mb.sum())
+D3_BLANC_DONE_NO_SCORE

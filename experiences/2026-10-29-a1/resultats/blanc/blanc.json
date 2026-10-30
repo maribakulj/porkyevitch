@@ -1,0 +1,153 @@
+{
+ "prereg_sha256": "ed452dc3218028e33759151cbd0d8dd21038cd105b45492cb77964a673d3f383",
+ "versions": {
+  "python": "3.13.15",
+  "numpy": "2.1.3",
+  "scipy": "1.16.3",
+  "highs": "bundled with scipy 1.16.3",
+  "omp_threads": "1"
+ },
+ "counts": {
+  "validation": 4265,
+  "eligible": 4241,
+  "Vreg": 2154,
+  "Vdiag": 2111,
+  "Vreg_eligible": 2141,
+  "Vdiag_eligible": 2100,
+  "md5_shared_between_halves": 0
+ },
+ "B": {
+  "H": 0.5890847528448202,
+  "decisions_sha256": "ea2502e101ed96a5bf13f00b014e204db9e3bf3d29ca0b32aa34406338d5e910"
+ },
+ "recipe_vs_TK_top20_identical_share": 0.9395076201641266,
+ "setup_s": 61.160151729999995,
+ "E0": {
+  "codes_checked": 33431,
+  "simple_codes_chain_share": 1.0,
+  "nodes_86_as_composite_ancestors": 0,
+  "c_closed": true,
+  "t_transitive_ordered": true
+ },
+ "E0_s": 1.8777411899999947,
+ "E1_i_8": [
+  {
+   "position": 0,
+   "U": 45,
+   "value": 0.9218679346855914,
+   "path": "sort_certified"
+  },
+  {
+   "position": 2,
+   "U": 61,
+   "value": 0.802701839088334,
+   "path": "sort_certified"
+  },
+  {
+   "position": 3,
+   "U": 13,
+   "value": 0.9999999999999998,
+   "path": "sort_certified"
+  },
+  {
+   "position": 5,
+   "U": 66,
+   "value": 0.8230038188389845,
+   "path": "sort_certified"
+  },
+  {
+   "position": 7,
+   "U": 58,
+   "value": 0.5425214971854224,
+   "path": "sort_certified"
+  },
+  {
+   "position": 8,
+   "U": 59,
+   "value": 0.4155861408655932,
+   "path": "sort_certified"
+  },
+  {
+   "position": 11,
+   "U": 102,
+   "value": 0.40697705120976624,
+   "path": "sort_certified"
+  },
+  {
+   "position": 12,
+   "U": 16,
+   "value": 0.856381153533443,
+   "path": "sort_certified"
+  }
+ ],
+ "E1_i_8_s": 5.1219588700000145,
+ "E1_ii_64": 64,
+ "E1_ii_64_s": 0.1525995989999842,
+ "U_sizes_sample": {
+  "16": [
+   65,
+   118,
+   21,
+   101,
+   169,
+   141,
+   191,
+   28,
+   156,
+   39,
+   267,
+   22,
+   73,
+   19,
+   35,
+   312
+  ],
+  "32": [
+   67,
+   148,
+   25,
+   162,
+   287,
+   194,
+   303,
+   49,
+   229,
+   55,
+   456,
+   23,
+   90,
+   37,
+   46,
+   475
+  ],
+  "64": [
+   87,
+   196,
+   29,
+   205,
+   411,
+   332,
+   477,
+   85,
+   365,
+   85,
+   729,
+   28,
+   167,
+   76,
+   82,
+   630
+  ]
+ },
+ "estimate": {
+  "per_decode_s": 0.009992660531249697,
+  "grid_108_Vreg_s": 2324.6126047056796,
+  "E1_full_s": 220.62062973848364,
+  "threshold_controls_s": 1179.4721267611164,
+  "diagnostic_s": 663.2835191444043,
+  "total_hours": 1.2363963259082456
+ },
+ "technical_only": true,
+ "scores": null,
+ "status": "WITHIN_2H"
+}
