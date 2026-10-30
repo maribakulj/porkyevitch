@@ -1,0 +1,182 @@
+{
+ "protocol_sha256": "5115c3a5654f303723161c1eed0bd0dc3dac98c54ba8a5f21df384a6337186cb",
+ "seal_sha256": "3c468faa7bec5ac7a98104a4ac47d3f7be24ec9ef76e0855f49b42aad12fad0c",
+ "family_size": 7,
+ "level_one_sided": 0.9928571428571429,
+ "rule": "retained iff lower bound(Delta_Rijks) > 0 and lower bound(Delta_ICAI) > -0.01",
+ "bootstrap": {
+  "draws": 10000,
+  "seed": 0,
+  "icai_unit": "image",
+  "rijks_unit": "dependency component",
+  "paired": "same draws for every system of a bank"
+ },
+ "denominators": {
+  "icai_test": 787,
+  "icai_excluded_empty_projected_truth": 1,
+  "rijks_test_images": 1201,
+  "rijks_test_components": 908
+ },
+ "icai_T0_control": {
+  "measured": 0.5459036967738998,
+  "preregistered": 0.5459
+ },
+ "verdicts": {
+  "T_star": {
+   "brick": "T_star",
+   "reference": "T0",
+   "delta_icai": {
+    "delta": 0.027726863596092,
+    "lower_one_sided_99_29": 0.018755725691545173,
+    "ci95_two_sided": [
+     0.020561493962915064,
+     0.035238323623199744
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "delta_rijks": {
+    "delta": 0.002569649194505419,
+    "lower_one_sided_99_29": -0.006144582251372872,
+    "ci95_two_sided": [
+     -0.004609125271925636,
+     0.009690776106266806
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "retained": false
+  },
+  "TK": {
+   "brick": "TK",
+   "reference": "T_star",
+   "delta_icai": {
+    "delta": 0.007515727478046519,
+    "lower_one_sided_99_29": 0.0011505345493251153,
+    "ci95_two_sided": [
+     0.002415600437803484,
+     0.0128038650835469
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "delta_rijks": {
+    "delta": 0.001474695989287289,
+    "lower_one_sided_99_29": -0.006619886440593229,
+    "ci95_two_sided": [
+     -0.005092933865123312,
+     0.008273952373690021
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "retained": false
+  },
+  "T-niv": {
+   "brick": "T-niv",
+   "reference": "T_star",
+   "delta_icai": {
+    "delta": 0.0,
+    "lower_one_sided_99_29": 0.0,
+    "ci95_two_sided": [
+     0.0,
+     0.0
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "delta_rijks": {
+    "delta": 0.0,
+    "lower_one_sided_99_29": 0.0,
+    "ci95_two_sided": [
+     0.0,
+     0.0
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "retained": false
+  },
+  "T-H": {
+   "brick": "T-H",
+   "reference": "T_star",
+   "delta_icai": {
+    "delta": -0.026752534597949906,
+    "lower_one_sided_99_29": -0.03756498743887164,
+    "ci95_two_sided": [
+     -0.035361933399159176,
+     -0.018372595275506578
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "delta_rijks": {
+    "delta": -0.008244308886391716,
+    "lower_one_sided_99_29": -0.019297742317313873,
+    "ci95_two_sided": [
+     -0.017267220364879633,
+     0.0006449996525180144
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "retained": false
+  },
+  "T-Z": {
+   "brick": "T-Z",
+   "reference": "T_star",
+   "delta_icai": {
+    "delta": -0.005173092353877973,
+    "lower_one_sided_99_29": -0.018957152426900395,
+    "ci95_two_sided": [
+     -0.0164882479281071,
+     0.005963584215116613
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "delta_rijks": {
+    "delta": -0.03252743220003401,
+    "lower_one_sided_99_29": -0.04768133620640048,
+    "ci95_two_sided": [
+     -0.04480027565341895,
+     -0.02072162532888299
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "retained": false
+  },
+  "T-D": {
+   "brick": "T-D",
+   "reference": "T_star",
+   "delta_icai": {
+    "delta": 0.0034837243197912704,
+    "lower_one_sided_99_29": -0.009877605180360216,
+    "ci95_two_sided": [
+     -0.007178377547973088,
+     0.01416394861443576
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "delta_rijks": {
+    "delta": -0.053218425485556886,
+    "lower_one_sided_99_29": -0.06781280875196374,
+    "ci95_two_sided": [
+     -0.06494758172101407,
+     -0.041194313034212754
+    ],
+    "draws": 10000,
+    "quantile_method": "numpy linear"
+   },
+   "retained": false
+  },
+  "TK-niv": {
+   "brick": "TK-niv",
+   "reference": "T_star",
+   "executed": false,
+   "reason": "TK and T-niv not both retained; keeps its place in the family of seven"
+  }
+ }
+}
