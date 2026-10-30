@@ -18,7 +18,7 @@ SCRIPTS = {"a1_run.py": "78b1ed982ae9b2e59624a30b83675703e156b92a1d45309b6089162
 DIAG = "312d5a40affb6a399e807dec318e2bd8b569b7c8fcfecfb3552cd1f4cc4457d3"
 INVENTORY = "ff424e6453192f6465e23e3cdf9acf29aa5827d84565deb329de4c1b891a65d9"
 # blanc: section 7 (<= 20 min CPU); reglage and diagnostic: the series is <= 2 h, so neither stage may exceed it
-WALL_SECONDS = {"blanc": 1200, "reglage": 7200, "diagnostic": 7200}
+WALL_SECONDS = {"blanc": 1200, "reglage": 7200, "diagnostic": 4387}  # diagnostic: series <= 7200 s - blanc 87 s - reglage 2726 s = 4387 s
 RAM_BYTES = 8_000_000_000      # section 7: RAM <= 8 Go (decimal, the stricter reading)
 OUTPUT_BYTES = 1_000_000_000   # section 7: outputs <= 1 Go, everything under /kaggle/working
 MIN_FREE_BYTES = 256 << 20
