@@ -35,9 +35,10 @@ class TestPilot(unittest.TestCase):
 
     def test_mesures_stage_needs_sealed_predictions_and_receipt(self):
         src = PILOT.read_text()
-        self.assertIn('"/kaggle/input/**/MANIFEST_PREDICTIONS.json"', src)
-        self.assertIn('"/kaggle/input/**/recu_planche_pe.json"', src)
-        self.assertIn("if len(sealed) != 1 or len(receipt) != 1:", src)
+        self.assertIn('only("MANIFEST_PREDICTIONS.json", mounted)', src)
+        self.assertIn('receipt = only("recu_planche_pe.json")', src)
+        self.assertIn("if len(sealed) != 1:", src)
+        self.assertIn("if len(receipt) != 1:", src)
 
 
 if __name__ == "__main__":

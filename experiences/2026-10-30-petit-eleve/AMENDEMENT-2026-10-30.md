@@ -77,3 +77,25 @@ Le smoke 2 a tourné sur `0315a1d`. Les valeurs ci-dessous sont reprises de son 
 **Quantiles** (déclarés, `pe_common.py` inchangé) : intervalle percentile 2,5 / 97,5 %, `numpy.quantile` par défaut (méthode **linéaire**). Les tirages non finis sont retirés, et le nombre de tirages définis est publié (`draws`). La méthode est écrite dans `resultats.json` (`quantile_method`).
 
 Le pilote passe à `STAGE = "full"`. L'étape `mesures` suivra la planche regardée et le reçu des deux regards.
+
+## 9. D11 : entrées en archive `.bin` épinglée (pilote seul)
+
+Kaggle a supprimé les jeux `porky-*`, dont `porky-petit-eleve-v1`, qui portait 166 images JPG. La cause n'est pas sûre : le nom, ou les dessins de nus, dont `p034` et `p163`.
+
+- **Les entrées** (listes, noms, scripts, 166 images, 158 graphes Gemini, 30 S1b) viennent maintenant en **un seul tar non compressé**, `pe-entrees.bin`, sha `b48cb32c…`, dans le jeu `pkyevitch-pe-entrees`.
+- **Construction reproductible** par `outils/construire_entrees_bin.py` : les listes et les scripts sont contrôlés contre `CODE_SHA256.json`, et les images et graphes contre `listes.json`. Les ensembles fermés sont refusés. Les membres sont triés, avec mtime 0, uid/gid 0, au format USTAR. Deux constructions donnent les mêmes octets. Le pilote n'est pas dans l'archive, puisque son SHA l'épingle.
+- **Le pilote** `kaggle_pe_run.py` :
+  - trouve exactement un `pe-entrees.bin` ;
+  - l'extrait avec `safe_extract`, la fonction relue du pilote de mesure de la phase 1, à l'identique : SHA épinglé, refus des chemins absolus, de `..`, des liens et des fichiers spéciaux, avant toute écriture ;
+  - ne cherche `listes.json` et les scripts **que là**.
+- **L'extraction se fait dans `/tmp/pkyevitch`**, et non dans `/kaggle/working` : Kaggle publie ce dossier comme sortie du noyau, et les images ne doivent pas y réapparaître.
+- **Si le dossier scellé du complet** (12 planches JPG) doit aussi être re-téléversé, il viendra en `pe-scelle.bin`, avec un SHA épinglé par un commit relu (`SCELLE_SHA256`, aujourd'hui `None`, donc refusé). Sinon, on monte la sortie du noyau du complet, comme avant.
+- **`pe_kaggle.py` et `pe_common.py` sont inchangés.** C'est obligatoire : le sceau du complet vérifie leur SHA avant les mesures. `STAGE` reste `full` ; le passage à `mesures` sera un commit séparé, après la planche et le reçu.
+- **Limite restante** : le complet écrit ses planches JPG dans sa sortie, `/kaggle/working`. Les en retirer obligerait à changer `pe_kaggle.py`, ce que le sceau interdit.
+- **Tests** : `tests/test_pe_bin.py`, 7 tests :
+  - extraction hors de `/kaggle/working` ;
+  - SHA faux, deux archives, destination existante ;
+  - membres `..`, absolus et liens refusés sans rien écrire ;
+  - scripts non relus refusés, et `listes.json` exigé à la racine ;
+  - dossier scellé pris dans la sortie du noyau, ou dans l'archive seulement avec un SHA épinglé ;
+  - reconstruction réelle reproductible, égale au SHA épinglé.

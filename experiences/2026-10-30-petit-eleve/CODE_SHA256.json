@@ -1,17 +1,19 @@
 {
-  "status": "Complet prêt après smoke 2 (Grok p3 CONFORME) : MobileCLIP a67804d1, tokenizer CLIP 1.0@7ffa84b3, Florence natif 00921df6, OWL cfd3195b, environnement du smoke exigé, quantiles déclarés, STAGE full ; à relire avant lancement",
+  "status": "Complet prêt après smoke 2 (Grok p3 CONFORME) : MobileCLIP a67804d1, tokenizer CLIP 1.0@7ffa84b3, Florence natif 00921df6, OWL cfd3195b, environnement du smoke exigé, quantiles déclarés, STAGE full ; à relire avant lancement ; D11 : entrées en pe-entrees.bin (b48cb32c) extraites hors de /kaggle/working par le pilote, pe_kaggle inchangé",
   "files": {
-    "AMENDEMENT-2026-10-30.md": "e4c164d7a2b0ebabbd10645bf84bd2713af10d081d1ddcabcb0d88f9f7a43a41",
+    "AMENDEMENT-2026-10-30.md": "f61049db8e388e52e2a258c1317a03caa8d4589749bcb7a2eb7eb614b5a99ea5",
     "PREINSCRIPTION.md": "bf5c02c7e3a4bc2d918dc17ab01fe79e3d33059688e7aa5c497dff224029dadc",
     "listes.json": "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af",
     "noms.json": "dfa0e011f7f1df458d5396602b5f33ede99ac2a9f34b7465940241afec648ed2",
-    "scripts/kaggle_pe_run.py": "f92a0c91679441e277e13ef8fc5adca889847fa9c4cbcb33ab9fa51f1695f0d0",
+    "outils/construire_entrees_bin.py": "68bc11d47a5cb53f902c7a8429a0d4f98fa1b91fa268e8cf2d613cf62482e22d",
+    "scripts/kaggle_pe_run.py": "14c436e781b650f938e2e826a2b1402ee9299340321b85ebd3cb2f6a80414987",
     "scripts/pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af",
     "scripts/pe_kaggle.py": "91996fe00a615496529f1035d437d30caab6d27f0ea880ab9e28e7bb660af22a",
     "scripts/pe_listes.py": "2281a5dea11bd928f9ece00ee06dc5c5d580574d0757874cbbda207caaa93edf",
     "tests/test_pe_amendement.py": "20096ccaf52c50472aa02a53ea6dcbe28561687723786d75bc200e6962a790c3",
+    "tests/test_pe_bin.py": "5b391a3886fa7b2403e57ff02a60ce285c62c64179e3cb3f07f5001f9bdd7cee",
     "tests/test_pe_common.py": "ccd14b8c3dc835e8fd90ac8f7a2b6678ca5cb86b2ce59656c743602e23089751",
-    "tests/test_pe_pilot.py": "a8ae88a4e581105b7b892358d9965eaaae056044fc69ed94c9405f591b85f5ac",
+    "tests/test_pe_pilot.py": "5e838e77de4a2d4ea1fce59a5dc0d5dcfa813a3ce1aff0d90adbfe6b4f413d46",
     "tests/test_pe_torch.py": "0b869693e23aaa91549b6a6e195183c3903169f0442ef362d57883b4f98c3bdc"
   }
 }
