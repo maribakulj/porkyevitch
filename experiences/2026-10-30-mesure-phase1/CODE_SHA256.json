@@ -1,0 +1,10 @@
+{
+  "status": "Code écrit pour relecture (Grok p2 puis Codex p4), aucune exécution",
+  "files": {
+    "README.md": "c14c1bf447d793e21b93a1f9a50cfabe56740965e4b85148dc4ea05a176223b1",
+    "scripts/mesure_phase1.py": "e5f073f5be5a54d216d97ad2177b5e33d914383d92b686272e3b5c71d46eda08",
+    "scripts/mesure_metrics.py": "9a9d452676e7dd7717d4fab0aa00d11c2a1da5169913d03a80e0ccb5416df895",
+    "scripts/kaggle_mesure_run.py": "4092d8232c91ca1d219073c47c9a4dc2dbbbebee66174442e0a2816bc3b42dd8",
+    "tests/test_mesure.py": "eabcd37b81eb417964c717181c64d31f659bc17a565ba94de25f03871e643059"
+  }
+}
