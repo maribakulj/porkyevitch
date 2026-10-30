@@ -1,0 +1,9 @@
+{
+  "status": "Script M0 écrit pour relecture ; portes null ; aucune exécution sur données réelles",
+  "files": {
+    "README.md": "ef5aab7721ed5bb3d7dcdf64098ef5ff511c28b2ea95ce02de99080076774aae",
+    "PARAMETRES.json": "2ece6aadb12809c7513c4694102a237e46c5a2f623375ebfc291e5732e4e5a90",
+    "scripts/m0.py": "f766f23e85b281cb4d090ad75fa50da9683be2a0666585494c958171c185e1a9",
+    "tests/test_m0.py": "12443826a8b60cce0538ae87131b333b1050dd53452195b5c4eb0a07301aa0e2"
+  }
+}
