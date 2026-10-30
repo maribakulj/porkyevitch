@@ -1,0 +1,487 @@
+{
+ "E1_i_64": [
+  {
+   "position": 0,
+   "U": 45,
+   "value": 0.9218679346855914,
+   "path": "sort_certified"
+  },
+  {
+   "position": 2,
+   "U": 61,
+   "value": 0.802701839088334,
+   "path": "sort_certified"
+  },
+  {
+   "position": 3,
+   "U": 13,
+   "value": 0.9999999999999998,
+   "path": "sort_certified"
+  },
+  {
+   "position": 5,
+   "U": 66,
+   "value": 0.8230038188389845,
+   "path": "sort_certified"
+  },
+  {
+   "position": 7,
+   "U": 58,
+   "value": 0.5425214971854224,
+   "path": "sort_certified"
+  },
+  {
+   "position": 8,
+   "U": 59,
+   "value": 0.41558614086559326,
+   "path": "sort_certified"
+  },
+  {
+   "position": 11,
+   "U": 102,
+   "value": 0.40697705120976624,
+   "path": "sort_certified"
+  },
+  {
+   "position": 12,
+   "U": 16,
+   "value": 0.8563811535334429,
+   "path": "sort_certified"
+  },
+  {
+   "position": 15,
+   "U": 63,
+   "value": 0.44991165379963827,
+   "path": "sort_certified"
+  },
+  {
+   "position": 17,
+   "U": 27,
+   "value": 0.953451325298496,
+   "path": "sort_certified"
+  },
+  {
+   "position": 18,
+   "U": 41,
+   "value": 0.8238510176338181,
+   "path": "sort_certified"
+  },
+  {
+   "position": 20,
+   "U": 16,
+   "value": 0.9599999999999999,
+   "path": "sort_certified"
+  },
+  {
+   "position": 21,
+   "U": 32,
+   "value": 0.8930875648297314,
+   "path": "sort_certified"
+  },
+  {
+   "position": 23,
+   "U": 17,
+   "value": 0.7719018530666688,
+   "path": "sort_certified"
+  },
+  {
+   "position": 24,
+   "U": 26,
+   "value": 0.9550242446340209,
+   "path": "sort_certified"
+  },
+  {
+   "position": 25,
+   "U": 163,
+   "value": 0.5780192641250407,
+   "path": "sort_certified"
+  },
+  {
+   "position": 26,
+   "U": 56,
+   "value": 0.7902235719604935,
+   "path": "sort_certified"
+  },
+  {
+   "position": 30,
+   "U": 31,
+   "value": 0.5287887967343666,
+   "path": "sort_certified"
+  },
+  {
+   "position": 32,
+   "U": 9,
+   "value": 0.6484665943725816,
+   "path": "sort_certified"
+  },
+  {
+   "position": 33,
+   "U": 22,
+   "value": 0.806033391920649,
+   "path": "sort_certified"
+  },
+  {
+   "position": 34,
+   "U": 18,
+   "value": 0.8331207509416887,
+   "path": "sort_certified"
+  },
+  {
+   "position": 37,
+   "U": 77,
+   "value": 0.4239836848830142,
+   "path": "sort_certified"
+  },
+  {
+   "position": 39,
+   "U": 11,
+   "value": 0.8388823187988252,
+   "path": "sort_certified"
+  },
+  {
+   "position": 40,
+   "U": 17,
+   "value": 0.8910040596478356,
+   "path": "sort_certified"
+  },
+  {
+   "position": 42,
+   "U": 20,
+   "value": 0.5892174423653418,
+   "path": "sort_certified"
+  },
+  {
+   "position": 44,
+   "U": 49,
+   "value": 0.5861391863115674,
+   "path": "sort_certified"
+  },
+  {
+   "position": 45,
+   "U": 23,
+   "value": 0.940941258197343,
+   "path": "sort_certified"
+  },
+  {
+   "position": 46,
+   "U": 53,
+   "value": 0.4975952391046812,
+   "path": "sort_certified"
+  },
+  {
+   "position": 47,
+   "U": 14,
+   "value": 0.5368632984768635,
+   "path": "sort_certified"
+  },
+  {
+   "position": 50,
+   "U": 60,
+   "value": 0.8608651245670531,
+   "path": "sort_certified"
+  },
+  {
+   "position": 53,
+   "U": 6,
+   "value": 0.9999999999999999,
+   "path": "sort_certified"
+  },
+  {
+   "position": 54,
+   "U": 34,
+   "value": 0.7612083405027611,
+   "path": "sort_certified"
+  },
+  {
+   "position": 55,
+   "U": 71,
+   "value": 0.6457259619523262,
+   "path": "sort_certified"
+  },
+  {
+   "position": 56,
+   "U": 54,
+   "value": 0.8298159563402293,
+   "path": "sort_certified"
+  },
+  {
+   "position": 61,
+   "U": 89,
+   "value": 0.6976863257505306,
+   "path": "sort_certified"
+  },
+  {
+   "position": 62,
+   "U": 66,
+   "value": 0.5863667950356799,
+   "path": "sort_certified"
+  },
+  {
+   "position": 64,
+   "U": 47,
+   "value": 0.7139824928397114,
+   "path": "sort_certified"
+  },
+  {
+   "position": 67,
+   "U": 25,
+   "value": 0.9337309004414989,
+   "path": "sort_certified"
+  },
+  {
+   "position": 69,
+   "U": 25,
+   "value": 0.7943441617176762,
+   "path": "sort_certified"
+  },
+  {
+   "position": 71,
+   "U": 25,
+   "value": 0.7030860896543122,
+   "path": "sort_certified"
+  },
+  {
+   "position": 72,
+   "U": 15,
+   "value": 0.999205522455708,
+   "path": "sort_certified"
+  },
+  {
+   "position": 76,
+   "U": 15,
+   "value": 0.9174709239171297,
+   "path": "sort_certified"
+  },
+  {
+   "position": 81,
+   "U": 41,
+   "value": 0.3996008100596099,
+   "path": "sort_certified"
+  },
+  {
+   "position": 82,
+   "U": 16,
+   "value": 0.6316852721254358,
+   "path": "sort_certified"
+  },
+  {
+   "position": 85,
+   "U": 53,
+   "value": 0.4430778089288403,
+   "path": "sort_certified"
+  },
+  {
+   "position": 89,
+   "U": 60,
+   "value": 0.7122327507453856,
+   "path": "sort_certified"
+  },
+  {
+   "position": 90,
+   "U": 23,
+   "value": 0.7068214210818515,
+   "path": "sort_certified"
+  },
+  {
+   "position": 92,
+   "U": 42,
+   "value": 0.4486933913212476,
+   "path": "sort_certified"
+  },
+  {
+   "position": 93,
+   "U": 22,
+   "value": 0.9111088871200573,
+   "path": "sort_certified"
+  },
+  {
+   "position": 94,
+   "U": 63,
+   "value": 0.8592880079865568,
+   "path": "sort_certified"
+  },
+  {
+   "position": 95,
+   "U": 126,
+   "value": 0.7728266997955071,
+   "path": "sort_certified"
+  },
+  {
+   "position": 97,
+   "U": 34,
+   "value": 0.8453388760625804,
+   "path": "sort_certified"
+  },
+  {
+   "position": 98,
+   "U": 16,
+   "value": 0.8877230501132376,
+   "path": "sort_certified"
+  },
+  {
+   "position": 105,
+   "U": 21,
+   "value": 0.6672697960775456,
+   "path": "sort_certified"
+  },
+  {
+   "position": 106,
+   "U": 66,
+   "value": 0.5167802655950601,
+   "path": "sort_certified"
+  },
+  {
+   "position": 109,
+   "U": 13,
+   "value": 0.9999999999999998,
+   "path": "sort_certified"
+  },
+  {
+   "position": 113,
+   "U": 18,
+   "value": 0.9066325890358374,
+   "path": "sort_certified"
+  },
+  {
+   "position": 114,
+   "U": 18,
+   "value": 0.7124926574280923,
+   "path": "sort_certified"
+  },
+  {
+   "position": 115,
+   "U": 23,
+   "value": 0.9629834676725596,
+   "path": "sort_certified"
+  },
+  {
+   "position": 118,
+   "U": 19,
+   "value": 0.9514689478148552,
+   "path": "sort_certified"
+  },
+  {
+   "position": 120,
+   "U": 24,
+   "value": 0.6528511664364736,
+   "path": "sort_certified"
+  },
+  {
+   "position": 121,
+   "U": 63,
+   "value": 0.7126694040711581,
+   "path": "sort_certified"
+  },
+  {
+   "position": 122,
+   "U": 77,
+   "value": 0.6522856804457906,
+   "path": "sort_certified"
+  },
+  {
+   "position": 125,
+   "U": 59,
+   "value": 0.46114575442551076,
+   "path": "sort_certified"
+  }
+ ],
+ "E1_i_16_K64": [
+  {
+   "position": 0,
+   "U": 87,
+   "value": 0.9082740793936009,
+   "path": "sort_certified"
+  },
+  {
+   "position": 2,
+   "U": 196,
+   "value": 0.781071735724787,
+   "path": "sort_certified"
+  },
+  {
+   "position": 3,
+   "U": 29,
+   "value": 0.8974398623441725,
+   "path": "sort_certified"
+  },
+  {
+   "position": 5,
+   "U": 205,
+   "value": 0.695626330791473,
+   "path": "sort_certified"
+  },
+  {
+   "position": 7,
+   "U": 411,
+   "value": 0.5100008056967822,
+   "path": "sort_certified"
+  },
+  {
+   "position": 8,
+   "U": 332,
+   "value": 0.5219339933968403,
+   "path": "sort_certified"
+  },
+  {
+   "position": 11,
+   "U": 477,
+   "value": 0.48418184658761626,
+   "path": "sort_certified"
+  },
+  {
+   "position": 12,
+   "U": 85,
+   "value": 0.8583664961264219,
+   "path": "sort_certified"
+  },
+  {
+   "position": 15,
+   "U": 365,
+   "value": 0.42092551813146734,
+   "path": "sort_certified"
+  },
+  {
+   "position": 17,
+   "U": 85,
+   "value": 0.8850742660399813,
+   "path": "sort_certified"
+  },
+  {
+   "position": 18,
+   "U": 729,
+   "value": 0.6057017316027384,
+   "path": "sort_certified"
+  },
+  {
+   "position": 20,
+   "U": 28,
+   "value": 0.9483040685988002,
+   "path": "sort_certified"
+  },
+  {
+   "position": 21,
+   "U": 167,
+   "value": 0.8969845940918205,
+   "path": "sort_certified"
+  },
+  {
+   "position": 23,
+   "U": 76,
+   "value": 0.8981370582886814,
+   "path": "sort_certified"
+  },
+  {
+   "position": 24,
+   "U": 82,
+   "value": 0.7963969345460706,
+   "path": "sort_certified"
+  },
+  {
+   "position": 25,
+   "U": 630,
+   "value": 0.4905975503610283,
+   "path": "sort_certified"
+  }
+ ],
+ "E1_ii": 4241
+}
