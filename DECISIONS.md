@@ -35,3 +35,11 @@ consensus mesurent la fidélité, pas la localisation ; les relations du petit �
 ablation nommée qui exige de réentraîner E0 ; poids objet ½ ≠ cible de probabilité ½ (préciser la perte, le « pas d'objet » et
 l'union au-delà de 30) ; E1′ ne sépare pas la quantité du professeur. L'entraînement sur les 300 reste conditionné par D2 (porte
 du petit élève). Rapports : porkyevitch-tranche300-grok.md, porkyevitch-tranche300-codex.md.
+
+## D7 (30/10/2026) : P9-A, gradients non finis en fp16 (devis échoué au 12e pas du bras G)
+
+Diagnostic wA:pH : vraisemblablement un dépassement fp16 normal que GradScaler sauterait, mais que update() interdit. Correctif
+dans p9a_run.py seulement (le blanc 2 reste valable) : variante update_amp qui laisse GradScaler sauter un pas à gradients non
+finis, vérifie que les poids n'ont pas changé et journalise le saut. Seuils fixés avant relance : arrêt si l'échelle passe sous 1
+(divergence) ; plafond de 1 % de pas sautés par époque et par bras, au-delà amendement exigé. Relecture Grok p2 et audit Codex p4
+avant la relance du devis.
