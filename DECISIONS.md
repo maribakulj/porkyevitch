@@ -128,3 +128,11 @@ Une seule mesure, puis écrire : A1 avec q figé (eta = 1) et son seuil scellé 
 en H-F1 sur le dev Rijksmuseum (301 images, 239 composantes ; pas les 211 paires de D10), contre B = T-Z (comparaison
 principale) et T* (référence figée), bootstrap par composantes, règle écrite d'avance ; aucune ligne de test, aucun réglage
 sur le dev. Pas de kNN en produit ni de Hill dans ce tour. Rapports : porkyevitch-apres-phase2-grok.md / -codex.md.
+
+## D18 (30/10/2026) : comparaison avec des VLM (accord de Marcel)
+
+Marcel lance la comparaison VLM contre modèle rapide (objectif initial). Systèmes : **Haiku 5.5** (VLM bon marché, déjà
+validé chez nous pour les graphes), **Gemini 3.8 Flash** (déjà dans le dispositif), **Opus 5.5 sur une petite tranche
+seulement** (repère de plafond, pas candidat de production). Préinscription v1 de wA:pH (vocabulaire fermé principal,
+invalidité, refus, répétabilité, coûts et temps symétriques) à mettre en v2 avec ces trois systèmes ; famille ajustée.
+Images : Gemini a déjà reçu ces images ICAI/dev aux pilotes ; même pratique, déclarée. Relecture Sonnet puis audit Codex.
