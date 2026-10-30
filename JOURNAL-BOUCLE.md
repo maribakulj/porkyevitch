@@ -35,3 +35,4 @@
 - 30/10 : blanc P9-A échoué (invariant de conservation de masse après entraînement > 1e-6 ; B reproduit exactement) ; diagnostic demandé à pH.
 - 30/10 : 1er gel complet refusé à 7 s (jeu porky-gel-smoke non monté) ; manifeste du blanc déplacé dans porky-gel-config, sonde conforme ; gel relancé (phase1_freeze_2).
 - 30/10 : p7 → revue critique longue traîne + profondeur d'après le diagnostic.
+- 30/10 : décision D3 (vote rare, tête des enfants) consignée.
