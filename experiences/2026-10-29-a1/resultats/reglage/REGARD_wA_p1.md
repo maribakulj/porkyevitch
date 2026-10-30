@@ -8,3 +8,5 @@
   plus large (24F/25A911/49E1 → 24C1, 24F, 25, 49D22, 49E10) où A1 élargit l'ensemble.
 - Aucune incohérence de fermeture visible (pas de descendant sans ancêtre), aucun code 86, aucun ensemble vide.
 - Limite : sans image, ce regard juge la cohérence des ensembles, pas leur justesse visuelle.
+
+Précision après le regard de Grok p7 : ligne 835, A1 ne garde pas 41C74 ; il le remplace par 31A2422 (pas un simple ajout).

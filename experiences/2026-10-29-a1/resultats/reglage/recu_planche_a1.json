@@ -1,0 +1,17 @@
+{
+ "stage": "planche_a1_regardee",
+ "reglage_manifest_sha256": "8f75d5002d1d88145452a510929108d13c9ea566cd0ed1602bed9e7bd7515f23",
+ "planche_html_sha256": "b75f8cf91bad997d9625bf45be09b54b5f95415b76ac834e8cf0be420c23045c",
+ "regards": [
+  {
+   "viewer": "wA:p1",
+   "viewed_at": "2026-10-30T09:22:00+01:00",
+   "notes": "resultats/reglage/REGARD_wA_p1.md"
+  },
+  {
+   "viewer": "Grok wA:p7",
+   "viewed_at": "2026-10-30T09:27:08+01:00",
+   "notes": "~/Documents/reviews/porkyevitch-a1-planche-grok.md"
+  }
+ ]
+}
