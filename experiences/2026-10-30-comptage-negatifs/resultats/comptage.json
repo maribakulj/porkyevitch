@@ -1,0 +1,2374 @@
+{
+ "descriptive_only": true,
+ "no_gate": true,
+ "totals": {
+  "images": 26,
+  "pairs": {
+   "negatives": 2428,
+   "comparable": 269,
+   "asserted_by_S1b": 9,
+   "asserted_share_of_comparable": 0.03345724907063197,
+   "asserted_share_of_negatives": 0.0037067545304777594
+  },
+  "predicates": {
+   "left of": {
+    "negatives": 2684,
+    "comparable": 337,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "above": {
+    "negatives": 2690,
+    "comparable": 340,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "inside": {
+    "negatives": 2700,
+    "comparable": 337,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "behind": {
+    "negatives": 2712,
+    "comparable": 349,
+    "asserted_by_S1b": 2,
+    "asserted_share_of_comparable": 0.0057306590257879654
+   },
+   "right of": {
+    "negatives": 2713,
+    "comparable": 347,
+    "asserted_by_S1b": 3,
+    "asserted_share_of_comparable": 0.008645533141210375
+   },
+   "on": {
+    "negatives": 2690,
+    "comparable": 337,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "stands on": {
+    "negatives": 2719,
+    "comparable": 349,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "wears": {
+    "negatives": 2693,
+    "comparable": 334,
+    "asserted_by_S1b": 1,
+    "asserted_share_of_comparable": 0.0029940119760479044
+   },
+   "holds": {
+    "negatives": 2719,
+    "comparable": 350,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "below": {
+    "negatives": 2712,
+    "comparable": 346,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "in front of": {
+    "negatives": 2727,
+    "comparable": 348,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "looks at": {
+    "negatives": 2724,
+    "comparable": 348,
+    "asserted_by_S1b": 1,
+    "asserted_share_of_comparable": 0.0028735632183908046
+   },
+   "sits on": {
+    "negatives": 2714,
+    "comparable": 349,
+    "asserted_by_S1b": 0,
+    "asserted_share_of_comparable": 0.0
+   },
+   "autre_relation": {
+    "negatives": 2713,
+    "comparable": 347,
+    "asserted_by_S1b": 7,
+    "asserted_share_of_comparable": 0.020172910662824207
+   }
+  },
+  "objects": {
+   "s1b_objects": 326,
+   "s1b_unmatched_joint": 236,
+   "s1b_unmatched_iou": 218,
+   "unmatched_share_joint": 0.7239263803680982,
+   "unmatched_share_iou": 0.6687116564417178
+  }
+ },
+ "per_image": {
+  "p009": {
+   "gemini_objects": 2,
+   "s1b_objects": 6,
+   "matched_joint": 1,
+   "matched_iou": 2,
+   "pairs": {
+    "negatives": 1,
+    "comparable": 0,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 1,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 2,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 5,
+    "s1b_unmatched_iou": 4
+   }
+  },
+  "p016": {
+   "gemini_objects": 12,
+   "s1b_objects": 12,
+   "matched_joint": 1,
+   "matched_iou": 4,
+   "pairs": {
+    "negatives": 120,
+    "comparable": 0,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 131,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 129,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 127,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 131,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 132,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 130,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 11,
+    "s1b_unmatched_iou": 8
+   }
+  },
+  "p018": {
+   "gemini_objects": 5,
+   "s1b_objects": 7,
+   "matched_joint": 1,
+   "matched_iou": 3,
+   "pairs": {
+    "negatives": 7,
+    "comparable": 0,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 17,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 16,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 17,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 17,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 20,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 6,
+    "s1b_unmatched_iou": 4
+   }
+  },
+  "p020": {
+   "gemini_objects": 10,
+   "s1b_objects": 10,
+   "matched_joint": 2,
+   "matched_iou": 2,
+   "pairs": {
+    "negatives": 80,
+    "comparable": 1,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 87,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 86,
+     "comparable": 1,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 88,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 8,
+    "s1b_unmatched_iou": 8
+   }
+  },
+  "p041": {
+   "gemini_objects": 6,
+   "s1b_objects": 12,
+   "matched_joint": 3,
+   "matched_iou": 3,
+   "pairs": {
+    "negatives": 19,
+    "comparable": 3,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 27,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 22,
+     "comparable": 3,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 9,
+    "s1b_unmatched_iou": 9
+   }
+  },
+  "p049": {
+   "gemini_objects": 13,
+   "s1b_objects": 13,
+   "matched_joint": 6,
+   "matched_iou": 7,
+   "pairs": {
+    "negatives": 142,
+    "comparable": 25,
+    "asserted_by_S1b": 3
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 152,
+     "comparable": 29,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 156,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 156,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 156,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 156,
+     "comparable": 30,
+     "asserted_by_S1b": 2
+    },
+    "on": {
+     "negatives": 153,
+     "comparable": 29,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 156,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 154,
+     "comparable": 29,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 155,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 156,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 154,
+     "comparable": 29,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 156,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 155,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 155,
+     "comparable": 29,
+     "asserted_by_S1b": 1
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 7,
+    "s1b_unmatched_iou": 6
+   }
+  },
+  "p052": {
+   "gemini_objects": 14,
+   "s1b_objects": 11,
+   "matched_joint": 5,
+   "matched_iou": 6,
+   "pairs": {
+    "negatives": 164,
+    "comparable": 11,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 180,
+     "comparable": 18,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 180,
+     "comparable": 18,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 180,
+     "comparable": 18,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 172,
+     "comparable": 19,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 180,
+     "comparable": 18,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 182,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 6,
+    "s1b_unmatched_iou": 5
+   }
+  },
+  "p059": {
+   "gemini_objects": 11,
+   "s1b_objects": 15,
+   "matched_joint": 6,
+   "matched_iou": 7,
+   "pairs": {
+    "negatives": 97,
+    "comparable": 28,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 107,
+     "comparable": 29,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 107,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 108,
+     "comparable": 29,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 106,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 109,
+     "comparable": 30,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 110,
+     "comparable": 30,
+     "asserted_by_S1b": 1
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 9,
+    "s1b_unmatched_iou": 8
+   }
+  },
+  "p063": {
+   "gemini_objects": 9,
+   "s1b_objects": 16,
+   "matched_joint": 4,
+   "matched_iou": 5,
+   "pairs": {
+    "negatives": 63,
+    "comparable": 10,
+    "asserted_by_S1b": 1
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 71,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 71,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 70,
+     "comparable": 10,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 72,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 72,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 70,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 72,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 71,
+     "comparable": 12,
+     "asserted_by_S1b": 1
+    },
+    "holds": {
+     "negatives": 72,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 72,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 72,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 72,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 72,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 70,
+     "comparable": 12,
+     "asserted_by_S1b": 1
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 12,
+    "s1b_unmatched_iou": 11
+   }
+  },
+  "p071": {
+   "gemini_objects": 6,
+   "s1b_objects": 10,
+   "matched_joint": 3,
+   "matched_iou": 4,
+   "pairs": {
+    "negatives": 24,
+    "comparable": 4,
+    "asserted_by_S1b": 1
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 29,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 28,
+     "comparable": 4,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 28,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 29,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 30,
+     "comparable": 6,
+     "asserted_by_S1b": 1
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 7,
+    "s1b_unmatched_iou": 6
+   }
+  },
+  "p073": {
+   "gemini_objects": 7,
+   "s1b_objects": 11,
+   "matched_joint": 3,
+   "matched_iou": 3,
+   "pairs": {
+    "negatives": 34,
+    "comparable": 2,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 40,
+     "comparable": 4,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 41,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 40,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 40,
+     "comparable": 4,
+     "asserted_by_S1b": 1
+    },
+    "sits on": {
+     "negatives": 41,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 42,
+     "comparable": 6,
+     "asserted_by_S1b": 1
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 8,
+    "s1b_unmatched_iou": 8
+   }
+  },
+  "p083": {
+   "gemini_objects": 5,
+   "s1b_objects": 9,
+   "matched_joint": 4,
+   "matched_iou": 4,
+   "pairs": {
+    "negatives": 13,
+    "comparable": 8,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 19,
+     "comparable": 11,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 16,
+     "comparable": 9,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 18,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 5,
+    "s1b_unmatched_iou": 5
+   }
+  },
+  "p085": {
+   "gemini_objects": 7,
+   "s1b_objects": 11,
+   "matched_joint": 5,
+   "matched_iou": 7,
+   "pairs": {
+    "negatives": 34,
+    "comparable": 14,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 40,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 38,
+     "comparable": 16,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 41,
+     "comparable": 19,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 42,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 41,
+     "comparable": 19,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 6,
+    "s1b_unmatched_iou": 4
+   }
+  },
+  "p117": {
+   "gemini_objects": 8,
+   "s1b_objects": 16,
+   "matched_joint": 4,
+   "matched_iou": 7,
+   "pairs": {
+    "negatives": 42,
+    "comparable": 10,
+    "asserted_by_S1b": 1
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 52,
+     "comparable": 11,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 55,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 49,
+     "comparable": 11,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 56,
+     "comparable": 12,
+     "asserted_by_S1b": 1
+    },
+    "right of": {
+     "negatives": 56,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 56,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 56,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 56,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 56,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 55,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 56,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 56,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 55,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 55,
+     "comparable": 11,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 12,
+    "s1b_unmatched_iou": 9
+   }
+  },
+  "p123": {
+   "gemini_objects": 3,
+   "s1b_objects": 10,
+   "matched_joint": 0,
+   "matched_iou": 1,
+   "pairs": {
+    "negatives": 2,
+    "comparable": 0,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 4,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 5,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 5,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 6,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 10,
+    "s1b_unmatched_iou": 9
+   }
+  },
+  "p131": {
+   "gemini_objects": 8,
+   "s1b_objects": 13,
+   "matched_joint": 2,
+   "matched_iou": 2,
+   "pairs": {
+    "negatives": 45,
+    "comparable": 1,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 54,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 55,
+     "comparable": 1,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 54,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 52,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 56,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 54,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 11,
+    "s1b_unmatched_iou": 11
+   }
+  },
+  "p133": {
+   "gemini_objects": 4,
+   "s1b_objects": 11,
+   "matched_joint": 3,
+   "matched_iou": 3,
+   "pairs": {
+    "negatives": 5,
+    "comparable": 2,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 11,
+     "comparable": 5,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 9,
+     "comparable": 4,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 11,
+     "comparable": 5,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 10,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 12,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 8,
+    "s1b_unmatched_iou": 8
+   }
+  },
+  "p136": {
+   "gemini_objects": 28,
+   "s1b_objects": 21,
+   "matched_joint": 7,
+   "matched_iou": 7,
+   "pairs": {
+    "negatives": 734,
+    "comparable": 39,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 752,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 755,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 756,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 754,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 755,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 756,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 756,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 756,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 755,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 752,
+     "comparable": 41,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 755,
+     "comparable": 41,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 756,
+     "comparable": 42,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 749,
+     "comparable": 41,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 755,
+     "comparable": 42,
+     "asserted_by_S1b": 1
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 14,
+    "s1b_unmatched_iou": 14
+   }
+  },
+  "p141": {
+   "gemini_objects": 12,
+   "s1b_objects": 15,
+   "matched_joint": 2,
+   "matched_iou": 2,
+   "pairs": {
+    "negatives": 115,
+    "comparable": 2,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 129,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 128,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 131,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 130,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 125,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 132,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 13,
+    "s1b_unmatched_iou": 13
+   }
+  },
+  "p149": {
+   "gemini_objects": 10,
+   "s1b_objects": 16,
+   "matched_joint": 2,
+   "matched_iou": 2,
+   "pairs": {
+    "negatives": 80,
+    "comparable": 2,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 88,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 87,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 90,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 89,
+     "comparable": 2,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 14,
+    "s1b_unmatched_iou": 14
+   }
+  },
+  "p153": {
+   "gemini_objects": 10,
+   "s1b_objects": 14,
+   "matched_joint": 4,
+   "matched_iou": 4,
+   "pairs": {
+    "negatives": 78,
+    "comparable": 9,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 89,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 89,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 89,
+     "comparable": 11,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 89,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 89,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 89,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 88,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 88,
+     "comparable": 10,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 89,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 90,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 90,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 90,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 89,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 90,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 10,
+    "s1b_unmatched_iou": 10
+   }
+  },
+  "p158": {
+   "gemini_objects": 12,
+   "s1b_objects": 16,
+   "matched_joint": 10,
+   "matched_iou": 10,
+   "pairs": {
+    "negatives": 108,
+    "comparable": 71,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 125,
+     "comparable": 85,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 126,
+     "comparable": 85,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 121,
+     "comparable": 81,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 132,
+     "comparable": 90,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 6,
+    "s1b_unmatched_iou": 6
+   }
+  },
+  "p163": {
+   "gemini_objects": 17,
+   "s1b_objects": 19,
+   "matched_joint": 3,
+   "matched_iou": 3,
+   "pairs": {
+    "negatives": 253,
+    "comparable": 6,
+    "asserted_by_S1b": 2
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 272,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 272,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 270,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 272,
+     "comparable": 6,
+     "asserted_by_S1b": 1
+    },
+    "right of": {
+     "negatives": 269,
+     "comparable": 6,
+     "asserted_by_S1b": 1
+    },
+    "on": {
+     "negatives": 265,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 271,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 270,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 271,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 272,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 272,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 270,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 271,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 271,
+     "comparable": 6,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 16,
+    "s1b_unmatched_iou": 16
+   }
+  },
+  "p171": {
+   "gemini_objects": 10,
+   "s1b_objects": 10,
+   "matched_joint": 0,
+   "matched_iou": 1,
+   "pairs": {
+    "negatives": 77,
+    "comparable": 0,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 88,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 84,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 90,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 90,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 90,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 90,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 89,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 90,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 90,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 89,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 90,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 89,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 89,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 88,
+     "comparable": 0,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 10,
+    "s1b_unmatched_iou": 9
+   }
+  },
+  "p186": {
+   "gemini_objects": 5,
+   "s1b_objects": 9,
+   "matched_joint": 4,
+   "matched_iou": 4,
+   "pairs": {
+    "negatives": 13,
+    "comparable": 6,
+    "asserted_by_S1b": 1
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 19,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 18,
+     "comparable": 11,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 18,
+     "comparable": 10,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 17,
+     "comparable": 9,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 20,
+     "comparable": 12,
+     "asserted_by_S1b": 1
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 5,
+    "s1b_unmatched_iou": 5
+   }
+  },
+  "p195": {
+   "gemini_objects": 10,
+   "s1b_objects": 13,
+   "matched_joint": 5,
+   "matched_iou": 5,
+   "pairs": {
+    "negatives": 78,
+    "comparable": 15,
+    "asserted_by_S1b": 0
+   },
+   "predicates": {
+    "left of": {
+     "negatives": 89,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "above": {
+     "negatives": 88,
+     "comparable": 18,
+     "asserted_by_S1b": 0
+    },
+    "inside": {
+     "negatives": 88,
+     "comparable": 18,
+     "asserted_by_S1b": 0
+    },
+    "behind": {
+     "negatives": 89,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "right of": {
+     "negatives": 89,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "on": {
+     "negatives": 88,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "stands on": {
+     "negatives": 89,
+     "comparable": 19,
+     "asserted_by_S1b": 0
+    },
+    "wears": {
+     "negatives": 89,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "holds": {
+     "negatives": 89,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "below": {
+     "negatives": 90,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "in front of": {
+     "negatives": 90,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "looks at": {
+     "negatives": 89,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "sits on": {
+     "negatives": 90,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    },
+    "autre_relation": {
+     "negatives": 90,
+     "comparable": 20,
+     "asserted_by_S1b": 0
+    }
+   },
+   "objects": {
+    "s1b_unmatched_joint": 8,
+    "s1b_unmatched_iou": 8
+   }
+  }
+ },
+ "reading": "a negative S1b asserts is not certainly wrong in Gemini, nor certainly true in S1b",
+ "listes_sha256": "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af",
+ "pe_common_sha256": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"
+}
