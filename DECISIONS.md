@@ -43,3 +43,12 @@ dans p9a_run.py seulement (le blanc 2 reste valable) : variante update_amp qui l
 finis, vérifie que les poids n'ont pas changé et journalise le saut. Seuils fixés avant relance : arrêt si l'échelle passe sous 1
 (divergence) ; plafond de 1 % de pas sautés par époque et par bras, au-delà amendement exigé. Relecture Grok p2 et audit Codex p4
 avant la relance du devis.
+
+## D8 (30/10/2026) : baselines de production (après avis Grok p7 et contre-expertise Codex p4)
+
+YOLOE-v8-S en mode texte (8 requêtes figées) est ajouté au protocole T4 du petit élève : débit mesuré par nous sur les 96 images
+d'entraînement et rappel sans classe sur les 26 graphes Gemini, à côté d'OWLv2 et de Florence-2, descriptif, sans changer D2.
+RF-DETR Nano en option de débit seulement ; les autres modèles hors du test minimal. Les débits publiés (TensorRT, autre matériel)
+ne sont jamais repris comme résultats. À figer avant les 26 : poids, versions, NMS, seuil ; préparation du texte hors régime
+établi, même portion de pipeline chronométrée. Préalable : corriger le chronométrage de l'élève (no_grad/autocast, comme OWLv2)
+et le chargement de Florence-2. Gemini mesure la fidélité, pas la vérité.

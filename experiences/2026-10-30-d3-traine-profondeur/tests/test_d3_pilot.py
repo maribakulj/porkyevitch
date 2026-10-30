@@ -74,12 +74,31 @@ class TestMonitor(unittest.TestCase):
         rec = k.run_child([sys.executable, "-c", "pass"], dict(os.environ), self.out, 0.0, 7200, self.work, None,
                           clock, late, calm)
         self.assertEqual(rec["status"], "failed")
-        rec = k.run_child([sys.executable, "-c", "raise SystemExit(2)"], dict(os.environ), self.out, 0.0, 7200,
-                          self.work, None, FakeClock(0.0), SHORT, calm)
+        fresh = lambda: tempfile.mkdtemp(dir=self.work)
+        w = fresh()
+        rec = k.run_child([sys.executable, "-c", "raise SystemExit(2)"], dict(os.environ), os.path.join(w, "o"), 0.0,
+                          7200, w, None, FakeClock(0.0), SHORT, calm)
         self.assertEqual(rec["failure"], "d3 exit 2")
-        rec = k.run_child([sys.executable, "-c", "pass"], dict(os.environ), self.out, 0.0, 7200, self.work, None,
+        w = fresh()
+        rec = k.run_child([sys.executable, "-c", "pass"], dict(os.environ), os.path.join(w, "o"), 0.0, 7200, w, None,
                           FakeClock(0.0), SHORT, calm)
         self.assertEqual((rec["status"], rec["exit_code"]), ("passed", 0))
+
+    def test_preexisting_blank_is_never_touched(self):
+        # same flaw as A1 B3 (Codex p4): an earlier blanc.json in the output folder, then a failing run
+        old = b'{"earlier": "reviewed bytes"}'
+        Path(self.out, "blanc.json").write_bytes(old)
+        Path(self.work, "driver.json").write_bytes(b"earlier driver")
+        marker = os.path.join(self.work, "child_started")
+        cmd = [sys.executable, "-c", "import sys; open(sys.argv[1], 'w'); raise SystemExit(1)", marker]
+        rec = k.run_child(cmd, dict(os.environ), self.out, 0.0, 7200, self.work, None, FakeClock(0.0),
+                          lambda s: None, calm)
+        self.assertEqual((rec["status"], rec["started"]), ("failed", False))
+        self.assertIn("output not empty before start", rec["failure"])
+        self.assertFalse(os.path.exists(marker))
+        self.assertEqual(Path(self.out, "blanc.json").read_bytes(), old)
+        self.assertFalse(Path(self.out, "blanc.REFUSED.json").exists())
+        self.assertEqual(Path(self.work, "driver.json").read_bytes(), b"earlier driver")
 
     def test_pins_and_limits(self):
         here = Path(__file__).resolve().parents[1] / "scripts"

@@ -7,6 +7,8 @@
 # 2 h session of preregistration section 5, counted from the pilot start, plus outputs < 200 MB and machine guards. At
 # any breach the process group is stopped, driver.json says "failed" and a blanc.json written by that run is renamed
 # blanc.REFUSED.json, so the complete stage can never find it.
+# B3 (Codex p4, 30/10, found on A1): a non-empty output folder or an earlier driver.json is refused before the child
+# starts, writing and renaming nothing; only a blanc.json created by the failed run itself is ever renamed.
 import glob, hashlib, json, os, shutil, signal, subprocess, sys, time
 
 STAGE = "blanc"
@@ -110,26 +112,43 @@ def monitor(child, start, wall, work, clock=time.monotonic, sleep=time.sleep, me
     return failure, peak
 
 
-def refuse_outputs(out):
-    """A failed run never leaves a blanc.json that a later stage could pick up."""
+def refuse_outputs(out, blank_existed):
+    """A failed run never leaves a blanc.json that a later stage could pick up; only a blanc.json created by this run
+    is renamed, never one that existed before it started (run_child also refuses a non-empty output beforehand)."""
     blank = os.path.join(out, "blanc.json")
-    if os.path.exists(blank):
+    if not blank_existed and os.path.exists(blank):
         os.replace(blank, os.path.join(out, "blanc.REFUSED.json"))
+
+
+def preexisting(out, work):
+    """Paths that a new run could overwrite or rename: a non-empty output folder, or an earlier driver.json."""
+    found = []
+    if os.path.lexists(out) and (not os.path.isdir(out) or os.listdir(out)):
+        found.append(out)
+    if os.path.lexists(os.path.join(work, "driver.json")):
+        found.append(os.path.join(work, "driver.json"))
+    return found
 
 
 def run_child(cmd, env, out, start, wall, work, extra=None, clock=time.monotonic, sleep=time.sleep, measure=usage):
     """Start the stage in its own process group, monitor it, write driver.json; return the record."""
     record = {"stage": STAGE, "wall_limit_seconds": wall, "output_limit_bytes": OUTPUT_BYTES, "status": "running",
               "no_automatic_continuation": True, **(extra or {})}
+    # B3 (Codex p4, 30/10): refuse before Popen, write nothing and rename nothing, so earlier paths and bytes stay intact
+    found = preexisting(out, work)
+    if found:
+        return {**record, "status": "failed", "failure": f"output not empty before start: {found}", "exit_code": None,
+                "started": False}
+    blank_existed = os.path.lexists(os.path.join(out, "blanc.json"))
     with open(os.path.join(work, "d3.log"), "w") as f:
         child = subprocess.Popen(cmd, stdout=f, stderr=subprocess.STDOUT, env=env, start_new_session=True)
         failure, peak = monitor(child, start, wall, work, clock, sleep, measure)
     if failure is None and child.returncode != 0:
         failure = f"d3 exit {child.returncode}"
     record.update({"exit_code": child.returncode, "elapsed_s": clock() - start, "failure": failure, "peak": peak,
-                   "status": "failed" if failure else "passed"})
+                   "status": "failed" if failure else "passed", "started": True})
     if failure:
-        refuse_outputs(out)
+        refuse_outputs(out, blank_existed)
     with open(os.path.join(work, "driver.json"), "w") as f:
         json.dump(record, f, indent=2, allow_nan=False)
         f.write("\n")

@@ -93,11 +93,35 @@ class TestMonitor(unittest.TestCase):
         rec = k.run_child([sys.executable, "-c", "raise SystemExit(3)"], dict(os.environ), self.out, 0.0, 1200,
                           self.work, FakeClock(0.0), lambda s: __import__("time").sleep(0.05), calm)
         self.assertEqual((rec["status"], rec["failure"]), ("failed", "a1 exit 3"))
-        Path(self.out, "blanc.json").write_text("{}")
-        rec = k.run_child([sys.executable, "-c", "pass"], dict(os.environ), self.out, 0.0, 1200, self.work,
-                          FakeClock(0.0), lambda s: __import__("time").sleep(0.05), calm)
+        work2 = tempfile.mkdtemp(dir=self.work)
+        out2 = os.path.join(work2, "a1-blanc")
+        cmd = [sys.executable, "-c", "import os, sys; os.mkdir(sys.argv[1]); open(sys.argv[1] + '/blanc.json', 'w')", out2]
+        rec = k.run_child(cmd, dict(os.environ), out2, 0.0, 1200, work2, FakeClock(0.0),
+                          lambda s: __import__("time").sleep(0.05), calm)
         self.assertEqual((rec["status"], rec["failure"], rec["exit_code"]), ("passed", None, 0))
-        self.assertTrue(Path(self.out, "blanc.json").exists())
+        self.assertTrue(Path(out2, "blanc.json").exists())
+
+    def test_preexisting_blank_is_never_touched(self):
+        # B3 reproduced by Codex p4: an earlier blanc.json in the output folder, then a failing run
+        old = b'{"earlier": "reviewed bytes"}'
+        Path(self.out, "blanc.json").write_bytes(old)
+        Path(self.work, "driver.json").write_bytes(b"earlier driver")
+        marker = os.path.join(self.work, "child_started")
+        cmd = [sys.executable, "-c", "import sys; open(sys.argv[1], 'w'); raise SystemExit(1)", marker]
+        rec = k.run_child(cmd, dict(os.environ), self.out, 0.0, 1200, self.work, FakeClock(0.0),
+                          lambda s: None, calm)
+        self.assertEqual((rec["status"], rec["started"]), ("failed", False))
+        self.assertIn("output not empty before start", rec["failure"])
+        self.assertFalse(os.path.exists(marker))
+        self.assertEqual(Path(self.out, "blanc.json").read_bytes(), old)
+        self.assertFalse(Path(self.out, "blanc.REFUSED.json").exists())
+        self.assertEqual(Path(self.work, "driver.json").read_bytes(), b"earlier driver")
+        self.assertEqual(sorted(os.listdir(self.out)), ["blanc.json"])
+        # an earlier driver.json alone (empty output folder) is refused the same way
+        os.remove(os.path.join(self.out, "blanc.json"))
+        rec = k.run_child(cmd, dict(os.environ), self.out, 0.0, 1200, self.work, FakeClock(0.0), lambda s: None, calm)
+        self.assertFalse(rec["started"])
+        self.assertFalse(os.path.exists(marker))
 
     def test_real_usage_reads_this_tree(self):
         Path(self.work, "x.bin").write_bytes(b"0" * 1000)

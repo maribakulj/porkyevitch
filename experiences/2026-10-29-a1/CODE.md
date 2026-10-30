@@ -13,7 +13,7 @@
 - **`scripts/kaggle_a1_run.py`** : pilote CPU, un seul fil, SHA des scripts et des entrées vérifiés ; moniteur global (voir « Plafonds du pilote »).
 - Tests :
   - `tests/test_a1_core.py` (8) : parité E3, tri fermé et optimal pour chaque k (exhaustif), décodeur égal à l'exhaustif avec émission (branche du solveur exercée), PLNE de fermeture seule égal au tri, cas à maximal interdit, π₀ = 1, contrôle par seuil, projection `float32` ;
-  - `tests/test_a1_pilot.py` (7) : moniteur du pilote sur processus et horloges fictifs (voir « Plafonds du pilote ») ;
+  - `tests/test_a1_pilot.py` (8) : moniteur du pilote sur processus et horloges fictifs (voir « Plafonds du pilote ») ;
   - `tests/test_a1_run.py` (4) : E0 et E1 sur données factices, non-régression HiGHS, départages, et étapes `reglage` puis `diagnostic` de bout en bout, avec refus d'un reçu sans le regard de Grok.
 
 ## Deux défauts de HiGHS trouvés par E1 avant tout calcul réel
@@ -61,6 +61,7 @@ maintenant le processus enfant, sur le modèle de `kaggle_gel_run.py` :
 - **Arrêt** : au premier dépassement, SIGTERM au groupe de processus, puis SIGKILL après 10 s. `driver.json` porte `status: failed` et la raison, ainsi que les pics de RAM et de sortie.
 - **Blanc refusé** : un `blanc.json` écrit par un passage échoué est renommé `blanc.REFUSED.json`. L'étape `reglage` ne peut donc pas le trouver, en plus de l'exigence de `BLANK_SHA256` relu.
 - **Fin tardive** : un enfant qui termine normalement mais au-delà du plafond est aussi un échec.
+- **Sortie déjà occupée (B3, Codex p4)** : un dossier de sortie non vide ou un `driver.json` antérieur est refusé **avant** le lancement de l'enfant. Rien n'est écrit ni renommé : les anciens chemins et octets restent intacts. Seul un `blanc.json` créé par le passage échoué peut être renommé. Codex avait reproduit le défaut : un `blanc.json` préexistant était renommé après un échec.
 
 Les limites par PLNE et les critères mathématiques sont inchangés, ainsi que `a1_core.py` et `a1_run.py`. Les tests
 (`tests/test_a1_pilot.py`) exercent tous les cas sans attendre vingt minutes : dépassement de temps avec arrêt du groupe

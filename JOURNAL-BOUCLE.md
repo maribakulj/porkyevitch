@@ -59,3 +59,19 @@
 - 30/10 : D4 maintenue (Grok p7 : aucun chemin de fuite). Test phase 1 attend la relecture des sorties dev par Grok p3.
 - 30/10 : challenge Grok p7 de la note tranche 300 : ne pas préinscrire tel quel ; M0 descriptive sans choix de bras ; juge = 26 Gemini ; consensus Haiku en colonne de fidélité. Contre-expertise Codex p4 en file (n°5) ; décision ensuite.
 - 30/10 : note tranche 300 v2 (pH 75d86b0) : accepte M0 descriptive, juge = 26 Gemini, pas de porte d'achat sur +0,05, relations exclues ; option passe Gemini sur les 60 (juge à 86 images) : avis wA:p1 favorable, décision après Codex p4.
+- 30/10 : diff reçu P9-A (9044582) : feu vert Grok p2 ; devis reste sur e08881c5 ; étapes suivantes 789a1f3b après Codex.
+- 30/10 : feu vert Grok p3 (sorties dev + reçu) ; conditions de Codex p4 remplies (relecture des sorties dev, 7 planches, reçu à deux regards) ; étape TEST de la phase 1 lancée (pilote identique au dev sauf STAGE).
+- 30/10 : règle O/A/E écrite par Grok p3 ; troisième regard à l'aveugle des 47 désaccords confié à Gemini p8.
+- 30/10 : M0 descriptif : feu vert Grok p2 (9950825f) ; attend audit p4 (ajouté à sa file).
+- 30/10 : revue littérature étiquettes manquantes (Grok p7) : publier l'audit en trois comptes, pas de F1 corrigé par propension ; Hill = candidat ultérieur. Test phase 1 relancé (dataset porky-mesure-entree introuvable côté Kaggle → porky-mesure-test-entree).
+- 30/10 : Kaggle supprime les jeux de données contenant les images des planches (3 fois) ; amendement du pilote (archive .bin épinglée) demandé à pH ; aucun calcul de test n'a eu lieu (pilote arrêté au contrôle d'entrée, 2 fois).
+- 30/10 : comptage des négatifs (feu vert Grok p7, descriptif 1 s) : 2428 paires négatives Gemini, 269 comparables (deux objets appariés à S1b), 9 affirmées par S1b (3,3 %) ; seule 11 % des négatives sont comparables (appariement objets faible).
+- 30/10 : amendement pilote : feu vert Grok p2 (STAGE=test → e8949b6a) ; test attend l'audit Codex p4 (priorité 0 de sa file, retour ~6:40).
+- 30/10 : avis baselines production (Grok p7) : ajouter YOLOE-v8-S au protocole T4 du petit élève ; débits publiés non repris ; contre-expertise Codex en file (n°7) avant amendement.
+- 30/10 : Codex p4 FEU VERT amendement pilote (e8949b6a, archive 8281e581) ; étape TEST phase 1 lancée (dataset porky-mesure-bin).
+- 30/10 : Codex FEU VERT devis P9-A graine 0 (e08881c5) ; préparation du lancement demandée à pH. Petit élève smoke : dataset téléversé.
+- 30/10 : Codex : A1 texte FEU VERT ; blanc BLOQUÉ (B1 pas de moniteur global, B2 manifeste périmé) → pH ; repro HiGHS confirmée.
+- 30/10 : devis P9-A lancé (T4, graine 0, config 985af6fa) ; D3 texte FEU VERT Codex, blanc à corriger (moniteur, T4 exigé) → pH.
+- 30/10 : devis P9-A ÉCHOUÉ (nonfinite gradients dans update, 184 s) → diagnostic pH.
+- 30/10 : petit élève smoke OK (overfit passed, 27,5 img/s) ; Florence-2 indisponible (transformers) ; relecture des sorties par Grok p3. M0 fait : Dice conjoint 0,596, IoU seul 0,657, accord catégories 0,891, relations 0,537.
+- 30/10 : PHASE 1 CLOSE : aucune brique retenue (verdicts commités) ; vérification Grok p3 + audit Codex demandés. D8 (YOLOE-v8-S ajouté). B3 A1/D3 en relecture.

@@ -18,7 +18,7 @@
   - bootstrap par groupes.
 - **`scripts/d3_run.py`** : étapes `blanc` et `complet`. Les voisins sont calculés en numpy float32 **sur CPU** (dérogation déclarée, voir « Correctifs du 30/10 »), la tête des enfants en torch sur **un T4 exigé**.
 - **`scripts/kaggle_d3_run.py`** : pilote T4, SHA des scripts et des entrées vérifiés ; T4 et torch exigés et journalisés ; moniteur global.
-- **`tests/test_d3_pilot.py`** (5 tests) : moniteur du pilote sur processus et horloges fictifs.
+- **`tests/test_d3_pilot.py`** (6 tests) : moniteur du pilote sur processus et horloges fictifs.
 - **`tests/test_d3.py`** (13 tests, torch CPU, sous le drapeau de test local) :
   - parité E3 ;
   - profondeur et parent ;
@@ -36,6 +36,7 @@
 
 **Blanc (B1).**
 - **Plafond de session.** Le pilote appelait `subprocess.run` sans délai, et `WITHIN_2H` n'était qu'une extrapolation. Il surveille maintenant l'enfant, sur le modèle de `kaggle_gel_run.py` : 7 200 s par étape (§5 : une session T4 de 2 h au plus), comptées depuis le départ du pilote ; sorties sous `/kaggle/working` < 200 Mo ; RAM disponible ≥ 512 Mio et disque libre ≥ 256 Mio. Aucun plafond de RAM n'est préinscrit : c'est une garde de machine, et le pic est publié. Au premier dépassement, le groupe de processus est arrêté et `driver.json` vaut `failed`. Un `blanc.json` écrit par un passage échoué est renommé `blanc.REFUSED.json`. Une fin normale mais tardive est aussi un échec. L'époque et les supports ne sont pas modifiés.
+- **Sortie déjà occupée (même faille que le B3 d'A1, Codex p4)** : un dossier de sortie non vide ou un `driver.json` antérieur est refusé avant le lancement de l'enfant. Rien n'est écrit ni renommé, et seul un `blanc.json` créé par le passage échoué peut être renommé.
 - **Dispositif.** Plus de repli silencieux sur CPU. Le pilote exige un T4 avant de lancer l'enfant et journalise torch, CUDA et le nom du GPU. `d3_run.device()` refuse aussi tout autre dispositif. Le seul CPU possible passe par le drapeau explicite des tests locaux, `D3_CPU_FOR_LOCAL_TESTS`, que le pilote retire de l'environnement de l'enfant. `blanc.json` publie `environment` (dispositif, GPU, python, numpy, scipy, torch, CUDA, voisins). Le complet refuse un blanc relu dont l'environnement diffère.
 - **Voisins sur CPU, dérogation déclarée.** La préinscription (§5) annonçait les voisins en float32 sur GPU. Le code les calcule en numpy float32 sur CPU, par blocs de 256 lignes. Le temps du blanc se rapporte donc à ce calcul, ce qui est écrit dans `blanc.json`. Une version GPU serait de nouveaux octets à relire.
 
