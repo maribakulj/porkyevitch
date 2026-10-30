@@ -85,3 +85,11 @@ Les pilotes qui citent un chemin /kaggle/input/…/porky-… doivent être amend
 Précision (Marcel, 30/10) : la cause exacte n'est pas sûre ; le nom « porky » est probable, mais les images de nus dessinés
 ont pu jouer aussi. Double prudence : noms pkyevitch-* ET images de planches ou d'évaluation potentiellement sensibles
 transmises dans une archive .bin épinglée (que Kaggle n'ouvre pas), comme pour la mesure de la phase 1.
+
+## D12 (30/10/2026) : audit de remplacement quand Codex est indisponible (accord de Marcel)
+
+Quand Codex p4 n'a plus de crédits (ou ne répond pas), l'audit final avant lancement est fait par un Grok qui n'a PAS fait la
+première relecture de ces octets (p7 ou p3 selon disponibilité), avec la même exigence (rapport, FEU VERT ou BLOCAGE, pins).
+Le lancement peut alors partir. À son retour, Codex contre-vérifie ces audits AVANT que les résultats servent à une décision,
+une publication ou une étape suivante. Pendant une indisponibilité, la boucle avance aussi sur tout ce qui ne demande pas
+d'audit (dossiers de lancement, préinscriptions, rédaction).

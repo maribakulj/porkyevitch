@@ -75,3 +75,8 @@ remplace un appel de modèle.
 4. Tracer : `JOURNAL-BOUCLE.md` (une ligne par action), `DECISIONS.md` ; commits et poussées sur `travail`.
 5. Informer Marcel seulement aux jalons, aux décisions importantes, ou quand il doit agir (connexion, /login).
 6. Choisir le délai du prochain réveil selon ce qu'on attend (calcul Kaggle : sa durée ; relectures : 10-20 min ; rien : 20-30 min).
+
+
+## Codex indisponible (D12, 30/10/2026)
+
+Audit de remplacement par un Grok qui n'a pas fait la première relecture ; lancement possible ; contre-vérification de Codex à son retour, avant tout usage des résultats. Ne jamais passer un réveil à seulement attendre : avancer sur ce qui ne demande pas d'audit.
