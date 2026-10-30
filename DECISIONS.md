@@ -93,3 +93,11 @@ première relecture de ces octets (p7 ou p3 selon disponibilité), avec la même
 Le lancement peut alors partir. À son retour, Codex contre-vérifie ces audits AVANT que les résultats servent à une décision,
 une publication ou une étape suivante. Pendant une indisponibilité, la boucle avance aussi sur tout ce qui ne demande pas
 d'audit (dossiers de lancement, préinscriptions, rédaction).
+
+## D13 (30/10/2026) : relectures par sous-agents Sonnet (Marcel)
+
+Marcel juge les Grok lents et inadaptés à la relecture. Désormais, **toutes les relectures** (code, diffs, sorties, regards
+de planches) sont faites par des **sous-agents Sonnet** lancés par wA:p1 (Agent, model=sonnet), indépendants, avec un brief
+complet et un rapport écrit dans ~/Documents/reviews/porkyevitch-*-sonnet.md. L'audit final de Codex p4 avant lancement reste
+inchangé (D12 : si Codex est indisponible, un second sous-agent Sonnet indépendant fait l'audit de remplacement). Les Grok
+ne relisent plus ; leurs rôles sont à réaffecter (littérature, challenger).
