@@ -1,0 +1,46 @@
+{
+  "seed": 0,
+  "verdicts": {
+    "F": {
+      "verdict": "non_retenue",
+      "delta_H": 0.004275323914703755,
+      "delta_E": 1.6319546065290957e-05,
+      "delta_F_R": -0.002626769957704639,
+      "alpha": 0.25
+    },
+    "controle_global": {
+      "verdict": "non_retenue",
+      "delta_H": 0.0019231254118705632,
+      "delta_E": -0.007865925732102541,
+      "delta_F_R": -0.0023390340546902005,
+      "alpha": 0.25
+    },
+    "A": {
+      "verdict": "non_retenue",
+      "delta_H": 0.0015359840851054685,
+      "delta_E": -0.007342881967799142,
+      "delta_F_R": -0.0031510269629199256,
+      "alpha": 0.25
+    },
+    "C": {
+      "verdict": "non_retenue",
+      "delta_H": 0.0017894776098126286,
+      "delta_E": -0.005387370442344608,
+      "delta_F_R": -0.0026240368429516353,
+      "alpha": 0.25
+    }
+  },
+  "mechanism": {
+    "general_local_nesting_supported": false,
+    "rare_local_nesting_supported": false,
+    "A_minus_G_H_Vdiag": -0.000280542135998596,
+    "A_minus_G_F_R_Vdiag": -0.0006867935689009869,
+    "A_minus_F_H_Vdiag": -0.0026013371403371677,
+    "A_minus_C_H_Vdiag": 0.0003937553329900201,
+    "rare_positive_occurrences_Vdiag": 948,
+    "reading": "A beating F but not G is a hierarchical recipe, not local nesting; CSRA better is said"
+  },
+  "exploratory": true,
+  "rules": "preregistration 9.1-9.3",
+  "gel_sha256": "13f75f3acfb890724d6463e30c66ae6437e9d6f7c2e95161641623272be50101"
+}

@@ -1,0 +1,49 @@
+{
+  "stage": "mesures",
+  "seed": 0,
+  "config_sha256": "fd324d144a625885f47f5b856b438601417e25d711b09152584a5dbbde780a2b",
+  "source_manifest_sha256": "e4023b8d3b861e97e08e733819bf050105ad5859e87bf1d4ce6ba19fcde2ff5c",
+  "versions": {
+    "torch": "2.11.0+cu128",
+    "huggingface-hub": "1.29.0",
+    "Pillow": "13.0.0",
+    "scipy": "1.16.3",
+    "numpy": "2.1.3",
+    "psutil": "5.9.5",
+    "tokenizers": "0.23.1",
+    "safetensors": "0.8.0",
+    "pyarrow": "23.0.1",
+    "transformers": "5.16.1"
+  },
+  "python": "3.13.15",
+  "approval": {
+    "grok_p2_report": "porkyevitch-p9a-mesures-audit-sonnet.md (relecture Sonnet, D13) ; regards wA:p1 + Grok p7",
+    "codex_p4_report": "porkyevitch-p9a-mesures-audit-sonnet.md (audit Sonnet de remplacement, D12) ; contre-v\u00e9rification Codex \u00e0 faire",
+    "slot_granted_by": "wA:p1",
+    "slot_id": "p9a-mesures-0-2026-10-30",
+    "seeds_1_2_decision": null
+  },
+  "wall_limit_seconds": 7200,
+  "status": "passed",
+  "no_automatic_continuation": true,
+  "exit_code": 0,
+  "elapsed_s": 175.92499799,
+  "failure": null,
+  "monitor_samples": [
+    {
+      "elapsed_s": 5.884267389999991,
+      "aggregate_rss_bytes": 839680,
+      "output_bytes": 19053
+    },
+    {
+      "elapsed_s": 65.89997286599998,
+      "aggregate_rss_bytes": 4775784448,
+      "output_bytes": 60265
+    },
+    {
+      "elapsed_s": 125.91281835299998,
+      "aggregate_rss_bytes": 11542048768,
+      "output_bytes": 126145
+    }
+  ]
+}
