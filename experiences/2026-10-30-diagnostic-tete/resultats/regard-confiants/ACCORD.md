@@ -12,3 +12,13 @@ Les deux regards s'accordent sur l'essentiel : **74 à 88 % de ces prédictions 
 de 12 à 26 %. Le F1 brut pénalise donc à tort la majorité de ces prédictions ; la part d'oublis *précis* va de 29 à 61 % selon le
 juge. Ce n'est pas un score ; une mesure corrigée exigerait une règle de catégorie écrite d'avance et un troisième regard sur les
 désaccords.
+
+## Troisième regard (Gemini wA:p8, 30/10), sur les 47 désaccords, à l'aveugle
+
+Règle écrite d'avance par Grok wA:p3 (`~/Documents/reviews/porkyevitch-regle-OAE-grok.md`), sans accès aux deux regards.
+Sur les 47 : O 2, A 30, E 15 ; d'accord avec Grok sur 39, avec wA:p1 sur 5, avec aucun sur 3.
+**Comptes arbitrés (accord des deux premiers regards, sinon troisième regard) : O 29, A 46, E 25 → 75 % de prédictions vraies.**
+Réserves : la règle est celle du juge le plus strict, ce qui pousse l'arbitre vers lui ; les justifications de Gemini citent
+surtout les clauses de la règle, et la lecture effective de chaque image n'a pas été contrôlée dans ses journaux.
+Lecture pour l'article : un quart des prédictions sûres « fausses » sont de vraies erreurs ; trois quarts sont vraies, dont
+environ 30 % d'oublis précis du catalogueur.
