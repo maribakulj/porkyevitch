@@ -1,0 +1,55 @@
+{
+  "seed": 0,
+  "rule": "max H on V-reglage; ties alpha, epoch, theta",
+  "reference_H_Vreg": 0.5908485695207462,
+  "arms": {
+    "F": {
+      "chosen": {
+        "alpha": 0.25,
+        "epoch": 7,
+        "theta": 0.6,
+        "H_Vreg": 0.5956433689925033
+      },
+      "candidates": 571,
+      "weights_sha256": "80f0cc9614969cb662105894e0b1e26cf4d07512ea6b31c583578d32e8dde9cb"
+    },
+    "controle_global": {
+      "chosen": {
+        "alpha": 0.25,
+        "epoch": 8,
+        "theta": 0.6,
+        "H_Vreg": 0.5932582347431816
+      },
+      "candidates": 571,
+      "weights_sha256": "db0820e21f6d894b3e7265a39815e185028b816ec358c912f0d2f4106f626d65"
+    },
+    "A": {
+      "chosen": {
+        "alpha": 0.25,
+        "epoch": 10,
+        "theta": 0.6,
+        "H_Vreg": 0.5927592930090954
+      },
+      "candidates": 571,
+      "weights_sha256": "4e0d828b0c48f0e5f13f1cfab31eaf5238f55e51bd178df8ad05f41a05ef9b60"
+    },
+    "C": {
+      "chosen": {
+        "alpha": 0.25,
+        "epoch": 10,
+        "theta": 0.6,
+        "H_Vreg": 0.5936916161328659
+      },
+      "candidates": 571,
+      "weights_sha256": "4525c88d2c34d7a2ce9c2e29eccfdc6392e0502b5947e356bae5332d196f558c"
+    }
+  },
+  "identity": {
+    "seed": 0,
+    "data_sha256": "82f8caf1e4703fdc9530a04f8358968da3c69f9b78191c984fccbaa49bb9c7b3",
+    "permutations_sha256": "b3bf9042eeef8015d7cea439a8a1a79890cd4d10365c73d7245fef44b4ba6073",
+    "preparation_sha256": "b16b06d1a84fbedc175b0bb7b326be18d302dd65a7313c97c71c803a3b607b46",
+    "prereg_sha256": "25f1040f5b657d7b94896cba41852f59c2f6e3042a555f798c126ca8698d3585",
+    "micro": 64
+  }
+}
