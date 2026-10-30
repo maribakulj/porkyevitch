@@ -1,4 +1,4 @@
-"""VLM comparison, step 1 (PREINSCRIPTION-v2.3.md section 6): samples, images, truths, B and T* references, identity
+"""VLM comparison, step 1 (PREINSCRIPTION-v2.4.md section 6): samples, images, truths, B and T* references, identity
 controls, call plan and preparation seal. No model call, no score of a VLM.
 
 Reads only validation rows of the ICAI train shards (never data/test-*), the "dev" member of the Rijksmuseum frozen bank
@@ -33,6 +33,7 @@ SEAL_SHA256 = "3c468faa7bec5ac7a98104a4ac47d3f7be24ec9ef76e0855f49b42aad12fad0c"
 THRESHOLDS = {"B_TZ": 0.65, "T_star": 0.6}
 VDIAG_B_H = 0.5860487335040372  # a1/resultats/diagnostic/diagnostic.json H.B (6adb2404), on the 2100 evaluable rows
 DEV_H = {"T-Z": 0.4190608607340926, "T_star": 0.42054172423289}  # a1-dev-rijks/resultats/dev.json H (3cc297f4)
+LISTES_SHA256 = "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af"  # pe_kaggle.py, as committed (v2.4)
 DEV_KEY = b'\n "dev": '
 PINNED = {"a1_core.py": "177ef54243fd6dfed0aa557561aa365f41b2c992379aef6d4fab4c5e27ab205a",
           "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"}
@@ -227,6 +228,7 @@ def download(row, last=[0.0]):
 # ---------------------------------------------------------------- petit élève evaluation images
 def pe_evaluation(pe, out_dir):
     pe = Path(pe)
+    require(sha(pe / "listes.json") == LISTES_SHA256, "pe_listes_not_the_approved_file")  # v2.4, Codex note 1
     listes = json.loads((pe / "listes.json").read_text())
     rows = [r for r in listes["evaluation"] if r.get("gemini_graph_sha256")]
     require(len(rows) == 26, "pe_26_evaluation_graphs")
@@ -311,7 +313,7 @@ def main(a):
               "truth": it["truth_projected"], "group": str(it["component"]), "B": sealed["T-Z"][i],
               "T_star": sealed["T_star"][i]} for i, it in enumerate(items)]
     calls = plan_calls([x["key"] for x in icai], [x["key"] for x in rijks], opus, repeat, [x["name"] for x in pe])
-    prep = {"preinscription": "PREINSCRIPTION-v2.3.md", "models": vc.MODELS, "seed": vc.SEED, "seed_repeat": vc.SEED_REPEAT,
+    prep = {"preinscription": "PREINSCRIPTION-v2.4.md", "models": vc.MODELS, "seed": vc.SEED, "seed_repeat": vc.SEED_REPEAT,
             "vocabulary": vocab, "prompts_sha256": vc.prompts_sha256(vocab),
             "code_sha256": {n: sha(HERE / n) for n in CODE},
             "banks": {"icai_vdiag": icai, "rijks_dev": rijks, "pe_eval": pe},

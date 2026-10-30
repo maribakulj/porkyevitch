@@ -21,6 +21,8 @@ import vlm_core as vc  # noqa: E402
 import vlm_measure as vm  # noqa: E402
 import vlm_prepare as prep  # noqa: E402
 
+call.cli_versions = lambda: {"claude": "test", "agy": "test"}  # never run the real CLIs in tests
+
 VOCAB_FILE = Path.home() / "porkyevitch-donnees/sauvegardes-kaggle/porky-diag-run/diag-full/vocabulaire.json"
 VOCAB = ["1", "11", "11H", "11H(JEROME)", "2", "25", "25F", "25F2", "31A", "31A2"]
 
@@ -88,12 +90,21 @@ def claude_stream(image, read_path=None, text='{"codes": ["11H"]}', stop="end_tu
     return "\n".join(json.dumps(e) for e in ev)
 
 
-def agy_db(history, cid, opened):
+CID1, CID2 = "11111111-1111-1111-1111-111111111111", "22222222-2222-2222-2222-222222222222"
+
+
+def read_step(path, mime=b"image/jpeg", step_type=132, status=3, error=None):
+    """A read result row as agy logs it: tool call on the path (compact JSON) and the image payload."""
+    call_ = b"\x0bview_file\x1a" + json.dumps({"AbsolutePath": str(path)}, separators=(",", ":")).encode()
+    return (step_type, status, error, call_ + b"\x12" + mime + b"\x22<bytes>")
+
+
+def agy_db(history, cid, rows):
+    """rows: (step_type, status, error_details, payload) as in agy's steps table."""
     history.mkdir(parents=True, exist_ok=True)
     with sqlite3.connect(history / f"{cid}.db") as con:
-        con.execute("CREATE TABLE steps (step_payload BLOB)")
-        for p in opened:
-            con.execute("INSERT INTO steps VALUES (?)", (json.dumps({"view_file": {"AbsolutePath": str(p)}}, separators=(",", ":")).encode(),))  # agy's compact form
+        con.execute("CREATE TABLE IF NOT EXISTS steps (step_type INTEGER, status INTEGER, error_details TEXT, step_payload BLOB)")
+        con.executemany("INSERT INTO steps VALUES (?, ?, ?, ?)", rows)
 
 
 class CallerParsingTest(unittest.TestCase):
@@ -115,18 +126,50 @@ class CallerParsingTest(unittest.TestCase):
 
     def test_agy_sqlite_guard(self):
         hist = self.d / "hist"
-        agy_db(hist, "c1", [self.img.resolve()])
-        env = json.dumps({"response": '{"codes": ["2"]}', "status": "SUCCESS", "usage": {"t": 1}, "conversation_id": "c1"})
+        agy_db(hist, CID1, [read_step(self.img.resolve())])
+        env = json.dumps({"response": '{"codes": ["2"]}', "status": "SUCCESS", "usage": {"t": 1}, "conversation_id": CID1})
         p = vc.parse_agy(env, self.img, hist)
         self.assertTrue(p["image_read"])
         self.assertEqual(vc.agy_state("codes", p), ("reponse", ["2"]))
-        agy_db(hist, "c2", [self.d / "other.jpg"])
-        p2 = vc.parse_agy(env.replace("c1", "c2"), self.img, hist)
+        agy_db(hist, CID2, [read_step(self.d / "other.jpg")])
+        p2 = vc.parse_agy(env.replace(CID1, CID2), self.img, hist)
         self.assertEqual(vc.agy_state("codes", p2)[0], "image_non_lue")
-        p3 = vc.parse_agy(json.dumps({"response": "partiel", "status": "ERROR", "conversation_id": "c1"}), self.img, hist)
+        p3 = vc.parse_agy(json.dumps({"response": "partiel", "status": "ERROR", "conversation_id": CID1}), self.img, hist)
         self.assertEqual(vc.agy_state("codes", p3)[0], "echec_technique")
-        p4 = vc.parse_agy(json.dumps({"response": "", "status": "BLOCKED", "conversation_id": "c1"}), self.img, hist)
+        p4 = vc.parse_agy(json.dumps({"response": "", "status": "BLOCKED", "conversation_id": CID1}), self.img, hist)
         self.assertEqual(vc.agy_state("codes", p4)[0], "refus")
+
+
+class AgyImageProofTest(unittest.TestCase):
+    """Codex B1 (30/10): only a successful read result on the exact path with image bytes proves the image was shown."""
+    def setUp(self):
+        self.d = Path(tempfile.mkdtemp())
+        self.img = self.d / "a.jpg"
+        self.img.write_bytes(b"jpg")
+        self.env = json.dumps({"response": '{"codes": ["2"]}', "status": "SUCCESS", "conversation_id": CID1})
+
+    def state(self, rows):
+        hist = Path(tempfile.mkdtemp())
+        agy_db(hist, CID1, rows)
+        return vc.agy_state("codes", vc.parse_agy(self.env, self.img, hist))[0]
+
+    def test_codex_counterexamples_are_refused(self):
+        mention = (15, 3, None, json.dumps({"AbsolutePath": str(self.img)}, separators=(",", ":")).encode())
+        self.assertEqual(self.state([mention]), "image_non_lue")
+        failed = read_step(self.img.resolve(), status=2, error="failed")
+        self.assertEqual(self.state([failed]), "image_non_lue")
+        self.assertEqual(self.state([read_step(self.img.resolve(), mime=b"text/plain")]), "image_non_lue")
+        self.assertEqual(self.state([read_step(self.img.resolve(), step_type=15)]), "image_non_lue")
+        self.assertEqual(self.state([read_step(self.d / "b.jpg")]), "image_non_lue")
+
+    def test_successful_image_read_is_accepted(self):
+        self.assertEqual(self.state([read_step(self.img.resolve())]), "reponse")
+        self.assertEqual(self.state([read_step(self.img.resolve(), mime=b"image/png")]), "reponse")
+
+    def test_bad_or_absent_conversation_is_no_proof(self):
+        hist = Path(tempfile.mkdtemp())
+        self.assertFalse(vc.image_shown("not-a-uuid", self.img, hist))
+        self.assertFalse(vc.image_shown(CID2, self.img, hist))
 
 
 class SampleTest(unittest.TestCase):
@@ -166,6 +209,15 @@ class PrepareGuardsTest(unittest.TestCase):
                          sha(Path.home() / "porkyevitch/experiences/2026-10-29-a1/scripts/a1_core.py"))
         self.assertEqual(sha(ROOT / "scripts/pe_common.py"),
                          sha(Path.home() / "porkyevitch/experiences/2026-10-30-petit-eleve/scripts/pe_common.py"))
+
+    def test_pe_listes_pinned(self):
+        listes = Path.home() / "porkyevitch-donnees/petit-eleve/upload/listes.json"
+        if listes.exists():
+            self.assertEqual(sha(listes), prep.LISTES_SHA256)
+        d = Path(tempfile.mkdtemp())
+        (d / "listes.json").write_text("{}")
+        with self.assertRaises(SystemExit):
+            prep.pe_evaluation(d, d / "out")
 
     def test_never_a_test_shard(self):
         self.assertTrue(prep.shard_path("train-00003-of-00011").endswith("data/train-00003-of-00011.parquet"))
@@ -220,7 +272,7 @@ def fake_prep(root, n_dev=6):
         (root / "images" / x["image"]).write_bytes(x["key"].encode())
     opus, repeat = [x["key"] for x in rijks[:4]], [x["key"] for x in rijks[:2]]
     calls = prep.plan_calls([x["key"] for x in icai], [x["key"] for x in rijks], opus, repeat, [x["name"] for x in pe])
-    p = {"preinscription": "PREINSCRIPTION-v2.3.md", "vocabulary": VOCAB, "prompts_sha256": vc.prompts_sha256(VOCAB),
+    p = {"preinscription": "PREINSCRIPTION-v2.4.md", "vocabulary": VOCAB, "prompts_sha256": vc.prompts_sha256(VOCAB),
          "code_sha256": {n: sha(ROOT / "scripts" / n) for n in prep.CODE},
          "banks": {"icai_vdiag": icai, "rijks_dev": rijks, "pe_eval": pe},
          "samples": {"opus": opus, "repeat": repeat, "vdiag_groups_order": [["m0", 2], ["m1", 2]]},
@@ -234,7 +286,7 @@ def scripted(answers, delay=0.0, probe=None):
     """attempt_fn returning, per call id, the next scripted (state, payload, cost); probe tracks concurrency."""
     seen = {}
 
-    def fn(spec, image, vocab, history):
+    def fn(spec, image, vocab, history, **kw):
         k = seen.get(spec["id"], 0)
         seen[spec["id"]] = k + 1
         if probe is not None:
@@ -267,6 +319,11 @@ class Probe:
             self.now[self._k(system)] -= 1
 
 
+def results(root, stage):
+    return [r for r in (json.loads(l) for l in (root / f"journal/{stage}.jsonl").read_text().splitlines())
+            if r.get("phase") == "result"]
+
+
 OK = lambda spec, k: ("reponse", [[0, 0, 100, 100]] if spec["kind"] == "boites" else ["25F"], 0.001)  # noqa: E731
 
 
@@ -284,7 +341,7 @@ class StageTest(unittest.TestCase):
         self.s0()
         st = call.stage_run(self.root, "S1", ("H", "G", "O"), attempt_fn=scripted(OK))
         self.assertTrue(st["complete"])
-        order = [call.S1_BLOCKS.index(json.loads(l)["block"]) for l in (self.root / "journal/S1.jsonl").read_text().splitlines()]
+        order = [call.S1_BLOCKS.index(r["block"]) for r in results(self.root, "S1")]
         self.assertEqual(order, sorted(order))  # dev, then Opus, then V-diagnostic, then graphs
         self.assertFalse(json.loads((self.root / "plan_S1.json").read_text())["reduced"])
 
@@ -316,7 +373,7 @@ class StageTest(unittest.TestCase):
         finally:
             vc.BUDGET_USD = old
         self.assertEqual(st["stopped_by"], "budget Claude")
-        recs = [json.loads(l) for l in (self.root / "journal/S0.jsonl").read_text().splitlines()]
+        recs = results(self.root, "S0")
         planned_g = sum(c["system"] == "G" for c in json.loads((self.root / "prep.json").read_text())["calls"]["S0"])
         g_final = {r["id"] for r in recs if r["system"] == "G"}
         self.assertEqual(len(g_final), planned_g)  # Gemini goes on
@@ -340,7 +397,7 @@ class StageTest(unittest.TestCase):
     def test_extrapolation_reduces_vdiag_only(self):
         self.s0(lambda s, k: ("reponse", ["25F"], 0.5) if s["system"] in vc.CLAUDE_SYSTEMS else OK(s, k))
         sizes = {"n_dev": 6, "n_repeat": 2, "n_graphs": 2, "n_opus": 4}
-        s0 = [json.loads(l) for l in (self.root / "journal/S0.jsonl").read_text().splitlines()]
+        s0 = results(self.root, "S0")
         spent = sum(r["budget_charge_usd"] or 0 for r in s0)
         full = vc.plan_s1(s0, sizes, [("m0", 2), ("m1", 2)], spent, budget=100.0)
         self.assertFalse(full["reduced"])
@@ -370,7 +427,8 @@ class StageTest(unittest.TestCase):
         call.stage_run(self.root, "R", ("H", "G"), attempt_fn=scripted(answers))
         rec = self.root / "recu.json"
         good = {"journals_sha256": {s: sha(self.root / f"journal/{s}.jsonl") for s in ("S1", "R")},
-                "status_S1_sha256": sha(self.root / "status_S1.json"), "regards": ["wA:p1", "sonnet"]}
+                "status_S1_sha256": sha(self.root / "status_S1.json"), "status_R_sha256": sha(self.root / "status_R.json"),
+                "regards": ["wA:p1", "sonnet"]}
         args = type("A", (), {"prep": str(self.root), "receipt": str(rec)})
         for bad in ({**good, "status_S1_sha256": "bad"}, {**good, "regards": ["wA:p1", "wA:p1"]}):
             rec.write_text(json.dumps(bad))
@@ -392,10 +450,122 @@ class StageTest(unittest.TestCase):
         self.assertEqual(dev["systems"]["H"]["chains"], {"valide": 6, "hors_V": 6, "invalide": 6})
         self.assertIn("q1_25", m["family_dev_vs_T_star"]["H"])
         self.assertEqual(m["family_dev_vs_T_star"]["H"]["reading"], "dépasse T* sur le dev, en accord de catalogue")
+        self.assertTrue(m["family_dev_vs_T_star"]["H"]["reading_valid"])
         self.assertEqual(m["icai_vdiag"]["images"], 4)
         self.assertEqual(m["graphs"]["H"]["recall_at_30_vs_gemini"], 1.0)
         self.assertEqual(m["repeatability"]["H"]["jaccard_mean"], 1.0)
         self.assertIn("absent ici", m["costs_and_time"]["fast_model"])
+
+
+class CodexB3B4Test(unittest.TestCase):
+    """Codex B3/B4 (30/10): durable starts and resumption; caps read once the slot is held."""
+    def setUp(self):
+        self.root = Path(tempfile.mkdtemp())
+        self.prep = fake_prep(self.root)
+        self.spec = next(c for c in self.prep["calls"]["S0"] if c["system"] == "H")
+
+    def test_interrupted_call_is_durable_counted_and_charged(self):
+        journal = call.Journal(self.root, "S0")
+        caps = call.Caps(self.root, "S0", 19, journal)
+
+        def interrupted(*a, **kw):
+            raise RuntimeError("interruption fictive après envoi")
+        with self.assertRaises(RuntimeError):
+            call.worker([self.spec], self.prep, self.root, journal, caps, None, interrupted)
+        again = call.Journal(self.root, "S0")
+        self.assertEqual((len(again.starts), len(again.records)), (1, 0))  # the start survived on disk
+        resumed = call.Caps(self.root, "S0", 19, again)
+        self.assertEqual(resumed.spent, vc.UNKNOWN_CHARGE_USD)  # never free: prudent charge before any cost is known
+        call.close_orphans(again, resumed)
+        self.assertEqual(again.records[0]["state"], "interrompu")
+        self.assertEqual(call.claude_spent(self.root), vc.UNKNOWN_CHARGE_USD)  # written once, not counted twice
+        seen = scripted(OK)
+        call.worker([self.spec], self.prep, self.root, again, resumed, None, seen)
+        self.assertEqual(seen.seen[self.spec["id"]], 1)  # one new attempt, numbered 1, nothing overwritten
+        self.assertEqual([s["attempt"] for s in again.starts], [0, 1])
+        self.assertTrue(again.final(self.spec["id"]))
+
+    def test_waiting_call_does_not_start_after_the_budget(self):
+        journal = call.Journal(self.root, "S0")
+        caps = call.Caps(self.root, "S0", 19, journal)
+        for _ in range(vc.CLAUDE_IN_FLIGHT):
+            caps.claude_slots.acquire()  # three calls already in flight
+        starts = []
+
+        def attempt(spec, image, vocab, history, **kw):
+            starts.append(caps.spent)
+            return {"state": "reponse", "payload": [], "seconds": 0, "timed_out": False, "raw": "{}", "cost_usd": 0.1,
+                    "image_read": True}
+        t = threading.Thread(target=call.worker, args=([self.spec], self.prep, self.root, journal, caps, None, attempt))
+        t.start()
+        time.sleep(0.2)  # the worker waits for a slot
+        caps.spent = vc.BUDGET_USD  # the calls in flight end and exhaust the budget
+        for _ in range(vc.CLAUDE_IN_FLIGHT):
+            caps.claude_slots.release()
+        t.join(5)
+        self.assertFalse(t.is_alive())
+        self.assertEqual(starts, [])
+        self.assertEqual(journal.starts, [])
+        self.assertEqual(caps.stopped_by(), "budget Claude")
+
+    def test_attempt_cap_is_reserved_atomically(self):
+        """Codex B4 residual (30/10): 21 durable starts, cap 22, three workers that all pass the image check together:
+        exactly one call is sent."""
+        specs = prep.plan_calls([], ["r0", "r1", "r2", "r3", "r4"], ["r0", "r1", "r2", "r3", "r4"], [],
+                                ["p000", "p001"])["S0"]
+        journal = call.Journal(self.root, "S0")
+
+        def result(state):
+            return {"state": state, "payload": [], "seconds": 0, "timed_out": False, "raw": "{}", "cost_usd": 0.001,
+                    "budget_charge_usd": 0.001, "image_read": True}
+        for i, spec in enumerate(specs[:16]):
+            if i < 5:
+                journal.result(journal.start(spec), result("echec_technique"))
+            journal.result(journal.start(spec), result("reponse"))
+        caps = call.Caps(self.root, "S0", 19, journal)
+        self.assertEqual((len(journal.starts), caps.max_attempts), (21, 22))
+        barrier, original, sent = threading.Barrier(3), call.image_path, []
+
+        def delayed_image(*a):
+            barrier.wait(timeout=3)  # the three workers are past the image check together
+            return original(*a)
+
+        def fake(spec, image, vocab, history, **kw):
+            sent.append(spec["id"])
+            return result("reponse")
+        call.image_path = delayed_image
+        try:
+            threads = [threading.Thread(target=call.worker, args=([s], self.prep, self.root, journal, caps, None, fake))
+                       for s in specs[16:]]
+            for th in threads:
+                th.start()
+            for th in threads:
+                th.join(5)
+        finally:
+            call.image_path = original
+        self.assertEqual((len(sent), len(journal.starts)), (1, 22))
+        self.assertEqual(caps.stopped_by(), "plafond d'essais")
+
+    def test_gates_need_all_systems_and_versions_are_logged(self):
+        call.stage_run(self.root, "S0", ("H", "G"), attempt_fn=scripted(OK))  # O missing
+        with self.assertRaises(SystemExit):
+            call.stage_run(self.root, "S1", ("H", "G", "O"), attempt_fn=scripted(OK))
+        call.stage_run(self.root, "S0", ("H", "G", "O"), attempt_fn=scripted(OK))
+        call.stage_run(self.root, "S1", ("H", "G"), attempt_fn=scripted(OK))  # O missing
+        with self.assertRaises(SystemExit):
+            call.stage_run(self.root, "R", ("H", "G"), attempt_fn=scripted(OK))
+        metas = [json.loads(l) for l in (self.root / "journal/S0.jsonl").read_text().splitlines()]
+        metas = [m for m in metas if m.get("phase") == "meta"]
+        self.assertEqual(metas[0]["cli_versions"], {"claude": "test", "agy": "test"})
+
+    def test_call_timeout_is_bounded_by_the_s1_time_left(self):
+        journal = call.Journal(self.root, "S1")
+        caps = call.Caps(self.root, "S1", 10, journal)
+        caps.wall_base = vc.S1_WALL_SECONDS - 300
+        self.assertLessEqual(caps.timeout(), 300)
+        caps.wall_base = vc.S1_WALL_SECONDS - 60
+        self.assertFalse(caps.allow("G"))
+        self.assertEqual(caps.stopped_by(), "temps réel de S1")
 
 
 class V22Test(unittest.TestCase):
@@ -447,17 +617,14 @@ class AgyCommandTest(unittest.TestCase):
     """v2.3: a command call in agy's database discards the answer (state commande_executee, no new attempt)."""
     def db(self, payloads):
         hist = Path(tempfile.mkdtemp())
-        with sqlite3.connect(hist / "c.db") as con:
-            con.execute("CREATE TABLE steps (step_type INTEGER, step_payload BLOB)")
-            for st, pl in payloads:
-                con.execute("INSERT INTO steps VALUES (?, ?)", (st, pl))
+        agy_db(hist, CID1, [(st, 3, None, pl) for st, pl in payloads])
         return hist
 
     def setUp(self):
         self.img = Path(tempfile.mkdtemp()) / "a.jpg"
         self.img.write_bytes(b"x")
-        self.view = (15, json.dumps({"view_file": {"AbsolutePath": str(self.img.resolve())}}, separators=(",", ":")).encode())
-        self.env = json.dumps({"response": '{"codes": ["2"]}', "status": "SUCCESS", "conversation_id": "c"})
+        self.view = read_step(self.img.resolve())[::3]  # (132, payload)
+        self.env = json.dumps({"response": '{"codes": ["2"]}', "status": "SUCCESS", "conversation_id": CID1})
 
     def test_declaration_and_reasoning_are_not_calls(self):
         declaration = (14, b"\x0brun_command\x10\x01\x1a\x0fRuns a command")  # tool list, in every conversation
@@ -473,6 +640,18 @@ class AgyCommandTest(unittest.TestCase):
         self.assertEqual(p["commands"], 1)
         self.assertEqual(vc.agy_state("codes", p), ("commande_executee", None))
         self.assertNotIn("commande_executee", vc.RETRYABLE)  # final: no new attempt
+
+    def test_key_order_and_send_command_input(self):
+        """Codex B2 (30/10): Cwd before CommandLine, a refused call, and send_command_input with its own arguments."""
+        cases = [(132, 3, b'run_command' + json.dumps({"Cwd": "/tmp", "CommandLine": "echo fictif"},
+                                                       separators=(",", ":")).encode()),
+                 (132, 7, b'\x0bcall_2\x12\x0brun_command\x1a\x01{"WaitMsBeforeAsync": 0, "CommandLine": "ls"}'),
+                 (15, 3, b'send_command_input\x1a\x05{"CommandId":"x","Input":"y"}')]
+        for st, status, pl in cases:
+            hist = Path(tempfile.mkdtemp())
+            agy_db(hist, CID1, [read_step(self.img.resolve()), (st, status, None, pl)])
+            p = vc.parse_agy(self.env, self.img, hist)
+            self.assertEqual((p["commands"], vc.agy_state("codes", p)[0]), (1, "commande_executee"), pl)
 
 
 class FakeExecutableTest(unittest.TestCase):
@@ -492,11 +671,12 @@ print("\\n".join(json.dumps(e) for e in ev))
 """
         agy = f"""#!{sys.executable}
 import json, os, sqlite3, sys
-cid = "conv1"
+cid = "33333333-3333-3333-3333-333333333333"
 img = os.path.join(os.getcwd(), sys.argv[2].split("@")[1].split()[0])
 with sqlite3.connect(os.path.join({str(self.hist)!r}, cid + ".db")) as con:
-    con.execute("CREATE TABLE IF NOT EXISTS steps (step_payload BLOB)")
-    con.execute("INSERT INTO steps VALUES (?)", (json.dumps({{"view_file": {{"AbsolutePath": img}}}}, separators=(",", ":")).encode(),))
+    con.execute("CREATE TABLE IF NOT EXISTS steps (step_type INTEGER, status INTEGER, error_details TEXT, step_payload BLOB)")
+    pl = b"\\x0bview_file\\x1a" + json.dumps({{"AbsolutePath": img}}, separators=(",", ":")).encode() + b"\\x12image/jpeg"
+    con.execute("INSERT INTO steps VALUES (132, 3, NULL, ?)", (pl,))
 print(json.dumps({{"response": "{{\\"codes\\": [\\"2\\"]}}", "status": "SUCCESS", "usage": {{"t": 3}}, "conversation_id": cid}}))
 """
         for name, body in (("claude", claude), ("agy", agy)):

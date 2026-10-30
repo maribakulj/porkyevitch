@@ -1,4 +1,4 @@
-"""VLM comparison, measures (PREINSCRIPTION-v2.3.md sections 3.5, 3.6, 4, 5). Runs only after the plate receipt.
+"""VLM comparison, measures (PREINSCRIPTION-v2.4.md sections 3.5, 3.6, 4, 5). Runs only after the plate receipt.
 
 The receipt (recu.json) names the SHA-256 of the journals of S1 and R and of status_S1.json, and at least two distinct looks;
 every raw output must still match the SHA-256 written in its journal record. Nothing is measured otherwise. V-diagnostic is
@@ -24,14 +24,14 @@ from vlm_call import require, sha  # noqa: E402
 
 
 def vm_read(path):
-    return [json.loads(l) for l in path.read_text().splitlines()] if path.exists() else []
+    """Result lines of a journal (v2.4: the journal also holds 'started' and 'meta' lines)."""
+    return [r for r in (json.loads(l) for l in path.read_text().splitlines()) if r.get("phase") == "result"] \
+        if path.exists() else []
 
 
 def final_records(root, stage):
-    path = root / "journal" / f"{stage}.jsonl"
     last = {}
-    for line in path.read_text().splitlines() if path.exists() else []:
-        r = json.loads(line)
+    for r in vm_read(root / "journal" / f"{stage}.jsonl"):
         last[r["id"]] = r
     return last
 
@@ -122,11 +122,11 @@ def graphs(prep, last, systems):
 def costs(root):
     out = {}
     for p in sorted((root / "journal").glob("*.jsonl")):
-        for line in p.read_text().splitlines():
-            r = json.loads(line)
+        for r in vm_read(p):
             o = out.setdefault(r["system"], {"attempts": 0, "seconds": [], "cost_usd": 0.0, "cost_missing": 0, "usage": []})
             o["attempts"] += 1
-            o["seconds"].append(r["seconds"])
+            if r.get("seconds") is not None:
+                o["seconds"].append(r["seconds"])
             if isinstance(r.get("cost_usd"), (int, float)):
                 o["cost_usd"] += r["cost_usd"]
             else:
@@ -134,7 +134,8 @@ def costs(root):
             o["usage"].append(r.get("usage"))
     for o in out.values():
         s = np.array(o.pop("seconds"))
-        o["seconds_median"], o["seconds_p90"] = float(np.median(s)), float(np.percentile(s, 90))
+        o["seconds_median"] = float(np.median(s)) if len(s) else None
+        o["seconds_p90"] = float(np.percentile(s, 90)) if len(s) else None
         o["usage_records"] = sum(u is not None for u in o.pop("usage"))
     out["fast_model"] = "absent ici : T4-chrono en préinscription séparée (v2.1)"
     return out
@@ -149,18 +150,24 @@ def main(a):
     for stage in ("S1", "R"):
         require(receipt["journals_sha256"][stage] == sha(root / "journal" / f"{stage}.jsonl"), f"receipt_journal_{stage}")
     require(receipt["status_S1_sha256"] == sha(root / "status_S1.json"), "receipt_status")
+    require(receipt["status_R_sha256"] == sha(root / "status_R.json"), "receipt_status_R")
     require(len(set(receipt.get("regards", []))) >= 2, "receipt_two_distinct_looks")
     for stage in ("S0", "S1", "R"):
         for rec in vm_read(root / "journal" / f"{stage}.jsonl"):
-            require(sha(root / "raw" / rec["raw_file"]) == rec["raw_sha256"], f"raw_changed_{rec['raw_file']}")
+            if rec["raw_file"] is not None:  # an interrupted attempt has no raw output
+                require(sha(root / "raw" / rec["raw_file"]) == rec["raw_sha256"], f"raw_changed_{rec['raw_file']}")
     plan = json.loads((root / "plan_S1.json").read_text())
     kept = set(plan["vdiag_groups_kept"])
     s1, r = final_records(root, "S1"), final_records(root, "R")
     status = json.loads((root / "status_S1.json").read_text())
+    status_r = json.loads((root / "status_R.json").read_text())
+    whole = bool(status["complete"] and status["all_systems"])  # v2.4: a family reading only on a complete S1
     dev = bank_measure(prep, s1, "rijks_dev", vc.MAIN_SYSTEMS)
-    family = {s: {**dev["bootstrap"]["contrasts"][f"{s}-T_star"],
-                  "reading": vc.reading(dev["bootstrap"]["contrasts"][f"{s}-T_star"])} for s in vc.MAIN_SYSTEMS}
-    out = {"preinscription": prep["preinscription"], "complete": status["complete"], "stopped_by": status["stopped_by"],
+    family = {s: {**dev["bootstrap"]["contrasts"][f"{s}-T_star"], "reading_valid": whole,
+                  "reading": vc.reading(dev["bootstrap"]["contrasts"][f"{s}-T_star"]) if whole
+                  else "S1 incomplet : descriptif, pas de lecture familiale"} for s in vc.MAIN_SYSTEMS}
+    out = {"preinscription": prep["preinscription"], "complete": whole, "stopped_by": status["stopped_by"],
+           "repeat_complete": bool(status_r["complete"] and status_r["all_systems"]),
            "family_dev_vs_T_star": family,
            "family_level": "Bonferroni bilatéral sur 2 : q1_25 / q98_75 ; q2_5 / q97_5 = IC95 non corrigé, descriptif",
            "plan_S1": plan,
@@ -169,7 +176,7 @@ def main(a):
            "opus_slice_descriptive": bank_measure(prep, s1, "rijks_dev", ("H", "G", "O"), keys=set(prep["samples"]["opus"])),
            "repeatability": repeatability(prep, s1, r, vc.MAIN_SYSTEMS), "graphs": graphs(prep, s1, vc.MAIN_SYSTEMS),
            "costs_and_time": costs(root), "test_rows": 0}
-    if not status["complete"]:
+    if not whole:
         out["incomplete"] = "S1 incomplet : publié comme tel, aucun sous-ensemble choisi après coup"
     (root / "mesures.json").write_text(json.dumps(out, ensure_ascii=False, indent=1, allow_nan=False) + "\n")
     print(json.dumps(family, ensure_ascii=False))

@@ -1,4 +1,4 @@
-"""VLM comparison (PREINSCRIPTION-v2.3.md): pure rules, no network, no model call. numpy only (plus the pinned copies
+"""VLM comparison (PREINSCRIPTION-v2.4.md): pure rules, no network, no model call. numpy only (plus the pinned copies
 a1_core.py and pe_common.py, imported by the scripts that need them).
 
 Everything a score depends on is here and frozen by SHA-256 in the preparation seal: the prompts, the notation syntax,
@@ -26,7 +26,8 @@ CLAUDE_IN_FLIGHT = 3  # H and O together (v2.2)
 COST_MARGIN = 1.2  # extrapolation from S0 (v2.2)
 UNKNOWN_CHARGE_USD = 1.0  # prudent charge when no Claude cost has been observed yet (v2.2)
 MAX_BOXES = 30
-RETRYABLE = ("illisible", "image_non_lue", "echec_technique")  # one new attempt; "refus" is final
+RETRYABLE = ("illisible", "image_non_lue", "echec_technique", "interrompu")  # one new attempt; "refus" and
+# "commande_executee" are final
 
 # ---- notation syntax (section 3.3): recognises the 7907 codes of V; rejects free text and unbalanced brackets ----
 _ATOM = r"[0-9](?:[0-9A-Za-z+]|\([^()]*\)|\[[^\[\]]*\]|<[^<>]*>)*"
@@ -193,44 +194,76 @@ def claude_state(kind, parsed):
 AGY_HISTORY = Path.home() / ".gemini/antigravity-cli/conversations"
 
 
-def observed_paths(conversation_id, history=AGY_HISTORY):
-    """Image paths the agent opened (view_file AbsolutePath or read_file Path), read-only. Copied from
-    ~/BBVLM/src/region_agy.py.observed_paths."""
+READ_RESULT, DONE = 132, 3
+
+
+def image_shown(conversation_id, path, history=AGY_HISTORY):
+    """True only if agy's log holds a successful read_file/view_file result for exactly `path` carrying image bytes: a
+    tool-result step (step_type 132) with status 3 and no error, whose payload holds read calls on the canonical path only,
+    and an image mime. Copied from the audited graphes_agy.image_shown (Codex wA:p4, B2 of 29/10; B1 of 30/10). A mention of
+    the path, a failed or refused read, another image, a textual read or an absent log is no proof."""
+    if not conversation_id or not re.fullmatch(r"[0-9a-f-]{36}", conversation_id):
+        return False
     db = Path(history) / f"{conversation_id}.db"
     if not db.exists():
-        return []
-    found = set()
-    with contextlib.closing(sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True)) as con:
-        for (payload,) in con.execute("SELECT step_payload FROM steps"):
-            if payload:
-                text = payload.decode("utf-8", "ignore") if isinstance(payload, bytes) else str(payload)
-                found.update(re.findall(r'"AbsolutePath":"([^"]+)"', text))
-                found.update(re.findall(r'(?:read_file|view_file)[^{]{0,8}\{"Path":"([^"]+)"', text))
-    return sorted(found)
+        return False
+    target = json.dumps(str(path))[1:-1].encode()
+    try:
+        with contextlib.closing(sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True)) as con:
+            rows = list(con.execute("SELECT step_type, status, error_details, step_payload FROM steps"))
+    except sqlite3.Error:
+        return False
+    for step_type, status, error, payload in rows:
+        if step_type != READ_RESULT or status != DONE or error is not None or not isinstance(payload, bytes):
+            continue
+        calls = re.findall(rb'(?:read_file|view_file)[^{]{0,8}\{"(?:Absolute)?Path":"([^"]+)"\}', payload)
+        if calls and all(c == target for c in calls) and (b"image/jpeg" in payload or b"image/png" in payload):
+            return True
+    return False
 
 
-# A real command call in agy's database: the tool name followed by its JSON arguments (v2.3). It does not match the tool
-# declaration present in every conversation, nor the model's reasoning when it merely names the tool.
-COMMAND_CALL = re.compile(r'(?:run_command|send_command_input)[^{]{0,8}\{"CommandLine"')
+# A command call in agy's database: the tool name run_command or send_command_input followed, within a few bytes, by a
+# JSON object of arguments that decodes (v2.4, Codex B2: the arguments are parsed, their key order does not matter). It does
+# not match the tool declaration present in every conversation, nor the model's reasoning that only names the tool
+# (checked on the 497 local conversations, 30/10: the 6 real calls are found, nothing else).
+COMMAND_TOOL = re.compile(rb"(?:run_command|send_command_input)[^{]{0,8}(?=\{)")
+
+
+def command_calls(payload):
+    """Argument objects of the command calls held in one step payload."""
+    found = []
+    for m in COMMAND_TOOL.finditer(payload):
+        text = payload[m.end():].decode("utf-8", "ignore")
+        try:
+            obj, _ = json.JSONDecoder().raw_decode(text)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict):
+            found.append(obj)
+    return found
 
 
 def commands_requested(conversation_id, history=AGY_HISTORY):
-    """Number of steps holding a command call (requested, executed or refused by the guard), read-only."""
+    """Number of steps holding a command call (requested, executed or refused by the guard), read-only. An unreadable
+    database counts as one call: no proof that no command ran."""
     db = Path(history) / f"{conversation_id}.db"
     if not db.exists():
         return 0
+    try:
+        with contextlib.closing(sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True)) as con:
+            rows = list(con.execute("SELECT step_payload FROM steps"))
+    except sqlite3.Error:
+        return 1
     n = 0
-    with contextlib.closing(sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True)) as con:
-        for (payload,) in con.execute("SELECT step_payload FROM steps"):
-            if payload:
-                text = payload.decode("utf-8", "ignore") if isinstance(payload, bytes) else str(payload)
-                n += bool(COMMAND_CALL.search(text))
+    for (payload,) in rows:
+        if payload:
+            b = payload if isinstance(payload, bytes) else str(payload).encode()
+            n += bool(command_calls(b))
     return n
 
 
 def parse_agy(stdout, image_path, history=AGY_HISTORY):
-    out = {"text": None, "status": None, "usage": None, "conversation_id": None, "image_read": False, "opened": [],
-           "commands": 0}
+    out = {"text": None, "status": None, "usage": None, "conversation_id": None, "image_read": False, "commands": 0}
     s = (stdout or "").strip()
     try:
         env = json.loads(s) if s.startswith("{") else {}
@@ -239,9 +272,8 @@ def parse_agy(stdout, image_path, history=AGY_HISTORY):
     out["text"], out["status"], out["usage"] = env.get("response"), env.get("status"), env.get("usage")
     out["conversation_id"] = env.get("conversation_id")
     if out["conversation_id"]:
-        out["opened"] = observed_paths(out["conversation_id"], history)
         out["commands"] = commands_requested(out["conversation_id"], history)
-        out["image_read"] = str(Path(image_path).resolve()) in {str(Path(p).resolve()) for p in out["opened"]}
+        out["image_read"] = image_shown(out["conversation_id"], Path(image_path).resolve(), history)
     return out
 
 
