@@ -1,6 +1,6 @@
 # Lecture des mesures du petit élève v1 (porte D2) : « pas de signal »
 
-Sorties CONFORMES (sous-agent Sonnet, porkyevitch-pe-mesures-sorties-sonnet.md ; contre-vérification Codex à faire).
+Sorties CONFORMES (sous-agent Sonnet, porkyevitch-pe-mesures-sorties-sonnet.md ; contre-vérification Codex : CONFORME, porkyevitch-petit-eleve-codex.md).
 Juge : 26 graphes Gemini d'évaluation (fidélité à Gemini, pas vérité de localisation).
 - Loc− : rappel@30 de l'élève contre l'a priori (rectangles fixes, 0,258) : −0,033 / −0,029 / −0,012 selon la graine,
   intervalles contenant 0, bornes hautes +0,016 / +0,023 / +0,043. L'élève ne bat pas l'a priori.
