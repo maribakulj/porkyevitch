@@ -1,4 +1,4 @@
-"""Pilot amendment (30/10): pinned open_clip install before the subprocess; the reviewed scripts stay pinned unchanged."""
+"""Pilot amendments (30/10): pinned open_clip and ultralytics installs before the subprocess, scripts pinned, mesures stage."""
 import ast
 import hashlib
 from pathlib import Path
@@ -19,18 +19,25 @@ class TestPilot(unittest.TestCase):
     def test_pin_and_order(self):
         src = PILOT.read_text()
         self.assertEqual(literal(ast.parse(src), "OPEN_CLIP"), "open_clip_torch==3.3.0")
+        self.assertEqual(literal(ast.parse(src), "ULTRALYTICS"), "ultralytics==8.4.177")
         sha_gate = src.index("sha256 is not the reviewed one")
-        install = src.index('"pip", "install", "-q", OPEN_CLIP]')
-        check = src.index('versions["open_clip_torch"] != OPEN_CLIP.split("==")[1]')
+        install = src.index('for package in (OPEN_CLIP, ULTRALYTICS):')
+        check = src.index('versions["ultralytics"] != ULTRALYTICS.split("==")[1]')
         child = src.index('"pe_kaggle.py"), "--stage"')
         self.assertTrue(sha_gate < install < check < child)
 
     def test_reviewed_scripts_unchanged(self):
         pins = literal(ast.parse(PILOT.read_text()), "SCRIPT_SHA256")
-        self.assertEqual(pins, {"pe_kaggle.py": "017f488863fc58b5f9e7457d354a714a0b04d48bfc5e5409c497563d0c626a91",
-                                "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"})
+        self.assertEqual(set(pins), {"pe_kaggle.py", "pe_common.py"})
+        self.assertEqual(pins["pe_common.py"], "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af")
         for name, want in pins.items():
             self.assertEqual(hashlib.sha256((ROOT / "scripts" / name).read_bytes()).hexdigest(), want)
+
+    def test_mesures_stage_needs_sealed_predictions_and_receipt(self):
+        src = PILOT.read_text()
+        self.assertIn('"/kaggle/input/**/MANIFEST_PREDICTIONS.json"', src)
+        self.assertIn('"/kaggle/input/**/recu_planche_pe.json"', src)
+        self.assertIn("if len(sealed) != 1 or len(receipt) != 1:", src)
 
 
 if __name__ == "__main__":

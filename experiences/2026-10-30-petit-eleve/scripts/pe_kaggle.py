@@ -1,13 +1,20 @@
 """Petit élève (jalon 5) on Kaggle T4: re-encoding, identity and overfit controls, heads, witnesses, throughput, D2 reading.
 
-Usage: pe_kaggle.py --stage smoke|full --inputs IN --encoder ENC --out OUT
+Usage: pe_kaggle.py --stage smoke|full|mesures --inputs IN --encoder ENC --out OUT [--predictions P --receipt R]
   IN   dataset holding listes.json, noms.json, images/pNNN.jpg, graphes/pNNN.json (Gemini) and s1b/pNNN.json (evaluation only);
        it must hold no image or graph of the closed sets (exemples, test20): the script refuses them.
   ENC  full output of caypollard-encode-cradio v3 (grid/<shard>.npy), used only for the 8x8 identity control.
   OUT  /kaggle/working/... (empty).
 smoke (blank): hashes and opens the training files only; encodes the 8 overfit images, identity control, overfit control,
   OWLv2 and Florence-2 on 2 of them (revisions recorded), a one-repetition timing on them. No tuning or evaluation file is opened.
-full: everything in PREINSCRIPTION.md, then resultats.json with the D2 reading. Rules are in pe_common.py, fixed in advance.
+full: heads, witnesses (OWLv2, Florence-2, YOLOE-v8-S), throughput and the plate; predictions are written and sealed
+  (MANIFEST_PREDICTIONS.json) but NO measure is computed, so the plate is looked at before any number (Codex p4, 30/10).
+mesures (CPU): only with the plate receipt of wA:p1 and a Grok bound to that manifest; measures and the D2 reading from the
+  sealed predictions, nothing re-inferred. Rules are in pe_common.py, fixed in advance.
+Amendment 30/10 (before the full run): revisions pinned from the reviewed smoke; Florence-2 loaded through the native
+transformers class from the official converted checkpoint (the remote code of microsoft/Florence-2-base fails under
+transformers 5.16: forced_bos_token_id); every timed system under no_grad + fp16 autocast; box offsets equal to the
+integer padding of the square; a failed overfit control fails the smoke; YOLOE-v8-S text mode added (D8), frozen below.
 """
 import argparse
 import copy
@@ -16,6 +23,7 @@ import json
 import os
 from pathlib import Path
 import resource
+import shutil
 import sys
 import time
 
@@ -25,9 +33,17 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pe_common as pc  # noqa: E402
 
 ENC_REPO, ENC_REV = "nvidia/C-RADIOv3-L", "9d0413465e8a91e67bbf2c1ad342815478d1b906"
-OWL_REPO, FLO_REPO = "google/owlv2-base-patch16-ensemble", "microsoft/Florence-2-base"
-OWL_REV = None  # filled from blanc.json by a reviewed commit before the full run
-FLO_REV = None
+OWL_REPO = "google/owlv2-base-patch16-ensemble"
+OWL_REV = "cfd3195ba4ea9592eec887ded089f4c08eff231d"  # resolved by the reviewed smoke (Grok p3, 30/10)
+FLO_SOURCE = ("microsoft/Florence-2-base", "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac")  # resolved by the smoke; its remote
+# code cannot load under transformers 5.16, so the weights are taken from the official transformers conversion of it:
+FLO_NATIVE_REPO, FLO_REV = "florence-community/Florence-2-base", "00921df66db728a9ceb750f5eca43e5c203a2051"  # MIT
+YOLOE_PACKAGE = "ultralytics==8.4.177"  # installed by the pilot (wheel sha256 de8fd2fc...), AGPL-3.0, recorded
+YOLOE_WEIGHTS = ("https://github.com/ultralytics/assets/releases/download/v8.3.0/yoloe-v8s-seg.pt",
+                 "ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536")  # 31 135 890 bytes, text/visual mode
+YOLOE_TEXT_MODEL = "mobileclip:blt"     # text encoder the checkpoint asks for (checked at load)
+YOLOE_TEXT_SHA256 = None                # sha of mobileclip_blt.ts, recorded by the smoke, pinned by a reviewed commit
+YOLOE_CONF, YOLOE_IOU, YOLOE_MAX_DET, YOLOE_IMGSZ = 0.1, 0.5, 300, 640  # same score threshold and NMS as OWLv2
 LISTES_SHA256 = "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af"  # listes.json as committed
 NOMS_SHA256 = "dfa0e011f7f1df458d5396602b5f33ede99ac2a9f34b7465940241afec648ed2"  # noms.json as committed
 OWL_THRESHOLD, NMS_IOU = 0.1, 0.5
@@ -130,7 +146,7 @@ class Encoder:
         im = im.convert("RGB")
         s = max(im.size)
         c = Image.new("RGB", (s, s), (128, 128, 128))
-        c.paste(im, ((s - im.width) // 2, (s - im.height) // 2))
+        c.paste(im, pad_offsets(im.width, im.height))
         return c.resize((448, 448), Image.BICUBIC)
 
     def pixels(self, images):
@@ -148,10 +164,16 @@ class Encoder:
         return spatial.half(), g8.half()
 
 
+def pad_offsets(w, h):
+    """Integer offsets of the image in its grey square, the same for the pixels (Encoder.square) and the boxes."""
+    s = max(w, h)
+    return (s - w) // 2, (s - h) // 2
+
+
 def square_box(box, w, h):
     """Box in thousandths of the image -> thousandths of the grey square the encoder sees (centred padding)."""
     s = max(w, h)
-    ox, oy = (s - w) / 2, (s - h) / 2
+    ox, oy = pad_offsets(w, h)
     x0, y0, x1, y1 = box
     return [(x0 * w / 1000 + ox) / s * 1000, (y0 * h / 1000 + oy) / s * 1000,
             (x1 * w / 1000 + ox) / s * 1000, (y1 * h / 1000 + oy) / s * 1000]
@@ -159,7 +181,7 @@ def square_box(box, w, h):
 
 def unsquare_box(box, w, h):
     s = max(w, h)
-    ox, oy = (s - w) / 2, (s - h) / 2
+    ox, oy = pad_offsets(w, h)
     x0, y0, x1, y1 = box
     return [((x0 * s / 1000) - ox) / w * 1000, ((y0 * s / 1000) - oy) / h * 1000,
             ((x1 * s / 1000) - ox) / w * 1000, ((y1 * s / 1000) - oy) / h * 1000]
@@ -421,25 +443,81 @@ def owl_detect(images, dev, revision):
 
 
 def florence_detect(images, dev, revision):
+    """Native transformers Florence-2 (no remote code), fp16, task <OD>, greedy beams as in the model card."""
     import torch
-    from transformers import AutoModelForCausalLM, AutoProcessor
-    proc = AutoProcessor.from_pretrained(FLO_REPO, revision=revision, trust_remote_code=True)
+    from transformers import AutoProcessor, Florence2ForConditionalGeneration
+    proc = AutoProcessor.from_pretrained(FLO_NATIVE_REPO, revision=revision)
     dtype = torch.float16 if dev == "cuda" else torch.float32
-    model = AutoModelForCausalLM.from_pretrained(FLO_REPO, revision=revision, trust_remote_code=True,
-                                                 torch_dtype=dtype).to(dev).eval()
+    model = Florence2ForConditionalGeneration.from_pretrained(FLO_NATIVE_REPO, revision=revision, dtype=dtype).to(dev).eval()
     out = []
     for im in images:
         im = im.convert("RGB")
         inputs = proc(text="<OD>", images=im, return_tensors="pt").to(dev, dtype)
         with torch.no_grad():
-            ids = model.generate(input_ids=inputs["input_ids"], pixel_values=inputs["pixel_values"], max_new_tokens=1024,
-                                 num_beams=3, do_sample=False)
+            ids = model.generate(**inputs, max_new_tokens=1024, num_beams=3, do_sample=False)
         text = proc.batch_decode(ids, skip_special_tokens=False)[0]
         r = proc.post_process_generation(text, task="<OD>", image_size=im.size)["<OD>"]
         w, h = im.size
         boxes = [pc.clean_box([b[0] / w * 1000, b[1] / h * 1000, b[2] / w * 1000, b[3] / h * 1000]) for b in r["bboxes"]]
         out.append({"boxes": [b or [0, 0, 0, 0] for b in boxes]})
     return out, (proc, model)
+
+
+def yoloe_load(dev, work):
+    """YOLOE-v8-S in text mode with the eight OWLv2 queries; weights downloaded and sha-checked here, text encoder sha
+    recorded (pinned for the full run). Returns (model, record)."""
+    import urllib.request
+    from ultralytics import YOLOE
+    import ultralytics
+    work.mkdir(parents=True, exist_ok=True)
+    weights = work / "yoloe-v8s-seg.pt"
+    urllib.request.urlretrieve(YOLOE_WEIGHTS[0], weights)
+    require(sha(weights) == YOLOE_WEIGHTS[1], "yoloe_weights_sha")
+    model = YOLOE(str(weights))
+    text_model = getattr(model.model, "text_model", "mobileclip:blt")
+    require(text_model == YOLOE_TEXT_MODEL, "yoloe_text_model")
+    texts = [pc.OWL_QUERIES[c] for c in pc.CATEGORIES]
+    cwd = os.getcwd()
+    os.chdir(work)  # the text encoder is downloaded into the current folder by ultralytics
+    try:
+        t0 = time.perf_counter()
+        model.set_classes(texts, model.get_text_pe(texts))
+        prep = time.perf_counter() - t0
+    finally:
+        os.chdir(cwd)
+    ts = sorted(work.rglob("mobileclip_blt.ts"))
+    require(len(ts) == 1, "yoloe_text_encoder_file")
+    record = {"package": ultralytics.__version__, "weights_url": YOLOE_WEIGHTS[0], "weights_sha256": YOLOE_WEIGHTS[1],
+              "text_model": text_model, "text_encoder_sha256": sha(ts[0]), "queries": texts,
+              "text_preparation_seconds": prep, "conf": YOLOE_CONF, "nms_iou_per_class": YOLOE_IOU,
+              "agnostic_nms_iou": NMS_IOU, "max_det": YOLOE_MAX_DET, "imgsz": YOLOE_IMGSZ, "fp16": dev == "cuda",
+              "executed": "detection and segmentation heads (masks computed by the -seg checkpoint, not used)"}
+    return model, record
+
+
+def yoloe_detect(model, images, dev):
+    """Per image: boxes (thousandths), scores, query index, and the class-free list after NMS at NMS_IOU, as for OWLv2."""
+    import torch
+    from torchvision.ops import nms
+    out = []
+    for im in images:
+        r = model.predict(im.convert("RGB"), conf=YOLOE_CONF, iou=YOLOE_IOU, max_det=YOLOE_MAX_DET, imgsz=YOLOE_IMGSZ,
+                          quantize=16 if dev == "cuda" else None, device=0 if dev == "cuda" else "cpu",
+                          verbose=False)[0]
+        boxes = r.boxes.xyxy.float().cpu()
+        scores, labels = r.boxes.conf.float().cpu(), r.boxes.cls.long().cpu()
+        w, h = im.size
+        norm = (boxes / torch.tensor([w, h, w, h]) * 1000).tolist()
+        out.append({"boxes": [pc.clean_box(b) or [0, 0, 0, 0] for b in norm], "score": scores.tolist(),
+                    "cat": labels.tolist(), "agnostic": nms(boxes, scores, NMS_IOU).tolist()})
+    return out
+
+
+def student_forward(model, enc, px=None, tokens=None):
+    """The student as timed: no_grad and fp16 autocast around the encoder AND the head, as OWLv2 and YOLOE."""
+    import torch
+    with torch.no_grad(), torch.autocast("cuda", dtype=torch.float16):
+        return model(enc.tokens(px)[0] if tokens is None else tokens)
 
 
 def resolved_revision(repo):
@@ -523,8 +601,60 @@ def timing(fn, batches, reps=5, warm=1, counts=None):
             "repetitions": reps}
 
 
+# ---------------------------------------------------------------- sealed predictions (full) and their reading (mesures)
+PRED_DIR = "predictions"
+
+
+def query_pairs():
+    """Ordered pairs (i, j), i != j, of the NQ queries in the order predict() emits them."""
+    return [(i, j) for i in range(NQ) for j in range(NQ) if i != j]
+
+
+def save_student(out, key, preds):
+    """Boxes and scores as JSON, relation scores as one float32 array; the pairs are query_pairs()."""
+    require(all(p["pairs"] == query_pairs() for p in preds), "pairs_order")
+    write_json(out / PRED_DIR / f"{key}.json", [{k: p[k] for k in ("boxes", "score", "cat", "cat_score")} for p in preds])
+    with open(out / PRED_DIR / f"{key}_rel.npy", "wb") as f:
+        np.save(f, np.stack([np.asarray(p["rel"], dtype=np.float32) for p in preds]) if preds else np.zeros((0,)))
+
+
+def load_student(root, key):
+    preds = json.loads((root / PRED_DIR / f"{key}.json").read_text())
+    rel = np.load(root / PRED_DIR / f"{key}_rel.npy", allow_pickle=False)
+    pairs = query_pairs()
+    for p, r in zip(preds, rel, strict=True):
+        p["pairs"], p["rel"] = pairs, r
+    return preds
+
+
+def seal(out, record):
+    """MANIFEST_PREDICTIONS.json: sha of every file written by the full stage, the plate included; written last."""
+    files = {str(p.relative_to(out)): sha(p) for p in sorted(out.rglob("*")) if p.is_file()}
+    write_json(out / "MANIFEST_PREDICTIONS.json", {**record, "files": files})
+    return sha(out / "MANIFEST_PREDICTIONS.json")
+
+
+def check_receipt(root, receipt_path):
+    """Before any number: every sealed file present and unchanged, and a receipt of both looks (wA:p1 and a Grok, each
+    with viewed_at) on exactly this manifest, as phase 1 and P9-A."""
+    manifest_path = root / "MANIFEST_PREDICTIONS.json"
+    manifest = json.loads(manifest_path.read_text())
+    for rel, digest in manifest["files"].items():
+        require((root / rel).is_file() and sha(root / rel) == digest, f"sealed_file_missing_or_changed_{rel}")
+    require(all(f"planche/{n}.jpg" in manifest["files"] for n in manifest["planche"]), "plate_not_sealed")
+    receipt = json.loads(Path(receipt_path).read_text())
+    looks = [x for x in receipt.get("regards") or [] if x.get("viewer") and x.get("viewed_at")]
+    require(receipt.get("stage") == "planche_petit_eleve_regardee" and receipt.get("manifest_sha256") == sha(manifest_path),
+            "plate_not_viewed")
+    require(any(x["viewer"] == "wA:p1" for x in looks) and any(x["viewer"].startswith("Grok") for x in looks),
+            "both_looks_required")
+    return manifest, receipt
+
+
 # ---------------------------------------------------------------- main
 def main(a):
+    if a.stage == "mesures":
+        return mesures(a)
     import torch
     from PIL import Image
     torch.backends.cudnn.benchmark = False
@@ -535,11 +665,10 @@ def main(a):
     out.mkdir(parents=True, exist_ok=True)
     listes = json.loads((inp / "listes.json").read_text())
     if a.stage == "full":
-        require(None not in (OWL_REV, FLO_REV), "revisions_not_pinned_after_blank")
+        require(YOLOE_TEXT_SHA256 is not None, "yoloe_text_encoder_not_pinned_after_smoke")
     require(sha(inp / "listes.json") == LISTES_SHA256 and sha(inp / "noms.json") == NOMS_SHA256, "lists_sha")
     roles = preflight(inp, listes, a.stage)
-    results = {"stage": a.stage, "versions": {"python": sys.version.split()[0], "torch": torch.__version__,
-                                              "numpy": np.__version__}, "gpu": torch.cuda.get_device_name()}
+    results = {"stage": a.stage, "versions": versions(), "gpu": torch.cuda.get_device_name()}
     by_name = {r["name"]: r for role in roles.values() for r in role}
     names = (listes["surapprentissage"] if a.stage == "smoke" else
              [r["name"] for r in roles["entrainement"] + roles["reglage"] + roles["evaluation"]])
@@ -581,9 +710,10 @@ def main(a):
     xy = torch.stack([xy[:, [0, 2]].min(1).values, xy[:, [1, 3]].min(1).values,
                       xy[:, [0, 2]].max(1).values, xy[:, [1, 3]].max(1).values], 1)
     roundtrip = float((cxcywh_to_xyxy(xyxy_to_cxcywh(xy)) - xy).abs().max())
-    sq = [square_box(b, 640, 480) for b in ([0, 0, 1000, 1000], [100, 200, 300, 900])]
-    roundtrip = max(roundtrip, max(abs(u - v) for b, s in zip(([0, 0, 1000, 1000], [100, 200, 300, 900]), sq)
-                                   for u, v in zip(unsquare_box(s, 640, 480), b)) / 1000)
+    probe = ([0, 0, 1000, 1000], [100, 200, 300, 900])
+    for w, h in ((640, 480), (641, 480), (480, 641)):  # odd differences included (half-pixel case of Codex p4)
+        roundtrip = max(roundtrip, max(abs(u - v) for b in probe for u, v in zip(unsquare_box(square_box(b, w, h), w, h), b))
+                        / 1000)
     overfit = {"images": ov, "steps": OVERFIT_STEPS, "recall_at_30": rec, "first_loss": checks["first_loss"],
                "last_loss": checks["last_loss"], "grads_finite": checks["grads_finite"],
                "parameters_without_gradient_at_step1": checks["zero_grad_params_at_step1"],
@@ -592,25 +722,34 @@ def main(a):
                              and not checks["zero_grad_params_at_step1"] and roundtrip < 1e-5)
     results["overfit_control"] = overfit
     budget("overfit")
+    model.eval()
 
     if a.stage == "smoke":
         two = [images[n] for n in ov[:2]]
-        results["revisions_to_pin"] = {OWL_REPO: resolved_revision(OWL_REPO), FLO_REPO: resolved_revision(FLO_REPO)}
-        o, _ = owl_detect(two, dev, results["revisions_to_pin"][OWL_REPO])
+        results["revisions"] = {OWL_REPO: OWL_REV, "florence_native": [FLO_NATIVE_REPO, FLO_REV],
+                                "florence_source": list(FLO_SOURCE),
+                                "resolved_now": {OWL_REPO: resolved_revision(OWL_REPO),
+                                                 FLO_NATIVE_REPO: resolved_revision(FLO_NATIVE_REPO)}}
+        o, _ = owl_detect(two, dev, OWL_REV)
         results["owlv2_smoke"] = [{"detections": len(x["score"]), "agnostic": len(x["agnostic"])} for x in o]
         try:
-            f, _ = florence_detect(two, dev, results["revisions_to_pin"][FLO_REPO])
+            f, _ = florence_detect(two, dev, FLO_REV)
             results["florence2_smoke"] = [{"boxes": len(x["boxes"])} for x in f]
         except Exception as e:  # recorded: Florence-2 is a descriptive witness
             results["florence2_smoke"] = f"unavailable: {type(e).__name__}: {e}"[:500]
+        ymodel, results["yoloe"] = yoloe_load(dev, out / "yoloe-cache")
+        results["yoloe_smoke"] = [{"detections": len(x["score"]), "agnostic": len(x["agnostic"])}
+                                  for x in yoloe_detect(ymodel, two, dev)]
+        shutil.rmtree(out / "yoloe-cache")
         px = enc.pixels([images[n] for n in ov]).to(dev)
-        results["timing_smoke_student_full_b8"] = timing(lambda b: model(enc.tokens(b)[0]), [px], reps=1)
+        results["timing_smoke_student_full_b8"] = timing(lambda b: student_forward(model, enc, px=b), [px], reps=1)
         results["listes_sha256"], results["noms_sha256"] = sha(inp / "listes.json"), sha(inp / "noms.json")
         results["script_sha256"] = {f: sha(Path(__file__).parent / f) for f in ("pe_kaggle.py", "pe_common.py")}
         results["peak_rss_mib"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
         results["vram_peak_gib"] = torch.cuda.max_memory_allocated() / 2 ** 30
         results["wall_seconds"] = time.monotonic() - START
         write_json(out / "blanc.json", results)
+        require(overfit["passed"], "overfit_control_failed_technical_failure")  # never a successful blank (Codex p4)
         print("PETIT_ELEVE_SMOKE_DONE_NO_TUNING_NO_EVALUATION")
         return
     if not overfit["passed"]:
@@ -619,27 +758,28 @@ def main(a):
         print("PETIT_ELEVE_TECHNICAL_FAILURE")
         return
 
-    # (3) heads: 2 grids x 3 seeds, epoch chosen on the tuning loss
+    # (3) heads: 2 grids x 3 seeds, epoch chosen on the tuning loss; predictions written, not measured
+    (out / PRED_DIR).mkdir()
     tr = [r["name"] for r in roles["entrainement"]]
     tu = [r["name"] for r in roles["reglage"]]
     ev = [r["name"] for r in roles["evaluation"] if r["gemini_graph_sha256"]]
-    ev_graphs = [graphs[n] for n in ev]
-    results["arms"] = {}
-    preds = {}
+    arms, models = {}, {}
     for side in (28, 8):
         data, tune = dataset(tr, side), dataset(tu, side)
         tok = tok28 if side == 28 else tok8
         for seed in SEEDS:
             model, history, _ = train(side, seed, data, tune, dev)
-            p = predict(model, torch.stack([tok[n].to(dev) for n in ev]), [sizes[n] for n in ev])
-            preds[(side, seed)] = (p, model)
-            results["arms"][f"{side}x{side}_seed{seed}"] = {"history": history}
+            model.eval()
+            save_student(out, f"student_{side}x{side}_seed{seed}",
+                         predict(model, torch.stack([tok[n].to(dev) for n in ev]), [sizes[n] for n in ev]))
+            arms[f"{side}x{side}_seed{seed}"] = {"history": history}
+            if (side, seed) == (28, 0):
+                models["m0"] = model
     budget("heads")
 
-    # (4) witnesses on the same evaluation images
+    # (4) witnesses on the same evaluation images, outputs only
     train_boxes = [o["box"] for n in tr for o in graphs[n]["objects"]]
     protos, share = pc.kmeans_prototypes(train_boxes)
-    prior_images = [(protos, share, gt_boxes(g)) for g in ev_graphs]
     pair_counts = {}
     for n in tr:
         g = graphs[n]
@@ -647,83 +787,41 @@ def main(a):
             key = (g["objects"][s]["cat"], g["objects"][o]["cat"])
             pair_counts.setdefault(key, np.zeros(NREL))[r] += 1
     glob = np.sum(list(pair_counts.values()), 0)
-    rel_prior = {k: int(np.argmax(v)) for k, v in pair_counts.items()} | {"global": int(np.argmax(glob))}
+    write_json(out / PRED_DIR / "a_priori.json", {"protos": [list(map(float, b)) for b in protos],
+                                                  "share": [float(x) for x in share],
+                                                  "rel_prior": [[list(k), int(np.argmax(v))] for k, v in pair_counts.items()],
+                                                  "rel_prior_global": int(np.argmax(glob))})
     owl, owl_models = owl_detect([images[n] for n in ev], dev, OWL_REV)
+    write_json(out / PRED_DIR / "owlv2.json", owl)
+    witnesses = {"florence2": None}
     try:
         flo, flo_models = florence_detect([images[n] for n in ev], dev, FLO_REV)
+        write_json(out / PRED_DIR / "florence2.json", flo)
     except Exception as e:
         flo, flo_models = None, None
-        results["florence2"] = f"unavailable: {type(e).__name__}: {e}"[:500]
+        witnesses["florence2"] = f"unavailable: {type(e).__name__}: {e}"[:500]
+    ymodel, witnesses["yoloe"] = yoloe_load(dev, out.parent / "yoloe-cache")  # cache kept outside the sealed folder
+    require(witnesses["yoloe"]["text_encoder_sha256"] == YOLOE_TEXT_SHA256, "yoloe_text_encoder_sha")
+    write_json(out / PRED_DIR / "yoloe.json", yoloe_detect(ymodel, [images[n] for n in ev], dev))
     budget("witnesses")
 
-    # (5) measures on the 26 evaluation graphs (Gemini = reference of fidelity, not a human truth)
-    counts_prior = pc.recall_counts(prior_images, 30)
-    judged = [c for c in range(len(pc.CATEGORIES)) if sum(1 for g in ev_graphs for o in g["objects"] if o["cat"] == c) >= 10]
-    owl_cat = {c: owl_images(owl, ev_graphs, c) for c in judged}
-    owl_agn = owl_images(owl, ev_graphs)
-    results["witnesses"] = {
-        "a_priori": {"recall_at_30": pc.pooled_recall(counts_prior),
-                     "relations": relation_measures([{"boxes": protos, "score": share}] * len(ev_graphs), ev_graphs,
-                                                    prior=rel_prior)},
-        "owlv2_base": {"recall_at_30": pc.pooled_recall(pc.recall_counts(owl_agn, 30)),
-                       "ap50_agnostic": pc.average_precision(owl_agn),
-                       "ap50_by_category": {pc.CATEGORIES[c]: pc.average_precision(owl_cat[c]) for c in judged},
-                       "autre_objects_not_queried": sum(1 for g in ev_graphs for o in g["objects"]
-                                                        if o["cat"] == len(pc.CATEGORIES))}}
-    if flo is not None:
-        flo_imgs = [(f["boxes"], [1.0 - k / max(1, len(f["boxes"])) for k in range(len(f["boxes"]))], gt_boxes(g))
-                    for f, g in zip(flo, ev_graphs)]
-        results["witnesses"]["florence2_base_od"] = {
-            "recall_all_boxes": pc.pooled_recall(pc.recall_counts(flo_imgs, 10 ** 6)),
-            "boxes_per_image": float(np.mean([len(f["boxes"]) for f in flo])), "scores": "none: output order only"}
-    results["judged_categories"] = [pc.CATEGORIES[c] for c in judged]
-    reading = {"delta": [], "low": [], "high": [], "g": [], "g_interval": []}
-    for (side, seed), (p, _) in preds.items():
-        imgs = student_images(p, ev_graphs)
-        counts = pc.recall_counts(imgs, 30)
-        cats = {c: student_images(p, ev_graphs, c) for c in judged}
-        arm = results["arms"][f"{side}x{side}_seed{seed}"]
-        arm.update({"recall_at_10": pc.pooled_recall(pc.recall_counts(imgs, 10)),
-                    "recall_at_20": pc.pooled_recall(pc.recall_counts(imgs, 20)), "recall_at_30": pc.pooled_recall(counts),
-                    "ap50_agnostic": pc.average_precision(imgs),
-                    "ap50_by_category": {pc.CATEGORIES[c]: pc.average_precision(cats[c]) for c in judged},
-                    "objects_per_image_score_ge_0.5": float(np.mean([sum(s >= 0.5 for s in x["score"]) for x in p])),
-                    "relations": relation_measures(p, ev_graphs)})
-        if side != 28:
-            continue
-        delta = pc.pooled_recall(counts) - pc.pooled_recall(counts_prior)
-        ci = pc.bootstrap(lambda idx: pc.pooled_recall(counts, idx) - pc.pooled_recall(counts_prior, idx), len(ev),
-                          seed=2030 + seed)
-        g = pc.per_category(cats, judged) - pc.per_category(owl_cat, judged)
-        gi = pc.bootstrap(lambda idx: pc.per_category(cats, judged, idx=idx) - pc.per_category(owl_cat, judged, idx=idx),
-                          len(ev), seed=2040 + seed)
-        arm["d2"] = {"delta": delta, "low": ci["low"], "high": ci["high"], "g": finite(g), "g_interval_descriptive": gi}
-        for k, v in (("delta", delta), ("low", ci["low"]), ("high", ci["high"]), ("g", g), ("g_interval", gi)):
-            reading[k].append(v)
-    budget("measures")
-
-    # (6) agreement with S1b on the 30 evaluation images (26 with a Gemini graph, 4 without), descriptive
-    s1b = {r["name"]: load_graph(inp / "s1b" / f"{r['name']}.json") for r in roles["evaluation"] if r.get("s1b_graph_sha256")}
-    p0, m0 = preds[(28, 0)]
-    allv = list(s1b)
+    # (6) the seed-0 28x28 student on the 30 evaluation images with an S1b graph: agreement measured later, plate now
+    allv = [r["name"] for r in roles["evaluation"] if r.get("s1b_graph_sha256")]
+    m0 = models["m0"]
     pa = predict(m0, torch.stack([tok28[n].to(dev) for n in allv]), [sizes[n] for n in allv])
-    agree = {"with_gemini_graph": [], "without_gemini_graph": []}
-    for n, p in zip(allv, pa):
-        key = "with_gemini_graph" if by_name[n]["gemini_graph_sha256"] else "without_gemini_graph"
-        agree[key].append(pc.recall_counts([(p["boxes"], p["score"], gt_boxes(s1b[n]))], 30)[0])
-    results["agreement_with_s1b_seed0_recall_at_30"] = {k: {"recall": pc.pooled_recall(v), "images": len(v)}
-                                                         for k, v in agree.items()}
+    save_student(out, "student_28x28_seed0_s1b30", pa)
 
-    # (7) throughput on the fixed training timing corpus (no evaluation image); decoding excluded for every system
+    # (7) throughput on the fixed training timing corpus (no evaluation image); decoding excluded for every system;
+    # every system timed under no_grad + fp16 autocast (Codex p4); the student's measured predictions stay float32
     tim = [images[n] for n in listes["chronometrage"]]
     t0 = time.perf_counter()
     px = [enc.pixels(tim[i:i + 32]) for i in range(0, len(tim), 32)]
     px = [x.to(dev) for x in px]
-    results["timing"] = {"student_preprocess_cpu_images_per_second": len(tim) / (time.perf_counter() - t0)}
+    timing_ = {"student_preprocess_cpu_images_per_second": len(tim) / (time.perf_counter() - t0)}
     tok_batches = [enc.tokens(b)[0] for b in px]
-    results["timing"]["student_full_b32"] = timing(lambda b: m0(enc.tokens(b)[0]), px)
-    results["timing"]["student_heads_only_b32"] = timing(lambda t: m0(t), tok_batches)
-    results["timing"]["student_full_b1"] = timing(lambda b: m0(enc.tokens(b)[0]), list(px[0][:32].split(1)))
+    timing_["student_full_b32"] = timing(lambda b: student_forward(m0, enc, px=b), px)
+    timing_["student_heads_only_b32"] = timing(lambda t: student_forward(m0, enc, tokens=t), tok_batches)
+    timing_["student_full_b1"] = timing(lambda b: student_forward(m0, enc, px=b), list(px[0][:32].split(1)))
     proc, owl_model = owl_models
     texts = [[pc.OWL_QUERIES[c] for c in pc.CATEGORIES]]
     owl_batch = None
@@ -739,40 +837,35 @@ def main(a):
                 with torch.no_grad(), torch.autocast("cuda", dtype=torch.float16):
                     return owl_model(**x)
 
-            results["timing"]["owlv2_full"] = timing(owl_fwd, owl_px, counts=owl_counts) | {"batch": bs, "preprocess_cpu_images_per_second": prep}
+            timing_["owlv2_full"] = timing(owl_fwd, owl_px, counts=owl_counts) | {"batch": bs, "preprocess_cpu_images_per_second": prep}
             owl_batch = bs
             break
         except torch.cuda.OutOfMemoryError:
             torch.cuda.empty_cache()
     require(owl_batch is not None, "owlv2_timing_failed")
+    timing_["yoloe_v8s_text_b32_with_preprocess"] = timing(
+        lambda ims: ymodel.predict(ims, conf=YOLOE_CONF, iou=YOLOE_IOU, max_det=YOLOE_MAX_DET, imgsz=YOLOE_IMGSZ,
+                                   quantize=16, device=0, verbose=False), [tim[i:i + 32] for i in range(0, len(tim), 32)])
     if flo_models is not None:
         fproc, fmodel = flo_models
 
         def flo_fwd(ims):
             x = fproc(text=["<OD>"] * len(ims), images=ims, return_tensors="pt").to(dev, torch.float16)
             with torch.no_grad():
-                fmodel.generate(input_ids=x["input_ids"], pixel_values=x["pixel_values"], max_new_tokens=1024, num_beams=3,
-                                do_sample=False)
+                fmodel.generate(**x, max_new_tokens=1024, num_beams=3, do_sample=False)
 
-        results["timing"]["florence2_full_b8_with_preprocess"] = timing(flo_fwd, [tim[i:i + 8] for i in range(0, 32, 8)], reps=2)
-    d = results["timing"]["student_full_b32"]["images_per_second_median"] / results["timing"]["owlv2_full"]["images_per_second_median"]
-    results["timing"]["D"] = d
-    results["timing"]["note"] = ("student batch 32, OWLv2 at the largest batch <= 32 that fits; fp16 autocast for both; "
-                                 "images decoded beforehand; preprocessing timed apart on CPU")
+        timing_["florence2_full_b8_with_preprocess"] = timing(flo_fwd, [tim[i:i + 8] for i in range(0, 32, 8)], reps=2)
+    timing_["D"] = timing_["student_full_b32"]["images_per_second_median"] / timing_["owlv2_full"]["images_per_second_median"]
+    timing_["note"] = ("student batch 32, OWLv2 at the largest batch <= 32 that fits, YOLOE batch 32 through its own "
+                       "predictor (preprocessing, NMS and mask branch included); no_grad + fp16 for every system; images "
+                       "decoded beforehand; student and OWLv2 preprocessing timed apart on CPU")
+    write_json(out / "timing.json", timing_)
     budget("timing")
 
-    # (8) D2 reading, rules fixed in pe_common
-    loc, ap, dd = pc.states(reading["delta"], reading["low"], reading["high"],
-                            [x if np.isfinite(x) else float("nan") for x in reading["g"]], d)
-    results["d2_reading"] = {"states": [loc, ap, dd], "issue": pc.issue(loc, ap, dd),
-                             "per_seed": {k: [finite(x) if not isinstance(x, dict) else x for x in v]
-                                          for k, v in reading.items()},
-                             "read_as": "pas de signal = no justification of this campaign by this prototype; it refutes "
-                                        "neither Haiku nor distillation, and adopts nothing automatically"}
-
-    # (9) planche: 12 evaluation images, student (seed 0, 28x28) / Gemini / S1b drawn side by side
+    # (9) plate BEFORE any number: 12 evaluation images, student (seed 0, 28x28) / Gemini / S1b drawn side by side
     from PIL import ImageDraw
     (out / "planche").mkdir()
+    s1b = {n: load_graph(inp / "s1b" / f"{n}.json") for n in allv}
     for n in listes["planche"]:
         p = pa[allv.index(n)]
         panels = []
@@ -788,21 +881,142 @@ def main(a):
         for k, im in enumerate(panels):
             sheet.paste(im, (k * w, 0))
         sheet.save(out / "planche" / f"{n}.jpg", quality=90)
-    results["planche"] = {"images": listes["planche"], "panels": ["élève 28x28 graine 0, score >= 0.5", "Gemini", "S1b"]}
-    results["script_sha256"] = {f: sha(Path(__file__).parent / f) for f in ("pe_kaggle.py", "pe_common.py")}
-    results["peak_rss_mib"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
-    results["vram_peak_gib"] = torch.cuda.max_memory_allocated() / 2 ** 30
-    results["wall_seconds"] = time.monotonic() - START
+    results.update({"arms": arms, "witnesses": witnesses, "evaluation_images": ev, "s1b_images": allv,
+                    "script_sha256": {f: sha(Path(__file__).parent / f) for f in ("pe_kaggle.py", "pe_common.py")},
+                    "peak_rss_mib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024,
+                    "vram_peak_gib": torch.cuda.max_memory_allocated() / 2 ** 30, "wall_seconds": time.monotonic() - START,
+                    "measures": None})
+    write_json(out / "run.json", results)
+    digest = seal(out, {"stage": "predictions_sealed", "planche": listes["planche"],
+                        "panels": ["élève 28x28 graine 0, score >= 0.5", "Gemini", "S1b"],
+                        "script_sha256": results["script_sha256"], "listes_sha256": LISTES_SHA256})
+    print("PETIT_ELEVE_PREDICTIONS_SEALED_NO_MEASURE", digest)
+
+
+def versions():
+    import torch
+    v = {"python": sys.version.split()[0], "torch": torch.__version__, "numpy": np.__version__}
+    for name in ("transformers", "ultralytics", "open_clip_torch", "torchvision"):
+        try:
+            v[name] = __import__("importlib.metadata").metadata.version(name)
+        except Exception:
+            v[name] = None
+    return v
+
+
+def mesures(a):
+    """CPU: the measures of PREINSCRIPTION.md and the D2 reading, from the sealed predictions, after the plate receipt."""
+    inp, root, out = Path(a.inputs).resolve(), Path(a.predictions).resolve(), Path(a.out).resolve()
+    require(not out.exists() or not any(out.iterdir()), "output_not_empty")
+    manifest, receipt = check_receipt(root, a.receipt)
+    require(manifest["script_sha256"] == {f: sha(Path(__file__).parent / f) for f in ("pe_kaggle.py", "pe_common.py")},
+            "measures_with_other_scripts_than_the_sealed_run")
+    out.mkdir(parents=True, exist_ok=True)
+    listes = json.loads((inp / "listes.json").read_text())
+    require(sha(inp / "listes.json") == LISTES_SHA256 and sha(inp / "noms.json") == NOMS_SHA256, "lists_sha")
+    roles = preflight(inp, listes, "full")
+    by_name = {r["name"]: r for role in roles.values() for r in role}
+    run = json.loads((root / "run.json").read_text())
+    ev, allv = run["evaluation_images"], run["s1b_images"]
+    require(ev == [r["name"] for r in roles["evaluation"] if r["gemini_graph_sha256"]], "evaluation_list")
+    ev_graphs = [load_graph(inp / "graphes" / f"{n}.json") for n in ev]
+    results = {k: run[k] for k in ("stage", "versions", "gpu", "identity_8x8", "overfit_control", "arms", "witnesses")}
+    results.update({"stage": "mesures", "predictions_manifest_sha256": receipt["manifest_sha256"], "receipt": receipt})
+    prior = json.loads((root / PRED_DIR / "a_priori.json").read_text())
+    protos, share = prior["protos"], prior["share"]
+    rel_prior = {tuple(k): v for k, v in prior["rel_prior"]} | {"global": prior["rel_prior_global"]}
+    owl = json.loads((root / PRED_DIR / "owlv2.json").read_text())
+    flo_path = root / PRED_DIR / "florence2.json"
+    flo = json.loads(flo_path.read_text()) if flo_path.is_file() else None
+    yol = json.loads((root / PRED_DIR / "yoloe.json").read_text())
+    timing_ = json.loads((root / "timing.json").read_text())
+
+    # (5) measures on the 26 evaluation graphs (Gemini = reference of fidelity, not a human truth)
+    prior_images = [(protos, share, gt_boxes(g)) for g in ev_graphs]
+    counts_prior = pc.recall_counts(prior_images, 30)
+    judged = [c for c in range(len(pc.CATEGORIES)) if sum(1 for g in ev_graphs for o in g["objects"] if o["cat"] == c) >= 10]
+    owl_cat = {c: owl_images(owl, ev_graphs, c) for c in judged}
+    owl_agn = owl_images(owl, ev_graphs)
+    yol_agn = owl_images(yol, ev_graphs)
+    results["witnesses_measures"] = {
+        "a_priori": {"recall_at_30": pc.pooled_recall(counts_prior),
+                     "relations": relation_measures([{"boxes": protos, "score": share}] * len(ev_graphs), ev_graphs,
+                                                    prior=rel_prior)},
+        "owlv2_base": {"recall_at_30": pc.pooled_recall(pc.recall_counts(owl_agn, 30)),
+                       "ap50_agnostic": pc.average_precision(owl_agn),
+                       "ap50_by_category": {pc.CATEGORIES[c]: pc.average_precision(owl_cat[c]) for c in judged},
+                       "autre_objects_not_queried": sum(1 for g in ev_graphs for o in g["objects"]
+                                                        if o["cat"] == len(pc.CATEGORIES))},
+        "yoloe_v8s_text": {"recall_at_10": pc.pooled_recall(pc.recall_counts(yol_agn, 10)),
+                           "recall_at_20": pc.pooled_recall(pc.recall_counts(yol_agn, 20)),
+                           "recall_at_30": pc.pooled_recall(pc.recall_counts(yol_agn, 30)),
+                           "ap50_agnostic": pc.average_precision(yol_agn),
+                           "read_as": "descriptive column (D8): no veto on D2, OWLv2 stays the reference of the gate"}}
+    if flo is not None:
+        flo_imgs = [(f["boxes"], [1.0 - k / max(1, len(f["boxes"])) for k in range(len(f["boxes"]))], gt_boxes(g))
+                    for f, g in zip(flo, ev_graphs)]
+        results["witnesses_measures"]["florence2_base_od"] = {
+            "recall_all_boxes": pc.pooled_recall(pc.recall_counts(flo_imgs, 10 ** 6)),
+            "boxes_per_image": float(np.mean([len(f["boxes"]) for f in flo])), "scores": "none: output order only"}
+    results["judged_categories"] = [pc.CATEGORIES[c] for c in judged]
+    reading = {"delta": [], "low": [], "high": [], "g": [], "g_interval": []}
+    for side in (28, 8):
+        for seed in SEEDS:
+            p = load_student(root, f"student_{side}x{side}_seed{seed}")
+            imgs = student_images(p, ev_graphs)
+            counts = pc.recall_counts(imgs, 30)
+            cats = {c: student_images(p, ev_graphs, c) for c in judged}
+            arm = results["arms"][f"{side}x{side}_seed{seed}"]
+            arm.update({"recall_at_10": pc.pooled_recall(pc.recall_counts(imgs, 10)),
+                        "recall_at_20": pc.pooled_recall(pc.recall_counts(imgs, 20)), "recall_at_30": pc.pooled_recall(counts),
+                        "ap50_agnostic": pc.average_precision(imgs),
+                        "ap50_by_category": {pc.CATEGORIES[c]: pc.average_precision(cats[c]) for c in judged},
+                        "objects_per_image_score_ge_0.5": float(np.mean([sum(s >= 0.5 for s in x["score"]) for x in p])),
+                        "relations": relation_measures(p, ev_graphs)})
+            if side != 28:
+                continue
+            delta = pc.pooled_recall(counts) - pc.pooled_recall(counts_prior)
+            ci = pc.bootstrap(lambda idx: pc.pooled_recall(counts, idx) - pc.pooled_recall(counts_prior, idx), len(ev),
+                              seed=2030 + seed)
+            g = pc.per_category(cats, judged) - pc.per_category(owl_cat, judged)
+            gi = pc.bootstrap(lambda idx: pc.per_category(cats, judged, idx=idx) - pc.per_category(owl_cat, judged, idx=idx),
+                              len(ev), seed=2040 + seed)
+            arm["d2"] = {"delta": delta, "low": ci["low"], "high": ci["high"], "g": finite(g), "g_interval_descriptive": gi}
+            for k, v in (("delta", delta), ("low", ci["low"]), ("high", ci["high"]), ("g", g), ("g_interval", gi)):
+                reading[k].append(v)
+
+    # (6) agreement with S1b on the 30 evaluation images (26 with a Gemini graph, 4 without), descriptive
+    s1b = {n: load_graph(inp / "s1b" / f"{n}.json") for n in allv}
+    pa = load_student(root, "student_28x28_seed0_s1b30")
+    agree = {"with_gemini_graph": [], "without_gemini_graph": []}
+    for n, p in zip(allv, pa, strict=True):
+        key = "with_gemini_graph" if by_name[n]["gemini_graph_sha256"] else "without_gemini_graph"
+        agree[key].append(pc.recall_counts([(p["boxes"], p["score"], gt_boxes(s1b[n]))], 30)[0])
+    results["agreement_with_s1b_seed0_recall_at_30"] = {k: {"recall": pc.pooled_recall(v), "images": len(v)}
+                                                         for k, v in agree.items()}
+    results["timing"] = timing_
+
+    # (8) D2 reading, rules fixed in pe_common
+    loc, ap, dd = pc.states(reading["delta"], reading["low"], reading["high"],
+                            [x if np.isfinite(x) else float("nan") for x in reading["g"]], timing_["D"])
+    results["d2_reading"] = {"states": [loc, ap, dd], "issue": pc.issue(loc, ap, dd),
+                             "per_seed": {k: [finite(x) if not isinstance(x, dict) else x for x in v]
+                                          for k, v in reading.items()},
+                             "read_as": "pas de signal = no justification of this campaign by this prototype; it refutes "
+                                        "neither Haiku nor distillation, and adopts nothing automatically"}
+    results["script_sha256"] = manifest["script_sha256"]
     write_json(out / "resultats.json", results)
     print("PETIT_ELEVE_DONE", results["d2_reading"]["issue"])
 
 
 if __name__ == "__main__":
     ap_ = argparse.ArgumentParser(description=__doc__)
-    ap_.add_argument("--stage", choices=("smoke", "full"), required=True)
+    ap_.add_argument("--stage", choices=("smoke", "full", "mesures"), required=True)
     ap_.add_argument("--inputs", required=True)
     ap_.add_argument("--encoder", required=True)
     ap_.add_argument("--out", required=True)
+    ap_.add_argument("--predictions")
+    ap_.add_argument("--receipt")
     try:
         main(ap_.parse_args())
     except RuntimeError as error:

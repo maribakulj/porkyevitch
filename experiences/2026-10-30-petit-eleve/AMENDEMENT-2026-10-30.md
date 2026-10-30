@@ -1,0 +1,49 @@
+# Petit élève v1 : amendement avant le complet (30/10/2026)
+
+Claude wA:pH, à la demande de wA:p1. Les points viennent de l'audit de Codex p4 (« Points à reprendre avant le complet ») et des décisions D8 et du smoke. **`PREINSCRIPTION.md` reste intacte** : ce texte dit où le code s'en écarte et pourquoi. Rien n'est lancé.
+
+## 1. Le regard avant les chiffres (Codex, point 1)
+
+La préinscription veut que la planche soit regardée avant les chiffres. Le complet calculait pourtant les métriques et l'issue D2 avant de construire la planche. Il est maintenant coupé en deux étapes.
+
+- **`full`** (T4) : têtes, témoins, chronométrage et planche. Elle écrit les **prédictions** (`predictions/`), le chronométrage (`timing.json`), `run.json` (sans mesure) et la planche (12 images), puis scelle le tout dans `MANIFEST_PREDICTIONS.json` (SHA de chaque fichier). **Aucune mesure n'est calculée.**
+- **`mesures`** (CPU) : elle ne démarre qu'avec le reçu `recu_planche_pe.json`, de la forme `{"stage": "planche_petit_eleve_regardee", "manifest_sha256": <sha du manifeste>, "regards": [{"viewer": "wA:p1", "viewed_at": …}, {"viewer": "Grok …", "viewed_at": …}]}`. Comme pour la phase 1 et P9-A, il faut les deux regards et que chaque fichier scellé soit présent et inchangé. Les scripts doivent être ceux du passage scellé. Elle recalcule les mesures et la lecture D2 **depuis les prédictions scellées**, sans nouvelle inférence. Les règles restent celles de `pe_common.py`, inchangé.
+
+Les sorties de l'élève (boîtes, scores, catégories, scores de relations) sont enregistrées telles que `predict` les rend, en float32. Un test vérifie que les mesures de relations sont identiques avant et après l'aller-retour.
+
+## 2. Un débit comparable (Codex, point 2)
+
+L'élève était chronométré sans `no_grad` et sans autocast autour de sa tête, face à OWLv2 en `no_grad` + fp16. Désormais, **chaque système chronométré** tourne sous `no_grad` et autocast fp16 : l'élève (encodeur et tête, `student_forward`), OWLv2, YOLOE (`quantize=16`) et Florence-2 (fp16). Les prédictions mesurées de l'élève restent en float32, comme avant.
+
+## 3. Le repère des rectangles (Codex, point 3)
+
+Le carré gris décalait l'image d'un nombre entier de pixels (`//2`), alors que les conversions de boîtes utilisaient `/2`. Il y avait donc un demi-pixel d'écart quand la différence des côtés est impaire. Les deux passent désormais par `pad_offsets`, qui donne les décalages entiers. Le contrôle d'aller-retour du blanc couvre maintenant aussi 641×480 et 480×641, et un test vérifie le cas impair.
+
+## 4. Une panne au blanc (Codex, point 4)
+
+Un contrôle de surapprentissage à `passed: false` fait maintenant échouer le smoke : `blanc.json` est écrit, puis le code sort avec une erreur, sans `SMOKE_DONE`. C'est une panne, qui ne peut autoriser ni les bras scientifiques ni l'entraînement sur S1b.
+
+## 5. Révisions épinglées après le smoke relu (Grok p3, CONFORME)
+
+- OWLv2 : `google/owlv2-base-patch16-ensemble` à `cfd3195ba4ea9592eec887ded089f4c08eff231d`.
+- **Florence-2.** La révision relevée par le smoke, `microsoft/Florence-2-base` à `5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac`, est consignée comme source. Son **code distant ne se charge pas** avec transformers 5.16 (`'Florence2LanguageConfig' object has no attribute 'forced_bos_token_id'`), et le patcher, ou rétrograder transformers pour tout le passage, toucherait l'encodeur ou OWLv2. Le code charge donc **le checkpoint converti officiel de transformers**, `florence-community/Florence-2-base` à `00921df66db728a9ceb750f5eca43e5c203a2051` (MIT), avec la classe native `Florence2ForConditionalGeneration`, sans code distant. La tâche est `<OD>`, 3 faisceaux, fp16. Ce sont les poids de Microsoft convertis par transformers. Je n'ai pas pu vérifier ici leur égalité numérique avec la révision `5ca5edf5` : c'est une substitution déclarée, et Florence-2 reste un témoin descriptif. Si le chargement échoue encore au smoke, l'indisponibilité est écrite, comme avant.
+
+## 6. YOLOE-v8-S en mode texte (D8)
+
+Tout est figé avant les 26, sur le code et les seules entrées d'entraînement.
+
+| | |
+|---|---|
+| paquet | `ultralytics==8.4.177` (roue `de8fd2fc…`, 13/10/2026), installé par le pilote, avec torch exigé inchangé ; licence AGPL-3.0 consignée |
+| poids | `yoloe-v8s-seg.pt`, assets `v8.3.0`, 31 135 890 octets, sha256 `ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536`, téléchargés et vérifiés par le script |
+| encodeur de texte | `mobileclip:blt` (`mobileclip_blt.ts`, 599 764 649 octets). Son SHA est **relevé par le smoke**, puis épinglé (`YOLOE_TEXT_SHA256`) par un commit relu : **le complet refuse `None`** |
+| requêtes | les huit chaînes `OWL_QUERIES` d'OWLv2, sans recherche de synonymes |
+| seuil, NMS | score ≥ 0,1 (celui d'OWLv2), NMS par classe à 0,5 (`iou`), au plus 300 boîtes, `imgsz` 640, fp16 |
+| sans classe | la même règle qu'OWLv2 : union des requêtes, NMS torchvision à 0,5, objets « autre » gardés au dénominateur |
+| exécuté | têtes de détection **et de segmentation** (les masques sont calculés par le checkpoint `-seg` et non utilisés : leur coût est dans le débit) |
+| mesures | rappel@10/20/30 sans classe et AP50 sans classe sur les 26 Gemini, en colonne descriptive. **Aucun veto sur D2** : OWLv2 reste la référence de la porte |
+| débit | 96 images de chronométrage, lots de 32, prétraitement, NMS et masques compris. La préparation du texte est chronométrée à part |
+
+## Ordre
+
+Ces changements sont de nouveaux octets : relecture par Grok p2 puis Codex p4. Ensuite vient un **nouveau smoke**, qui doit montrer que Florence-2 se charge réellement et relever le SHA de `mobileclip_blt.ts`. Viennent enfin un commit relu qui épingle ce SHA, puis `full`, la planche regardée et le reçu, et enfin `mesures`. Restent à fixer, comme le demande Codex : la méthode des quantiles et les versions de l'environnement réellement éprouvé, à reprendre du smoke.
