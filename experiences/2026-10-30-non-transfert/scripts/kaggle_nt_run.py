@@ -1,11 +1,14 @@
 # Kaggle T4 driver for nt_run.py (porkyevitch-maths, experiences/2026-10-30-non-transfert). Internet on (IIIF images of
 # the Rijksmuseum dev, sha checked by the reviewed freeze downloader; open_clip_torch for the C-RADIO remote code).
-# Inputs, each found exactly once under /kaggle/input and sha-checked here: the reviewed freeze code (porky-gel-code,
-# manifest c3a538cc, gel_*.py), its binding (porky-gel-config/sources.json) and inventory (ENTREES_GELEES.json), the
+# Inputs, each found exactly once under /kaggle/input and sha-checked here: the reviewed freeze code (pkyevitch-gel-code,
+# manifest c3a538cc, gel_*.py), its binding (pkyevitch-gel-config/sources.json) and inventory (ENTREES_GELEES.json), the
 # seal of the freeze (porky-gel-run output, MANIFEST.json 3c468faa: only its two dev prediction files are opened), the
 # validation cache of porky-diag-run v3, and this folder (nt_run.py, nt_core.py, mesure_metrics.py). A global monitor
 # as for A1 / D3: one session of at most 3 600 s from the pilot start, outputs <= 200 MB, machine guards, refusal of a
 # non-empty output before the child starts. Nothing of the test is read; the diagnostic writes no row of it.
+# Amendment D11 (30/10): Kaggle deleted the porky-* datasets; the freeze code, its config and the bench are re-uploaded
+# unchanged as pkyevitch-gel-code, pkyevitch-gel-config and pkyevitch-banc-gel. Only the binding changes (three dataset
+# paths; kernel outputs keep their names): BINDING pins liaison/sources-gel-pkyevitch.json, uploaded as sources.json.
 # Amendment (30/10, after the first launch stopped on single_visible_T4_required: the Kaggle T4 machine shows two T4):
 # the child sees only GPU 0 (CUDA_VISIBLE_DEVICES=0, as kaggle_gel_run.py); the pilot logs how many GPUs it sees.
 import glob, hashlib, importlib.metadata, json, os, shutil, signal, subprocess, sys, time
@@ -18,7 +21,7 @@ GEL = {"gel_common.py": "e228e390f3d23fcb9ee6e31d2d85f6d89c6f8b5e0b835e2d8ccd3ab
        "gel_data.py": "cc0686d313f49ca489c9683ef919b551f65e27360795eff31e354d8bfeabd0cc",
        "gel_models.py": "f84ebc46cb5275792fd6fc02f77242815ed66d3a5fbf161119a255567aaacd4a",
        "gel_predictions.py": "0ac075adf74ff7bcd2abc80e031891ddcabff595188cac6a38956b4ef5c71af0"}
-BINDING = "60639678e2c2157845964d765b09b950c434d4f5b04546585599576efd77b744"
+BINDING = "60d068998f7d93ab5fb379a8df9ea3fbd3bca6dfa42f7baa02cb2c5572ffb898"  # D11: pkyevitch-gel-config/sources.json
 INVENTORY = "6bde822932f9a288d9bd764cc950e160e16e1c78fb5456df28b51bfd6acd6604"
 SEAL = "3c468faa7bec5ac7a98104a4ac47d3f7be24ec9ef76e0855f49b42aad12fad0c"
 DIAG_NPZ = "c7df9d3dd28acea7454cf7609cf083fe961fa5ff5a7ef121a85fc1d7c2eedbe9"

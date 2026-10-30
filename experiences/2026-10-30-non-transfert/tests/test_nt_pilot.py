@@ -52,6 +52,16 @@ class PilotTest(unittest.TestCase):
             self.assertEqual(hashlib.sha256((gel / name).read_bytes()).hexdigest(), want)
         self.assertEqual(k.WALL_SECONDS, {"diagnostic": 3600})
 
+    def test_binding_pin_is_the_committed_pkyevitch_binding(self):
+        import json
+        liaison = Path(__file__).resolve().parents[1] / "liaison" / "sources-gel-pkyevitch.json"
+        self.assertEqual(hashlib.sha256(liaison.read_bytes()).hexdigest(), k.BINDING)
+        paths = json.loads(liaison.read_text())
+        self.assertFalse(any("/datasets/mabaku/porky-" in v for v in paths.values()))
+        self.assertEqual(paths["frozen_json"], "/kaggle/input/datasets/mabaku/pkyevitch-banc-gel/frozen.json")
+        # kept under another name in the code dataset, so that the pilot finds sources.json exactly once
+        self.assertFalse((liaison.parent / "sources.json").exists())
+
     def test_child_sees_one_gpu(self):
         # first launch: two T4 visible, nt_run requires exactly one (single_visible_T4_required)
         src = (Path(__file__).resolve().parents[1] / "scripts" / "kaggle_nt_run.py").read_text()

@@ -1,13 +1,14 @@
 {
-  "status": "Préinscription D10 (favorable Codex p4) ; code : correctif B1 (vote effectif de TK au seuil, oracle gardé), tk_above_threshold, tirages indéfinis comptés ; à contre-vérifier ; aucune exécution ; pilote : l'enfant ne voit que le GPU 0 (CUDA_VISIBLE_DEVICES=0), nombre de GPU journalisé, après l'échec single_visible_T4_required ; écriture : scalaires numpy convertis avant write_json (échec int64 de la relance, après les contrôles d'identité passés)",
+  "status": "Préinscription D10 (favorable Codex p4) ; code : correctif B1 (vote effectif de TK au seuil, oracle gardé), tk_above_threshold, tirages indéfinis comptés ; à contre-vérifier ; aucune exécution ; pilote : l'enfant ne voit que le GPU 0 (CUDA_VISIBLE_DEVICES=0), nombre de GPU journalisé, après l'échec single_visible_T4_required ; écriture : scalaires numpy convertis avant write_json (échec int64 de la relance, après les contrôles d'identité passés) ; D11 : liaison pkyevitch-* épinglée (60d06899), jeux re-téléversés sans changement",
   "files": {
     "CORRECTIF-B1.md": "16380a1fa2d5a0046dae990143f3395deb7d58fdd8e40aee0ad13e3c7407b91e",
     "PREINSCRIPTION.md": "4dca2435eb3723cfdf46256b434351d80f778e2212d3b55c9896088ad72d9257",
-    "scripts/kaggle_nt_run.py": "609fcbac83231b4e356e56deb97692426ecc1f87fab0d227eaf42ccc349e6c85",
+    "liaison/sources-gel-pkyevitch.json": "60d068998f7d93ab5fb379a8df9ea3fbd3bca6dfa42f7baa02cb2c5572ffb898",
+    "scripts/kaggle_nt_run.py": "c0e396004ca55601dae73df12d9b6cd86c5f5aca8c37013fba2a92310c5be08e",
     "scripts/mesure_metrics.py": "9a9d452676e7dd7717d4fab0aa00d11c2a1da5169913d03a80e0ccb5416df895",
     "scripts/nt_core.py": "d6761ae9a69f2836f9e3a13a45a0252d3b483f8027aa85089761e5154da7f987",
     "scripts/nt_run.py": "ffbc430ce007d0c344854af6415797e13da5ada4c2b4c3c0ed4e9088ceeff49f",
     "tests/test_nt.py": "cd78744e1f9cecfa3f68e17cc4eefdd2e205178df59995a833f4ca300197aa77",
-    "tests/test_nt_pilot.py": "01c770340afde00ffc8fb95e409b53da7c6857e85bc77471811d5b7802cb5b93"
+    "tests/test_nt_pilot.py": "964341d825f28143de6559b5b8c94404b6e000299f120b02b92ba3eff2c9696d"
   }
 }
