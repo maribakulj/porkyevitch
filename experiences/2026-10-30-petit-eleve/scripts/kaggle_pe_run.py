@@ -9,11 +9,11 @@
 # (recu_planche_pe.json), each found exactly once under /kaggle/input, and installs nothing.
 import glob, hashlib, importlib.metadata, os, subprocess, sys, time
 
-STAGE = "smoke"
+STAGE = "full"  # after smoke 2 (Grok p3 CONFORME), revisions, MobileCLIP and CLIP tokenizer pinned in pe_kaggle.py
 OPEN_CLIP = "open_clip_torch==3.3.0"
 ULTRALYTICS = "ultralytics==8.4.177"  # YOLOE-v8-S witness (D8), smoke and full only
 W = "/kaggle/working"
-SCRIPT_SHA256 = {"pe_kaggle.py": "a6ae6582b7598bd86ae34027b5500d56dd79e323ffe198554bb20b9b7f729794", "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"}
+SCRIPT_SHA256 = {"pe_kaggle.py": "91996fe00a615496529f1035d437d30caab6d27f0ea880ab9e28e7bb660af22a", "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"}
 
 
 def log(m):

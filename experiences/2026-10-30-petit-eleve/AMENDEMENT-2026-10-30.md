@@ -61,3 +61,19 @@ Ces changements sont de nouveaux octets : relecture par Grok p2 puis Codex p4. E
 La note du chronométrage dit maintenant que les colonnes ne couvrent pas la même portion du pipeline. YOLOE est chronométré avec son prétraitement, la NMS et les masques. L'élève et OWLv2 le sont sur leur forward seul, prétraitement à part. D est le rapport de deux forwards, pas un rapport de bout en bout.
 
 **Après le smoke** : `blanc.json` relève maintenant `clip_tokenizer`, c'est-à-dire la version et, pour une installation git, le commit du tokenizer CLIP qu'ultralytics peut installer au premier usage, en plus du SHA de `mobileclip_blt.ts`. Les deux seront figés par un commit relu avant le complet. Reste aussi à fixer la méthode des quantiles du bootstrap : le cœur utilise le défaut de numpy, linéaire, à déclarer.
+
+## 8. Épinglage pour le complet, après le smoke 2 (Grok p3, CONFORME)
+
+Le smoke 2 a tourné sur `0315a1d`. Les valeurs ci-dessous sont reprises de son `blanc.json` :
+
+| | valeur figée | contrôle au complet |
+|---|---|---|
+| OWLv2 | `cfd3195ba4ea9592eec887ded089f4c08eff231d` | révision chargée |
+| Florence-2 natif | `florence-community/Florence-2-base` `00921df66db728a9ceb750f5eca43e5c203a2051` (source consignée : Microsoft `5ca5edf5…`) | **s'est chargé réellement au smoke 2** (2 et 7 boîtes) ; ce n'est plus une dérogation |
+| MobileCLIP (`mobileclip_blt.ts`) | `a67804d1b0f07b8b9a20c1761ec0847f34660f5fa338ec70e8f3fce68ed95e54` | SHA exigé |
+| tokenizer CLIP | `clip` 1.0, `https://github.com/ultralytics/CLIP.git` @ `7ffa84b3bfa40c42ecc1c77147a855e69cb2dd40` | version, URL et commit exigés |
+| environnement | Python 3.13.15, torch 2.11.0+cu128, numpy 2.1.3, transformers 5.16.1, ultralytics 8.4.177, open_clip_torch 3.3.0, torchvision 0.26.0+cu128 | `versions()` exigé égal, sinon arrêt avant tout calcul |
+
+**Quantiles** (déclarés, `pe_common.py` inchangé) : intervalle percentile 2,5 / 97,5 %, `numpy.quantile` par défaut (méthode **linéaire**). Les tirages non finis sont retirés, et le nombre de tirages définis est publié (`draws`). La méthode est écrite dans `resultats.json` (`quantile_method`).
+
+Le pilote passe à `STAGE = "full"`. L'étape `mesures` suivra la planche regardée et le reçu des deux regards.

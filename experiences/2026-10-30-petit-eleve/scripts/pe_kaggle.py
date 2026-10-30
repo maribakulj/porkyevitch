@@ -42,7 +42,12 @@ YOLOE_PACKAGE = "ultralytics==8.4.177"  # installed by the pilot (wheel sha256 d
 YOLOE_WEIGHTS = ("https://github.com/ultralytics/assets/releases/download/v8.3.0/yoloe-v8s-seg.pt",
                  "ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536")  # 31 135 890 bytes, text/visual mode
 YOLOE_TEXT_MODEL = "mobileclip:blt"     # text encoder the checkpoint asks for (checked at load)
-YOLOE_TEXT_SHA256 = None                # sha of mobileclip_blt.ts, recorded by the smoke, pinned by a reviewed commit
+YOLOE_TEXT_SHA256 = "a67804d1b0f07b8b9a20c1761ec0847f34660f5fa338ec70e8f3fce68ed95e54"  # mobileclip_blt.ts, smoke 2
+CLIP_TOKENIZER = {"version": "1.0", "url": "https://github.com/ultralytics/CLIP.git",
+                  "commit_id": "7ffa84b3bfa40c42ecc1c77147a855e69cb2dd40"}  # installed by ultralytics at first use, smoke 2
+TESTED_ENV = {"python": "3.13.15", "torch": "2.11.0+cu128", "numpy": "2.1.3", "transformers": "5.16.1",
+              "ultralytics": "8.4.177", "open_clip_torch": "3.3.0", "torchvision": "0.26.0+cu128"}  # smoke 2 (Grok p3)
+QUANTILE_METHOD = ("percentile interval 2.5 / 97.5 %, numpy.quantile default method linear; non-finite draws are dropped and the defined ones counted in draws (pe_common.bootstrap, unchanged)")
 YOLOE_CONF, YOLOE_IOU, YOLOE_MAX_DET, YOLOE_IMGSZ = 0.1, 0.5, 300, 640  # same score threshold and NMS as OWLv2
 LISTES_SHA256 = "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af"  # listes.json as committed
 NOMS_SHA256 = "dfa0e011f7f1df458d5396602b5f33ede99ac2a9f34b7465940241afec648ed2"  # noms.json as committed
@@ -710,6 +715,7 @@ def main(a):
     listes = json.loads((inp / "listes.json").read_text())
     if a.stage == "full":
         require(YOLOE_TEXT_SHA256 is not None, "yoloe_text_encoder_not_pinned_after_smoke")
+        require(versions() == TESTED_ENV, "environment_differs_from_the_reviewed_smoke")
     require(sha(inp / "listes.json") == LISTES_SHA256 and sha(inp / "noms.json") == NOMS_SHA256, "lists_sha")
     roles = preflight(inp, listes, a.stage)
     results = {"stage": a.stage, "versions": versions(), "gpu": torch.cuda.get_device_name()}
@@ -848,6 +854,10 @@ def main(a):
         witnesses["florence2"] = f"unavailable: {type(e).__name__}: {e}"[:500]
     ymodel, witnesses["yoloe"] = yoloe_load(dev, out.parent / "yoloe-cache")  # cache kept outside the sealed folder
     require(witnesses["yoloe"]["text_encoder_sha256"] == YOLOE_TEXT_SHA256, "yoloe_text_encoder_sha")
+    tok = witnesses["yoloe"]["clip_tokenizer"] or {}
+    require(tok.get("version") == CLIP_TOKENIZER["version"] and (tok.get("direct_url") or {}).get("url") ==
+            CLIP_TOKENIZER["url"] and ((tok.get("direct_url") or {}).get("vcs_info") or {}).get("commit_id") ==
+            CLIP_TOKENIZER["commit_id"], "clip_tokenizer_differs_from_the_reviewed_smoke")
     write_json(out / PRED_DIR / "yoloe.json", yoloe_detect(ymodel, [images[n] for n in ev], dev))
     budget("witnesses")
 
@@ -1057,6 +1067,7 @@ def mesures(a):
                              "read_as": "pas de signal = no justification of this campaign by this prototype; it refutes "
                                         "neither Haiku nor distillation, and adopts nothing automatically"}
     results["script_sha256"] = manifest["script_sha256"]
+    results["quantile_method"] = QUANTILE_METHOD
     write_json(out / "resultats.json", results)
     print("PETIT_ELEVE_DONE", results["d2_reading"]["issue"])
 

@@ -11,8 +11,8 @@
 # writing and renaming nothing; only a blanc.json created by the failed run itself is ever renamed.
 import glob, hashlib, json, os, shutil, signal, subprocess, sys, time
 
-STAGE = "blanc"
-BLANK_SHA256 = None  # sha of the reviewed blanc.json, set by a reviewed commit before "reglage"
+STAGE = "reglage"
+BLANK_SHA256 = "81003a86f64818b6e2a0d9af1fa5380ee8ef7d4d17f97b34cea9094487643eef"  # reviewed blanc.json (Grok p3 CONFORME, 30/10)
 W = "/kaggle/working"
 SCRIPTS = {"a1_run.py": "78b1ed982ae9b2e59624a30b83675703e156b92a1d45309b6089162c9dcee597", "a1_core.py": "177ef54243fd6dfed0aa557561aa365f41b2c992379aef6d4fab4c5e27ab205a"}
 DIAG = "312d5a40affb6a399e807dec318e2bd8b569b7c8fcfecfb3552cd1f4cc4457d3"

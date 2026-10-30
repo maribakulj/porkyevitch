@@ -195,7 +195,13 @@ class TimingAndPinsTest(unittest.TestCase):
         self.assertEqual(pk.YOLOE_WEIGHTS[1], "ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536")
         self.assertEqual((pk.YOLOE_CONF, pk.YOLOE_IOU, pk.YOLOE_MAX_DET, pk.YOLOE_IMGSZ), (0.1, 0.5, 300, 640))
         self.assertEqual(pk.YOLOE_CONF, pk.OWL_THRESHOLD)
-        self.assertIsNone(pk.YOLOE_TEXT_SHA256)  # pinned by a reviewed commit after the smoke; the full refuses None
+        self.assertEqual(pk.YOLOE_TEXT_SHA256, "a67804d1b0f07b8b9a20c1761ec0847f34660f5fa338ec70e8f3fce68ed95e54")
+        self.assertEqual(pk.CLIP_TOKENIZER["commit_id"], "7ffa84b3bfa40c42ecc1c77147a855e69cb2dd40")
+        self.assertEqual(pk.CLIP_TOKENIZER["version"], "1.0")
+        self.assertEqual(pk.TESTED_ENV["torch"], "2.11.0+cu128")
+        self.assertIn('require(versions() == TESTED_ENV, "environment_differs_from_the_reviewed_smoke")', SRC)
+        self.assertIn('"clip_tokenizer_differs_from_the_reviewed_smoke"', SRC)
+        self.assertIn("method linear", pk.QUANTILE_METHOD)
         self.assertIn('require(YOLOE_TEXT_SHA256 is not None, "yoloe_text_encoder_not_pinned_after_smoke")', SRC)
         self.assertNotIn("trust_remote_code=True,\n", SRC[SRC.index("def florence_detect"):SRC.index("def yoloe_load")])
 
