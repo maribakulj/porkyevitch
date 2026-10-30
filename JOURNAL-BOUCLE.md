@@ -36,3 +36,5 @@
 - 30/10 : 1er gel complet refusé à 7 s (jeu porky-gel-smoke non monté) ; manifeste du blanc déplacé dans porky-gel-config, sonde conforme ; gel relancé (phase1_freeze_2).
 - 30/10 : p7 → revue critique longue traîne + profondeur d'après le diagnostic.
 - 30/10 : décision D3 (vote rare, tête des enfants) consignée.
+- 30/10 : blanc P9-A relancé (correctif invariant 733a3f28, feux verts Grok p2 section 12 et Codex p4).
+- 30/10 : GEL COMPLET phase 1 scellé : 24 fichiers, predictions_frozen true, 28 min sur T4, aucune mesure.
