@@ -1,6 +1,6 @@
 # Lecture du diagnostic d'A1 (V-diagnostic, 2 100 images éligibles), exploratoire
 
-Sorties jugées CONFORMES (sous-agent Sonnet, porkyevitch-a1-diagnostic-sorties-sonnet.md ; contre-vérification Codex à faire).
+Sorties jugées CONFORMES (sous-agent Sonnet, porkyevitch-a1-diagnostic-sorties-sonnet.md ; contre-vérification Codex : FEU VERT rétrospectif et sorties CONFORMES, porkyevitch-a1-codex.md).
 - A1 bat B : H-F1 0,6076 contre 0,5860 (+0,022), F1 exact +0,034 ; la règle préinscrite le déclare candidat et « recommended ».
 - Le gain vient surtout du q tiré des voisins : à q égal, le décodeur ne gagne que +0,006 sur un seuil ; un seuil sur un q
   mieux réglé (eta = 1, analyse secondaire) fait légèrement mieux qu'A1 (0,6102). « Recommended » = « bat B », pas
