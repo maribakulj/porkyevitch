@@ -52,3 +52,14 @@ RF-DETR Nano en option de débit seulement ; les autres modèles hors du test mi
 ne sont jamais repris comme résultats. À figer avant les 26 : poids, versions, NMS, seuil ; préparation du texte hors régime
 établi, même portion de pipeline chronométrée. Préalable : corriger le chronométrage de l'élève (no_grad/autocast, comme OWLv2)
 et le chargement de Florence-2. Gemini mesure la fidélité, pas la vérité.
+
+## D9 (30/10/2026) : arbitrages de la note tranche 300 v3 (wA:pH 4f8359b)
+
+(3) Relations : **détecteur sans relations pour tous les bras du test**, E0 réentraîné sous ce code, en ablation nommée ; le petit
+élève v1 (avec relations) reste une colonne de comparaison. Raison : M0 et le comptage montrent que l'instabilité de S1b est
+dans la détection (4 objets sur 10 non retrouvés), et la question posée est « ces données aident-elles la détection ». Les
+relations restent dans le produit (petit élève v1) ; leur apport sera une autre brique.
+(4) Références séparées comme proposé. **Option des 60 Gemini acceptée** : passe Gemini (agy -p, une session par image, lecture
+d'image vérifiée) sur les 60 de validation interne, figée AVANT toute sortie d'entraînement ; juge principal = 86 images
+(26 + 60), fidélité au professeur Gemini, pas vérité de localisation (D5).
+Le reste de la v3 est adopté. La préinscription viendra après la porte D2 (complet du petit élève).
