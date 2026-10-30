@@ -1,0 +1,65 @@
+{
+ "stage": "smoke",
+ "versions": {
+  "python": "3.13.15",
+  "torch": "2.11.0+cu128",
+  "numpy": "2.1.3"
+ },
+ "gpu": "Tesla T4",
+ "identity_8x8": {
+  "images": 8,
+  "min_cell_cosine": 0.9999996423721313,
+  "max_abs_diff": 0.0,
+  "rule": "min cell cosine >= 0.999"
+ },
+ "overfit_control": {
+  "images": [
+   "p013",
+   "p022",
+   "p026",
+   "p079",
+   "p088",
+   "p126",
+   "p151",
+   "p188"
+  ],
+  "steps": 1000,
+  "recall_at_30": 0.935064935064935,
+  "first_loss": 25.998817443847656,
+  "last_loss": 1.7533910274505615,
+  "grads_finite": true,
+  "parameters_without_gradient_at_step1": [],
+  "box_roundtrip_max_error": 5.960464477539063e-08,
+  "passed": true
+ },
+ "revisions_to_pin": {
+  "google/owlv2-base-patch16-ensemble": "cfd3195ba4ea9592eec887ded089f4c08eff231d",
+  "microsoft/Florence-2-base": "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac"
+ },
+ "owlv2_smoke": [
+  {
+   "detections": 1,
+   "agnostic": 1
+  },
+  {
+   "detections": 6,
+   "agnostic": 5
+  }
+ ],
+ "florence2_smoke": "unavailable: AttributeError: 'Florence2LanguageConfig' object has no attribute 'forced_bos_token_id'",
+ "timing_smoke_student_full_b8": {
+  "images_per_second_median": 27.54594707012682,
+  "min": 27.54594707012682,
+  "max": 27.54594707012682,
+  "repetitions": 1
+ },
+ "listes_sha256": "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af",
+ "noms_sha256": "dfa0e011f7f1df458d5396602b5f33ede99ac2a9f34b7465940241afec648ed2",
+ "script_sha256": {
+  "pe_kaggle.py": "017f488863fc58b5f9e7457d354a714a0b04d48bfc5e5409c497563d0c626a91",
+  "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"
+ },
+ "peak_rss_mib": 2730.359375,
+ "vram_peak_gib": 2.6280550956726074,
+ "wall_seconds": 247.16965232499996
+}
