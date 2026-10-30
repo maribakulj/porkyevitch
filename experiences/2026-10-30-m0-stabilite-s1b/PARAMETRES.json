@@ -1,8 +1,6 @@
 {
-  "statut": "Valeurs de porte NON FIXÉES : à remplir après le challenge de Grok p7 et la contre-expertise de Codex p4, avant tout passage sur données réelles. Le script refuse de décider tant qu'une porte vaut null.",
-  "porte_objets_apparies_min": null,
-  "porte_relations_jaccard_v0_cible_dure_min": null,
+  "statut": "M0 descriptif seul (devis v2, section 1) : aucune porte, aucune décision, aucun bras ne dépend de M0.",
   "iou_appariement": 0.5,
   "bootstrap": {"tirages": 2000, "graine": 3061, "unite": "image", "methode": "percentile"},
-  "sources_note": "notes/2026-10-30-tranche300-devis.md, section 2 (valeurs proposées alors : 0,70 et 0,5, non retenues ici)"
+  "sources_note": "notes/2026-10-30-tranche300-devis-v2.md, section 1 (la v1 et sa porte de 70 % sont remplacées)"
 }

@@ -43,8 +43,26 @@ def load(g):
 class M0Test(unittest.TestCase):
     def test_identical_passes(self):
         s = m0.pooled([m0.image_stats(load(G), load(G))])
-        self.assertEqual((s["objects_matched_share"], s["category_agreement_iou_matched"],
-                          s["relations_v0_jaccard_matched_pairs"]), (1.0, 1.0, 1.0))
+        self.assertEqual((s["joint"]["micro"]["dice"], s["joint"]["micro"]["jaccard"],
+                          s["category_agreement_iou_matched"], s["relations_v0_jaccard_matched_pairs"]),
+                         (1.0, 1.0, 1.0, 1.0))
+        self.assertEqual(s["objects_per_image"], {"pass1": 3.0, "pass2": 3.0})
+
+    def test_rates_recall_dice_jaccard(self):
+        r = m0.rates(2, 3, 4)
+        self.assertAlmostEqual(r["recall_pass1"], 2 / 3)
+        self.assertAlmostEqual(r["recall_pass2"], 0.5)
+        self.assertAlmostEqual(r["dice"], 4 / 7)
+        self.assertAlmostEqual(r["jaccard"], 2 / 5)
+        self.assertIsNone(m0.rates(0, 0, 0)["dice"])
+
+    def test_hungarian_sensitivity_can_match_more(self):
+        # greedy takes a0-b0 (IoU 0.818) and leaves a1 and b1 alone; Hungarian takes a0-b1 (0.700) + a1-b0 (0.667)
+        a = [{"box": [0, 0, 100, 100], "cat": "personne"}, {"box": [30, 0, 130, 100], "cat": "personne"}]
+        b = [{"box": [10, 0, 110, 100], "cat": "personne"}, {"box": [0, 0, 70, 100], "cat": "personne"}]
+        greedy, hung = m0.match(a, b), m0.match(a, b, hungarian=True)
+        self.assertEqual(greedy, {0: 0})
+        self.assertEqual(hung, {0: 1, 1: 0})
 
     def test_name_differs_category_same_is_matched(self):
         st = m0.image_stats(load(G), variant(rename=(0, "old man")))
@@ -71,14 +89,21 @@ class M0Test(unittest.TestCase):
         b = [{"box": [0, 0, 100, 100], "cat": "personne"}]
         self.assertEqual(m0.match(a, b), {0: 0})
 
-    def test_null_gates_give_no_decision_and_fixed_gates_decide(self):
-        r = {"objects_matched_share": 0.8, "relations_v0_jaccard_matched_pairs": 0.3}
-        self.assertIsNone(m0.decide(r, {"porte_objets_apparies_min": None,
-                                        "porte_relations_jaccard_v0_cible_dure_min": 0.5})["decision"])
-        d = m0.decide(r, {"porte_objets_apparies_min": 0.7, "porte_relations_jaccard_v0_cible_dure_min": 0.5})
-        self.assertEqual((d["objects"], d["relations"]), ("cibles_dures_passe_1", "pas_de_cible_dure_relations_douces_ou_exclues"))
-        d = m0.decide(r, {"porte_objets_apparies_min": 0.9, "porte_relations_jaccard_v0_cible_dure_min": 0.2})
-        self.assertEqual((d["objects"], d["relations"]), ("cibles_douces_seconde_passe_240", "cible_dure_possible"))
+    def test_gate_in_params_is_refused(self):
+        root = Path(tempfile.mkdtemp())
+        (root / "tirage.json").write_text(json.dumps({"picks": []}))
+        params = json.loads((Path(__file__).resolve().parents[1] / "PARAMETRES.json").read_text())
+        params["porte_objets_apparies_min"] = 0.7
+        (root / "params.json").write_text(json.dumps(params))
+        old = m0.TIRAGE_SHA256
+        m0.TIRAGE_SHA256 = hashlib.sha256((root / "tirage.json").read_bytes()).hexdigest()
+        try:
+            a = type("A", (), dict(pass1=str(root), pass2=str(root), tirage=str(root / "tirage.json"),
+                                   params=str(root / "params.json"), out=str(root / "m0.json")))
+            with self.assertRaises(RuntimeError):
+                m0.main(a)
+        finally:
+            m0.TIRAGE_SHA256 = old
 
     def test_main_on_sixty_fictitious_pairs(self):
         root = Path(tempfile.mkdtemp())
@@ -100,10 +125,13 @@ class M0Test(unittest.TestCase):
             m0.TIRAGE_SHA256 = old
         out = json.loads((root / "m0.json").read_text())
         self.assertEqual(out["images"], 60)
-        self.assertAlmostEqual(out["pooled"]["objects_matched_share"], 2 * (30 * 3 + 30 * 2) / (60 * 3 + 30 * 3 + 30 * 2))
-        self.assertIsNone(out["decision"]["decision"])                # gates are null in PARAMETRES.json
-        lo, hi = out["ci95_by_image"]["objects_matched_share"]
-        self.assertLessEqual(lo, out["pooled"]["objects_matched_share"])
+        dice = out["pooled_greedy"]["joint"]["micro"]["dice"]
+        self.assertAlmostEqual(dice, 2 * (30 * 3 + 30 * 2) / (60 * 3 + 30 * 3 + 30 * 2))
+        self.assertTrue(out["descriptive_only"])
+        self.assertNotIn("decision", out)
+        self.assertIn("pooled_hungarian_sensitivity", out)
+        lo, hi = out["ci95_by_image"]["joint_dice"]
+        self.assertLessEqual(lo, dice)
 
 
 if __name__ == "__main__":
