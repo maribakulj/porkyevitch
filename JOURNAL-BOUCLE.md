@@ -47,3 +47,13 @@
 - 30/10 : A1 v2 : feu vert Grok p2 (texte), audit p4 en file.
 - 30/10 : mesure phase 1 : correctifs B1/B2 (18702a0) en contre-vérification ; décision : D sur validation des autres briques = écart déclaré, sans effet sur les verdicts.
 - 30/10 : contre-regard Grok p3 des 100 confiants absents : O 29 / A 45 / E 26 (wA:p1 : 61/27/12), accord 53 % ; vrai (O+A) 74-88 %.
+- 30/10 : mesure phase 1 : feux verts Codex p4 et Grok p7 ; étape DEV lancée (CPU, internet IIIF).
+- 30/10 : regard des 7 planches du dev par wA:p1 fait ; regard de Grok p3 demandé (reçu à deux regards exigé pour ouvrir les tests).
+- 30/10 : contre-vérif Grok p2 des correctifs B1/B2 : CONFORME (section 8) ; dev déjà fait ; test attend le regard Grok p3 + reçu.
+- 30/10 03:50 : Codex p4 à court de crédits jusqu'à 6:40 ; audits en attente : petit élève v1, A1 v2 (texte + code), D3 (texte + code), runner P9-A. Grok p2/p3/p7 et pH occupés ; Haiku pE-pG et Gemini p8 laissés au repos (D2 : pas d'annotation au-delà de la tranche 300 avant la porte du petit élève).
+- 30/10 : regard Grok p3 des planches reçu ; reçu des deux regards écrit ; relecture des sorties dev demandée à p3 ; test attend aussi la réponse de p7 (D4).
+- 30/10 : runner P9-A : feu vert Grok p2 pour le devis (e08881c5) ; reçu de mesures à deux regards demandé à pH ; audit p4 au retour de ses crédits.
+- 30/10 : M0 écrit (4f31d9c), portes à fixer après Grok p7 + Codex p4.
+- 30/10 : A1 v2 code : feu vert Grok p7 pour le blanc (paquet 25f56a5f) ; faux optimum HiGHS non reproduit chez Grok (presolve ou non) — à vérifier par Codex ; blanc attend l'audit p4.
+- 30/10 : D3 code : feu vert Grok p2 pour le blanc (paquet 3bca548c) ; attend audit p4. File p4 au retour (6:40) : petit élève v1, P9-A devis (e08881c5) + diff 9044582, A1 v2 texte+code (25f56a5f), D3 texte+code (3bca548c), tranche300/M0.
+- 30/10 : D4 maintenue (Grok p7 : aucun chemin de fuite). Test phase 1 attend la relecture des sorties dev par Grok p3.

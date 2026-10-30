@@ -15,3 +15,6 @@ fichiers écrits et des journaux). Étape dev lancée sous ces feux verts (sorti
 Désaccord : Grok p7 (relecteur supplémentaire) bloque ce point (`porkyevitch-mesure-phase1-grok.md`). Question posée : un chemin
 concret de fuite vers les planches, dev.json, les journaux ou une décision humaine. S'il en montre un, le dev sera refait avec une
 projection dev seule, épinglée ; sinon, le désaccord reste consigné ici.
+Réponse de Grok p7 (30/10) : aucun chemin concret ; « mesure_phase1.py:141 ne garde que doc["dev"]["items"], la ligne 142 fait
+del doc, et les planches, dev.json et les journaux n'écrivent que des objets issus de cette liste ». **D4 maintenue** : le dev
+n'est pas refait ; le désaccord de principe reste consigné.
