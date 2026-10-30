@@ -1,5 +1,5 @@
 {
-  "status": "Version 1 écrite pour relecture (Grok p2 puis Codex p4), aucune exécution ; listes et table des noms produites localement (comptage de fichiers)",
+  "status": "Version 1 relue (Grok p2, Codex p4 : feu vert smoke sur 59f56096) ; amendement du pilote seul (30/10) : open_clip_torch==3.3.0 installé avant le sous-processus, pe_kaggle.py et pe_common.py inchangés ; à relire par Grok p2",
   "files": {
     "PREINSCRIPTION.md": "bf5c02c7e3a4bc2d918dc17ab01fe79e3d33059688e7aa5c497dff224029dadc",
     "listes.json": "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af",
@@ -7,8 +7,9 @@
     "scripts/pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af",
     "scripts/pe_listes.py": "2281a5dea11bd928f9ece00ee06dc5c5d580574d0757874cbbda207caaa93edf",
     "scripts/pe_kaggle.py": "017f488863fc58b5f9e7457d354a714a0b04d48bfc5e5409c497563d0c626a91",
-    "scripts/kaggle_pe_run.py": "5263185f8a7ebc6379c620c9ed6b29742f19dc49b044740bc0777b1662214858",
+    "scripts/kaggle_pe_run.py": "1e748cfcc6dd36e575afa9358a5f7d82a41875537b472898522b671a6fd82b13",
     "tests/test_pe_common.py": "ccd14b8c3dc835e8fd90ac8f7a2b6678ca5cb86b2ce59656c743602e23089751",
-    "tests/test_pe_torch.py": "0b869693e23aaa91549b6a6e195183c3903169f0442ef362d57883b4f98c3bdc"
+    "tests/test_pe_torch.py": "0b869693e23aaa91549b6a6e195183c3903169f0442ef362d57883b4f98c3bdc",
+    "tests/test_pe_pilot.py": "ed4dd76ae13d5fd9677dbc2d19037710acc16d2487166d23b636581c4fec69e6"
   }
 }
