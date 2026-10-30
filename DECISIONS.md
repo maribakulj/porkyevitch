@@ -63,3 +63,15 @@ relations restent dans le produit (petit élève v1) ; leur apport sera une autr
 d'image vérifiée) sur les 60 de validation interne, figée AVANT toute sortie d'entraînement ; juge principal = 86 images
 (26 + 60), fidélité au professeur Gemini, pas vérité de localisation (D5).
 Le reste de la v3 est adopté. La préinscription viendra après la porte D2 (complet du petit élève).
+
+## D10 (30/10/2026) : priorités après la phase 1 (Grok p7 challenger, contre-expertise Codex p4)
+
+1. L'article publie des recettes et un artefact **exploratoires** : aucune brique retenue, aucun gain démontré sur le
+   Rijksmuseum ; T* et TK améliorent l'accord avec le catalogue ICAI seulement. Un F1 mesure un accord de catalogue.
+2. Référence Iconclass du petit élève et de la carte : **T\***. P9-A, A1 et D3 gardent T-Z comme référence, sans changer leurs
+   règles ni leurs interdits, mais ce sont des **sondes de validation**, pas une tête à publier.
+3. Cause du non-transfert : **non établie**. La lecture de Grok (codes fréquents profonds absents des notices Rijksmuseum) n'est
+   qu'une hypothèse : fréquence > 100 et profondeur sont deux marges, pas leur croisement. Diagnostic à préinscrire, dev et
+   validation seulement, selon le protocole de Codex (R_tête contre R_vote pondéré, table appariée, contrôle de prévalence,
+   croisement fréquence × profondeur), script audité avant lancement.
+4. Priorités : ce diagnostic et le petit élève, puis les sondes P9-A / A1 / D3 déjà prêtes.
