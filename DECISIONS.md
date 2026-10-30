@@ -121,3 +121,10 @@ Le petit élève v1 (tête sur C-RADIO gelé) s'arrête là (D2 « pas de signal
 écrit d'avance, même règle Loc/AP/D, mêmes 26 images (donc exploratoire : ces 26 ont déjà servi de juge). Aucune ouverture
 automatique de la campagne Haiku (300) ; OWLv2 n'est pas « adopté » par défaut. Si encore Loc−, la piste élève s'arrête.
 Rapports : porkyevitch-apres-d2-grok.md, porkyevitch-apres-d2-codex.md. Licence AGPL de YOLOE notée, pas une porte.
+
+## D17 (30/10/2026) : partie Iconclass après la phase 2 (Grok p7, contre-expertise Codex p4)
+
+Une seule mesure, puis écrire : A1 avec q figé (eta = 1) et son seuil scellé au réglage, sans réajustement, mesuré une fois
+en H-F1 sur le dev Rijksmuseum (301 images, 239 composantes ; pas les 211 paires de D10), contre B = T-Z (comparaison
+principale) et T* (référence figée), bootstrap par composantes, règle écrite d'avance ; aucune ligne de test, aucun réglage
+sur le dev. Pas de kNN en produit ni de Hill dans ce tour. Rapports : porkyevitch-apres-phase2-grok.md / -codex.md.
