@@ -1,0 +1,431 @@
+{
+ "arms": {
+  "T-D": {
+   "weights_bytes": {
+    "trainable": 49818508,
+    "frozen": 307200,
+    "buffers": 63256
+   },
+   "method": "first training batch of the arm, inside the loop: allocated before forward (A0), after forward (A1: activations and attention kept for backward), after backward (A2: + gradients, - freed activations), after the first AdamW step (A3: + optimiser states); peak = torch.cuda.max_memory_allocated over that batch after a reset; attention = bytes of the outputs of the decoder's multihead attention returned to the caller (forward hook; T-D only); its internal buffers kept for backward are inside A1 - A0 and are not separable from the other activations by this method",
+   "first_batch": {
+    "batch": 512,
+    "A0_before_forward": 201774080,
+    "A1_after_forward": 3326320128,
+    "A2_after_backward": 270729728,
+    "A3_after_step": 371677696,
+    "activations_kept_A1_minus_A0": 3124546048,
+    "gradients_bytes": 49818508,
+    "adamw_states_bytes": 99637088,
+    "attention_outputs_bytes": 170393600,
+    "peak_over_batch": 3572169216
+   },
+   "epochs": [
+    {
+     "epoch": 0,
+     "seconds": 3227.7572638988495,
+     "images": 81951,
+     "images_per_second": 25.389455598239238
+    },
+    {
+     "epoch": 1,
+     "seconds": 140.22413873672485,
+     "images": 81951,
+     "images_per_second": 584.4285929427867
+    },
+    {
+     "epoch": 2,
+     "seconds": 140.18828988075256,
+     "images": 81951,
+     "images_per_second": 584.5780436197933
+    },
+    {
+     "epoch": 3,
+     "seconds": 140.0542449951172,
+     "images": 81951,
+     "images_per_second": 585.1375459037595
+    },
+    {
+     "epoch": 4,
+     "seconds": 140.08852648735046,
+     "images": 81951,
+     "images_per_second": 584.994357099448
+    },
+    {
+     "epoch": 5,
+     "seconds": 139.90312504768372,
+     "images": 81951,
+     "images_per_second": 585.7695982027534
+    },
+    {
+     "epoch": 6,
+     "seconds": 139.97299337387085,
+     "images": 81951,
+     "images_per_second": 585.4772109337465
+    },
+    {
+     "epoch": 7,
+     "seconds": 140.07252430915833,
+     "images": 81951,
+     "images_per_second": 585.0611860848194
+    },
+    {
+     "epoch": 8,
+     "seconds": 139.90059113502502,
+     "images": 81951,
+     "images_per_second": 585.7802107950412
+    },
+    {
+     "epoch": 9,
+     "seconds": 139.87196111679077,
+     "images": 81951,
+     "images_per_second": 585.9001105815753
+    },
+    {
+     "epoch": 10,
+     "seconds": 139.83401155471802,
+     "images": 81951,
+     "images_per_second": 586.059118048252
+    },
+    {
+     "epoch": 11,
+     "seconds": 139.74322271347046,
+     "images": 81951,
+     "images_per_second": 586.4398658689494
+    },
+    {
+     "epoch": 12,
+     "seconds": 139.80055022239685,
+     "images": 81951,
+     "images_per_second": 586.1993605987316
+    },
+    {
+     "epoch": 13,
+     "seconds": 139.83095836639404,
+     "images": 81951,
+     "images_per_second": 586.0719145621455
+    },
+    {
+     "epoch": 14,
+     "seconds": 139.83867287635803,
+     "images": 81951,
+     "images_per_second": 586.039578611842
+    },
+    {
+     "epoch": 15,
+     "seconds": 139.81446766853333,
+     "images": 81951,
+     "images_per_second": 586.1410369891122
+    },
+    {
+     "epoch": 16,
+     "seconds": 139.74744153022766,
+     "images": 81951,
+     "images_per_second": 586.4221679180928
+    },
+    {
+     "epoch": 17,
+     "seconds": 139.7957057952881,
+     "images": 81951,
+     "images_per_second": 586.2197055195967
+    },
+    {
+     "epoch": 18,
+     "seconds": 139.93222761154175,
+     "images": 81951,
+     "images_per_second": 585.6477721096732
+    },
+    {
+     "epoch": 19,
+     "seconds": 139.7949275970459,
+     "images": 81951,
+     "images_per_second": 586.2229678365617
+    },
+    {
+     "epoch": 20,
+     "seconds": 139.78631281852722,
+     "images": 81951,
+     "images_per_second": 586.2590957003346
+    },
+    {
+     "epoch": 21,
+     "seconds": 139.90335726737976,
+     "images": 81951,
+     "images_per_second": 585.7686229137348
+    },
+    {
+     "epoch": 22,
+     "seconds": 139.78326416015625,
+     "images": 81951,
+     "images_per_second": 586.2718769496634
+    },
+    {
+     "epoch": 23,
+     "seconds": 139.90266847610474,
+     "images": 81951,
+     "images_per_second": 585.7715058654834
+    },
+    {
+     "epoch": 24,
+     "seconds": 139.8309667110443,
+     "images": 81951,
+     "images_per_second": 586.0718785880293
+    },
+    {
+     "epoch": 25,
+     "seconds": 139.74871373176575,
+     "images": 81951,
+     "images_per_second": 586.4168264263509
+    },
+    {
+     "epoch": 26,
+     "seconds": 139.74710726737976,
+     "images": 81951,
+     "images_per_second": 586.4235665866232
+    },
+    {
+     "epoch": 27,
+     "seconds": 139.87469601631165,
+     "images": 81951,
+     "images_per_second": 585.8886567693082
+    },
+    {
+     "epoch": 28,
+     "seconds": 139.8713812828064,
+     "images": 81951,
+     "images_per_second": 585.9025394185684
+    },
+    {
+     "epoch": 29,
+     "seconds": 139.85203886032104,
+     "images": 81951,
+     "images_per_second": 585.9835724481037
+    }
+   ],
+   "arm_wall_seconds": 9100.765604019165,
+   "vram_peak_allocated_arm_bytes": 3673903616,
+   "vram_peak_reserved_arm_bytes": 4028628992,
+   "ram_peak_process_so_far_gb": 13.018828,
+   "checkpoint_bytes": 50383783
+  },
+  "T-Z": {
+   "weights_bytes": {
+    "trainable": 73206668,
+    "frozen": 0,
+    "buffers": 0
+   },
+   "method": "first training batch of the arm, inside the loop: allocated before forward (A0), after forward (A1: activations and attention kept for backward), after backward (A2: + gradients, - freed activations), after the first AdamW step (A3: + optimiser states); peak = torch.cuda.max_memory_allocated over that batch after a reset; attention = bytes of the outputs of the decoder's multihead attention returned to the caller (forward hook; T-D only); its internal buffers kept for backward are inside A1 - A0 and are not separable from the other activations by this method",
+   "first_batch": {
+    "batch": 512,
+    "A0_before_forward": 241943552,
+    "A1_after_forward": 451325440,
+    "A2_after_backward": 315150848,
+    "A3_after_step": 462039552,
+    "activations_kept_A1_minus_A0": 209381888,
+    "gradients_bytes": 73206668,
+    "adamw_states_bytes": 146413356,
+    "attention_outputs_bytes": null,
+    "peak_over_batch": 535246336
+   },
+   "epochs": [
+    {
+     "epoch": 0,
+     "seconds": 21.633241891860962,
+     "images": 81951,
+     "images_per_second": 3788.197078943314
+    },
+    {
+     "epoch": 1,
+     "seconds": 21.441397190093994,
+     "images": 81951,
+     "images_per_second": 3822.091619406293
+    },
+    {
+     "epoch": 2,
+     "seconds": 22.05734610557556,
+     "images": 81951,
+     "images_per_second": 3715.3601593303038
+    },
+    {
+     "epoch": 3,
+     "seconds": 21.606788635253906,
+     "images": 81951,
+     "images_per_second": 3792.8351465582728
+    },
+    {
+     "epoch": 4,
+     "seconds": 21.882554531097412,
+     "images": 81951,
+     "images_per_second": 3745.0374676430647
+    },
+    {
+     "epoch": 5,
+     "seconds": 22.07538652420044,
+     "images": 81951,
+     "images_per_second": 3712.323777815665
+    },
+    {
+     "epoch": 6,
+     "seconds": 22.174111366271973,
+     "images": 81951,
+     "images_per_second": 3695.7957208743014
+    },
+    {
+     "epoch": 7,
+     "seconds": 22.48179054260254,
+     "images": 81951,
+     "images_per_second": 3645.2161556842384
+    },
+    {
+     "epoch": 8,
+     "seconds": 22.08584761619568,
+     "images": 81951,
+     "images_per_second": 3710.565614420347
+    },
+    {
+     "epoch": 9,
+     "seconds": 23.191174745559692,
+     "images": 81951,
+     "images_per_second": 3533.714365984992
+    },
+    {
+     "epoch": 10,
+     "seconds": 22.487268924713135,
+     "images": 81951,
+     "images_per_second": 3644.3279869038574
+    },
+    {
+     "epoch": 11,
+     "seconds": 22.044636964797974,
+     "images": 81951,
+     "images_per_second": 3717.502293582
+    },
+    {
+     "epoch": 12,
+     "seconds": 21.993462562561035,
+     "images": 81951,
+     "images_per_second": 3726.1522193825117
+    },
+    {
+     "epoch": 13,
+     "seconds": 21.4308979511261,
+     "images": 81951,
+     "images_per_second": 3823.9641899900985
+    },
+    {
+     "epoch": 14,
+     "seconds": 22.264667987823486,
+     "images": 81951,
+     "images_per_second": 3680.7639297105748
+    },
+    {
+     "epoch": 15,
+     "seconds": 21.69266128540039,
+     "images": 81951,
+     "images_per_second": 3777.8208589842247
+    },
+    {
+     "epoch": 16,
+     "seconds": 22.511722803115845,
+     "images": 81951,
+     "images_per_second": 3640.3694065423397
+    },
+    {
+     "epoch": 17,
+     "seconds": 23.15029525756836,
+     "images": 81951,
+     "images_per_second": 3539.95430418302
+    },
+    {
+     "epoch": 18,
+     "seconds": 23.305622100830078,
+     "images": 81951,
+     "images_per_second": 3516.361219332642
+    },
+    {
+     "epoch": 19,
+     "seconds": 22.885744094848633,
+     "images": 81951,
+     "images_per_second": 3580.8748887694132
+    },
+    {
+     "epoch": 20,
+     "seconds": 22.72018265724182,
+     "images": 81951,
+     "images_per_second": 3606.9685599314157
+    },
+    {
+     "epoch": 21,
+     "seconds": 22.850571632385254,
+     "images": 81951,
+     "images_per_second": 3586.3867430754112
+    },
+    {
+     "epoch": 22,
+     "seconds": 22.62446403503418,
+     "images": 81951,
+     "images_per_second": 3622.2288810465625
+    },
+    {
+     "epoch": 23,
+     "seconds": 22.190792322158813,
+     "images": 81951,
+     "images_per_second": 3693.017529164078
+    },
+    {
+     "epoch": 24,
+     "seconds": 22.226186513900757,
+     "images": 81951,
+     "images_per_second": 3687.1366072374167
+    },
+    {
+     "epoch": 25,
+     "seconds": 21.99958300590515,
+     "images": 81951,
+     "images_per_second": 3725.115536609255
+    },
+    {
+     "epoch": 26,
+     "seconds": 22.29692769050598,
+     "images": 81951,
+     "images_per_second": 3675.438517500429
+    },
+    {
+     "epoch": 27,
+     "seconds": 21.955072164535522,
+     "images": 81951,
+     "images_per_second": 3732.667565237173
+    },
+    {
+     "epoch": 28,
+     "seconds": 22.398451328277588,
+     "images": 81951,
+     "images_per_second": 3658.7789253893743
+    },
+    {
+     "epoch": 29,
+     "seconds": 21.88412880897522,
+     "images": 81951,
+     "images_per_second": 3744.767897855148
+    }
+   ],
+   "arm_wall_seconds": 2211.2926013469696,
+   "vram_peak_allocated_arm_bytes": 737223168,
+   "vram_peak_reserved_arm_bytes": 817889280,
+   "ram_peak_process_so_far_gb": 13.069504,
+   "checkpoint_bytes": 73348953
+  }
+ },
+ "ram_peak_gb": 13.069504,
+ "ram_note": "ru_maxrss of the process (Linux: KiB), divided by 1e6: GB to 2.4 %",
+ "disk_free_before_gb": {
+  "/kaggle/working/full": 20.940488704,
+  "/tmp": 1126.15163904
+ },
+ "disk_free_after_gb": {
+  "/kaggle/working/full": 20.816740352,
+  "/tmp": 1126.124781568
+ },
+ "outputs_bytes": 123744071,
+ "resumption": "none inside a run: checkpoints are written atomically at each best epoch; a lost session is rerun from zero in a new output folder (the optimiser state is not saved, so a resumed run would not be the same run)",
+ "wall_seconds": 11318.051565885544
+}

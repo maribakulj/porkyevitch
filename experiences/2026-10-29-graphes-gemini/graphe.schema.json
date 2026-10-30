@@ -1,0 +1,23 @@
+{
+  "type": "object",
+  "required": ["objects", "relations"],
+  "properties": {
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "box", "attributes"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "box": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4},
+          "attributes": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {"type": "array", "items": {"type": "string"}, "minItems": 3, "maxItems": 3}
+    }
+  }
+}

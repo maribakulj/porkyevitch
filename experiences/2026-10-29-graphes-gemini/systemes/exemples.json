@@ -1,0 +1,450 @@
+{
+ "note": "Three worked examples written by wA:p1 (Opus) on training images p055, p098, p162 of the pilot, used only as few-shot examples (systems S2 and above); never part of the tuning or evaluation sets.",
+ "p055.jpg": {
+  "objects": [
+   {
+    "id": "o1",
+    "name": "man",
+    "box": [
+     360,
+     140,
+     550,
+     690
+    ],
+    "attributes": [
+     "standing",
+     "long robe",
+     "long hair",
+     "raises right hand",
+     "looks down"
+    ]
+   },
+   {
+    "id": "o2",
+    "name": "man",
+    "box": [
+     580,
+     640,
+     800,
+     800
+    ],
+    "attributes": [
+     "rising",
+     "wrapped in white shroud",
+     "pale",
+     "half sitting up"
+    ]
+   },
+   {
+    "id": "o3",
+    "name": "tomb",
+    "box": [
+     400,
+     660,
+     860,
+     830
+    ],
+    "attributes": [
+     "open",
+     "stone"
+    ]
+   },
+   {
+    "id": "o4",
+    "name": "crowd",
+    "box": [
+     200,
+     430,
+     450,
+     960
+    ],
+    "attributes": [
+     "astonished",
+     "raised hands",
+     "leaning back"
+    ]
+   },
+   {
+    "id": "o5",
+    "name": "old man",
+    "box": [
+     280,
+     320,
+     370,
+     500
+    ],
+    "attributes": [
+     "bearded",
+     "standing",
+     "in shadow"
+    ]
+   },
+   {
+    "id": "o6",
+    "name": "sword",
+    "box": [
+     740,
+     160,
+     840,
+     430
+    ],
+    "attributes": [
+     "sheathed",
+     "hanging"
+    ]
+   }
+  ],
+  "relations": [
+   [
+    "o1",
+    "gestures to",
+    "o2"
+   ],
+   [
+    "o2",
+    "rises from",
+    "o3"
+   ],
+   [
+    "o4",
+    "looks at",
+    "o2"
+   ],
+   [
+    "o5",
+    "looks at",
+    "o1"
+   ],
+   [
+    "o1",
+    "stands on",
+    "o3"
+   ]
+  ]
+ },
+ "p098.jpg": {
+  "objects": [
+   {
+    "id": "o1",
+    "name": "carriage",
+    "box": [
+     180,
+     60,
+     760,
+     860
+    ],
+    "attributes": [
+     "horse-drawn omnibus",
+     "upper deck",
+     "large wheels",
+     "sign with lettering"
+    ]
+   },
+   {
+    "id": "o2",
+    "name": "horse",
+    "box": [
+     70,
+     280,
+     230,
+     560
+    ],
+    "attributes": [
+     "harnessed",
+     "walking"
+    ]
+   },
+   {
+    "id": "o3",
+    "name": "woman",
+    "box": [
+     640,
+     380,
+     830,
+     900
+    ],
+    "attributes": [
+     "long dark dress",
+     "hat",
+     "climbing"
+    ]
+   },
+   {
+    "id": "o4",
+    "name": "bag",
+    "box": [
+     620,
+     520,
+     740,
+     680
+    ],
+    "attributes": [
+     "large",
+     "dark",
+     "bulging"
+    ]
+   },
+   {
+    "id": "o5",
+    "name": "man",
+    "box": [
+     520,
+     330,
+     640,
+     620
+    ],
+    "attributes": [
+     "standing",
+     "cap",
+     "on the rear platform"
+    ]
+   },
+   {
+    "id": "o6",
+    "name": "crowd",
+    "box": [
+     300,
+     120,
+     700,
+     290
+    ],
+    "attributes": [
+     "seated",
+     "on the upper deck"
+    ]
+   },
+   {
+    "id": "o7",
+    "name": "dog",
+    "box": [
+     70,
+     700,
+     170,
+     880
+    ],
+    "attributes": [
+     "seated",
+     "small",
+     "dark"
+    ]
+   },
+   {
+    "id": "o8",
+    "name": "crowd",
+    "box": [
+     780,
+     300,
+     960,
+     860
+    ],
+    "attributes": [
+     "walking",
+     "street"
+    ]
+   },
+   {
+    "id": "o9",
+    "name": "building",
+    "box": [
+     60,
+     50,
+     970,
+     400
+    ],
+    "attributes": [
+     "tall",
+     "background",
+     "city street"
+    ]
+   }
+  ],
+  "relations": [
+   [
+    "o2",
+    "pulls",
+    "o1"
+   ],
+   [
+    "o3",
+    "carries",
+    "o4"
+   ],
+   [
+    "o3",
+    "enters",
+    "o1"
+   ],
+   [
+    "o5",
+    "stands on",
+    "o1"
+   ],
+   [
+    "o5",
+    "looks at",
+    "o3"
+   ],
+   [
+    "o6",
+    "sits on",
+    "o1"
+   ],
+   [
+    "o7",
+    "left of",
+    "o1"
+   ]
+  ]
+ },
+ "p162.jpg": {
+  "objects": [
+   {
+    "id": "o1",
+    "name": "man",
+    "box": [
+     300,
+     360,
+     960,
+     900
+    ],
+    "attributes": [
+     "seated",
+     "bald",
+     "bearded",
+     "dark coat",
+     "writing"
+    ]
+   },
+   {
+    "id": "o2",
+    "name": "old man",
+    "box": [
+     60,
+     80,
+     370,
+     610
+    ],
+    "attributes": [
+     "standing",
+     "bald",
+     "white moustache",
+     "light coat",
+     "hands lowered"
+    ]
+   },
+   {
+    "id": "o3",
+    "name": "desk",
+    "box": [
+     40,
+     560,
+     750,
+     980
+    ],
+    "attributes": [
+     "wooden",
+     "papers on top"
+    ]
+   },
+   {
+    "id": "o4",
+    "name": "pen",
+    "box": [
+     460,
+     400,
+     560,
+     500
+    ],
+    "attributes": [
+     "held up"
+    ]
+   },
+   {
+    "id": "o5",
+    "name": "inkwell",
+    "box": [
+     300,
+     580,
+     390,
+     660
+    ],
+    "attributes": [
+     "ornate"
+    ]
+   },
+   {
+    "id": "o6",
+    "name": "chair",
+    "box": [
+     780,
+     560,
+     970,
+     980
+    ],
+    "attributes": [
+     "armchair"
+    ]
+   },
+   {
+    "id": "o7",
+    "name": "cabinet",
+    "box": [
+     560,
+     30,
+     960,
+     460
+    ],
+    "attributes": [
+     "filing drawers",
+     "green"
+    ]
+   },
+   {
+    "id": "o8",
+    "name": "text",
+    "box": [
+     80,
+     930,
+     950,
+     1000
+    ],
+    "attributes": [
+     "caption",
+     "printed"
+    ]
+   }
+  ],
+  "relations": [
+   [
+    "o1",
+    "sits on",
+    "o6"
+   ],
+   [
+    "o1",
+    "holds",
+    "o4"
+   ],
+   [
+    "o1",
+    "speaks to",
+    "o2"
+   ],
+   [
+    "o2",
+    "looks at",
+    "o1"
+   ],
+   [
+    "o1",
+    "looks at",
+    "o2"
+   ],
+   [
+    "o1",
+    "writes with",
+    "o4"
+   ]
+  ]
+ }
+}

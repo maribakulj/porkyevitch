@@ -1,0 +1,6 @@
+{
+ "rows": 64,
+ "min_cosine": 1.0,
+ "max_abs_diff": 0.0,
+ "passed": true
+}

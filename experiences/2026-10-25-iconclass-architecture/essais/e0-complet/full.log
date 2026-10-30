@@ -1,0 +1,48 @@
+      5 s  test-00000-of-00001: ok
+     17 s  train-00000-of-00011: ok
+     29 s  train-00001-of-00011: ok
+     40 s  train-00002-of-00011: ok
+     53 s  train-00003-of-00011: ok
+     65 s  train-00004-of-00011: ok
+     78 s  train-00005-of-00011: ok
+     88 s  train-00006-of-00011: ok
+    102 s  train-00007-of-00011: ok
+    115 s  train-00008-of-00011: ok
+    128 s  train-00009-of-00011: ok
+    137 s  train-00010-of-00011: ok
+    140 s  controls: {'t0_sha256_ok': True, 'vocab_equal_t0': True, 'vocab_size': 7907, 'val_images': 4265, 'train_images': 81951, 't0_val_historical': 0.5517433451139009, 't0_val_historical_ok': True, 'passed': True}
+    200 s  T0 0.5519, T-seuil 0.5519 at 0.6
+/kaggle/input/datasets/mabaku/porky-e0-entree/e0_reference.py:275: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  f.write(json.dumps({"epoch": epoch, "val": s, "threshold": t, "val_historical_at_0.6": hist, "loss": float(loss)}) + "\n")
+    345 s  T-long epoch 0: val 0.4143 at 0.55 (historical at 0.6: 0.3989)
+    471 s  T-long epoch 1: val 0.4598 at 0.55 (historical at 0.6: 0.4546)
+    587 s  T-long epoch 2: val 0.4795 at 0.55 (historical at 0.6: 0.4800)
+    704 s  T-long epoch 3: val 0.4942 at 0.55 (historical at 0.6: 0.4939)
+    818 s  T-long epoch 4: val 0.5033 at 0.6 (historical at 0.6: 0.5037)
+    920 s  T-long epoch 5: val 0.5078 at 0.6 (historical at 0.6: 0.5080)
+   1019 s  T-long epoch 6: val 0.5197 at 0.6 (historical at 0.6: 0.5197)
+   1118 s  T-long epoch 7: val 0.5248 at 0.6 (historical at 0.6: 0.5249)
+   1212 s  T-long epoch 8: val 0.5267 at 0.6 (historical at 0.6: 0.5268)
+   1303 s  T-long epoch 9: val 0.5351 at 0.6 (historical at 0.6: 0.5350)
+   1389 s  T-long epoch 10: val 0.5368 at 0.6 (historical at 0.6: 0.5367)
+   1467 s  T-long epoch 11: val 0.5396 at 0.6 (historical at 0.6: 0.5394)
+   1546 s  T-long epoch 12: val 0.5475 at 0.6 (historical at 0.6: 0.5474)
+   1625 s  T-long epoch 13: val 0.5498 at 0.6 (historical at 0.6: 0.5496)
+   1696 s  T-long epoch 14: val 0.5519 at 0.6 (historical at 0.6: 0.5517)
+   1762 s  T-long epoch 15: val 0.5542 at 0.6 (historical at 0.6: 0.5543)
+   1831 s  T-long epoch 16: val 0.5577 at 0.6 (historical at 0.6: 0.5575)
+   1894 s  T-long epoch 17: val 0.5600 at 0.6 (historical at 0.6: 0.5600)
+   1953 s  T-long epoch 18: val 0.5584 at 0.6 (historical at 0.6: 0.5584)
+   2011 s  T-long epoch 19: val 0.5625 at 0.6 (historical at 0.6: 0.5622)
+   2067 s  T-long epoch 20: val 0.5656 at 0.6 (historical at 0.6: 0.5654)
+   2115 s  T-long epoch 21: val 0.5645 at 0.6 (historical at 0.6: 0.5643)
+   2171 s  T-long epoch 22: val 0.5720 at 0.6 (historical at 0.6: 0.5717)
+   2226 s  T-long epoch 23: val 0.5698 at 0.6 (historical at 0.6: 0.5697)
+   2268 s  T-long epoch 24: val 0.5642 at 0.6 (historical at 0.6: 0.5644)
+   2309 s  T-long epoch 25: val 0.5706 at 0.6 (historical at 0.6: 0.5707)
+   2354 s  T-long epoch 26: val 0.5767 at 0.6 (historical at 0.6: 0.5765)
+   2397 s  T-long epoch 27: val 0.5780 at 0.6 (historical at 0.6: 0.5778)
+   2440 s  T-long epoch 28: val 0.5774 at 0.6 (historical at 0.6: 0.5774)
+   2484 s  T-long epoch 29: val 0.5768 at 0.6 (historical at 0.6: 0.5766)
+   2484 s  done: T* = T-long

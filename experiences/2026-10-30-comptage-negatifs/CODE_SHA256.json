@@ -1,0 +1,8 @@
+{
+  "status": "Comptage descriptif écrit, sans porte ; aucune exécution sur données réelles",
+  "files": {
+    "README.md": "2fc6998bdec6dcb2669d17aaf91e24de1bd786e43c11ecbc1218cf5d99e39d24",
+    "scripts/comptage.py": "e8e62e32f9b8c25157feebee046abf08fa751160770f3dc2270c4845dc774376",
+    "tests/test_comptage.py": "60c1287cf3f33118a857ae95241b9b1b0283a03a0c5f3212a5becca6f60c2da5"
+  }
+}

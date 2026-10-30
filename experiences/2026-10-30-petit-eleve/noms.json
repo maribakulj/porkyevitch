@@ -1,0 +1,1838 @@
+{
+ "built_on": "names of the 106 training graphs only",
+ "rules_module_sha256": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af",
+ "objects_by_category": {
+  "animal": 65,
+  "autre": 5,
+  "construction": 197,
+  "objet": 125,
+  "paysage": 143,
+  "personne": 249,
+  "surnaturel": 32,
+  "texte_image": 132,
+  "vetement_parure": 81
+ },
+ "autre_share": 0.004859086491739553,
+ "table": {
+  "altar": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "anchor": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "animal": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "animal head": {
+   "category": "autre",
+   "rule": 4,
+   "count": 1
+  },
+  "animal skin": {
+   "category": "objet",
+   "rule": 5,
+   "count": 2
+  },
+  "arched opening": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "architectural model": {
+   "category": "construction",
+   "rule": 9,
+   "count": 1
+  },
+  "armchair": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "balcony": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "baldachin": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "balloon": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "balloons": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "balustrade": {
+   "category": "construction",
+   "rule": 13,
+   "count": 3
+  },
+  "bandolier": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "bank": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "banner": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 5
+  },
+  "barrel": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "base": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "basins": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "basket": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "beam": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "bear": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "beard": {
+   "category": "autre",
+   "rule": 4,
+   "count": 1
+  },
+  "bed": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "bedding": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "beehive": {
+   "category": "objet",
+   "rule": 5,
+   "count": 1
+  },
+  "bird": {
+   "category": "animal",
+   "rule": 11,
+   "count": 11
+  },
+  "birdcage": {
+   "category": "objet",
+   "rule": 2,
+   "count": 1
+  },
+  "birds": {
+   "category": "animal",
+   "rule": 11,
+   "count": 5
+  },
+  "boat": {
+   "category": "construction",
+   "rule": 13,
+   "count": 6
+  },
+  "bone": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "book": {
+   "category": "objet",
+   "rule": 12,
+   "count": 6
+  },
+  "book page": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "book stand": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "boots": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "botanical illustration": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 3
+  },
+  "bouquet": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "bow": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "bow tie": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "bowl": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "box": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "branch": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "branches": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "bread": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "breakwater": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "breeches": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "bridge": {
+   "category": "construction",
+   "rule": 13,
+   "count": 4
+  },
+  "bubbles": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "building": {
+   "category": "construction",
+   "rule": 13,
+   "count": 9
+  },
+  "buildings": {
+   "category": "construction",
+   "rule": 13,
+   "count": 8
+  },
+  "bush": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "bushes": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "bust": {
+   "category": "construction",
+   "rule": 9,
+   "count": 2
+  },
+  "buttons": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "calf": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "candle": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "canopy": {
+   "category": "construction",
+   "rule": 13,
+   "count": 3
+  },
+  "cap": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "card": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 4
+  },
+  "carpet": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "carriage": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "carriage door": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "cart": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "cartouche": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 2
+  },
+  "cattle": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "cave": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "chair": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "chariot": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "cherries": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "chest": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "child": {
+   "category": "personne",
+   "rule": 10,
+   "count": 14
+  },
+  "church": {
+   "category": "construction",
+   "rule": 13,
+   "count": 3
+  },
+  "church tower": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "circle": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 5
+  },
+  "circular frame": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 2
+  },
+  "city": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "city wall": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "cliff": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 3
+  },
+  "clip": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "cloak": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "clock": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "clock face": {
+   "category": "objet",
+   "rule": 2,
+   "count": 1
+  },
+  "clock hands": {
+   "category": "objet",
+   "rule": 2,
+   "count": 1
+  },
+  "clouds": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 13
+  },
+  "club": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "coat": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 5
+  },
+  "coat of arms": {
+   "category": "texte_image",
+   "rule": 0,
+   "count": 4
+  },
+  "coffered barrel vault": {
+   "category": "construction",
+   "rule": 3,
+   "count": 1
+  },
+  "collar": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 3
+  },
+  "column": {
+   "category": "construction",
+   "rule": 13,
+   "count": 4
+  },
+  "columns": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "cord": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "cottage": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "counter": {
+   "category": "construction",
+   "rule": 13,
+   "count": 3
+  },
+  "cow": {
+   "category": "animal",
+   "rule": 11,
+   "count": 6
+  },
+  "cradle": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "cravat": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 3
+  },
+  "crescent moon": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "crosier": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "cross": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "crowd": {
+   "category": "personne",
+   "rule": 10,
+   "count": 2
+  },
+  "cup": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "cupboard": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "curtain": {
+   "category": "construction",
+   "rule": 13,
+   "count": 6
+  },
+  "cushion": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "decorated initial letter": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "decorated letter": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "decorative border": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "desk": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "dish": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "distant mountains": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "dog": {
+   "category": "animal",
+   "rule": 11,
+   "count": 6
+  },
+  "dogs": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "dolls": {
+   "category": "objet",
+   "rule": 5,
+   "count": 1
+  },
+  "dome": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "donkey": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "door": {
+   "category": "construction",
+   "rule": 13,
+   "count": 3
+  },
+  "doorway": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "doorways": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "double staircase": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "doublet": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "dragon": {
+   "category": "surnaturel",
+   "rule": 6,
+   "count": 1
+  },
+  "drapery": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "dress": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 7
+  },
+  "dried fish": {
+   "category": "objet",
+   "rule": 5,
+   "count": 1
+  },
+  "drums": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "duck": {
+   "category": "animal",
+   "rule": 11,
+   "count": 2
+  },
+  "eagle": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "eel": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "equestrian statue": {
+   "category": "construction",
+   "rule": 9,
+   "count": 1
+  },
+  "falling figures": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "fence": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "field": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "fields": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "figure": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "fire": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "fireplace": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "fish": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "fishing net": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "flag": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "flames": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "floor": {
+   "category": "construction",
+   "rule": 13,
+   "count": 3
+  },
+  "floral ornament": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "foliage": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "foliage ornament": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "fountain": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "frame": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 4
+  },
+  "fruit": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "garland": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "garment": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "girl": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "glass panel": {
+   "category": "construction",
+   "rule": 3,
+   "count": 1
+  },
+  "goat": {
+   "category": "animal",
+   "rule": 11,
+   "count": 2
+  },
+  "grass": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "gridiron": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "ground": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 12
+  },
+  "group of people": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "hair ornament": {
+   "category": "vetement_parure",
+   "rule": 1,
+   "count": 1
+  },
+  "hairpins": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "halberd": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "halo": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 4
+  },
+  "hammer": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "hand": {
+   "category": "autre",
+   "rule": 4,
+   "count": 2
+  },
+  "handkerchief": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "handwriting": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "hare": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "hat": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 10
+  },
+  "headdress": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "heart": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "helmet": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "hill": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "hills": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 6
+  },
+  "hillside": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "hobby horses": {
+   "category": "objet",
+   "rule": 5,
+   "count": 1
+  },
+  "horse": {
+   "category": "animal",
+   "rule": 11,
+   "count": 10
+  },
+  "horseman": {
+   "category": "personne",
+   "rule": 10,
+   "count": 2
+  },
+  "horses": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "house": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "houses": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "hunting horn": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "illuminated letter": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "illustration": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "inkstand": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "inkwell": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "inscription": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 14
+  },
+  "jacket": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 3
+  },
+  "jugs": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "keys": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "kimono": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "knife": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "lamp": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "landscape": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "lantern": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "left arcade": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "left page": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "letter": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 5
+  },
+  "lid": {
+   "category": "objet",
+   "rule": 2,
+   "count": 1
+  },
+  "lines": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "logo": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "man": {
+   "category": "personne",
+   "rule": 10,
+   "count": 122
+  },
+  "man's head": {
+   "category": "autre",
+   "rule": 4,
+   "count": 1
+  },
+  "matchcord": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "medallion": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 2
+  },
+  "men": {
+   "category": "personne",
+   "rule": 10,
+   "count": 8
+  },
+  "mitre": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 4
+  },
+  "moon": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "mountain": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 4
+  },
+  "mountains": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 3
+  },
+  "musket": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "musket rest": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "necklace": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 3
+  },
+  "newspaper sheet": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "number plate": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "old man": {
+   "category": "personne",
+   "rule": 10,
+   "count": 7
+  },
+  "ornament": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "ornamental initial": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "ornate frame": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "oval frame": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 5
+  },
+  "ox": {
+   "category": "animal",
+   "rule": 11,
+   "count": 3
+  },
+  "pack animal": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "page": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 6
+  },
+  "page number": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "painting": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 11
+  },
+  "palette": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "palette knife": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "palm branch": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "paper": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "paper slip": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "path": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "peacock": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "pedestal": {
+   "category": "construction",
+   "rule": 13,
+   "count": 5
+  },
+  "people": {
+   "category": "personne",
+   "rule": 10,
+   "count": 14
+  },
+  "people at table": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "person": {
+   "category": "personne",
+   "rule": 10,
+   "count": 7
+  },
+  "picture frame": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "pig": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "pile of wood": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "pipe": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "plant": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "plants": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 3
+  },
+  "plaque": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 3
+  },
+  "plates": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "playing card": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "plaza": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "pole": {
+   "category": "objet",
+   "rule": 12,
+   "count": 4
+  },
+  "portal": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "post": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "pot": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "pouch": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "print": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "printed text": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 4
+  },
+  "procession": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "quill": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "quiver": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "reeds": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "ribbon": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "ribs": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "rider on horse": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "right arcade": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "right page": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 1
+  },
+  "ring": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "river": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "riverbed": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "robe": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "rock": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 4
+  },
+  "rocks": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "rocky cliff": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "rocky outcrop": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "rod": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "roof": {
+   "category": "construction",
+   "rule": 13,
+   "count": 3
+  },
+  "rooster": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "round building": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "ruined wall": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "ruins": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "ruler": {
+   "category": "objet",
+   "rule": 12,
+   "count": 3
+  },
+  "sailboat": {
+   "category": "construction",
+   "rule": 13,
+   "count": 5
+  },
+  "sailing ship": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "sand dunes": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "sandal": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "scabbard": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "scourge": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "scroll": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 2
+  },
+  "sea": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "seahorse": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "seated person": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "seated woman": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "sheep": {
+   "category": "animal",
+   "rule": 11,
+   "count": 2
+  },
+  "sheet of paper": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 8
+  },
+  "shell": {
+   "category": "objet",
+   "rule": 5,
+   "count": 2
+  },
+  "shells": {
+   "category": "objet",
+   "rule": 5,
+   "count": 1
+  },
+  "shield": {
+   "category": "objet",
+   "rule": 12,
+   "count": 8
+  },
+  "shirt": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "shoes": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "shore": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 2
+  },
+  "shorts": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "sky": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 12
+  },
+  "small lantern": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "small tree": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "smoke": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 5
+  },
+  "soldier": {
+   "category": "personne",
+   "rule": 10,
+   "count": 2
+  },
+  "soldiers": {
+   "category": "personne",
+   "rule": 10,
+   "count": 10
+  },
+  "spear": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "spectacles": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "sphere": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "staff": {
+   "category": "objet",
+   "rule": 12,
+   "count": 8
+  },
+  "staircase": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "stamp": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 3
+  },
+  "standing man": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "standing woman": {
+   "category": "personne",
+   "rule": 10,
+   "count": 1
+  },
+  "stars": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "statue": {
+   "category": "construction",
+   "rule": 9,
+   "count": 15
+  },
+  "statues": {
+   "category": "construction",
+   "rule": 9,
+   "count": 2
+  },
+  "steamship": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "stick": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "stone block": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "stone trough": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "stonemason": {
+   "category": "personne",
+   "rule": 10,
+   "count": 2
+  },
+  "stream": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "string": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "swan": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "sweater": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "sword": {
+   "category": "objet",
+   "rule": 12,
+   "count": 4
+  },
+  "table": {
+   "category": "construction",
+   "rule": 13,
+   "count": 8
+  },
+  "tablet": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 2
+  },
+  "tassels": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "tents": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "terrace": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "text": {
+   "category": "texte_image",
+   "rule": 7,
+   "count": 11
+  },
+  "throne": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "tiled floor": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "timbers": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "top hat": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "torch": {
+   "category": "objet",
+   "rule": 12,
+   "count": 2
+  },
+  "tower": {
+   "category": "construction",
+   "rule": 13,
+   "count": 7
+  },
+  "town": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "town wall": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "tree": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 8
+  },
+  "trees": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 21
+  },
+  "two-headed eagle": {
+   "category": "animal",
+   "rule": 11,
+   "count": 1
+  },
+  "umbrella": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "urn": {
+   "category": "objet",
+   "rule": 12,
+   "count": 1
+  },
+  "vaulted ceiling": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "veil": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "waistcoat": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "walking stick": {
+   "category": "objet",
+   "rule": 12,
+   "count": 3
+  },
+  "wall": {
+   "category": "construction",
+   "rule": 13,
+   "count": 7
+  },
+  "water": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 7
+  },
+  "water wheel": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "waterfall": {
+   "category": "paysage",
+   "rule": 14,
+   "count": 1
+  },
+  "wheel": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "wig": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 1
+  },
+  "window": {
+   "category": "construction",
+   "rule": 13,
+   "count": 8
+  },
+  "windows": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "winged child": {
+   "category": "surnaturel",
+   "rule": 6,
+   "count": 19
+  },
+  "winged figure": {
+   "category": "surnaturel",
+   "rule": 6,
+   "count": 10
+  },
+  "winged figures": {
+   "category": "surnaturel",
+   "rule": 6,
+   "count": 1
+  },
+  "winged man": {
+   "category": "surnaturel",
+   "rule": 6,
+   "count": 1
+  },
+  "woman": {
+   "category": "personne",
+   "rule": 10,
+   "count": 46
+  },
+  "wooden beam": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "wooden platform": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "wooden post": {
+   "category": "construction",
+   "rule": 13,
+   "count": 2
+  },
+  "wooden posts": {
+   "category": "construction",
+   "rule": 13,
+   "count": 1
+  },
+  "wreath": {
+   "category": "vetement_parure",
+   "rule": 8,
+   "count": 2
+  },
+  "young man": {
+   "category": "personne",
+   "rule": 10,
+   "count": 2
+  }
+ }
+}

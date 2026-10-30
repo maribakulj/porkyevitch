@@ -1,0 +1,12 @@
+{
+  "status": "Préinscription : feux verts Grok p2 et Codex p4 ; code : correctifs de l'audit Codex p4 (moniteur du pilote, T4 exigé, voisins CPU déclarés, None du complet, comptes de descente déclarés) ; à relire ; aucune exécution ; B3 corrigé (sortie non vide refusée avant le lancement)",
+  "files": {
+    "PREINSCRIPTION.md": "4a4c0c630ee58be873ddc6377fdca9d3241dab1afe256b1f71b154e86f1f783b",
+    "CODE.md": "eab13169b165019ab1c2adc10ccc3c2e0fbb4c62c0eeb82ceb0531dd6854f258",
+    "scripts/d3_core.py": "8a31d87b4364980bbf9e9ffb552c2bf622920ec03444cdadcb67f0dd3ab85039",
+    "scripts/d3_run.py": "2529107d7a16f08f2441bba81f5d7613e264b6232cc102f7cf783cbb25bf913a",
+    "scripts/kaggle_d3_run.py": "d592e8e8a659f764860db9f4add730bfba38cdf5339c058c620e60f03fd15235",
+    "tests/test_d3.py": "a1c98785ce5de2d612674247f9c90a708ccca9def2439411443be9966d3f644f",
+    "tests/test_d3_pilot.py": "9a9bbe727e3bea498494705b44f803ea0d28a81268761d1e4c5900753b31c27b"
+  }
+}

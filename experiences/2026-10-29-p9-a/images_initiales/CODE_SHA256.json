@@ -1,0 +1,8 @@
+{
+  "status": "Written for review; no execution",
+  "parent_manifest_sha256": "72a2f3681e2efd5b06a18ff65987d5783971fd1ffd5f837de533878a5d8d03d8",
+  "files": {
+    "kaggle_p9a_images_run.py": "852f1954a98249c0c6f9f47f6525ada7af082fa4b72ff3d0253ae21fda4a8b5e",
+    "p9a_image_cache.py": "e0959cd821a11144bc25909b6756f28c9f26420104346d356ed5b70c2c59f2db"
+  }
+}

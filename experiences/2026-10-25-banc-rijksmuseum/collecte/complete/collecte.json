@@ -1,0 +1,162 @@
+{
+ "date_utc": "2026-10-25T21:16:56Z",
+ "script_sha256": "ede3bb97591a81940a200b604e04dfada5e2dac68947fa809868d42f066971e2",
+ "essai": false,
+ "config": {
+  "types": [
+   "painting",
+   "print",
+   "drawing"
+  ],
+  "per_type": 3000,
+  "seed": 0,
+  "profile": "la-framed",
+  "accept": "application/ld+json",
+  "search": "https://data.rijksmuseum.nl/search/collection",
+  "size": "!800,800",
+  "link_roles": [
+   "after design by",
+   "after drawing by",
+   "after painting by",
+   "after print by",
+   "draftsman (artist)",
+   "fotograaf",
+   "knipkunstenaar",
+   "maker",
+   "naar ontwerp van",
+   "naar prent van",
+   "naar schilderij van",
+   "naar tekening van",
+   "painter",
+   "photographer",
+   "prentmaker",
+   "printmaker",
+   "schilder",
+   "tekenaar",
+   "vervaardiger"
+  ],
+  "no_link_roles": [
+   "clich\u00e9maker",
+   "compiler (person in literature)",
+   "drukker",
+   "printer (person)",
+   "publisher",
+   "samensteller",
+   "schrijver",
+   "uitgever",
+   "vendor",
+   "verkoper",
+   "writer (clerical worker)"
+  ],
+  "generic": "anoni|anonym|onbekend|unknown|unidentified",
+  "numpy": "2.5.4"
+ },
+ "frame": {
+  "painting": {
+   "type": "painting",
+   "total_items": 4920,
+   "pids_met": 4920,
+   "pages": 50,
+   "pids_order_sha256": "8c74586e296e6780a2f6c7998cb0ad6cfefc34763066fd684f20c2fb8a3e4726"
+  },
+  "print": {
+   "type": "print",
+   "total_items": 387339,
+   "pids_met": 387339,
+   "pages": 3874,
+   "pids_order_sha256": "c568edf762c4e4a25e61fe8b0d79891e1112fb073eb0f14fb558f45f8cd7f144"
+  },
+  "drawing": {
+   "type": "drawing",
+   "total_items": 48619,
+   "pids_met": 48619,
+   "pages": 487,
+   "pids_order_sha256": "0fb38aa4456d8746ca74c13f39e04dcb1bb97ecd0c0664b1d6035d1b8dd11bac"
+  }
+ },
+ "sample": {
+  "per_type": {
+   "painting": 3000,
+   "print": 3000,
+   "drawing": 3000
+  },
+  "union": 9000,
+  "unique_pids_sampled_in_several_types": 0,
+  "unique_pids_in_several_frame_lists": 12,
+  "union_sha256": "d41f259c9f383d75ea7c25060947b62b22c2ae69b0e0e93734cf25bc37b5caa5"
+ },
+ "records": {
+  "done": 9000,
+  "by_type": {
+   "painting": {
+    "objects": 3000,
+    "failed": 1,
+    "eligible": 2671,
+    "no_cc0_record": 0,
+    "no_code": 309,
+    "no_pdm_iiif_image_for_coded_visual": 16,
+    "not_alignable": 3,
+    "other_rights": 29,
+    "projected_truth_empty_or_unreadable": 0,
+    "codes_total": 5590,
+    "codes_unreadable": 0,
+    "codes_86": 1,
+    "with_link_actor": 2627,
+    "only_generic_actor": 348,
+    "no_actor": 25,
+    "with_parent": 64,
+    "parts_role_other": 54,
+    "actor_without_id": 111,
+    "iconclass_uri_unsupported": 0,
+    "place_skipped": 23
+   },
+   "print": {
+    "objects": 3004,
+    "failed": 0,
+    "eligible": 2737,
+    "no_cc0_record": 0,
+    "no_code": 214,
+    "no_pdm_iiif_image_for_coded_visual": 51,
+    "not_alignable": 0,
+    "other_rights": 79,
+    "projected_truth_empty_or_unreadable": 2,
+    "codes_total": 5821,
+    "codes_unreadable": 2,
+    "codes_86": 7,
+    "with_link_actor": 2480,
+    "only_generic_actor": 472,
+    "no_actor": 52,
+    "with_parent": 461,
+    "parts_role_other": 630,
+    "actor_without_id": 56,
+    "iconclass_uri_unsupported": 0,
+    "place_skipped": 91
+   },
+   "drawing": {
+    "objects": 3008,
+    "failed": 0,
+    "eligible": 2248,
+    "no_cc0_record": 0,
+    "no_code": 628,
+    "no_pdm_iiif_image_for_coded_visual": 132,
+    "not_alignable": 0,
+    "other_rights": 187,
+    "projected_truth_empty_or_unreadable": 0,
+    "codes_total": 4288,
+    "codes_unreadable": 0,
+    "codes_86": 0,
+    "with_link_actor": 2552,
+    "only_generic_actor": 352,
+    "no_actor": 104,
+    "with_parent": 309,
+    "parts_role_other": 117,
+    "actor_without_id": 23,
+    "iconclass_uri_unsupported": 0,
+    "place_skipped": 50
+   }
+  },
+  "notices_sha256": "a3154743f3c02e31d5a868e8382cf166620b99518fdf68610275d3a6a52a8b93"
+ },
+ "cache_keys_sha256": "20929b2eb50cbf32b586d3a0cb7f88c157326a2eb3b53a7cb88d9f23bed13843",
+ "requests_sent": 30582
+}

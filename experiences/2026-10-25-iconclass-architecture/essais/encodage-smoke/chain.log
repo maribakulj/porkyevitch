@@ -1,0 +1,2 @@
+16:00:08 inputs /kaggle/input/datasets/mabaku/caypollard-iconclass-pe ['candidates.jsonl', 'ext_images', 'gel2', 'near256.json', 'passk', 'remote_external_iconclass.py', 'remote_iconclass_head.py'] /kaggle/input/datasets/mabaku/caypollard-iconclass-t0 ['gel2', 'head.pt', 'predictions.json', 'resultats.json', 'scripts']
+16:03:34 CHAIN DONE smoke ok

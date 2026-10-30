@@ -1,0 +1,5 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/343 [00:00<?, ?it/s]Loading weights:  79%|███████▉  | 271/343 [00:00<00:00, 2709.85it/s]Loading weights: 100%|██████████| 343/343 [00:00<00:00, 2724.58it/s]
+Loading weights:   0%|          | 0/418 [00:00<?, ?it/s]Loading weights:  64%|██████▍   | 267/418 [00:00<00:00, 2661.71it/s]Loading weights: 100%|██████████| 418/418 [00:00<00:00, 2925.65it/s]
+[transformers] `Florence2Processor` defines `image_processor_class = 'CLIPImageProcessor'`, which is deprecated. Register the correct mapping in `AutoImageProcessor` instead.
+PETIT_ELEVE_SMOKE_DONE_NO_TUNING_NO_EVALUATION

@@ -1,0 +1,2 @@
+11:05:24 inputs /kaggle/input/datasets/mabaku/rijks-filtres-entree/eligibles.jsonl /kaggle/input/notebooks/mabaku/caypollard-encode-cradio/full ['budget.json', 'controle.json', 'emb.json', 'emb_grid.npy', 'emb_vec.npz', 'feats', 'grid', 'progress.log', 'run.json', 'runs.jsonl', 't0_new_predictions.json']
+13:34:13 CHAIN DONE full ok

@@ -1,0 +1,1042 @@
+{
+ "stage": "dev_only",
+ "images": 301,
+ "components": 239,
+ "systems": {
+  "T0": {
+   "hier_f1": 0.41662712406488556,
+   "exact": {
+    "precision": 0.08184383819379115,
+    "recall": 0.14403973509933773,
+    "f1": 0.10437912417516497
+   },
+   "depth_f1": {
+    "1-2": {
+     "f1": 0.6216304736238291,
+     "images": 301
+    },
+    "3-4": {
+     "f1": 0.34050016368243535,
+     "images": 301
+    },
+    "5+": {
+     "f1": 0.18431532207442097,
+     "images": 243
+    }
+   },
+   "D1_ancestor_recall": {
+    "1-2": {
+     "recall": 0.7413793103448276,
+     "truth_ancestors": 928
+    },
+    "3-4": {
+     "recall": 0.39550140581068416,
+     "truth_ancestors": 1067
+    },
+    "5+": {
+     "recall": 0.21733668341708542,
+     "truth_ancestors": 796
+    }
+   },
+   "D2_f1_by_frequency": {
+    "5-20": {
+     "tp": 4,
+     "fp": 136,
+     "fn": 102,
+     "f1": 0.032520325203252036
+    },
+    "21-100": {
+     "tp": 27,
+     "fp": 162,
+     "fn": 142,
+     "f1": 0.15083798882681565
+    },
+    ">100": {
+     "tp": 56,
+     "fp": 440,
+     "fn": 159,
+     "f1": 0.15752461322081576
+    },
+    "<5": {
+     "tp": 0,
+     "fp": 238,
+     "fn": 114,
+     "f1": 0.0
+    }
+   },
+   "D3_coverage": {
+    "per_image_mean": 0.15454833096029108,
+    "per_pair": 0.15562913907284767,
+    "distinct_codes": 423,
+    "distinct_outside": 86
+   },
+   "D4_codes_per_tranche": {
+    "1-2": {
+     "predicted": 0.8637873754152824,
+     "truth": 0.019933554817275746
+    },
+    "3-4": {
+     "predicted": 1.2425249169435215,
+     "truth": 0.5913621262458472
+    },
+    "5+": {
+     "predicted": 1.4252491694352158,
+     "truth": 1.3953488372093024
+    }
+   },
+   "D5_probabilities": "not_available: the seal holds predicted sets only, no probability per code",
+   "rare_recall_5_20": {
+    "recall": 0.0660377358490566,
+    "pairs": 106
+   },
+   "D6_by_support": {
+    "drawing": {
+     "hier_f1": 0.44194545425433746,
+     "images": 95
+    },
+    "painting": {
+     "hier_f1": 0.39042214726174945,
+     "images": 109
+    },
+    "print": {
+     "hier_f1": 0.4212776509055447,
+     "images": 97
+    }
+   }
+  },
+  "T_star": {
+   "hier_f1": 0.42054172423289,
+   "exact": {
+    "precision": 0.08826205641492266,
+    "recall": 0.1605960264900662,
+    "f1": 0.11391661773341162
+   },
+   "depth_f1": {
+    "1-2": {
+     "f1": 0.6127782717141717,
+     "images": 301
+    },
+    "3-4": {
+     "f1": 0.3586389260077585,
+     "images": 301
+    },
+    "5+": {
+     "f1": 0.20346188096101261,
+     "images": 243
+    }
+   },
+   "D1_ancestor_recall": {
+    "1-2": {
+     "recall": 0.7413793103448276,
+     "truth_ancestors": 928
+    },
+    "3-4": {
+     "recall": 0.42924086223055297,
+     "truth_ancestors": 1067
+    },
+    "5+": {
+     "recall": 0.24874371859296482,
+     "truth_ancestors": 796
+    }
+   },
+   "D2_f1_by_frequency": {
+    "5-20": {
+     "tp": 4,
+     "fp": 134,
+     "fn": 102,
+     "f1": 0.03278688524590164
+    },
+    "21-100": {
+     "tp": 31,
+     "fp": 180,
+     "fn": 138,
+     "f1": 0.1631578947368421
+    },
+    ">100": {
+     "tp": 62,
+     "fp": 440,
+     "fn": 153,
+     "f1": 0.17294281729428174
+    },
+    "<5": {
+     "tp": 0,
+     "fp": 248,
+     "fn": 114,
+     "f1": 0.0
+    }
+   },
+   "D3_coverage": {
+    "per_image_mean": 0.15454833096029108,
+    "per_pair": 0.15562913907284767,
+    "distinct_codes": 423,
+    "distinct_outside": 86
+   },
+   "D4_codes_per_tranche": {
+    "1-2": {
+     "predicted": 0.7641196013289037,
+     "truth": 0.019933554817275746
+    },
+    "3-4": {
+     "predicted": 1.2890365448504983,
+     "truth": 0.5913621262458472
+    },
+    "5+": {
+     "predicted": 1.5980066445182723,
+     "truth": 1.3953488372093024
+    }
+   },
+   "D5_probabilities": "not_available: the seal holds predicted sets only, no probability per code",
+   "rare_recall_5_20": {
+    "recall": 0.07547169811320754,
+    "pairs": 106
+   },
+   "D6_by_support": {
+    "drawing": {
+     "hier_f1": 0.4596353950720085,
+     "images": 95
+    },
+    "painting": {
+     "hier_f1": 0.3880586930849159,
+     "images": 109
+    },
+    "print": {
+     "hier_f1": 0.4187556589278686,
+     "images": 97
+    }
+   }
+  },
+  "TK": {
+   "hier_f1": 0.42071458483645646,
+   "exact": {
+    "precision": 0.0785472972972973,
+    "recall": 0.15397350993377484,
+    "f1": 0.10402684563758388
+   },
+   "depth_f1": {
+    "1-2": {
+     "f1": 0.6108131814551592,
+     "images": 301
+    },
+    "3-4": {
+     "f1": 0.36357054812178596,
+     "images": 301
+    },
+    "5+": {
+     "f1": 0.20111703814802337,
+     "images": 243
+    }
+   },
+   "D1_ancestor_recall": {
+    "1-2": {
+     "recall": 0.7650862068965517,
+     "truth_ancestors": 928
+    },
+    "3-4": {
+     "recall": 0.43673851921274603,
+     "truth_ancestors": 1067
+    },
+    "5+": {
+     "recall": 0.24120603015075376,
+     "truth_ancestors": 796
+    }
+   },
+   "D2_f1_by_frequency": {
+    "5-20": {
+     "tp": 4,
+     "fp": 144,
+     "fn": 102,
+     "f1": 0.031496062992125984
+    },
+    "21-100": {
+     "tp": 23,
+     "fp": 176,
+     "fn": 146,
+     "f1": 0.125
+    },
+    ">100": {
+     "tp": 66,
+     "fp": 494,
+     "fn": 149,
+     "f1": 0.1703225806451613
+    },
+    "<5": {
+     "tp": 0,
+     "fp": 277,
+     "fn": 114,
+     "f1": 0.0
+    }
+   },
+   "D3_coverage": {
+    "per_image_mean": 0.15454833096029108,
+    "per_pair": 0.15562913907284767,
+    "distinct_codes": 423,
+    "distinct_outside": 86
+   },
+   "D4_codes_per_tranche": {
+    "1-2": {
+     "predicted": 0.8504983388704319,
+     "truth": 0.019933554817275746
+    },
+    "3-4": {
+     "predicted": 1.4451827242524917,
+     "truth": 0.5913621262458472
+    },
+    "5+": {
+     "predicted": 1.6378737541528239,
+     "truth": 1.3953488372093024
+    }
+   },
+   "D5_probabilities": "not_available: the seal holds predicted sets only, no probability per code",
+   "rare_recall_5_20": {
+    "recall": 0.07547169811320754,
+    "pairs": 106
+   },
+   "D6_by_support": {
+    "drawing": {
+     "hier_f1": 0.4664141250479599,
+     "images": 95
+    },
+    "painting": {
+     "hier_f1": 0.3746215301259962,
+     "images": 109
+    },
+    "print": {
+     "hier_f1": 0.4277525914689032,
+     "images": 97
+    }
+   }
+  },
+  "T-niv": {
+   "hier_f1": 0.42054172423289,
+   "exact": {
+    "precision": 0.08826205641492266,
+    "recall": 0.1605960264900662,
+    "f1": 0.11391661773341162
+   },
+   "depth_f1": {
+    "1-2": {
+     "f1": 0.6127782717141717,
+     "images": 301
+    },
+    "3-4": {
+     "f1": 0.3586389260077585,
+     "images": 301
+    },
+    "5+": {
+     "f1": 0.20346188096101261,
+     "images": 243
+    }
+   },
+   "D1_ancestor_recall": {
+    "1-2": {
+     "recall": 0.7413793103448276,
+     "truth_ancestors": 928
+    },
+    "3-4": {
+     "recall": 0.42924086223055297,
+     "truth_ancestors": 1067
+    },
+    "5+": {
+     "recall": 0.24874371859296482,
+     "truth_ancestors": 796
+    }
+   },
+   "D2_f1_by_frequency": {
+    "5-20": {
+     "tp": 4,
+     "fp": 134,
+     "fn": 102,
+     "f1": 0.03278688524590164
+    },
+    "21-100": {
+     "tp": 31,
+     "fp": 180,
+     "fn": 138,
+     "f1": 0.1631578947368421
+    },
+    ">100": {
+     "tp": 62,
+     "fp": 440,
+     "fn": 153,
+     "f1": 0.17294281729428174
+    },
+    "<5": {
+     "tp": 0,
+     "fp": 248,
+     "fn": 114,
+     "f1": 0.0
+    }
+   },
+   "D3_coverage": {
+    "per_image_mean": 0.15454833096029108,
+    "per_pair": 0.15562913907284767,
+    "distinct_codes": 423,
+    "distinct_outside": 86
+   },
+   "D4_codes_per_tranche": {
+    "1-2": {
+     "predicted": 0.7641196013289037,
+     "truth": 0.019933554817275746
+    },
+    "3-4": {
+     "predicted": 1.2890365448504983,
+     "truth": 0.5913621262458472
+    },
+    "5+": {
+     "predicted": 1.5980066445182723,
+     "truth": 1.3953488372093024
+    }
+   },
+   "D5_probabilities": "not_available: the seal holds predicted sets only, no probability per code",
+   "rare_recall_5_20": {
+    "recall": 0.07547169811320754,
+    "pairs": 106
+   },
+   "D6_by_support": {
+    "drawing": {
+     "hier_f1": 0.4596353950720085,
+     "images": 95
+    },
+    "painting": {
+     "hier_f1": 0.3880586930849159,
+     "images": 109
+    },
+    "print": {
+     "hier_f1": 0.4187556589278686,
+     "images": 97
+    }
+   }
+  },
+  "TK-niv": {
+   "hier_f1": 0.42071458483645646,
+   "exact": {
+    "precision": 0.0785472972972973,
+    "recall": 0.15397350993377484,
+    "f1": 0.10402684563758388
+   },
+   "depth_f1": {
+    "1-2": {
+     "f1": 0.6108131814551592,
+     "images": 301
+    },
+    "3-4": {
+     "f1": 0.36357054812178596,
+     "images": 301
+    },
+    "5+": {
+     "f1": 0.20111703814802337,
+     "images": 243
+    }
+   },
+   "D1_ancestor_recall": {
+    "1-2": {
+     "recall": 0.7650862068965517,
+     "truth_ancestors": 928
+    },
+    "3-4": {
+     "recall": 0.43673851921274603,
+     "truth_ancestors": 1067
+    },
+    "5+": {
+     "recall": 0.24120603015075376,
+     "truth_ancestors": 796
+    }
+   },
+   "D2_f1_by_frequency": {
+    "5-20": {
+     "tp": 4,
+     "fp": 144,
+     "fn": 102,
+     "f1": 0.031496062992125984
+    },
+    "21-100": {
+     "tp": 23,
+     "fp": 176,
+     "fn": 146,
+     "f1": 0.125
+    },
+    ">100": {
+     "tp": 66,
+     "fp": 494,
+     "fn": 149,
+     "f1": 0.1703225806451613
+    },
+    "<5": {
+     "tp": 0,
+     "fp": 277,
+     "fn": 114,
+     "f1": 0.0
+    }
+   },
+   "D3_coverage": {
+    "per_image_mean": 0.15454833096029108,
+    "per_pair": 0.15562913907284767,
+    "distinct_codes": 423,
+    "distinct_outside": 86
+   },
+   "D4_codes_per_tranche": {
+    "1-2": {
+     "predicted": 0.8504983388704319,
+     "truth": 0.019933554817275746
+    },
+    "3-4": {
+     "predicted": 1.4451827242524917,
+     "truth": 0.5913621262458472
+    },
+    "5+": {
+     "predicted": 1.6378737541528239,
+     "truth": 1.3953488372093024
+    }
+   },
+   "D5_probabilities": "not_available: the seal holds predicted sets only, no probability per code",
+   "rare_recall_5_20": {
+    "recall": 0.07547169811320754,
+    "pairs": 106
+   },
+   "D6_by_support": {
+    "drawing": {
+     "hier_f1": 0.4664141250479599,
+     "images": 95
+    },
+    "painting": {
+     "hier_f1": 0.3746215301259962,
+     "images": 109
+    },
+    "print": {
+     "hier_f1": 0.4277525914689032,
+     "images": 97
+    }
+   }
+  },
+  "T-H": {
+   "hier_f1": 0.4128031101550861,
+   "exact": {
+    "precision": 0.07260406582768635,
+    "recall": 0.12417218543046357,
+    "f1": 0.0916310323762981
+   },
+   "depth_f1": {
+    "1-2": {
+     "f1": 0.6232041599639802,
+     "images": 301
+    },
+    "3-4": {
+     "f1": 0.3287407457443265,
+     "images": 301
+    },
+    "5+": {
+     "f1": 0.16299212620571193,
+     "images": 243
+    }
+   },
+   "D1_ancestor_recall": {
+    "1-2": {
+     "recall": 0.7273706896551724,
+     "truth_ancestors": 928
+    },
+    "3-4": {
+     "recall": 0.37488284910965325,
+     "truth_ancestors": 1067
+    },
+    "5+": {
+     "recall": 0.1884422110552764,
+     "truth_ancestors": 796
+    }
+   },
+   "D2_f1_by_frequency": {
+    "5-20": {
+     "tp": 2,
+     "fp": 137,
+     "fn": 104,
+     "f1": 0.0163265306122449
+    },
+    "21-100": {
+     "tp": 18,
+     "fp": 169,
+     "fn": 151,
+     "f1": 0.10112359550561797
+    },
+    ">100": {
+     "tp": 55,
+     "fp": 433,
+     "fn": 160,
+     "f1": 0.15647226173541964
+    },
+    "<5": {
+     "tp": 0,
+     "fp": 219,
+     "fn": 114,
+     "f1": 0.0
+    }
+   },
+   "D3_coverage": {
+    "per_image_mean": 0.15454833096029108,
+    "per_pair": 0.15562913907284767,
+    "distinct_codes": 423,
+    "distinct_outside": 86
+   },
+   "D4_codes_per_tranche": {
+    "1-2": {
+     "predicted": 0.8737541528239202,
+     "truth": 0.019933554817275746
+    },
+    "3-4": {
+     "predicted": 1.1262458471760797,
+     "truth": 0.5913621262458472
+    },
+    "5+": {
+     "predicted": 1.4318936877076411,
+     "truth": 1.3953488372093024
+    }
+   },
+   "D5_probabilities": "not_available: the seal holds predicted sets only, no probability per code",
+   "rare_recall_5_20": {
+    "recall": 0.03773584905660377,
+    "pairs": 106
+   },
+   "D6_by_support": {
+    "drawing": {
+     "hier_f1": 0.4647053204690234,
+     "images": 95
+    },
+    "painting": {
+     "hier_f1": 0.37963091653181325,
+     "images": 109
+    },
+    "print": {
+     "hier_f1": 0.39924701866140244,
+     "images": 97
+    }
+   }
+  },
+  "T-Z": {
+   "hier_f1": 0.4190608607340926,
+   "exact": {
+    "precision": 0.0851063829787234,
+    "recall": 0.11258278145695365,
+    "f1": 0.09693513898788311
+   },
+   "depth_f1": {
+    "1-2": {
+     "f1": 0.6113857349737748,
+     "images": 301
+    },
+    "3-4": {
+     "f1": 0.3347845440727269,
+     "images": 301
+    },
+    "5+": {
+     "f1": 0.17258949020181694,
+     "images": 243
+    }
+   },
+   "D1_ancestor_recall": {
+    "1-2": {
+     "recall": 0.6767241379310345,
+     "truth_ancestors": 928
+    },
+    "3-4": {
+     "recall": 0.3373945641986879,
+     "truth_ancestors": 1067
+    },
+    "5+": {
+     "recall": 0.16080402010050251,
+     "truth_ancestors": 796
+    }
+   },
+   "D2_f1_by_frequency": {
+    "5-20": {
+     "tp": 3,
+     "fp": 153,
+     "fn": 103,
+     "f1": 0.022900763358778626
+    },
+    "21-100": {
+     "tp": 22,
+     "fp": 131,
+     "fn": 147,
+     "f1": 0.13664596273291926
+    },
+    ">100": {
+     "tp": 42,
+     "fp": 229,
+     "fn": 173,
+     "f1": 0.1728395061728395
+    },
+    "<5": {
+     "tp": 1,
+     "fp": 218,
+     "fn": 113,
+     "f1": 0.006006006006006006
+    }
+   },
+   "D3_coverage": {
+    "per_image_mean": 0.15454833096029108,
+    "per_pair": 0.15562913907284767,
+    "distinct_codes": 423,
+    "distinct_outside": 86
+   },
+   "D4_codes_per_tranche": {
+    "1-2": {
+     "predicted": 0.8039867109634552,
+     "truth": 0.019933554817275746
+    },
+    "3-4": {
+     "predicted": 1.0099667774086378,
+     "truth": 0.5913621262458472
+    },
+    "5+": {
+     "predicted": 0.840531561461794,
+     "truth": 1.3953488372093024
+    }
+   },
+   "D5_probabilities": "not_available: the seal holds predicted sets only, no probability per code",
+   "rare_recall_5_20": {
+    "recall": 0.04716981132075472,
+    "pairs": 106
+   },
+   "D6_by_support": {
+    "drawing": {
+     "hier_f1": 0.4649169269282791,
+     "images": 95
+    },
+    "painting": {
+     "hier_f1": 0.3955338535406201,
+     "images": 109
+    },
+    "print": {
+     "hier_f1": 0.40058784522523466,
+     "images": 97
+    }
+   }
+  },
+  "T-D": {
+   "hier_f1": 0.3876881344663981,
+   "exact": {
+    "precision": 0.07750472589792061,
+    "recall": 0.1357615894039735,
+    "f1": 0.098676293622142
+   },
+   "depth_f1": {
+    "1-2": {
+     "f1": 0.5679877632193442,
+     "images": 301
+    },
+    "3-4": {
+     "f1": 0.32493359606902694,
+     "images": 301
+    },
+    "5+": {
+     "f1": 0.18322435874839116,
+     "images": 243
+    }
+   },
+   "D1_ancestor_recall": {
+    "1-2": {
+     "recall": 0.6853448275862069,
+     "truth_ancestors": 928
+    },
+    "3-4": {
+     "recall": 0.3701968134957826,
+     "truth_ancestors": 1067
+    },
+    "5+": {
+     "recall": 0.20100502512562815,
+     "truth_ancestors": 796
+    }
+   },
+   "D2_f1_by_frequency": {
+    "5-20": {
+     "tp": 4,
+     "fp": 163,
+     "fn": 102,
+     "f1": 0.029304029304029304
+    },
+    "21-100": {
+     "tp": 24,
+     "fp": 169,
+     "fn": 145,
+     "f1": 0.13259668508287292
+    },
+    ">100": {
+     "tp": 54,
+     "fp": 352,
+     "fn": 161,
+     "f1": 0.17391304347826086
+    },
+    "<5": {
+     "tp": 0,
+     "fp": 292,
+     "fn": 114,
+     "f1": 0.0
+    }
+   },
+   "D3_coverage": {
+    "per_image_mean": 0.15454833096029108,
+    "per_pair": 0.15562913907284767,
+    "distinct_codes": 423,
+    "distinct_outside": 86
+   },
+   "D4_codes_per_tranche": {
+    "1-2": {
+     "predicted": 0.7043189368770764,
+     "truth": 0.019933554817275746
+    },
+    "3-4": {
+     "predicted": 1.282392026578073,
+     "truth": 0.5913621262458472
+    },
+    "5+": {
+     "predicted": 1.5282392026578073,
+     "truth": 1.3953488372093024
+    }
+   },
+   "D5_probabilities": "not_available: the seal holds predicted sets only, no probability per code",
+   "rare_recall_5_20": {
+    "recall": 0.08490566037735849,
+    "pairs": 106
+   },
+   "D6_by_support": {
+    "drawing": {
+     "hier_f1": 0.4343657446914181,
+     "images": 95
+    },
+    "painting": {
+     "hier_f1": 0.3632149808880846,
+     "images": 109
+    },
+    "print": {
+     "hier_f1": 0.3694737094010297,
+     "images": 97
+    }
+   }
+  }
+ },
+ "D_validation_icai": "not measured here for the bricks: the seal holds no validation predictions; the head diagnostic (porky-diag-run) covers T* and T-Z only",
+ "plates": {
+  "T_star-T0": {
+   "images": [
+    "https://id.rijksmuseum.nl/200732191",
+    "https://id.rijksmuseum.nl/200362284",
+    "https://id.rijksmuseum.nl/20028436",
+    "https://id.rijksmuseum.nl/200151457",
+    "https://id.rijksmuseum.nl/200217474",
+    "https://id.rijksmuseum.nl/200732152",
+    "https://id.rijksmuseum.nl/200113828",
+    "https://id.rijksmuseum.nl/200439600",
+    "https://id.rijksmuseum.nl/200362335",
+    "https://id.rijksmuseum.nl/200796141",
+    "https://id.rijksmuseum.nl/200126689",
+    "https://id.rijksmuseum.nl/200316632"
+   ],
+   "conditional": false,
+   "html": "planches/T_star-T0.html",
+   "image_files": [
+    "planches/images/7aec9b3b81c0737b.jpg",
+    "planches/images/e8949ee364bfe0b8.jpg",
+    "planches/images/5a1e2048c4f0b532.jpg",
+    "planches/images/6f7233c507961473.jpg",
+    "planches/images/338f7f9541b4eb39.jpg",
+    "planches/images/b43479e2f1fecbcc.jpg",
+    "planches/images/dfe3ff99a10f269a.jpg",
+    "planches/images/49d722636abfcc30.jpg",
+    "planches/images/804a3e7058e4309b.jpg",
+    "planches/images/aa9b34c3622a3940.jpg",
+    "planches/images/f3d7b51325e1cb3b.jpg",
+    "planches/images/e3427d74a60c9807.jpg"
+   ]
+  },
+  "TK-T_star": {
+   "images": [
+    "https://id.rijksmuseum.nl/200118262",
+    "https://id.rijksmuseum.nl/200507560",
+    "https://id.rijksmuseum.nl/200362284",
+    "https://id.rijksmuseum.nl/200382130",
+    "https://id.rijksmuseum.nl/200217474",
+    "https://id.rijksmuseum.nl/200641542",
+    "https://id.rijksmuseum.nl/200316632",
+    "https://id.rijksmuseum.nl/200313907",
+    "https://id.rijksmuseum.nl/200439600",
+    "https://id.rijksmuseum.nl/200303549",
+    "https://id.rijksmuseum.nl/200138506",
+    "https://id.rijksmuseum.nl/20028797"
+   ],
+   "conditional": false,
+   "html": "planches/TK-T_star.html",
+   "image_files": [
+    "planches/images/589cb26a2118212f.jpg",
+    "planches/images/1694273b62bd5818.jpg",
+    "planches/images/e8949ee364bfe0b8.jpg",
+    "planches/images/ceea0d8ac1d3d569.jpg",
+    "planches/images/338f7f9541b4eb39.jpg",
+    "planches/images/45307b953d3066fc.jpg",
+    "planches/images/e3427d74a60c9807.jpg",
+    "planches/images/b963ee230addd850.jpg",
+    "planches/images/49d722636abfcc30.jpg",
+    "planches/images/7c94c224b60e777f.jpg",
+    "planches/images/72729cbfbc750382.jpg",
+    "planches/images/0c01f0f89894441b.jpg"
+   ]
+  },
+  "T-niv-T_star": {
+   "images": [
+    "https://id.rijksmuseum.nl/200100883",
+    "https://id.rijksmuseum.nl/200101129",
+    "https://id.rijksmuseum.nl/200101144",
+    "https://id.rijksmuseum.nl/200101195",
+    "https://id.rijksmuseum.nl/200101671",
+    "https://id.rijksmuseum.nl/200105297",
+    "https://id.rijksmuseum.nl/200105926",
+    "https://id.rijksmuseum.nl/200107883",
+    "https://id.rijksmuseum.nl/200107884",
+    "https://id.rijksmuseum.nl/200107885",
+    "https://id.rijksmuseum.nl/200107886",
+    "https://id.rijksmuseum.nl/200107887"
+   ],
+   "conditional": false,
+   "html": "planches/T-niv-T_star.html",
+   "image_files": [
+    "planches/images/d2bcadd28540b1ff.jpg",
+    "planches/images/2be362ca76786e1e.jpg",
+    "planches/images/42e72e475f86384e.jpg",
+    "planches/images/f0cab4c28e38b1a3.jpg",
+    "planches/images/678f41984b1def5b.jpg",
+    "planches/images/0afdeaf9e573af09.jpg",
+    "planches/images/bc551623db25631e.jpg",
+    "planches/images/442aa8893505829e.jpg",
+    "planches/images/41f794432cd15c80.jpg",
+    "planches/images/3a4b653a98d32bc1.jpg",
+    "planches/images/01a8cb2a7b8d89c0.jpg",
+    "planches/images/ca9c4086b7913db1.jpg"
+   ]
+  },
+  "TK-niv-T_star": {
+   "images": [
+    "https://id.rijksmuseum.nl/200118262",
+    "https://id.rijksmuseum.nl/200507560",
+    "https://id.rijksmuseum.nl/200362284",
+    "https://id.rijksmuseum.nl/200382130",
+    "https://id.rijksmuseum.nl/200217474",
+    "https://id.rijksmuseum.nl/200641542",
+    "https://id.rijksmuseum.nl/200316632",
+    "https://id.rijksmuseum.nl/200313907",
+    "https://id.rijksmuseum.nl/200439600",
+    "https://id.rijksmuseum.nl/200303549",
+    "https://id.rijksmuseum.nl/200138506",
+    "https://id.rijksmuseum.nl/20028797"
+   ],
+   "conditional": true,
+   "html": "planches/TK-niv-T_star.html",
+   "image_files": [
+    "planches/images/589cb26a2118212f.jpg",
+    "planches/images/1694273b62bd5818.jpg",
+    "planches/images/e8949ee364bfe0b8.jpg",
+    "planches/images/ceea0d8ac1d3d569.jpg",
+    "planches/images/338f7f9541b4eb39.jpg",
+    "planches/images/45307b953d3066fc.jpg",
+    "planches/images/e3427d74a60c9807.jpg",
+    "planches/images/b963ee230addd850.jpg",
+    "planches/images/49d722636abfcc30.jpg",
+    "planches/images/7c94c224b60e777f.jpg",
+    "planches/images/72729cbfbc750382.jpg",
+    "planches/images/0c01f0f89894441b.jpg"
+   ]
+  },
+  "T-H-T_star": {
+   "images": [
+    "https://id.rijksmuseum.nl/200732191",
+    "https://id.rijksmuseum.nl/200151457",
+    "https://id.rijksmuseum.nl/200497352",
+    "https://id.rijksmuseum.nl/200362284",
+    "https://id.rijksmuseum.nl/200700805",
+    "https://id.rijksmuseum.nl/20028436",
+    "https://id.rijksmuseum.nl/200538680",
+    "https://id.rijksmuseum.nl/200732152",
+    "https://id.rijksmuseum.nl/200162011",
+    "https://id.rijksmuseum.nl/200242953",
+    "https://id.rijksmuseum.nl/200507560",
+    "https://id.rijksmuseum.nl/200303549"
+   ],
+   "conditional": false,
+   "html": "planches/T-H-T_star.html",
+   "image_files": [
+    "planches/images/7aec9b3b81c0737b.jpg",
+    "planches/images/6f7233c507961473.jpg",
+    "planches/images/06360f7c7ce34946.jpg",
+    "planches/images/e8949ee364bfe0b8.jpg",
+    "planches/images/4980b054a1097859.jpg",
+    "planches/images/5a1e2048c4f0b532.jpg",
+    "planches/images/be2a4c811c69851f.jpg",
+    "planches/images/b43479e2f1fecbcc.jpg",
+    "planches/images/2ce46c596a741ed3.jpg",
+    "planches/images/f2ec0447c9d7aade.jpg",
+    "planches/images/1694273b62bd5818.jpg",
+    "planches/images/7c94c224b60e777f.jpg"
+   ]
+  },
+  "T-Z-T_star": {
+   "images": [
+    "https://id.rijksmuseum.nl/200766910",
+    "https://id.rijksmuseum.nl/200693875",
+    "https://id.rijksmuseum.nl/200315290",
+    "https://id.rijksmuseum.nl/200145752",
+    "https://id.rijksmuseum.nl/200362330",
+    "https://id.rijksmuseum.nl/200139779",
+    "https://id.rijksmuseum.nl/200114952",
+    "https://id.rijksmuseum.nl/20028553",
+    "https://id.rijksmuseum.nl/200732231",
+    "https://id.rijksmuseum.nl/200725785",
+    "https://id.rijksmuseum.nl/200520863",
+    "https://id.rijksmuseum.nl/200559998"
+   ],
+   "conditional": false,
+   "html": "planches/T-Z-T_star.html",
+   "image_files": [
+    "planches/images/5b8f6645ef984b41.jpg",
+    "planches/images/808d860d159d24e3.jpg",
+    "planches/images/2d9413925ba3e71a.jpg",
+    "planches/images/8f73bc0c36584624.jpg",
+    "planches/images/187eb5ee15a82c5f.jpg",
+    "planches/images/6407dda233032078.jpg",
+    "planches/images/0109305489fe44c3.jpg",
+    "planches/images/2e7a078ab7c23ddc.jpg",
+    "planches/images/9e4987c83ffd40b2.jpg",
+    "planches/images/91f8cd9ed9f99403.jpg",
+    "planches/images/cdf31cda15c09afe.jpg",
+    "planches/images/1ea987c61590d35d.jpg"
+   ]
+  },
+  "T-D-T_star": {
+   "images": [
+    "https://id.rijksmuseum.nl/200382130",
+    "https://id.rijksmuseum.nl/200766910",
+    "https://id.rijksmuseum.nl/200548992",
+    "https://id.rijksmuseum.nl/200113828",
+    "https://id.rijksmuseum.nl/200362434",
+    "https://id.rijksmuseum.nl/200114952",
+    "https://id.rijksmuseum.nl/200150362",
+    "https://id.rijksmuseum.nl/200442464",
+    "https://id.rijksmuseum.nl/200735312",
+    "https://id.rijksmuseum.nl/20027199",
+    "https://id.rijksmuseum.nl/200700805",
+    "https://id.rijksmuseum.nl/200725785"
+   ],
+   "conditional": false,
+   "html": "planches/T-D-T_star.html",
+   "image_files": [
+    "planches/images/ceea0d8ac1d3d569.jpg",
+    "planches/images/5b8f6645ef984b41.jpg",
+    "planches/images/7b9c742c605b7a93.jpg",
+    "planches/images/dfe3ff99a10f269a.jpg",
+    "planches/images/512bfac64f9d9da9.jpg",
+    "planches/images/0109305489fe44c3.jpg",
+    "planches/images/ab2a05bc6b938158.jpg",
+    "planches/images/c61db84a9fcc6f3e.jpg",
+    "planches/images/b97cb7ae0cc48045.jpg",
+    "planches/images/0daac5e3a6482f85.jpg",
+    "planches/images/4980b054a1097859.jpg",
+    "planches/images/91f8cd9ed9f99403.jpg"
+   ]
+  }
+ }
+}

@@ -1,0 +1,40 @@
+{
+  "stage": "REPLACE_devis_seed_planches_or_mesures",
+  "seed": 0,
+  "experiment_root": "/kaggle/input/REPLACE-code/2026-10-29-p9-a",
+  "source_manifest_sha256": "REPLACE_sha_of_CODE_SHA256_SCIENCE.json_after_review",
+  "binding": "/kaggle/input/REPLACE-bindings/sources.json",
+  "binding_sha256": "REPLACE",
+  "output": "/kaggle/working/REPLACE_new_unique_output",
+  "prepared": "/kaggle/input/REPLACE-preparation/prepare",
+  "preparation_sha256": "REPLACE",
+  "viewing_receipt": "/kaggle/input/REPLACE-bindings/regard_initial.json",
+  "blank": "/kaggle/input/REPLACE-blanc2/smoke/blanc.json",
+  "devis": "/kaggle/input/REPLACE-devis/devis/devis.json",
+  "devis_sha256": "REPLACE_seed_stage_only",
+  "wall_limit_seconds": 42000,
+  "resume": null,
+  "gel": "/kaggle/input/REPLACE-seed0/seed",
+  "gel_sha256": "REPLACE_sha_of_gel.json",
+  "planches": "/kaggle/input/REPLACE-planches/planches",
+  "plates_receipt": "/kaggle/input/REPLACE-bindings/recu_planches_p9a.json",
+  "approval": {
+    "grok_p2_report": "REPLACE",
+    "codex_p4_report": "REPLACE",
+    "slot_granted_by": "wA:p1",
+    "slot_id": "REPLACE",
+    "seeds_1_2_decision": null
+  },
+  "approved_versions": {
+    "Pillow": "REPLACE_and_audit",
+    "huggingface-hub": "REPLACE_and_audit",
+    "numpy": "REPLACE_and_audit",
+    "psutil": "REPLACE_and_audit",
+    "pyarrow": "REPLACE_and_audit",
+    "safetensors": "REPLACE_and_audit",
+    "scipy": "REPLACE_and_audit",
+    "tokenizers": "REPLACE_and_audit",
+    "torch": "REPLACE_and_audit",
+    "transformers": "REPLACE_and_audit"
+  }
+}

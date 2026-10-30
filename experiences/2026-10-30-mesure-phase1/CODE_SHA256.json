@@ -1,0 +1,11 @@
+{
+  "status": "Pilote : DEV_ARCHIVE_SHA256 épinglé (8281e581…), vérifié en local (extraction + check_dev_and_receipt) ; aucune exécution Kaggle",
+  "files": {
+    "README.md": "9f37f86af1529eef74088cf8d554a26f7f9a48d8be143eeda5c91b2554f64e34",
+    "scripts/mesure_phase1.py": "76f2643ae369faf5cb8b581af3b3c092ccf569355acb76d7f8c35e669fd7eb3b",
+    "scripts/mesure_metrics.py": "9a9d452676e7dd7717d4fab0aa00d11c2a1da5169913d03a80e0ccb5416df895",
+    "scripts/kaggle_mesure_run.py": "9651d7578acfc4b745e3d8d71774974d9ec564c6c5301e4b3428007e9a0de165",
+    "tests/test_mesure.py": "d10692ab307ea5dbcf41c0e7d6d9d15f2ced1d3e04111d2aea3ea0cfd49efbeb",
+    "tests/test_pilote.py": "326e3a7b16d793e09907430d01c501ef397572640f24b5224996f9583d002200"
+  }
+}

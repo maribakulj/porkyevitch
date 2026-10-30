@@ -1,0 +1,18 @@
+      8 s  preflight ok: 16 eligible objects, 87004 reference vectors
+     14 s  reference dHash test-00000-of-00001: done
+     21 s  reference dHash train-00000-of-00011: done
+     26 s  reference dHash train-00001-of-00011: done
+     32 s  reference dHash train-00002-of-00011: done
+     37 s  reference dHash train-00003-of-00011: done
+     42 s  reference dHash train-00004-of-00011: done
+     48 s  reference dHash train-00005-of-00011: done
+     52 s  reference dHash train-00006-of-00011: done
+     58 s  reference dHash train-00007-of-00011: done
+     62 s  reference dHash train-00008-of-00011: done
+     67 s  reference dHash train-00009-of-00011: done
+     71 s  reference dHash train-00010-of-00011: done
+     71 s  reference dHash: 192 rows, 0 undecodable
+     97 s  images: 16 kept, 0 excluded
+    153 s  encoder control: {'rows': 64, 'min_cosine': 1.0, 'max_abs_diff': 0.0, 'passed': True}
+    154 s  rijks vectors: 16 rows
+    154 s  done: {'eligible': 16, 'images_kept': 16, 'images_excluded': 0, 'reference_rows': 192, 'reference_undecodable': 0, 'below_50_bits': 0, 'below_64_bits': 1, 'cos_ge_095': 0, 'cos_ge_092': 0, 'internal_pairs': 5, 'dhash_histogram': [0, 0, 0, 1, 6, 9, 0], 'cos_histogram': [0, 0, 16, 0, 0, 0], 'smoke': 16}

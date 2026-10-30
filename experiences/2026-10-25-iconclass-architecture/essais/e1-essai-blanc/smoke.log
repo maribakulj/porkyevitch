@@ -1,0 +1,6 @@
+     15 s  votes ready on 200 validation images
+     16 s  controls: {'tstar_sha256_ok': True, 'e0_tstar': True, 'epoch_threshold_ok': True, 'tk_alpha1_reproduces_tstar': True, 'passed': True}
+     19 s  TK: {'alpha': 0.75, 'threshold': 0.5, 'val': 0.5842399898239019}
+     25 s  T-niv: [0.65, 0.6, 0.65] 0.5830
+     29 s  TK-niv: alpha 0.75, [0.5, 0.45, 0.5] 0.5858
+     29 s  done

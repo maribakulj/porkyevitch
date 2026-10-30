@@ -1,0 +1,30 @@
+{
+ "eligible": 16,
+ "images_kept": 16,
+ "images_excluded": 0,
+ "reference_rows": 192,
+ "reference_undecodable": 0,
+ "below_50_bits": 0,
+ "below_64_bits": 1,
+ "cos_ge_095": 0,
+ "cos_ge_092": 0,
+ "internal_pairs": 5,
+ "dhash_histogram": [
+  0,
+  0,
+  0,
+  1,
+  6,
+  9,
+  0
+ ],
+ "cos_histogram": [
+  0,
+  0,
+  16,
+  0,
+  0,
+  0
+ ],
+ "smoke": 16
+}

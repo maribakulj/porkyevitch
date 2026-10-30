@@ -1,0 +1,90 @@
+{
+ "repli": false,
+ "nodes": 7644,
+ "edges": {
+  "actor": 1208,
+  "parent": 120,
+  "internal_copy": 21259
+ },
+ "components": 1417,
+ "singletons": 1175,
+ "largest_component": 5768,
+ "size_histogram": [
+  1175,
+  138,
+  85,
+  18,
+  0,
+  0,
+  0,
+  0,
+  1
+ ],
+ "objects_only_generic_actor": 958,
+ "reserve_components": 142,
+ "reserve_objects": 176,
+ "nodes_by_support": {
+  "painting": 2669,
+  "print": 2737,
+  "drawing": 2238
+ },
+ "inputs_sha256": {
+  "notices": "a3154743f3c02e31d5a868e8382cf166620b99518fdf68610275d3a6a52a8b93",
+  "images.jsonl": "e945156036077d8de8f40f10750df0c48c3b6f367e92e9d1c4b48195581bc057",
+  "voisins.jsonl": "6ff785c3fa4bfa1ae69e8650c9fe891a34b6e6eedb41225ef0f1a3b29e19ffdf",
+  "internes.jsonl": "8296a6507c52757cd428c876cfa42c178f41aea6ed61400edbca08a7c0d83dd1"
+ },
+ "script_sha256": "8d8bbf7b3c04a63afc9a5eb89bab59752f812cc91c7687cee106366dadec3473",
+ "numpy": "2.5.4",
+ "sheet_counts": {
+  "painting/dhash": {
+   "a": 3,
+   "b": 6,
+   "c": 4,
+   "band": 18,
+   "rejected_total": 3,
+   "kept_total": 46
+  },
+  "painting/cos": {
+   "a": 2,
+   "b": 6,
+   "c": 4,
+   "band": 37,
+   "rejected_total": 2,
+   "kept_total": 47
+  },
+  "print/dhash": {
+   "a": 2,
+   "b": 6,
+   "c": 4,
+   "band": 56,
+   "rejected_total": 2,
+   "kept_total": 67
+  },
+  "print/cos": {
+   "a": 2,
+   "b": 6,
+   "c": 4,
+   "band": 31,
+   "rejected_total": 2,
+   "kept_total": 67
+  },
+  "drawing/dhash": {
+   "a": 2,
+   "b": 6,
+   "c": 4,
+   "band": 39,
+   "rejected_total": 2,
+   "kept_total": 56
+  },
+  "drawing/cos": {
+   "a": 3,
+   "b": 6,
+   "c": 4,
+   "band": 30,
+   "rejected_total": 3,
+   "kept_total": 55
+  }
+ },
+ "sheet_pairs": 67
+}

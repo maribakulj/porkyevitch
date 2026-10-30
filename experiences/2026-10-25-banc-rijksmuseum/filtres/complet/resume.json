@@ -1,0 +1,30 @@
+{
+ "eligible": 7647,
+ "images_kept": 7644,
+ "images_excluded": 3,
+ "reference_rows": 87004,
+ "reference_undecodable": 0,
+ "below_50_bits": 700,
+ "below_64_bits": 2581,
+ "cos_ge_095": 677,
+ "cos_ge_092": 2433,
+ "internal_pairs": 21259,
+ "dhash_histogram": [
+  222,
+  128,
+  350,
+  1881,
+  3578,
+  1485,
+  0
+ ],
+ "cos_histogram": [
+  0,
+  18,
+  1482,
+  3711,
+  1756,
+  677
+ ],
+ "smoke": 0
+}

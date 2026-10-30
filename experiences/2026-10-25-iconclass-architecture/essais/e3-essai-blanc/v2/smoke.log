@@ -1,0 +1,9 @@
+      7 s  controls: {'tstar_sha256_ok': True, 'vocab_equal_tstar': True, 'ml_decoder_sha256_ok': True, 'passed': True}
+/kaggle/input/datasets/mabaku/porky-e3-entree/e3_spatial.py:332: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
+  f.write(json.dumps({"epoch": epoch, "val": scores[t], "threshold": t, "loss": float(loss),
+    145 s  T-D epoch 0: val 0.2619 at 0.55
+    158 s  T-D epoch 1: val 0.2633 at 0.55
+    160 s  T-Z epoch 0: val 0.3082 at 0.55
+    164 s  T-Z epoch 1: val 0.3785 at 0.55
+    165 s  done: {'T-D': {'epoch': 1, 'threshold': 0.55, 'val': 0.2632559799472955, 'horizon': 30, 'sha256': 'ae6b1afb747b99e0264e5785322207e76f43b4a135c87b7d1e95b6244aeb89c4', 'trainable_parameters': 12454627}, 'T-Z': {'epoch': 1, 'threshold': 0.55, 'val': 0.37846184116936143, 'horizon': 30, 'sha256': '2b71c79544db034482dd434910b1331e19a8c38595c7acb8c1df0564c6c75b90', 'trainable_parameters': 18301667}}

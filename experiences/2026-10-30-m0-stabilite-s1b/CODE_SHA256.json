@@ -1,0 +1,9 @@
+{
+  "status": "M0 descriptif seul (devis v2) ; aucune exécution sur données réelles",
+  "files": {
+    "README.md": "df310c6ae081d94d7343dc3bccf18c2131db9572930dc159541d8320078c5e4b",
+    "PARAMETRES.json": "6d3b8bdff00411fbc00c1f85d430b6404d62ff35cbe8e48991f848c1a3dae710",
+    "scripts/m0.py": "0e1aa12dd61d567f55b5bc8e465acf5255e9fdb36b7b9c03ad24f1ac2e9ce31a",
+    "tests/test_m0.py": "629776589e1aeaa97d093de89c79a45e52865d91216e59b2ea5b9281afc799e0"
+  }
+}

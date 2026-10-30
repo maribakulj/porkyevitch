@@ -1,0 +1,2497 @@
+{
+ "dataset": [
+  "davanstrien/iconclass-vlm-brillfull",
+  "8045366ff092a06e8e1c4e47f1eb43cb2a54d732"
+ ],
+ "train_rows": 86216,
+ "train_groups": 86148,
+ "validation_groups": 4264,
+ "test_copy_groups_excluded": 3,
+ "pilot_groups_excluded": 200,
+ "population_groups": 81681,
+ "groups_without_chapter": 490,
+ "chapters": {
+  "0": {
+   "population": 33,
+   "groups_with_a_code_of_this_chapter": 36,
+   "drawn": 10,
+   "inclusion_probability": 0.30303030303030304,
+   "validation_interne": 2
+  },
+  "1": {
+   "population": 6596,
+   "groups_with_a_code_of_this_chapter": 12734,
+   "drawn": 26,
+   "inclusion_probability": 0.003941782898726501,
+   "validation_interne": 5
+  },
+  "2": {
+   "population": 14643,
+   "groups_with_a_code_of_this_chapter": 27879,
+   "drawn": 46,
+   "inclusion_probability": 0.003141432766509595,
+   "validation_interne": 9
+  },
+  "3": {
+   "population": 9772,
+   "groups_with_a_code_of_this_chapter": 29902,
+   "drawn": 34,
+   "inclusion_probability": 0.0034793286942284077,
+   "validation_interne": 7
+  },
+  "4": {
+   "population": 27540,
+   "groups_with_a_code_of_this_chapter": 50143,
+   "drawn": 78,
+   "inclusion_probability": 0.002832244008714597,
+   "validation_interne": 15
+  },
+  "5": {
+   "population": 1382,
+   "groups_with_a_code_of_this_chapter": 5200,
+   "drawn": 14,
+   "inclusion_probability": 0.010130246020260492,
+   "validation_interne": 3
+  },
+  "6": {
+   "population": 9833,
+   "groups_with_a_code_of_this_chapter": 18281,
+   "drawn": 34,
+   "inclusion_probability": 0.0034577443303162817,
+   "validation_interne": 7
+  },
+  "7": {
+   "population": 7645,
+   "groups_with_a_code_of_this_chapter": 9532,
+   "drawn": 29,
+   "inclusion_probability": 0.0037933289731850884,
+   "validation_interne": 6
+  },
+  "8": {
+   "population": 1230,
+   "groups_with_a_code_of_this_chapter": 1857,
+   "drawn": 13,
+   "inclusion_probability": 0.01056910569105691,
+   "validation_interne": 3
+  },
+  "9": {
+   "population": 2517,
+   "groups_with_a_code_of_this_chapter": 5537,
+   "drawn": 16,
+   "inclusion_probability": 0.006356773937226857,
+   "validation_interne": 3
+  }
+ },
+ "rule": {
+  "n": 300,
+  "minimum": 10,
+  "n_validation": 60,
+  "seeds": {
+   "draw": 31,
+   "validation": 32,
+   "names": 33
+  }
+ },
+ "picks": [
+  {
+   "name": "t000",
+   "md5": "f9315b860413df26206745b89ae59c2d",
+   "shard": "train-00009-of-00011",
+   "row": 5871,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t001",
+   "md5": "64b71cddb90b2d70a5219fdcfd4327fb",
+   "shard": "train-00007-of-00011",
+   "row": 5836,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t002",
+   "md5": "941b0f2e5398226b2705cf0d9cb5c3ee",
+   "shard": "train-00004-of-00011",
+   "row": 6478,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t003",
+   "md5": "4d59b2986d5fc00f66a963b7627bc434",
+   "shard": "train-00008-of-00011",
+   "row": 170,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t004",
+   "md5": "00115f91a5b7293caa5fc4f297563c10",
+   "shard": "train-00004-of-00011",
+   "row": 4440,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t005",
+   "md5": "75fd0b8fbf69f940cd1696ff0fd3b5d2",
+   "shard": "train-00003-of-00011",
+   "row": 7992,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t006",
+   "md5": "e129850c041fcc3d6ac9d8dd4ce6665b",
+   "shard": "train-00009-of-00011",
+   "row": 1115,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t007",
+   "md5": "fdbfed55161e6cf151b56a87126cadb3",
+   "shard": "train-00008-of-00011",
+   "row": 4307,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t008",
+   "md5": "c8befacef9e7e7fd0527852f43351bfb",
+   "shard": "train-00009-of-00011",
+   "row": 1204,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t009",
+   "md5": "15cfee88afaa4347e61be66fb13eac2c",
+   "shard": "train-00001-of-00011",
+   "row": 5668,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t010",
+   "md5": "aef65e845c71c931129a75fa22a4ea00",
+   "shard": "train-00000-of-00011",
+   "row": 4872,
+   "chapter": "5",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t011",
+   "md5": "e27f0b663bccdacf6a65321873e2d6db",
+   "shard": "train-00008-of-00011",
+   "row": 4269,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t012",
+   "md5": "42309ec5de94d538a4e5ebdb6a5b2d58",
+   "shard": "train-00001-of-00011",
+   "row": 5902,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t013",
+   "md5": "d29d7edab7ca2e2c9f9e3c1271af4b67",
+   "shard": "train-00004-of-00011",
+   "row": 7897,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t014",
+   "md5": "d2d4b523d514e7165cac09b771755099",
+   "shard": "train-00009-of-00011",
+   "row": 2294,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t015",
+   "md5": "9610ece90e79ca9ba37b4612e56138af",
+   "shard": "train-00003-of-00011",
+   "row": 7789,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t016",
+   "md5": "717127c4f79a7877f240f35695c11260",
+   "shard": "train-00003-of-00011",
+   "row": 1550,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t017",
+   "md5": "6c2e796f6af619a92f7051806d7816fb",
+   "shard": "train-00001-of-00011",
+   "row": 5594,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t018",
+   "md5": "683a9a522a316076459bc74122d1c61a",
+   "shard": "train-00003-of-00011",
+   "row": 2934,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t019",
+   "md5": "8f9594a59a8a0cd2800593dd3ae26e4d",
+   "shard": "train-00005-of-00011",
+   "row": 1953,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t020",
+   "md5": "d6dbc901345ff02c0f25a674eb43e6a7",
+   "shard": "train-00006-of-00011",
+   "row": 6716,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t021",
+   "md5": "efce618a59699102f8a31517875ff24b",
+   "shard": "train-00005-of-00011",
+   "row": 60,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t022",
+   "md5": "6737b6b2f275ebbe8d9e0b6af1fa31d4",
+   "shard": "train-00006-of-00011",
+   "row": 1165,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t023",
+   "md5": "a16b3b5b3ff6efdd938aff0da1d17e08",
+   "shard": "train-00000-of-00011",
+   "row": 7233,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t024",
+   "md5": "c81f508b5676e3cb5588b2e6ca68be13",
+   "shard": "train-00009-of-00011",
+   "row": 4667,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t025",
+   "md5": "e60ef83e02580421f9aa9b3b32edafd9",
+   "shard": "train-00004-of-00011",
+   "row": 7550,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t026",
+   "md5": "075f01ea2b9ddfdae3633ff7c1429e6c",
+   "shard": "train-00006-of-00011",
+   "row": 274,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t027",
+   "md5": "6b7a1caead012a8021814d6a17fde755",
+   "shard": "train-00006-of-00011",
+   "row": 3935,
+   "chapter": "6",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t028",
+   "md5": "d4e2297356335286255d45273ebc9b3b",
+   "shard": "train-00004-of-00011",
+   "row": 1059,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t029",
+   "md5": "e361c501bff31c24725ded47cff8b6fc",
+   "shard": "train-00005-of-00011",
+   "row": 3320,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t030",
+   "md5": "c4348a92a5cd324912e1955fafc0de73",
+   "shard": "train-00005-of-00011",
+   "row": 5095,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t031",
+   "md5": "6276a73c09ef81d4101977ec4b1293e6",
+   "shard": "train-00004-of-00011",
+   "row": 5626,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t032",
+   "md5": "8800dc5d25212f1d9d12f2510146d0c0",
+   "shard": "train-00002-of-00011",
+   "row": 5594,
+   "chapter": "3",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t033",
+   "md5": "8901cba8f1c3e9001538f15a02590b5f",
+   "shard": "train-00001-of-00011",
+   "row": 716,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t034",
+   "md5": "0e698fc125d7dce5f43e518b8ca64064",
+   "shard": "train-00005-of-00011",
+   "row": 515,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t035",
+   "md5": "c7451491b17027478842adb05218134e",
+   "shard": "train-00005-of-00011",
+   "row": 4648,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t036",
+   "md5": "284890908a56ab241d777fcc11a42b14",
+   "shard": "train-00002-of-00011",
+   "row": 6360,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t037",
+   "md5": "b853a9a56d1c40f1aa43b8aaf12f08c4",
+   "shard": "train-00007-of-00011",
+   "row": 1958,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t038",
+   "md5": "be596472950a87b6ba43462e931c4577",
+   "shard": "train-00006-of-00011",
+   "row": 6190,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t039",
+   "md5": "554b11d01242361d9c9cea58e06d3e4f",
+   "shard": "train-00008-of-00011",
+   "row": 56,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t040",
+   "md5": "46756781d64c32f874038f400b4f7a3e",
+   "shard": "train-00001-of-00011",
+   "row": 1166,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t041",
+   "md5": "b02de7113c19601a452c32cd2e298068",
+   "shard": "train-00003-of-00011",
+   "row": 3298,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t042",
+   "md5": "5e48134bc2941d62bd93ea24cc36c7fc",
+   "shard": "train-00004-of-00011",
+   "row": 453,
+   "chapter": "5",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t043",
+   "md5": "8a2fb6d4ad11381232eab2c2ba8c1c47",
+   "shard": "train-00000-of-00011",
+   "row": 2920,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t044",
+   "md5": "34369c032e10cdd0a6d704d8fd4e25a0",
+   "shard": "train-00009-of-00011",
+   "row": 4950,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t045",
+   "md5": "0048ee61c82e0f9d6dd847986f400096",
+   "shard": "train-00000-of-00011",
+   "row": 7520,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t046",
+   "md5": "c648b47ac64b0184bdca614ce40c0e0c",
+   "shard": "train-00000-of-00011",
+   "row": 4512,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t047",
+   "md5": "e0e9376db5d649886be955f761ecb792",
+   "shard": "train-00005-of-00011",
+   "row": 6254,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t048",
+   "md5": "483f88d355d54964d361a733968faa1a",
+   "shard": "train-00009-of-00011",
+   "row": 79,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t049",
+   "md5": "34f4e7d7ad809b9fcada80578f6f1dd0",
+   "shard": "train-00010-of-00011",
+   "row": 5805,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t050",
+   "md5": "d900b052c0620f3b0c06e4952d443b6d",
+   "shard": "train-00003-of-00011",
+   "row": 5356,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t051",
+   "md5": "2d03a4c9d66b8de844cd135b17f3110c",
+   "shard": "train-00004-of-00011",
+   "row": 2504,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t052",
+   "md5": "3d70f039ef0cd99549cd43bf5627981c",
+   "shard": "train-00002-of-00011",
+   "row": 4583,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t053",
+   "md5": "36932cd3af88c15632c317cfb9354f82",
+   "shard": "train-00000-of-00011",
+   "row": 7287,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t054",
+   "md5": "d148670ea9ff6606d6e82307516c6bf2",
+   "shard": "train-00008-of-00011",
+   "row": 5616,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t055",
+   "md5": "06564625ab16cbe40bfb863d7f5526cf",
+   "shard": "train-00004-of-00011",
+   "row": 3110,
+   "chapter": "3",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t056",
+   "md5": "22ea0586d989adbb49039d846bbf7b88",
+   "shard": "train-00000-of-00011",
+   "row": 5899,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t057",
+   "md5": "35608a62558be84916bf0242ebdef152",
+   "shard": "train-00008-of-00011",
+   "row": 219,
+   "chapter": "3",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t058",
+   "md5": "a3ee9a8df9ffa001cbde3967c35d5edb",
+   "shard": "train-00001-of-00011",
+   "row": 7721,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t059",
+   "md5": "3403853d0b82371e1d958502acdad984",
+   "shard": "train-00004-of-00011",
+   "row": 1797,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t060",
+   "md5": "1700823f16db997f71dce2ef296123ec",
+   "shard": "train-00009-of-00011",
+   "row": 6564,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t061",
+   "md5": "7f6429a9f6c8418ee7f348e7f39f2770",
+   "shard": "train-00001-of-00011",
+   "row": 2415,
+   "chapter": "0",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t062",
+   "md5": "f1a6b4853f766468d36b51e110a67a2f",
+   "shard": "train-00008-of-00011",
+   "row": 404,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t063",
+   "md5": "0226fb840179bb3755a80edc7a502b36",
+   "shard": "train-00006-of-00011",
+   "row": 7844,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t064",
+   "md5": "1dc031708e045fba8651131708b25f96",
+   "shard": "train-00004-of-00011",
+   "row": 5234,
+   "chapter": "8",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t065",
+   "md5": "4ce7247f8c4449a76088ee794638bc5d",
+   "shard": "train-00009-of-00011",
+   "row": 3869,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t066",
+   "md5": "d925431db7a2e4161cdfc4f4e8a94f57",
+   "shard": "train-00002-of-00011",
+   "row": 3657,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t067",
+   "md5": "2940d7be03c8b9528b15da7273c7c027",
+   "shard": "train-00005-of-00011",
+   "row": 6180,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t068",
+   "md5": "128320de4239ccc9113805f6bcb63c4d",
+   "shard": "train-00001-of-00011",
+   "row": 2901,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t069",
+   "md5": "fc95c399d5c9c3039b4fff56e096d687",
+   "shard": "train-00009-of-00011",
+   "row": 535,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t070",
+   "md5": "ac2039588779af767bed26e5c86c5595",
+   "shard": "train-00006-of-00011",
+   "row": 3349,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t071",
+   "md5": "9fb4ffb58a9ae30d94fbdacbdf854746",
+   "shard": "train-00000-of-00011",
+   "row": 5311,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t072",
+   "md5": "c4f35d4c2bf74192385879e2e97bd8eb",
+   "shard": "train-00009-of-00011",
+   "row": 1197,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t073",
+   "md5": "ba2f5368c3fd8467963c6dabcca5a1ee",
+   "shard": "train-00005-of-00011",
+   "row": 7126,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t074",
+   "md5": "79bb249114b7f2a0a9cb51d399b48e3d",
+   "shard": "train-00002-of-00011",
+   "row": 6093,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t075",
+   "md5": "1271b80fa8ac9e080da220dc5b5049e7",
+   "shard": "train-00007-of-00011",
+   "row": 6288,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t076",
+   "md5": "236ddf4d7cc95d687a0f057c4556b6b9",
+   "shard": "train-00004-of-00011",
+   "row": 6075,
+   "chapter": "0",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t077",
+   "md5": "d3411f8c7e5868f9bdfdf9c574e4cf11",
+   "shard": "train-00005-of-00011",
+   "row": 4851,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t078",
+   "md5": "45c94dfc6bfc506072db6bc8ae23a961",
+   "shard": "train-00008-of-00011",
+   "row": 3849,
+   "chapter": "0",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t079",
+   "md5": "79c49e00a66c3c91e30a615087ae9d64",
+   "shard": "train-00004-of-00011",
+   "row": 3253,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t080",
+   "md5": "6790eece5d548f3bb5b7bf4ae9059010",
+   "shard": "train-00000-of-00011",
+   "row": 3716,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t081",
+   "md5": "5c6fea10f7daa6424773bda6c09e3460",
+   "shard": "train-00004-of-00011",
+   "row": 1085,
+   "chapter": "7",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t082",
+   "md5": "33811a7b513bbbe7a92c8bc89cfff4a2",
+   "shard": "train-00003-of-00011",
+   "row": 5739,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t083",
+   "md5": "a7277be35bcb9ae559bf7d41a8fda763",
+   "shard": "train-00008-of-00011",
+   "row": 2676,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t084",
+   "md5": "64bbb36728e20c8de738805386094c1f",
+   "shard": "train-00010-of-00011",
+   "row": 913,
+   "chapter": "0",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t085",
+   "md5": "7fa87235f138324c7f829f30beb1d901",
+   "shard": "train-00002-of-00011",
+   "row": 6899,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t086",
+   "md5": "2693318221420d724c5ca47bf806d571",
+   "shard": "train-00007-of-00011",
+   "row": 4612,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t087",
+   "md5": "3412081a70e4ef6b68a839ab1b660a53",
+   "shard": "train-00004-of-00011",
+   "row": 5475,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t088",
+   "md5": "6ab9d8acc4fcfa8ee4f13de5bf34716c",
+   "shard": "train-00000-of-00011",
+   "row": 4077,
+   "chapter": "6",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t089",
+   "md5": "1ea0a81f24e7f72954c52766c254d92f",
+   "shard": "train-00008-of-00011",
+   "row": 6092,
+   "chapter": "0",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t090",
+   "md5": "346701960f42b9ffd1196108ce3a7bf1",
+   "shard": "train-00008-of-00011",
+   "row": 1309,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t091",
+   "md5": "f4fa3b229007e43a2ae6dafb29d4e83a",
+   "shard": "train-00008-of-00011",
+   "row": 2716,
+   "chapter": "6",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t092",
+   "md5": "0e195fb8f7346f3958bcca956cb9d53f",
+   "shard": "train-00008-of-00011",
+   "row": 1447,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t093",
+   "md5": "d5042b75f36a2031458706388a6e39d4",
+   "shard": "train-00005-of-00011",
+   "row": 6958,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t094",
+   "md5": "0de6259da3ff2159b4ba4163a5062815",
+   "shard": "train-00003-of-00011",
+   "row": 5753,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t095",
+   "md5": "53ce18918cedad916a8061b2309ca104",
+   "shard": "train-00009-of-00011",
+   "row": 5884,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t096",
+   "md5": "702628ccf25ef3aae502d223df82d86a",
+   "shard": "train-00007-of-00011",
+   "row": 937,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t097",
+   "md5": "08ea74e01572696af31e8354f9a8275d",
+   "shard": "train-00008-of-00011",
+   "row": 1853,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t098",
+   "md5": "07bb21370655be1b671b75daec608f5e",
+   "shard": "train-00002-of-00011",
+   "row": 5362,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t099",
+   "md5": "41300ce1e44e8b597792b135539b2879",
+   "shard": "train-00002-of-00011",
+   "row": 7243,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t100",
+   "md5": "7c57ef150f257d0c9e86aad4262d914e",
+   "shard": "train-00004-of-00011",
+   "row": 1801,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t101",
+   "md5": "c3a57650127ab3de4de9603619296896",
+   "shard": "train-00010-of-00011",
+   "row": 2046,
+   "chapter": "7",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t102",
+   "md5": "c36ca10aa91db360ea463b1e47981589",
+   "shard": "train-00001-of-00011",
+   "row": 7454,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t103",
+   "md5": "9498dc51590ec629bb51e0c0c1d5f6a2",
+   "shard": "train-00003-of-00011",
+   "row": 3107,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t104",
+   "md5": "35299a81e362a7ab3d3a004b6828f572",
+   "shard": "train-00002-of-00011",
+   "row": 2243,
+   "chapter": "8",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t105",
+   "md5": "78a7ec9c9557d10181a155770d61c827",
+   "shard": "train-00010-of-00011",
+   "row": 542,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t106",
+   "md5": "a55cf377270685358fdb544d44bbd123",
+   "shard": "train-00001-of-00011",
+   "row": 4613,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t107",
+   "md5": "7ebf6b61b8ea507cbfb21d6fb11ca2db",
+   "shard": "train-00009-of-00011",
+   "row": 7113,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t108",
+   "md5": "4b5891fe5568c0639ca47c2f3494778c",
+   "shard": "train-00001-of-00011",
+   "row": 4460,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t109",
+   "md5": "4e6d18df579c8814304865a2bf0d9655",
+   "shard": "train-00003-of-00011",
+   "row": 3974,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t110",
+   "md5": "cd498945a77131d2b38c38c8f90cb2df",
+   "shard": "train-00009-of-00011",
+   "row": 1119,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t111",
+   "md5": "2e1b94d87f4dd4c76d62474247510f2b",
+   "shard": "train-00004-of-00011",
+   "row": 595,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t112",
+   "md5": "10169eaa16f52ae2b1d88b673c36991a",
+   "shard": "train-00005-of-00011",
+   "row": 2014,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t113",
+   "md5": "f19147d99b8d08145bb97929b08070c6",
+   "shard": "train-00010-of-00011",
+   "row": 6112,
+   "chapter": "6",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t114",
+   "md5": "e59541643fbb0daf156c350bdb2568b1",
+   "shard": "train-00007-of-00011",
+   "row": 116,
+   "chapter": "6",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t115",
+   "md5": "721ffb25e46ebb97fadf22df6048dd3e",
+   "shard": "train-00001-of-00011",
+   "row": 7735,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t116",
+   "md5": "4e6fb295182124953b0e96f3bffb6f5e",
+   "shard": "train-00008-of-00011",
+   "row": 2255,
+   "chapter": "8",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t117",
+   "md5": "ccacebaa50be7513655aae535ccd3164",
+   "shard": "train-00008-of-00011",
+   "row": 3566,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t118",
+   "md5": "187eebacb315a0fe631818cc8ef55a80",
+   "shard": "train-00007-of-00011",
+   "row": 1274,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t119",
+   "md5": "aee82ac5b05a5aa452ef0bd1793dced3",
+   "shard": "train-00002-of-00011",
+   "row": 1266,
+   "chapter": "3",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t120",
+   "md5": "48ab7e81de43b9708975afdb34c8336a",
+   "shard": "train-00009-of-00011",
+   "row": 370,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t121",
+   "md5": "91bbc5adb67841258e0c50e286e3f08d",
+   "shard": "train-00004-of-00011",
+   "row": 3187,
+   "chapter": "0",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t122",
+   "md5": "3ca6c1e431d44bc41631a47103b84fc4",
+   "shard": "train-00009-of-00011",
+   "row": 2039,
+   "chapter": "8",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t123",
+   "md5": "2a4933d9cd716e30e52dd8e56107e4ea",
+   "shard": "train-00001-of-00011",
+   "row": 6241,
+   "chapter": "3",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t124",
+   "md5": "8a84a17dc89f7f1f03605a3bbedb1240",
+   "shard": "train-00004-of-00011",
+   "row": 2935,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t125",
+   "md5": "ea1f988a2cbda27abfed95edc78a2e81",
+   "shard": "train-00005-of-00011",
+   "row": 5834,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t126",
+   "md5": "489147fb79046d6e14c1f2f6fbb89579",
+   "shard": "train-00010-of-00011",
+   "row": 6090,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t127",
+   "md5": "1be5cb47a09103666fceea881ff6ae1b",
+   "shard": "train-00006-of-00011",
+   "row": 4816,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t128",
+   "md5": "ec2c656a06dc0184d49d03660e311339",
+   "shard": "train-00002-of-00011",
+   "row": 659,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t129",
+   "md5": "afcb8decd7a5314e8bd8658cb571a7cc",
+   "shard": "train-00001-of-00011",
+   "row": 1041,
+   "chapter": "9",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t130",
+   "md5": "7e6341b4b365ce3ab4dc5934c2fa04a5",
+   "shard": "train-00000-of-00011",
+   "row": 407,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t131",
+   "md5": "f68b6d485bec88e2cbe681810209f354",
+   "shard": "train-00000-of-00011",
+   "row": 219,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t132",
+   "md5": "92efbdc7a232bde9081187e0753bf37f",
+   "shard": "train-00004-of-00011",
+   "row": 7209,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t133",
+   "md5": "a60ccd38e81da92bf024dd795f38f775",
+   "shard": "train-00009-of-00011",
+   "row": 366,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t134",
+   "md5": "210f0c51a5a5ab272ca53f215b57f8c8",
+   "shard": "train-00010-of-00011",
+   "row": 1223,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t135",
+   "md5": "7365b5c0c38545723d8085b873de43f1",
+   "shard": "train-00002-of-00011",
+   "row": 6800,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t136",
+   "md5": "b87e92e26d23791140a479fa7d0d1b85",
+   "shard": "train-00003-of-00011",
+   "row": 322,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t137",
+   "md5": "c395865bc701a065b34a2584af5c39a8",
+   "shard": "train-00000-of-00011",
+   "row": 7184,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t138",
+   "md5": "705d77821364e0e0f12e35dd77311935",
+   "shard": "train-00010-of-00011",
+   "row": 2523,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t139",
+   "md5": "83a51074367c93402635f29cf85007a8",
+   "shard": "train-00007-of-00011",
+   "row": 2914,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t140",
+   "md5": "093da685949cd1d68819a114fd53077a",
+   "shard": "train-00001-of-00011",
+   "row": 1688,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t141",
+   "md5": "36b97bc18df8696b594b3e476b2631e1",
+   "shard": "train-00004-of-00011",
+   "row": 5914,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t142",
+   "md5": "79339e75b91add5316bd7d42fe909254",
+   "shard": "train-00001-of-00011",
+   "row": 6406,
+   "chapter": "1",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t143",
+   "md5": "923d1bf1c8aea538a56ddb8d0d234620",
+   "shard": "train-00004-of-00011",
+   "row": 400,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t144",
+   "md5": "49aef1cfe1e6059f2cc4cd5cc2c56526",
+   "shard": "train-00010-of-00011",
+   "row": 4305,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t145",
+   "md5": "0c72e52f066042b360ba39102b2eb4f0",
+   "shard": "train-00008-of-00011",
+   "row": 3404,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t146",
+   "md5": "86a2ac46418fabca501d4b0e825219ff",
+   "shard": "train-00008-of-00011",
+   "row": 4204,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t147",
+   "md5": "b1e7bf97ffef372a3c7548ba79457b72",
+   "shard": "train-00004-of-00011",
+   "row": 785,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t148",
+   "md5": "f62dfad885f81f56c46b16bd576bbfee",
+   "shard": "train-00004-of-00011",
+   "row": 5787,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t149",
+   "md5": "123e89abe5627425e56c2265ab3614d5",
+   "shard": "train-00009-of-00011",
+   "row": 5055,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t150",
+   "md5": "b080960e476af901455e80aca749cb6c",
+   "shard": "train-00000-of-00011",
+   "row": 3014,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t151",
+   "md5": "5e94673a1766f84fc29fe0c94d359808",
+   "shard": "train-00006-of-00011",
+   "row": 3540,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t152",
+   "md5": "c01acabc369f5e37bbb2b637ad5987c6",
+   "shard": "train-00007-of-00011",
+   "row": 841,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t153",
+   "md5": "e8d9c0a9378a71fbbcee12382e884249",
+   "shard": "train-00001-of-00011",
+   "row": 4679,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t154",
+   "md5": "92e70e591dd1abeb67a7c990d8f470c9",
+   "shard": "train-00007-of-00011",
+   "row": 6198,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t155",
+   "md5": "2535706e2729cfd32bca2bc218968711",
+   "shard": "train-00001-of-00011",
+   "row": 4133,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t156",
+   "md5": "d4f2617011f4ea63c65a164502f0734e",
+   "shard": "train-00003-of-00011",
+   "row": 2526,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t157",
+   "md5": "447a5c8c4566e57309198023093fdcd3",
+   "shard": "train-00009-of-00011",
+   "row": 5594,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t158",
+   "md5": "3000846a1b803ed99223993d5b8a7ba3",
+   "shard": "train-00001-of-00011",
+   "row": 2509,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t159",
+   "md5": "45edacab91dc27f883cfa824416ed202",
+   "shard": "train-00001-of-00011",
+   "row": 7646,
+   "chapter": "1",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t160",
+   "md5": "e4f03ad2efd21d379cb362b2fc208485",
+   "shard": "train-00009-of-00011",
+   "row": 3566,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t161",
+   "md5": "d8afcca257406ce7e4e864b7b8ac0607",
+   "shard": "train-00000-of-00011",
+   "row": 3472,
+   "chapter": "7",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t162",
+   "md5": "ef979e9361e96a9f0fcaf0efe5f4de29",
+   "shard": "train-00002-of-00011",
+   "row": 7525,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t163",
+   "md5": "e4452058ea93ef26f6a08bd3d1b43795",
+   "shard": "train-00005-of-00011",
+   "row": 3211,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t164",
+   "md5": "75a26c9861c21587450f6457c16440ff",
+   "shard": "train-00004-of-00011",
+   "row": 3703,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t165",
+   "md5": "cb9353f09394f7a9c2a568e65057992f",
+   "shard": "train-00001-of-00011",
+   "row": 2723,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t166",
+   "md5": "69c536edabd6ca9b8a11cd773da213ed",
+   "shard": "train-00006-of-00011",
+   "row": 2208,
+   "chapter": "0",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t167",
+   "md5": "8012202142f933f94a70b86c5a1f23e9",
+   "shard": "train-00003-of-00011",
+   "row": 6052,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t168",
+   "md5": "324afba0586a440cd1fecb9f10e9b4bb",
+   "shard": "train-00006-of-00011",
+   "row": 7415,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t169",
+   "md5": "190d2fcfbe6be7fea9a223c91153f16a",
+   "shard": "train-00000-of-00011",
+   "row": 3355,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t170",
+   "md5": "ec75b338ec4f5f21db2dee3a6e6e05e8",
+   "shard": "train-00001-of-00011",
+   "row": 3590,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t171",
+   "md5": "0f8f8d379ec186bb0ea1ff4dd19ca36b",
+   "shard": "train-00000-of-00011",
+   "row": 811,
+   "chapter": "1",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t172",
+   "md5": "5e856380e146ba063797732fc932748e",
+   "shard": "train-00006-of-00011",
+   "row": 5075,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t173",
+   "md5": "8592e2520cd070e55dff627a268aad85",
+   "shard": "train-00008-of-00011",
+   "row": 5596,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t174",
+   "md5": "e689f82d8385c1d283a00dbd92860d4c",
+   "shard": "train-00002-of-00011",
+   "row": 3542,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t175",
+   "md5": "a733ab9dc9159a7f44a92ddf300e080c",
+   "shard": "train-00001-of-00011",
+   "row": 5517,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t176",
+   "md5": "a664bb3c02b7f4338800d9c06d2c32e3",
+   "shard": "train-00006-of-00011",
+   "row": 1541,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t177",
+   "md5": "ffaa985af9a5cc1e82daff0eaabcc54c",
+   "shard": "train-00002-of-00011",
+   "row": 7260,
+   "chapter": "7",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t178",
+   "md5": "25f3038204fdd8c196cb0b685bde5b34",
+   "shard": "train-00000-of-00011",
+   "row": 6690,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t179",
+   "md5": "70c936e38370f1529130dfd732ce326a",
+   "shard": "train-00008-of-00011",
+   "row": 3450,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t180",
+   "md5": "5470b557fcd9d21f4786d7de3b923dae",
+   "shard": "train-00003-of-00011",
+   "row": 6587,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t181",
+   "md5": "5b32773781429285088938286df83e3f",
+   "shard": "train-00009-of-00011",
+   "row": 4760,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t182",
+   "md5": "15d6aee0a06a2a67f658586144f3a3fe",
+   "shard": "train-00009-of-00011",
+   "row": 7698,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t183",
+   "md5": "c6a653ee8ff11c8fd8a10971ed317540",
+   "shard": "train-00003-of-00011",
+   "row": 6877,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t184",
+   "md5": "db977eb474b8cc5e21078166084fcb38",
+   "shard": "train-00008-of-00011",
+   "row": 4799,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t185",
+   "md5": "2f10b5334d2d5545a0aac064fc14e417",
+   "shard": "train-00004-of-00011",
+   "row": 1541,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t186",
+   "md5": "bc1ca74f5d9dbacf71a0c18e9a623ae6",
+   "shard": "train-00007-of-00011",
+   "row": 2722,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t187",
+   "md5": "870b55815502ba3da6647558f3ca43d7",
+   "shard": "train-00010-of-00011",
+   "row": 3961,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t188",
+   "md5": "719c32be28057d4b56e482b9dde1b3e4",
+   "shard": "train-00004-of-00011",
+   "row": 5588,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t189",
+   "md5": "b1055ee8d856a9d2e7ac47ce2e14ae06",
+   "shard": "train-00010-of-00011",
+   "row": 4335,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t190",
+   "md5": "27b4aeb7fa20330bd1c4b91feaeb2728",
+   "shard": "train-00002-of-00011",
+   "row": 2060,
+   "chapter": "7",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t191",
+   "md5": "51276fc8e74e7495bfaea969e2ef65fe",
+   "shard": "train-00008-of-00011",
+   "row": 4770,
+   "chapter": "0",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t192",
+   "md5": "153a3f5dc9222b0e6ffd0a8479194a8f",
+   "shard": "train-00006-of-00011",
+   "row": 671,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t193",
+   "md5": "e5df1e9adcd891892a8059ae6ec3f224",
+   "shard": "train-00009-of-00011",
+   "row": 3593,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t194",
+   "md5": "8b9e60e722222643e8b1a39095ab3b3e",
+   "shard": "train-00004-of-00011",
+   "row": 7336,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t195",
+   "md5": "e85017e80da97498cf017e7373d7ee5c",
+   "shard": "train-00009-of-00011",
+   "row": 883,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t196",
+   "md5": "57be236072be0d1afb5252cb446045de",
+   "shard": "train-00000-of-00011",
+   "row": 3493,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t197",
+   "md5": "e7c7f6777ece1b988745807a293929a9",
+   "shard": "train-00007-of-00011",
+   "row": 2881,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t198",
+   "md5": "efa3e31a515e59b0faed1432b1381a0c",
+   "shard": "train-00004-of-00011",
+   "row": 5002,
+   "chapter": "9",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t199",
+   "md5": "e7ba99bddaaeb60c24e724ec2da5db6c",
+   "shard": "train-00010-of-00011",
+   "row": 1647,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t200",
+   "md5": "7057cda2380fe5334f4f12afba681d40",
+   "shard": "train-00000-of-00011",
+   "row": 2951,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t201",
+   "md5": "01dd0f09d4efdea10f100eb8a00e5f2e",
+   "shard": "train-00004-of-00011",
+   "row": 2972,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t202",
+   "md5": "680435195c90868d4131da61b2983cf3",
+   "shard": "train-00003-of-00011",
+   "row": 3036,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t203",
+   "md5": "083064b62d0710d33eed38d24a852639",
+   "shard": "train-00002-of-00011",
+   "row": 3849,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t204",
+   "md5": "845ea4881fc737e7aedd7bc017441cec",
+   "shard": "train-00003-of-00011",
+   "row": 3451,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t205",
+   "md5": "aa1f95326bf3d7d0add0286c402b2396",
+   "shard": "train-00008-of-00011",
+   "row": 7573,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t206",
+   "md5": "f321e46589741fb2acec91808696db22",
+   "shard": "train-00003-of-00011",
+   "row": 5625,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t207",
+   "md5": "7fa81ea389d8e76a7f3d184b128a0121",
+   "shard": "train-00009-of-00011",
+   "row": 5627,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t208",
+   "md5": "849f097589d72de9ebfd7e786ac315ff",
+   "shard": "train-00001-of-00011",
+   "row": 7332,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t209",
+   "md5": "c491d6526b8b6a0257205616ae41b908",
+   "shard": "train-00007-of-00011",
+   "row": 2753,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t210",
+   "md5": "9dcaa1459c3ab6eb7c1c72de9facf7f5",
+   "shard": "train-00006-of-00011",
+   "row": 5497,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t211",
+   "md5": "cee38856dc260a6843ff6e80149d9b78",
+   "shard": "train-00004-of-00011",
+   "row": 1931,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t212",
+   "md5": "dddb0db30758808f489b503f42ca0b43",
+   "shard": "train-00005-of-00011",
+   "row": 3498,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t213",
+   "md5": "b4f58bf549ca7e03d4e71efbf602915d",
+   "shard": "train-00003-of-00011",
+   "row": 7146,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t214",
+   "md5": "bd27d3c3d240a55f5d8931adabd9331f",
+   "shard": "train-00010-of-00011",
+   "row": 3878,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t215",
+   "md5": "6a8eea7fc8145fae9f4405befb657469",
+   "shard": "train-00007-of-00011",
+   "row": 4585,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t216",
+   "md5": "d36d0188498477d09c63bf49761c063e",
+   "shard": "train-00003-of-00011",
+   "row": 7603,
+   "chapter": "4",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t217",
+   "md5": "d55791dbdb413c6948b6ba958d93cea2",
+   "shard": "train-00005-of-00011",
+   "row": 73,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t218",
+   "md5": "cae6497418f1b57cc252f7562d55d970",
+   "shard": "train-00000-of-00011",
+   "row": 7139,
+   "chapter": "5",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t219",
+   "md5": "8c7a01ef68c582c7d44fc46790ae72ed",
+   "shard": "train-00010-of-00011",
+   "row": 6045,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t220",
+   "md5": "3f4de9f2ea86b0d32a7d6fb15fe0a004",
+   "shard": "train-00004-of-00011",
+   "row": 3745,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t221",
+   "md5": "730d8b2f02907d0356c6a146fbdc079a",
+   "shard": "train-00003-of-00011",
+   "row": 7905,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t222",
+   "md5": "12882f34b9599922a430e0ae55b72777",
+   "shard": "train-00007-of-00011",
+   "row": 531,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t223",
+   "md5": "3679de79d404b8166344c4c2ce786faf",
+   "shard": "train-00009-of-00011",
+   "row": 6006,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t224",
+   "md5": "fe900801d41e5076a14ed1a19c364ac5",
+   "shard": "train-00006-of-00011",
+   "row": 2029,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t225",
+   "md5": "76eb4505f0f7fe1484b563aa419c2ff6",
+   "shard": "train-00008-of-00011",
+   "row": 6342,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t226",
+   "md5": "65fe5bfb0a985dd2a9d90ed45e25cf95",
+   "shard": "train-00010-of-00011",
+   "row": 615,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t227",
+   "md5": "014241998b09e1ba6eafc023abb30c31",
+   "shard": "train-00006-of-00011",
+   "row": 1268,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t228",
+   "md5": "e585477d52115668f60909c660c6959f",
+   "shard": "train-00005-of-00011",
+   "row": 4148,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t229",
+   "md5": "92755b7c2cc8f679c0acf819740700da",
+   "shard": "train-00003-of-00011",
+   "row": 7192,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t230",
+   "md5": "62a10b509cf4c0bb5cd8f48dde14aba2",
+   "shard": "train-00003-of-00011",
+   "row": 2500,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t231",
+   "md5": "b9cb3f7148d124025defab9c3605b80b",
+   "shard": "train-00000-of-00011",
+   "row": 5692,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t232",
+   "md5": "9dbdbd2c229f4c9db9b2d5f53c573654",
+   "shard": "train-00009-of-00011",
+   "row": 1752,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t233",
+   "md5": "77f792f5a187ed1480fd748e234ae5a6",
+   "shard": "train-00001-of-00011",
+   "row": 4519,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t234",
+   "md5": "8fef090cac661e53713d8f63620d81fd",
+   "shard": "train-00001-of-00011",
+   "row": 444,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t235",
+   "md5": "d36c879b226b9ffcbb155ef9d9b633bb",
+   "shard": "train-00002-of-00011",
+   "row": 3816,
+   "chapter": "3",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t236",
+   "md5": "68942b09dd3d4a6fb6df6b6664266fb8",
+   "shard": "train-00002-of-00011",
+   "row": 7118,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t237",
+   "md5": "e9b87ca6fd19c37ab18c154505b4581d",
+   "shard": "train-00004-of-00011",
+   "row": 2562,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t238",
+   "md5": "99400ad85535df48d96cac24140a373b",
+   "shard": "train-00000-of-00011",
+   "row": 4642,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t239",
+   "md5": "d37441f5e834e7e560a47b55a8e1cc09",
+   "shard": "train-00001-of-00011",
+   "row": 2356,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t240",
+   "md5": "878c34a25b4bd875c9a3630504440b1c",
+   "shard": "train-00010-of-00011",
+   "row": 3980,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t241",
+   "md5": "6e6a9c5deb15103e9c634e96fb202d2a",
+   "shard": "train-00009-of-00011",
+   "row": 3952,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t242",
+   "md5": "c6fec6185ee049a81d02135ce3dad9fa",
+   "shard": "train-00007-of-00011",
+   "row": 6467,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t243",
+   "md5": "ff01b26706cc4e585b7ab606a59e56eb",
+   "shard": "train-00006-of-00011",
+   "row": 736,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t244",
+   "md5": "519989e5a953ba0d6a12eeff69e7f888",
+   "shard": "train-00006-of-00011",
+   "row": 1503,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t245",
+   "md5": "285c2ec1e3870b4cba0828573952c1f9",
+   "shard": "train-00007-of-00011",
+   "row": 5908,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t246",
+   "md5": "f0eb9d498de263f43f0c4ecc85443bec",
+   "shard": "train-00010-of-00011",
+   "row": 1011,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t247",
+   "md5": "87ab1147d7e9671268bfe1f008ffad72",
+   "shard": "train-00004-of-00011",
+   "row": 4590,
+   "chapter": "3",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t248",
+   "md5": "bda89f707c1b9ffb539c7ce7d729eb4d",
+   "shard": "train-00009-of-00011",
+   "row": 4825,
+   "chapter": "1",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t249",
+   "md5": "3198f226bd570c5cce2525180c856d7d",
+   "shard": "train-00000-of-00011",
+   "row": 4176,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t250",
+   "md5": "2e42b5579e21be1393523955ad66ed51",
+   "shard": "train-00002-of-00011",
+   "row": 3340,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t251",
+   "md5": "c3ae59e5ea84ebd9c4519fd1cc30bf71",
+   "shard": "train-00003-of-00011",
+   "row": 5315,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t252",
+   "md5": "8022089cfc9d559cc645a9967f32608e",
+   "shard": "train-00007-of-00011",
+   "row": 644,
+   "chapter": "7",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t253",
+   "md5": "276832328884ea9f337a504b1bc6d10c",
+   "shard": "train-00009-of-00011",
+   "row": 2421,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t254",
+   "md5": "e0a997add11ae6504d1434524c07383e",
+   "shard": "train-00005-of-00011",
+   "row": 1541,
+   "chapter": "2",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t255",
+   "md5": "7fd6f7cb04e37d4c76855e3ca1d32c45",
+   "shard": "train-00006-of-00011",
+   "row": 6407,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t256",
+   "md5": "ddb018e4252c05d704bbc6a936ed8ba6",
+   "shard": "train-00008-of-00011",
+   "row": 2811,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t257",
+   "md5": "19452d062678e797ff4d5d8630441b21",
+   "shard": "train-00004-of-00011",
+   "row": 1143,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t258",
+   "md5": "2eb865857aedaab15aeac9cf72977685",
+   "shard": "train-00005-of-00011",
+   "row": 600,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t259",
+   "md5": "85dadabdb1ce71b83b33c8d6441fb5be",
+   "shard": "train-00005-of-00011",
+   "row": 6049,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t260",
+   "md5": "1497ad2295a88c2b82243994dfde435f",
+   "shard": "train-00008-of-00011",
+   "row": 2704,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t261",
+   "md5": "48b3a0151950367aaf16ab9f5fb26a91",
+   "shard": "train-00009-of-00011",
+   "row": 2065,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t262",
+   "md5": "17ebe83131a611159629c81410adb318",
+   "shard": "train-00007-of-00011",
+   "row": 2192,
+   "chapter": "9",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t263",
+   "md5": "278679d58b74679bbd161a8a7d12f783",
+   "shard": "train-00002-of-00011",
+   "row": 6734,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t264",
+   "md5": "c1e328bfab2739b6a0e842856be5748a",
+   "shard": "train-00002-of-00011",
+   "row": 5399,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t265",
+   "md5": "8a04bcd0a972c1258dc5ed7389770e23",
+   "shard": "train-00006-of-00011",
+   "row": 882,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t266",
+   "md5": "5246eafc9241b7ba2f151de5acca0656",
+   "shard": "train-00009-of-00011",
+   "row": 6511,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t267",
+   "md5": "361ee0e1adf17ba964b37300a9f53a35",
+   "shard": "train-00008-of-00011",
+   "row": 3026,
+   "chapter": "0",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t268",
+   "md5": "fbf36492935c28dc11a2190076dfa057",
+   "shard": "train-00004-of-00011",
+   "row": 2357,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t269",
+   "md5": "6635770bdb99feac3b422590c2a5b23a",
+   "shard": "train-00006-of-00011",
+   "row": 3204,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t270",
+   "md5": "16bc8f70e587ed8aad2f5a6c599fdee4",
+   "shard": "train-00003-of-00011",
+   "row": 4153,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t271",
+   "md5": "a10a745764360a878603614d2d8b3524",
+   "shard": "train-00007-of-00011",
+   "row": 84,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t272",
+   "md5": "c3ef5c831301c4f12392b0c2f15249eb",
+   "shard": "train-00001-of-00011",
+   "row": 4642,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t273",
+   "md5": "f604573f3ca853ce4cb6ce57c3a7f5ee",
+   "shard": "train-00002-of-00011",
+   "row": 960,
+   "chapter": "0",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t274",
+   "md5": "8070d760290d9f66a6825b124e9dbb29",
+   "shard": "train-00003-of-00011",
+   "row": 1566,
+   "chapter": "1",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t275",
+   "md5": "e928d013a0e0868cae8859a92a6dc947",
+   "shard": "train-00005-of-00011",
+   "row": 5268,
+   "chapter": "9",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t276",
+   "md5": "073620ddf4ba352b8036456b384d5b8e",
+   "shard": "train-00005-of-00011",
+   "row": 7930,
+   "chapter": "1",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t277",
+   "md5": "77303b17119d5dc2317d7e981ab712a2",
+   "shard": "train-00002-of-00011",
+   "row": 3503,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t278",
+   "md5": "980709b2cd619dfc4664d32af3d3e6d0",
+   "shard": "train-00004-of-00011",
+   "row": 806,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t279",
+   "md5": "1106c853d16026cdf3f6931d3f65c226",
+   "shard": "train-00000-of-00011",
+   "row": 3430,
+   "chapter": "6",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t280",
+   "md5": "1c7c87bf2aa0e85bfea99e51faf435c3",
+   "shard": "train-00000-of-00011",
+   "row": 214,
+   "chapter": "6",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t281",
+   "md5": "ca6ef6bd4c3eb2b18a3b9e0f7e348d52",
+   "shard": "train-00006-of-00011",
+   "row": 2582,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t282",
+   "md5": "09c73d6c34af38a202747e3332a2be1d",
+   "shard": "train-00006-of-00011",
+   "row": 5647,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t283",
+   "md5": "4f85e3afa819b65496b698eefccf4949",
+   "shard": "train-00003-of-00011",
+   "row": 7219,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t284",
+   "md5": "a1fbd9cf43ae472db7bb67a8fd28fb04",
+   "shard": "train-00000-of-00011",
+   "row": 268,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t285",
+   "md5": "f1f89a71e375e3916707f9908c3ca46f",
+   "shard": "train-00007-of-00011",
+   "row": 2705,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t286",
+   "md5": "eda2417dad16827e9c289735341a4f3f",
+   "shard": "train-00002-of-00011",
+   "row": 7061,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t287",
+   "md5": "2aaeaef45623e3c6859d7b3e8318044b",
+   "shard": "train-00003-of-00011",
+   "row": 2375,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t288",
+   "md5": "d1a4f6dba0cdf3ebc2ba411f58e461ba",
+   "shard": "train-00007-of-00011",
+   "row": 129,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t289",
+   "md5": "e4912e82d84e1107d3d0a25e5acab0a5",
+   "shard": "train-00010-of-00011",
+   "row": 4867,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t290",
+   "md5": "5b9675ce66497c0f128585356b44bc61",
+   "shard": "train-00009-of-00011",
+   "row": 5735,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t291",
+   "md5": "0d7b349fa902497c21f8273f79beeb42",
+   "shard": "train-00007-of-00011",
+   "row": 7437,
+   "chapter": "5",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t292",
+   "md5": "0698ecb30cff4e4d9464b25bc56b9868",
+   "shard": "train-00010-of-00011",
+   "row": 5083,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t293",
+   "md5": "fe2e7039ead8399c2f119d5950013802",
+   "shard": "train-00001-of-00011",
+   "row": 2853,
+   "chapter": "7",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t294",
+   "md5": "5d5cbc39324481ff3e64f0743c487aca",
+   "shard": "train-00003-of-00011",
+   "row": 790,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t295",
+   "md5": "cf4756012016c3b044a2226798693a48",
+   "shard": "train-00002-of-00011",
+   "row": 3651,
+   "chapter": "2",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t296",
+   "md5": "5952da917fe86401717e8972cc136da4",
+   "shard": "train-00006-of-00011",
+   "row": 2523,
+   "chapter": "4",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t297",
+   "md5": "5da04ec62e67895c2d2e6faa92b5e87d",
+   "shard": "train-00002-of-00011",
+   "row": 746,
+   "chapter": "3",
+   "role": "apprentissage"
+  },
+  {
+   "name": "t298",
+   "md5": "35289d45813c7ee9b9c67546fad9d16e",
+   "shard": "train-00002-of-00011",
+   "row": 1645,
+   "chapter": "6",
+   "role": "validation_interne"
+  },
+  {
+   "name": "t299",
+   "md5": "5d8def0c9b906b6fbaafb69b348e7af5",
+   "shard": "train-00003-of-00011",
+   "row": 388,
+   "chapter": "1",
+   "role": "apprentissage"
+  }
+ ]
+}

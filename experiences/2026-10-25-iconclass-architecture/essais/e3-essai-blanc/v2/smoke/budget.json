@@ -1,0 +1,95 @@
+{
+ "arms": {
+  "T-D": {
+   "weights_bytes": {
+    "trainable": 49818508,
+    "frozen": 307200,
+    "buffers": 63256
+   },
+   "method": "first training batch of the arm, inside the loop: allocated before forward (A0), after forward (A1: activations and attention kept for backward), after backward (A2: + gradients, - freed activations), after the first AdamW step (A3: + optimiser states); peak = torch.cuda.max_memory_allocated over that batch after a reset; attention = bytes of the outputs of the decoder's multihead attention returned to the caller (forward hook; T-D only); its internal buffers kept for backward are inside A1 - A0 and are not separable from the other activations by this method",
+   "first_batch": {
+    "batch": 512,
+    "A0_before_forward": 201774080,
+    "A1_after_forward": 3326320128,
+    "A2_after_backward": 270729728,
+    "A3_after_step": 371677696,
+    "activations_kept_A1_minus_A0": 3124546048,
+    "gradients_bytes": 49818508,
+    "adamw_states_bytes": 99637088,
+    "attention_outputs_bytes": 170393600,
+    "peak_over_batch": 3572169216
+   },
+   "epochs": [
+    {
+     "epoch": 0,
+     "seconds": 123.60211515426636,
+     "images": 4096,
+     "images_per_second": 33.138589113593916
+    },
+    {
+     "epoch": 1,
+     "seconds": 7.004652500152588,
+     "images": 4096,
+     "images_per_second": 584.7536073241389
+    }
+   ],
+   "arm_wall_seconds": 151.1821596622467,
+   "vram_peak_allocated_arm_bytes": 3673903616,
+   "vram_peak_reserved_arm_bytes": 4011851776,
+   "ram_peak_process_so_far_gb": 2.188756,
+   "checkpoint_bytes": 50383783
+  },
+  "T-Z": {
+   "weights_bytes": {
+    "trainable": 73206668,
+    "frozen": 0,
+    "buffers": 0
+   },
+   "method": "first training batch of the arm, inside the loop: allocated before forward (A0), after forward (A1: activations and attention kept for backward), after backward (A2: + gradients, - freed activations), after the first AdamW step (A3: + optimiser states); peak = torch.cuda.max_memory_allocated over that batch after a reset; attention = bytes of the outputs of the decoder's multihead attention returned to the caller (forward hook; T-D only); its internal buffers kept for backward are inside A1 - A0 and are not separable from the other activations by this method",
+   "first_batch": {
+    "batch": 512,
+    "A0_before_forward": 241943552,
+    "A1_after_forward": 451325440,
+    "A2_after_backward": 315150848,
+    "A3_after_step": 462039552,
+    "activations_kept_A1_minus_A0": 209381888,
+    "gradients_bytes": 73206668,
+    "adamw_states_bytes": 146413356,
+    "attention_outputs_bytes": null,
+    "peak_over_batch": 535246336
+   },
+   "epochs": [
+    {
+     "epoch": 0,
+     "seconds": 1.203336238861084,
+     "images": 4096,
+     "images_per_second": 3403.858432489462
+    },
+    {
+     "epoch": 1,
+     "seconds": 1.0985682010650635,
+     "images": 4096,
+     "images_per_second": 3728.476550677175
+    }
+   ],
+   "arm_wall_seconds": 6.308229923248291,
+   "vram_peak_allocated_arm_bytes": 737223168,
+   "vram_peak_reserved_arm_bytes": 801112064,
+   "ram_peak_process_so_far_gb": 2.214476,
+   "checkpoint_bytes": 73348953
+  }
+ },
+ "ram_peak_gb": 2.214476,
+ "ram_note": "ru_maxrss of the process (Linux: KiB), divided by 1e6: GB to 2.4 %",
+ "disk_free_before_gb": {
+  "/kaggle/working/smoke": 20.940488704,
+  "/tmp": 1126.15163904
+ },
+ "disk_free_after_gb": {
+  "/kaggle/working/smoke": 20.816740352,
+  "/tmp": 1126.124781568
+ },
+ "outputs_bytes": 123734768,
+ "resumption": "none inside a run: checkpoints are written atomically at each best epoch; a lost session is rerun from zero in a new output folder (the optimiser state is not saved, so a resumed run would not be the same run)",
+ "wall_seconds": 164.58417510986328
+}

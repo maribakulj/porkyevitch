@@ -1,0 +1,15 @@
+    706 s  preflight ok
+    814 s  test-00000-of-00001: 788 rows
+   1211 s  train-00000-of-00011: 8000 rows
+   1613 s  train-00001-of-00011: 8000 rows
+   2009 s  train-00002-of-00011: 8000 rows
+   2419 s  train-00003-of-00011: 8000 rows
+   2811 s  train-00004-of-00011: 8000 rows
+   3206 s  train-00005-of-00011: 8000 rows
+   3597 s  train-00006-of-00011: 8000 rows
+   3986 s  train-00007-of-00011: 8000 rows
+   4375 s  train-00008-of-00011: 8000 rows
+   4774 s  train-00009-of-00011: 8000 rows
+   5074 s  train-00010-of-00011: 6216 rows
+   6094 s  emblematica: 7320 rows
+   6095 s  done, control True

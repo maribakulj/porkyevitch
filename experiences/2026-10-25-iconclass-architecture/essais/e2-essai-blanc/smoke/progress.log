@@ -1,0 +1,5 @@
+      0 s  toy test: {'m_parent': 0.8999999761581421, 'm_plus_parent': 0.4000000059604645, 'passed': True}
+     18 s  controls: {'toy_test': True, 'tstar_sha256_ok': True, 'vocab_equal_tstar': True, 'pairs': 44229, 't_h0_identical_to_tstar': True, 'passed': True}
+     41 s  T-H epoch 0: val 0.3523 at 0.15
+     57 s  T-H epoch 1: val 0.3972 at 0.15
+     58 s  done: {'epoch': 1, 'threshold': 0.15, 'val': 0.39718975653734306}

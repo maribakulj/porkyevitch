@@ -1,0 +1,41 @@
+[{"stream_name":"stderr","time":16.055720006,"data":"Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n"}
+,{"stream_name":"stdout","time":108.207244532,"data":"{\n"}
+,{"stream_name":"stdout","time":108.207277683,"data":" \"python\": \"3.13.15\",\n"}
+,{"stream_name":"stdout","time":108.207283922,"data":" \"versions\": [\n"}
+,{"stream_name":"stdout","time":108.207288978,"data":"  \"einops==0.8.2\",\n"}
+,{"stream_name":"stdout","time":108.207294027,"data":"  \"huggingface_hub==1.29.0\",\n"}
+,{"stream_name":"stdout","time":108.207299292,"data":"  \"numpy==2.1.3\",\n"}
+,{"stream_name":"stdout","time":108.207304428,"data":"  \"open_clip_torch==3.3.0\",\n"}
+,{"stream_name":"stdout","time":108.207309455,"data":"  \"pillow==13.0.0\",\n"}
+,{"stream_name":"stdout","time":108.207314193,"data":"  \"pyarrow==23.0.1\",\n"}
+,{"stream_name":"stdout","time":108.207318358,"data":"  \"safetensors==0.8.0\",\n"}
+,{"stream_name":"stdout","time":108.207322569,"data":"  \"timm==1.0.29\",\n"}
+,{"stream_name":"stdout","time":108.207326658,"data":"  \"torch==2.11.0+cu128\",\n"}
+,{"stream_name":"stdout","time":108.207330927,"data":"  \"torchvision==0.26.0+cu128\",\n"}
+,{"stream_name":"stdout","time":108.207335062,"data":"  \"transformers==5.16.1\"\n"}
+,{"stream_name":"stdout","time":108.207343426,"data":" ],\n"}
+,{"stream_name":"stdout","time":108.207347389,"data":" \"gpu\": \"Tesla T4\",\n"}
+,{"stream_name":"stdout","time":108.207351752,"data":" \"c-radio\": {\n"}
+,{"stream_name":"stdout","time":108.207355833,"data":"  \"returncode\": 0,\n"}
+,{"stream_name":"stdout","time":108.207360033,"data":"  \"images\": 32,\n"}
+,{"stream_name":"stdout","time":108.207364199,"data":"  \"identical\": 32,\n"}
+,{"stream_name":"stdout","time":108.207370432,"data":"  \"passed\": true,\n"}
+,{"stream_name":"stdout","time":108.207374598,"data":"  \"seconds\": 51.6,\n"}
+,{"stream_name":"stdout","time":108.207381428,"data":"  \"stderr_tail\": \"Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\\n\\nLoading weights:   0%|          | 0/343 [00:00\u003c?, ?it/s]\\nLoading weights:  78%|\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u258a  | 266/343 [00:00\u003c00:00, 2654.86it/s]\\nLoading weights: 100%|\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588\\u2588| 343/343 [00:00\u003c00:00, 2701.04it/s]\\n\"\n"}
+,{"stream_name":"stdout","time":108.207393009,"data":" },\n"}
+,{"stream_name":"stdout","time":108.207397815,"data":" \"pe-spatial\": {\n"}
+,{"stream_name":"stdout","time":108.207402487,"data":"  \"returncode\": 0,\n"}
+,{"stream_name":"stdout","time":108.207407477,"data":"  \"images\": 32,\n"}
+,{"stream_name":"stdout","time":108.207411724,"data":"  \"identical\": 32,\n"}
+,{"stream_name":"stdout","time":108.207415982,"data":"  \"passed\": true,\n"}
+,{"stream_name":"stdout","time":108.20742015,"data":"  \"seconds\": 30.1,\n"}
+,{"stream_name":"stdout","time":108.207424414,"data":"  \"stderr_tail\": \"Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\\n\"\n"}
+,{"stream_name":"stdout","time":108.207429221,"data":" }\n"}
+,{"stream_name":"stdout","time":108.20743312,"data":"}\n"}
+,{"stream_name":"stderr","time":110.712765781,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":110.712804576,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":110.975632322,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":110.975662063,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":111.758764595,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":112.742396566,"data":"[NbConvertApp] Writing 287947 bytes to __results__.html\n"}
+]

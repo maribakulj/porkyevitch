@@ -1,0 +1,6 @@
+{
+  "statut": "M0 descriptif seul (devis v2, section 1) : aucune porte, aucune décision, aucun bras ne dépend de M0.",
+  "iou_appariement": 0.5,
+  "bootstrap": {"tirages": 2000, "graine": 3061, "unite": "image", "methode": "percentile"},
+  "sources_note": "notes/2026-10-30-tranche300-devis-v2.md, section 1 (la v1 et sa porte de 70 % sont remplacées)"
+}

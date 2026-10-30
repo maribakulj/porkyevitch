@@ -1,0 +1,33 @@
+{
+ "script_sha256": "c3f12bb71deda0b96bf3b8d015d9a79f4db666c234ad8edb0ff04633bd2bf1ca",
+ "inputs": {
+  "caypollard-iconclass-t0/head.pt": "2b403a912383853d52ed771ef5843a42a80160e39b180ccf98e8bf3b1fc98242",
+  "caypollard-iconclass-t0/predictions.json": "84283a881ed15747bd8a023130f638d0c65d0a0535adb239d65e4c818c145fd7",
+  "caypollard-iconclass-t0/resultats.json": "d207d0c4ade1d1ba3171cbd0ffe06433637823021ad248b273656159ce63fa33",
+  "gel2/candidats_feats.npz": "347babaa95f7ca11615bda760affa26d024c1e2871bb6beea2d411db5b639a9a",
+  "gel2/predictions.json": "543a556f7a0dc78446ea27399dc9ceb06c64814df40ef083c59641dff6bb5e85",
+  "gel2/test.json": "44cc03f936a58a82ee4ac9f420a56098a89bc5bea831c16372bc0c2b74d01acb",
+  "ext/candidates.jsonl": "bfe9e9703d8ce308fa255f80ef1297a15984d0de5d1df05fd1a64b8409ac3e3a",
+  "ext/near256.json": "a23736e08ab18291e115b8dd303b12264ed686ecc14563dabd71a6a57ea5a5ef"
+ },
+ "dataset": [
+  "davanstrien/iconclass-vlm-brillfull",
+  "8045366ff092a06e8e1c4e47f1eb43cb2a54d732"
+ ],
+ "feature_config": "nvidia/C-RADIOv3-L@9d0413465e8a91e67bbf2c1ad342815478d1b906|square-grey128|448|bicubic|autocast-fp16|summary+meanspatial|l2-each-then-l2",
+ "grid_config": "nvidia/C-RADIOv3-L@9d0413465e8a91e67bbf2c1ad342815478d1b906|square-grey128|448|bicubic|autocast-fp16|spatial28x28|adaptive-avg-8x8|fp16",
+ "smoke": 0,
+ "versions": {
+  "torch": "2.11.0+cu128",
+  "torchvision": "0.26.0+cu128",
+  "transformers": "5.16.1",
+  "timm": "1.0.29",
+  "open-clip-torch": "3.3.0",
+  "einops": "0.8.2",
+  "numpy": "2.1.3",
+  "pillow": "13.0.0",
+  "pyarrow": "23.0.1",
+  "huggingface-hub": "1.29.0"
+ },
+ "gpu": "Tesla T4"
+}

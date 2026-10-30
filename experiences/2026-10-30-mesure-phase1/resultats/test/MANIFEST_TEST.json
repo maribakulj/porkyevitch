@@ -1,0 +1,41 @@
+{
+ "seal_sha256": "3c468faa7bec5ac7a98104a4ac47d3f7be24ec9ef76e0855f49b42aad12fad0c",
+ "dev_manifest_sha256": "d4dfd1f4ab25503d2a4877a1c63b22535aaab42eb9907708b072b8c9d07bd622",
+ "receipt": {
+  "stage": "planches_dev_regardees",
+  "dev_manifest_sha256": "d4dfd1f4ab25503d2a4877a1c63b22535aaab42eb9907708b072b8c9d07bd622",
+  "regards": [
+   {
+    "viewer": "wA:p1",
+    "viewed_at": "2026-10-30T03:48:00+01:00",
+    "notes": "resultats/dev/REGARD_wA_p1.md"
+   },
+   {
+    "viewer": "Grok wA:p3",
+    "viewed_at": "2026-10-30T03:53:13+01:00",
+    "notes": "~/Documents/reviews/porkyevitch-planches-dev-grok.md"
+   }
+  ],
+  "plates_html_sha256": {
+   "T_star-T0": "4e7f859e8354928e1e9f1a4685541c9cd4a493ac34cbf12f6deac8f0bbc2302d",
+   "TK-T_star": "d091a9c9487918c160ef6960c8e0d6dcecf3138a85e3ae7b5141bded8a65eec1",
+   "T-niv-T_star": "15181bc02d00df09902b7ef23db28bc9ab306d9d0ded9baa98a935d84e3fefd3",
+   "TK-niv-T_star": "de0ae713fdd77ad79f9c963e9a8fd59ad98cb1ab6cad29f974330172ccd32ba6",
+   "T-H-T_star": "e4684c7dadaf26112a6fd8eb1a5da66e67b90fdd4ec4d02c4b4cc96d28b1e6e2",
+   "T-Z-T_star": "5c4776b407e8ca10374ea5bba839118d0228a647cf14242a34bc011c54208a9f",
+   "T-D-T_star": "24bd4b51a9cdab3aa0e5bc73b8b2fdd80ec49d64abbe4425f7d3f289715ffb19"
+  }
+ },
+ "script_sha256": {
+  "mesure_phase1.py": "76f2643ae369faf5cb8b581af3b3c092ccf569355acb76d7f8c35e669fd7eb3b",
+  "mesure_metrics.py": "9a9d452676e7dd7717d4fab0aa00d11c2a1da5169913d03a80e0ccb5416df895"
+ },
+ "versions": {
+  "python": "3.13.15",
+  "numpy": "2.1.3"
+ },
+ "files": {
+  "mesures_test.json": "e6ac6206a00174ae4295629ef09d0de9a81c8d30c94dba72478d753eb7e064b0",
+  "verdicts.json": "5a4193cca9899959c027cac369ef03a92f1457e486b8d8cf8f570b6538fe7651"
+ }
+}

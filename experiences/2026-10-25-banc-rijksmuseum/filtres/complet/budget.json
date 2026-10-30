@@ -1,0 +1,14 @@
+{
+ "ram_peak_gb": 5.99254,
+ "vram_peak_allocated_gb": 4.316156928,
+ "disk_free_before_gb": {
+  "/kaggle/working/full": 20.940500992,
+  "/tmp": 1126.14606848
+ },
+ "disk_free_after_gb": {
+  "/kaggle/working/full": 19.207041024,
+  "/tmp": 1124.800745472
+ },
+ "outputs_gb": 1.717520933,
+ "wall_seconds": 8911.022192955017
+}

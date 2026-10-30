@@ -1,0 +1,79 @@
+# Journal de la boucle wA:p1
+
+- 29/10 : boucle créée (BOUCLE.md). En cours : passe Gemini du pilote (94 acceptés / 183 réponses, 79 JSON illisibles) ; P9-A code feu vert Grok p2, audit Codex p4 demandé ; script de prédictions phase 1 à écrire.
+- 29/10 it.1 : p6 → script de gel des prédictions phase 1 ; p3 → vérification E3 complet ; Gemini 107 acceptés / 214 réponses ; p4 audite le code P9-A ; p7 revue cap production.
+- 29/10 : Marcel précise le rôle de Codex maths (algorithmes compétitifs sans VLM) ; BOUCLE.md mis à jour ; tâche envoyée à p6 après le script phase 1.
+- 29/10 : E3 complet vérifié CONFORME par Grok p3.
+- 29/10 : rapport challenger cap production (Grok p7) reçu ; contre-expertise demandée à Codex p4 (p6 occupé).
+- 29/10 : cache 12 images P9-A feu vert Grok p2 ; audit p4 demandé. Haiku test20 relancé (liste d'images manquante dans ma consigne).
+- 29/10 : Haiku test20 validé (20/20 valides, 0,2 objet faux et 0,1 relation fausse par image, ≈ 6 s/image).
+- 29/10 : décision D1 (cap production, ordre des jalons) consignée.
+- 29/10 : Marcel demande d'améliorer Haiku (consigne, exemples, vocabulaire) → étape préinscrite après le schéma de relations de Grok p7 (référence Opus de 30 images, comparaison de consignes, deux passes, zooms, vote). Cache 12 images P9-A : feu vert p4.
+- 29/10 : gel phase 1 feu vert Grok p2, audit p4 demandé. Marcel : tester plusieurs systèmes Haiku jusqu'au meilleur avant l'échelle (+2 Haiku ensuite).
+- 29/10 : passe Gemini finie : 178/200 acceptés (89 %, entre 80 et 95 : pas d'échelle selon la règle). Contre-regard Grok p3 sur Haiku : 0 inventé, 1 mal nommé, 4 rectangles, 3 relations ; validation confirmée. Banc des systèmes Haiku préinscrit (amendement 4). Codex p4/p6 à court de crédits jusqu'à 1 h 37 ; Claude wA:pH remplace p6.
+- 29/10 : préparation P9-A refusée par le pilote (image CPU = torch 2.11.0+cpu, versions auditées = +cu128) ; relancée sur machine T4 (préparation en CPU, versions conformes), aucun calcul fait au 1er essai.
+- 29/10 : rapport algos production (wA:pH, 5 algos) → challenge Grok p7.
+- 29/10 : préparation P9-A arrêtée par le garde-fou (descriptions Iconclass en conflit, 83(SHAKESPEARE…)) ; correctif demandé à wA:pH.
+- 29/10 : correctif B1 du gel phase 1 : feu vert Grok p2 (5b2750a) ; contre-vérification Codex p4 à envoyer après 1 h 37 (retour de crédits).
+- 29/10 : correctif descriptions P9-A : feu vert Grok p2 (93759a2, manifeste 8438cdae). File d'attente Codex p4 (retour 1 h 37) : contre-vérif B1 gel phase 1 (5b2750a) ; contre-vérif P9-A descriptions (93759a2) ; contre-expertise algos production.
+- 29/10 : challenge Grok p7 des algos A1-A5 reçu ; pH prépare préinscription A1 et script A3 en attendant la contre-expertise Codex p4.
+- 30/10 : banc Haiku : contre-regard Grok p3 confirme S1b (2,37/image contre -0,50) ; S1b retenu comme système d'annotation.
+- 30/10 : A3 exactitude exécuté localement (58 s, après feu vert Grok p2 ; diagnostic CPU léger) : borne conforme (0 violation sur 15 753 paires x 4 couplages) ; top-10 identique sur 166/178 requêtes seulement → selon la règle, écart = erreur de code ; diagnostic demandé à wA:pH.
+- 30/10 : avis Grok p7 sur D2 : ne pas annoter 5 000 tout de suite ; petit élève d'abord sur les graphes Gemini existants, puis tranche S1b de quelques centaines stratifiée si signal. Contre-expertise Codex p4 à son retour.
+- 30/10 : A3 passage 2 (script 9deca3e8, feu vert Grok p2) : borne conforme, top-10 identique 178/178 ; A3 exact sur le pilote. Vitesse : après le jalon 4.
+- 30/10 00:15 : itération : pH → préinscription + script du diagnostic palier 0 (validation seule). Disque 5,2 Go libres (baisse, autres projets) : recherche des gros fichiers récents en cours.
+- 30/10 : diagnostic de la tête : feu vert Grok p2 (6a63a8f, manifeste 96ee72d1) ; audit p4 au retour, puis blanc --stage smoke.
+- 30/10 00:35 : itération : pH → brouillon de préinscription du petit élève. Disque remonté à 9,1 Go.
+- 30/10 : petit élève v0.1 : feu vert Grok p2 (909f73ee) ; contre-expertise Codex p4 (D2 + brouillon) à son retour.
+- 30/10 01:40 : Codex p4 de retour ; file de 5 dossiers envoyée (B1 gel, P9-A descriptions, diagnostic, D2 + petit élève, A1-A5).
+- 30/10 : décision D2 consignée (petit élève v1 + tranche S1b de 300 en parallèle).
+- 30/10 : blanc du gel refusé par le pilote : open-clip-torch absent de l'image Kaggle actuelle (3.3.0 dans l'encodage historique) ; relancé avec réinstallation de 3.3.0 dans le lanceur (signalé aux relecteurs). Diagnostic complet lancé (v1.1).
+- 30/10 : diagnostic complet : longue traîne nulle sous 5 exemples (F1 ≈ 0), 0,20 pour 5-100, 0,33 pour 101-1000, 0,52 au-delà ; rappel 0,86 → 0,38 de la profondeur 1 à 6 ; seuil par tranche +0,0013 ; 765 « confiants absents » ; T-Z − T* = +0,011 [0,006 ; 0,016] ; erreurs T*/T-Z très corrélées (r = 0,82). Vérif p3/p4 demandée ; extraction des 100 images pour le regard demandée à pH.
+- 30/10 : blanc du gel : FEU VERT Codex p4 pour le gel complet (écart OpenCLIP accepté) ; attente relecture Grok p3 ; config freeze en préparation.
+- 30/10 : planche initiale P9-A regardée (12 images : portraits, gravures, lettrine, arbres, nature morte de gibier, page imprimée, décor peint) ; reçu signé ; blanc P9-A lancé sur T4.
+- 30/10 : GEL COMPLET phase 1 lancé (feux verts Codex p4 section 8, Grok p3 section 11 ; 24 fichiers + sceau, T4, plafond 4 h).
+- 30/10 : blanc P9-A échoué (invariant de conservation de masse après entraînement > 1e-6 ; B reproduit exactement) ; diagnostic demandé à pH.
+- 30/10 : 1er gel complet refusé à 7 s (jeu porky-gel-smoke non monté) ; manifeste du blanc déplacé dans porky-gel-config, sonde conforme ; gel relancé (phase1_freeze_2).
+- 30/10 : p7 → revue critique longue traîne + profondeur d'après le diagnostic.
+- 30/10 : décision D3 (vote rare, tête des enfants) consignée.
+- 30/10 : blanc P9-A relancé (correctif invariant 733a3f28, feux verts Grok p2 section 12 et Codex p4).
+- 30/10 : GEL COMPLET phase 1 scellé : 24 fichiers, predictions_frozen true, 28 min sur T4, aucune mesure.
+- 30/10 : diagnostic complet vérifié CONFORME par Codex p4 ; cache de probabilités float32 (npz) rapatrié pour A1.
+- 30/10 : stabilité S1b sur 60 images (deux passes indépendantes) : Jaccard des noms d'objets 0,52, des relations 0,34, écart moyen 2,4 objets par image.
+- 30/10 : regard des 100 confiants absents (wA:p1) : 61 oublis plausibles, 27 vrais mais génériques, 12 vraies erreurs ; contre-regard Grok p3 demandé.
+- 30/10 : P9-A blanc 2 CONFORME (Codex p4) ; passage scientifique : runner et devis complet à écrire (file de pH après les mesures de phase 1).
+- 30/10 : petit élève v1 : feu vert Grok p2 pour le blanc (59f56096) ; audit Codex p4 en file (après la mesure phase 1).
+- 30/10 : mesure phase 1 BLOQUÉE par Codex p4 (B1 pid/id, B2 reçu sans planches) ; correctif demandé à pH en priorité.
+- 30/10 : A1 v2 : feu vert Grok p2 (texte), audit p4 en file.
+- 30/10 : mesure phase 1 : correctifs B1/B2 (18702a0) en contre-vérification ; décision : D sur validation des autres briques = écart déclaré, sans effet sur les verdicts.
+- 30/10 : contre-regard Grok p3 des 100 confiants absents : O 29 / A 45 / E 26 (wA:p1 : 61/27/12), accord 53 % ; vrai (O+A) 74-88 %.
+- 30/10 : mesure phase 1 : feux verts Codex p4 et Grok p7 ; étape DEV lancée (CPU, internet IIIF).
+- 30/10 : regard des 7 planches du dev par wA:p1 fait ; regard de Grok p3 demandé (reçu à deux regards exigé pour ouvrir les tests).
+- 30/10 : contre-vérif Grok p2 des correctifs B1/B2 : CONFORME (section 8) ; dev déjà fait ; test attend le regard Grok p3 + reçu.
+- 30/10 03:50 : Codex p4 à court de crédits jusqu'à 6:40 ; audits en attente : petit élève v1, A1 v2 (texte + code), D3 (texte + code), runner P9-A. Grok p2/p3/p7 et pH occupés ; Haiku pE-pG et Gemini p8 laissés au repos (D2 : pas d'annotation au-delà de la tranche 300 avant la porte du petit élève).
+- 30/10 : regard Grok p3 des planches reçu ; reçu des deux regards écrit ; relecture des sorties dev demandée à p3 ; test attend aussi la réponse de p7 (D4).
+- 30/10 : runner P9-A : feu vert Grok p2 pour le devis (e08881c5) ; reçu de mesures à deux regards demandé à pH ; audit p4 au retour de ses crédits.
+- 30/10 : M0 écrit (4f31d9c), portes à fixer après Grok p7 + Codex p4.
+- 30/10 : A1 v2 code : feu vert Grok p7 pour le blanc (paquet 25f56a5f) ; faux optimum HiGHS non reproduit chez Grok (presolve ou non) — à vérifier par Codex ; blanc attend l'audit p4.
+- 30/10 : D3 code : feu vert Grok p2 pour le blanc (paquet 3bca548c) ; attend audit p4. File p4 au retour (6:40) : petit élève v1, P9-A devis (e08881c5) + diff 9044582, A1 v2 texte+code (25f56a5f), D3 texte+code (3bca548c), tranche300/M0.
+- 30/10 : D4 maintenue (Grok p7 : aucun chemin de fuite). Test phase 1 attend la relecture des sorties dev par Grok p3.
+- 30/10 : challenge Grok p7 de la note tranche 300 : ne pas préinscrire tel quel ; M0 descriptive sans choix de bras ; juge = 26 Gemini ; consensus Haiku en colonne de fidélité. Contre-expertise Codex p4 en file (n°5) ; décision ensuite.
+- 30/10 : note tranche 300 v2 (pH 75d86b0) : accepte M0 descriptive, juge = 26 Gemini, pas de porte d'achat sur +0,05, relations exclues ; option passe Gemini sur les 60 (juge à 86 images) : avis wA:p1 favorable, décision après Codex p4.
+- 30/10 : diff reçu P9-A (9044582) : feu vert Grok p2 ; devis reste sur e08881c5 ; étapes suivantes 789a1f3b après Codex.
+- 30/10 : feu vert Grok p3 (sorties dev + reçu) ; conditions de Codex p4 remplies (relecture des sorties dev, 7 planches, reçu à deux regards) ; étape TEST de la phase 1 lancée (pilote identique au dev sauf STAGE).
+- 30/10 : règle O/A/E écrite par Grok p3 ; troisième regard à l'aveugle des 47 désaccords confié à Gemini p8.
+- 30/10 : M0 descriptif : feu vert Grok p2 (9950825f) ; attend audit p4 (ajouté à sa file).
+- 30/10 : revue littérature étiquettes manquantes (Grok p7) : publier l'audit en trois comptes, pas de F1 corrigé par propension ; Hill = candidat ultérieur. Test phase 1 relancé (dataset porky-mesure-entree introuvable côté Kaggle → porky-mesure-test-entree).
+- 30/10 : Kaggle supprime les jeux de données contenant les images des planches (3 fois) ; amendement du pilote (archive .bin épinglée) demandé à pH ; aucun calcul de test n'a eu lieu (pilote arrêté au contrôle d'entrée, 2 fois).
+- 30/10 : comptage des négatifs (feu vert Grok p7, descriptif 1 s) : 2428 paires négatives Gemini, 269 comparables (deux objets appariés à S1b), 9 affirmées par S1b (3,3 %) ; seule 11 % des négatives sont comparables (appariement objets faible).
+- 30/10 : amendement pilote : feu vert Grok p2 (STAGE=test → e8949b6a) ; test attend l'audit Codex p4 (priorité 0 de sa file, retour ~6:40).
+- 30/10 : avis baselines production (Grok p7) : ajouter YOLOE-v8-S au protocole T4 du petit élève ; débits publiés non repris ; contre-expertise Codex en file (n°7) avant amendement.
+- 30/10 : Codex p4 FEU VERT amendement pilote (e8949b6a, archive 8281e581) ; étape TEST phase 1 lancée (dataset porky-mesure-bin).
+- 30/10 : Codex FEU VERT devis P9-A graine 0 (e08881c5) ; préparation du lancement demandée à pH. Petit élève smoke : dataset téléversé.
+- 30/10 : Codex : A1 texte FEU VERT ; blanc BLOQUÉ (B1 pas de moniteur global, B2 manifeste périmé) → pH ; repro HiGHS confirmée.
+- 30/10 : devis P9-A lancé (T4, graine 0, config 985af6fa) ; D3 texte FEU VERT Codex, blanc à corriger (moniteur, T4 exigé) → pH.
+- 30/10 : devis P9-A ÉCHOUÉ (nonfinite gradients dans update, 184 s) → diagnostic pH.
+- 30/10 : petit élève smoke OK (overfit passed, 27,5 img/s) ; Florence-2 indisponible (transformers) ; relecture des sorties par Grok p3. M0 fait : Dice conjoint 0,596, IoU seul 0,657, accord catégories 0,891, relations 0,537.
+- 30/10 : PHASE 1 CLOSE : aucune brique retenue (verdicts commités) ; vérification Grok p3 + audit Codex demandés. D8 (YOLOE-v8-S ajouté). B3 A1/D3 en relecture.
+- 30/10 : smoke petit élève CONFORME (Grok p3) ; complet attend : révisions épinglées, correctifs Codex (chrono, Florence-2, planche), YOLOE-v8-S, puis relectures.
+- 30/10 : verdicts phase 1 : audit Codex CONFORME (5a4193cc). Vérif Grok p3 attendue, puis carte HF et fusion travail→main.

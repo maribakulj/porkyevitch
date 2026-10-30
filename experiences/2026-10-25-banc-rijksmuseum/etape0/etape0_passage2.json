@@ -1,0 +1,124 @@
+{
+ "date_utc": "2026-10-25T19:35:41Z",
+ "script_sha256": "82b078b5995eb946c040e96a1f2c5e72bd7a0fba55bb0e50176b90816e8b250f",
+ "config": {
+  "per_type": 300,
+  "types": [
+   "painting",
+   "print",
+   "drawing"
+  ],
+  "profile": "la-framed",
+  "accept": "application/ld+json",
+  "search": "https://data.rijksmuseum.nl/search/collection",
+  "scope": "first results of the museum's search per type, not the whole catalogue"
+ },
+ "types": {
+  "painting": {
+   "search": {
+    "state": "complete"
+   },
+   "search_pages": [
+    "https://data.rijksmuseum.nl/search/collection?type=painting&imageAvailable=true",
+    "https://data.rijksmuseum.nl/search/collection?type=painting&imageAvailable=true&pageToken=eyJ0b2tlbiI6ICJodHRwczovL2lkLnJpamtzbXVzZXVtLm5sLzIwMDEwNzg2NSJ9",
+    "https://data.rijksmuseum.nl/search/collection?type=painting&imageAvailable=true&pageToken=eyJ0b2tlbiI6ICJodHRwczovL2lkLnJpamtzbXVzZXVtLm5sLzIwMDEwODAxNSJ9"
+   ],
+   "pids_met": 300,
+   "pids_examined": 300,
+   "record_ok": 300,
+   "record_failed": 0,
+   "visual_failed": 0,
+   "digital_failed": 0,
+   "metadata_cc0_on_object": 0,
+   "metadata_cc0_on_record": 300,
+   "shows_items": 300,
+   "digital_objects": 300,
+   "iiif_access_point": 300,
+   "pdm_on_digital_with_iiif": 0,
+   "pdm_on_visual_item_with_iiif": 299,
+   "with_iconclass": 291,
+   "all_readable": 291,
+   "some_unreadable": 0,
+   "truth_non_empty_without_86": 291,
+   "creator_identified": 203,
+   "codes_total": 699,
+   "eligible_verified": 291,
+   "eligibility_unknown": 0,
+   "exploratory_cc0_anywhere": 300,
+   "exploratory_pdm_anywhere": 299,
+   "exploratory_iiif_anywhere": 299,
+   "pids_met_order_sha256": "24b43aef4b7415096f87a8a7fa2cdc53cdf3f3dc6ad0cecd86ced9b12a029a91"
+  },
+  "print": {
+   "search": {
+    "state": "complete"
+   },
+   "search_pages": [
+    "https://data.rijksmuseum.nl/search/collection?type=print&imageAvailable=true",
+    "https://data.rijksmuseum.nl/search/collection?type=print&imageAvailable=true&pageToken=eyJ0b2tlbiI6ICJodHRwczovL2lkLnJpamtzbXVzZXVtLm5sLzIwMDEwMTEzMyJ9",
+    "https://data.rijksmuseum.nl/search/collection?type=print&imageAvailable=true&pageToken=eyJ0b2tlbiI6ICJodHRwczovL2lkLnJpamtzbXVzZXVtLm5sLzIwMDEwMTI2OSJ9"
+   ],
+   "pids_met": 300,
+   "pids_examined": 300,
+   "record_ok": 300,
+   "record_failed": 0,
+   "visual_failed": 0,
+   "digital_failed": 0,
+   "metadata_cc0_on_object": 0,
+   "metadata_cc0_on_record": 300,
+   "shows_items": 300,
+   "digital_objects": 299,
+   "iiif_access_point": 299,
+   "pdm_on_digital_with_iiif": 0,
+   "pdm_on_visual_item_with_iiif": 297,
+   "with_iconclass": 298,
+   "all_readable": 298,
+   "some_unreadable": 0,
+   "truth_non_empty_without_86": 298,
+   "creator_identified": 248,
+   "codes_total": 705,
+   "eligible_verified": 295,
+   "eligibility_unknown": 0,
+   "exploratory_cc0_anywhere": 300,
+   "exploratory_pdm_anywhere": 277,
+   "exploratory_iiif_anywhere": 279,
+   "pids_met_order_sha256": "0713b1fec9057afa1c0b7a13e7f8a2860a610010cc82e0e91eabd9ceb3a1a853"
+  },
+  "drawing": {
+   "search": {
+    "state": "complete"
+   },
+   "search_pages": [
+    "https://data.rijksmuseum.nl/search/collection?type=drawing&imageAvailable=true",
+    "https://data.rijksmuseum.nl/search/collection?type=drawing&imageAvailable=true&pageToken=eyJ0b2tlbiI6ICJodHRwczovL2lkLnJpamtzbXVzZXVtLm5sLzIwMDEwMTA5OSJ9",
+    "https://data.rijksmuseum.nl/search/collection?type=drawing&imageAvailable=true&pageToken=eyJ0b2tlbiI6ICJodHRwczovL2lkLnJpamtzbXVzZXVtLm5sLzIwMDEwMjc2In0"
+   ],
+   "pids_met": 300,
+   "pids_examined": 300,
+   "record_ok": 300,
+   "record_failed": 0,
+   "visual_failed": 0,
+   "digital_failed": 0,
+   "metadata_cc0_on_object": 0,
+   "metadata_cc0_on_record": 300,
+   "shows_items": 300,
+   "digital_objects": 300,
+   "iiif_access_point": 300,
+   "pdm_on_digital_with_iiif": 0,
+   "pdm_on_visual_item_with_iiif": 300,
+   "with_iconclass": 256,
+   "all_readable": 256,
+   "some_unreadable": 0,
+   "truth_non_empty_without_86": 256,
+   "creator_identified": 184,
+   "codes_total": 621,
+   "eligible_verified": 256,
+   "eligibility_unknown": 0,
+   "exploratory_cc0_anywhere": 300,
+   "exploratory_pdm_anywhere": 84,
+   "exploratory_iiif_anywhere": 84,
+   "pids_met_order_sha256": "018400d7b43aa9854a1060ede2734d8c62ce8c8f9a547755c8919508c973aa87"
+  }
+ },
+ "cache_keys_sha256": "4d999e6624b4048ef5b98b83b6c7e21848cc200262363a72fa55222f92fe52df"
+}

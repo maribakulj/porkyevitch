@@ -1,0 +1,8 @@
+{
+ "script_sha256": "5ba741088e976566a149205a753b980077a77ff2a6b87ec7108952563038ec57",
+ "smoke": 2,
+ "torch": "2.11.0+cu128",
+ "numpy": "2.1.3",
+ "gpu": "Tesla T4",
+ "tstar_sha256": "5a1b3041c0d9aab0e3403182b0881272a02f395542fe8414dc54b4fc7fa045ea"
+}
