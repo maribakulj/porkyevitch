@@ -82,3 +82,6 @@ Kaggle a supprimé les jeux de données mabaku/porky-* (nom pris pour NSFW ; c'e
 modération des images de planches, contrairement à l'hypothèse du journal. Désormais tout jeu de données ou noyau Kaggle se
 nomme **pkyevitch-*** ; les noyaux porky-* encore vivants sont rapatriés puis recréés sous le nouveau nom quand on les relance.
 Les pilotes qui citent un chemin /kaggle/input/…/porky-… doivent être amendés (relecture) avant toute relance.
+Précision (Marcel, 30/10) : la cause exacte n'est pas sûre ; le nom « porky » est probable, mais les images de nus dessinés
+ont pu jouer aussi. Double prudence : noms pkyevitch-* ET images de planches ou d'évaluation potentiellement sensibles
+transmises dans une archive .bin épinglée (que Kaggle n'ouvre pas), comme pour la mesure de la phase 1.
