@@ -21,3 +21,9 @@
 - 30/10 : A3 exactitude exécuté localement (58 s, après feu vert Grok p2 ; diagnostic CPU léger) : borne conforme (0 violation sur 15 753 paires x 4 couplages) ; top-10 identique sur 166/178 requêtes seulement → selon la règle, écart = erreur de code ; diagnostic demandé à wA:pH.
 - 30/10 : avis Grok p7 sur D2 : ne pas annoter 5 000 tout de suite ; petit élève d'abord sur les graphes Gemini existants, puis tranche S1b de quelques centaines stratifiée si signal. Contre-expertise Codex p4 à son retour.
 - 30/10 : A3 passage 2 (script 9deca3e8, feu vert Grok p2) : borne conforme, top-10 identique 178/178 ; A3 exact sur le pilote. Vitesse : après le jalon 4.
+- 30/10 00:15 : itération : pH → préinscription + script du diagnostic palier 0 (validation seule). Disque 5,2 Go libres (baisse, autres projets) : recherche des gros fichiers récents en cours.
+- 30/10 : diagnostic de la tête : feu vert Grok p2 (6a63a8f, manifeste 96ee72d1) ; audit p4 au retour, puis blanc --stage smoke.
+- 30/10 00:35 : itération : pH → brouillon de préinscription du petit élève. Disque remonté à 9,1 Go.
+- 30/10 : petit élève v0.1 : feu vert Grok p2 (909f73ee) ; contre-expertise Codex p4 (D2 + brouillon) à son retour.
+- 30/10 01:40 : Codex p4 de retour ; file de 5 dossiers envoyée (B1 gel, P9-A descriptions, diagnostic, D2 + petit élève, A1-A5).
+- 30/10 : décision D2 consignée (petit élève v1 + tranche S1b de 300 en parallèle).
