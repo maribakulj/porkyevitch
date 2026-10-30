@@ -1,6 +1,6 @@
 # Lecture de D3 (complet, validation seule), résultat négatif
 
-Sorties CONFORMES (sous-agent Sonnet, porkyevitch-d3-complet-sorties-sonnet.md ; contre-vérification Codex à faire).
+Sorties CONFORMES (sous-agent Sonnet, porkyevitch-d3-complet-sorties-sonnet.md ; contre-vérification Codex : CONFORME, porkyevitch-d3-codex.md).
 - Bras 1 (vote des 20 voisins sur les codes rares, poids fixe 0,25) : NON retenu. F_R 0,048 contre B 0,070
   (IC95 de l'écart [−0,018 ; −0,013]), H −0,004. Il réduit les faux positifs (714 contre 2 071) mais perd des vrais
   (230 contre 357). Il bat le témoin permuté (F_R 0,039) : la mémoire porte un signal, mais pas assez pour battre B.
