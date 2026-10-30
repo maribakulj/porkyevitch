@@ -1,6 +1,6 @@
 """Gemini pass of the scene-graph pilot (PREINSCRIPTION.md): one fresh `agy -p` session per call, on the Mac (network calls only).
 
-Usage: graphes_agy.py PILOTE CONSIGNE SCHEMA [--jobs 3]
+Usage: graphes_agy.py PILOTE CONSIGNE SCHEMA [--jobs 3] [--expected 200]
   PILOTE   the downloaded draw (images/pNNN.*, verite.json, tirage.json); verite.json and tirage.json are never given to Gemini
   CONSIGNE consigne.md (fixed before any call), SCHEMA graphe.schema.json (structure enforced by agy --json-schema)
 Model gemini-3.8-flash-medium (Marcel's choice, 18/10). Corrections B2 and B3 of Codex wA:p4 (29/10).
@@ -17,7 +17,8 @@ and g.json for an accepted graph. A call runs in a fresh directory PILOTE/appels
 is deleted afterwards. On a new invocation: an image with an accepted attempt is re-checked (g.json parses and matches the recorded
 sha256; image, prompt, model and schema sha256 equal the current ones; otherwise the run stops with an error, nothing is
 overwritten); a g.json without an accepted record is set aside as g.orphan-N.json; started attempts count against the 3, even
-without a result line. Costs are summed over every recorded attempt. Failed images stay in the denominator of 200.
+without a result line. Costs are summed over every recorded attempt. Failed images stay in the denominator of N
+(--expected, default 200: the pilot; the number of images in PILOTE/images must equal it).
 """
 import hashlib, json, os, re, shutil, signal, sqlite3, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor
@@ -166,10 +167,11 @@ def summary(root, images):
 
 root, consigne_path, schema_path = Path(sys.argv[1]).resolve(), Path(sys.argv[2]), Path(sys.argv[3]).resolve()
 jobs = int(sys.argv[sys.argv.index("--jobs") + 1]) if "--jobs" in sys.argv else 3
+expected = int(sys.argv[sys.argv.index("--expected") + 1]) if "--expected" in sys.argv else 200
 consigne = consigne_path.read_text()
 keys = {"model": MODEL, "consigne_sha256": sha(consigne.encode()), "schema_sha256": sha(schema_path.read_bytes())}
 images = sorted((root / "images").glob("p[0-9][0-9][0-9].*"))
-assert len(images) == 200, len(images)
+assert len(images) == expected, (len(images), expected)
 t0 = time.time()
 with ThreadPoolExecutor(jobs) as ex:
     list(ex.map(lambda im: one(im, root, consigne, schema_path, keys), images))
@@ -178,4 +180,4 @@ write_atomic(root / "graphes" / "run.json", json.dumps(dict(keys, script_sha256=
              accepted=len(accepted), failed=failed, calls=calls, calls_without_result=unfinished,
              recorded_call_seconds=round(seconds, 1), cost_complete=unfinished == 0,
              wall_seconds_this_invocation=round(time.time() - t0, 1), jobs=jobs), indent=1))
-print(f"accepted {len(accepted)}/200, failed {len(failed)}, calls {calls}, without result {unfinished}")
+print(f"accepted {len(accepted)}/{expected}, failed {len(failed)}, calls {calls}, without result {unfinished}")
