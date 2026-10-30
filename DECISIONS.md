@@ -101,3 +101,10 @@ de planches) sont faites par des **sous-agents Sonnet** lancés par wA:p1 (Agent
 complet et un rapport écrit dans ~/Documents/reviews/porkyevitch-*-sonnet.md. L'audit final de Codex p4 avant lancement reste
 inchangé (D12 : si Codex est indisponible, un second sous-agent Sonnet indépendant fait l'audit de remplacement). Les Grok
 ne relisent plus ; leurs rôles sont à réaffecter (littérature, challenger).
+
+## D14 (30/10/2026) : P9-A, gel.json contient le score de B
+
+gel.json porte B_reference {H_F1 0,58908 sur 4 241 éligibles}, alors que RUNNER.md dit « aucune mesure ». Décision wA:p1 :
+non bloquant. Ce score est celui de la référence B (T-Z), déjà publié par le devis et le diagnostic (contrôle d'intégrité
+autorisé sur B seul) ; aucun score de bras (A, C, F, contrôle) n'y figure, et la sélection est scellée avant le gel
+(selection_sha256 repris dans gel.json). Écart déclaré au RUNNER ; Codex le contre-vérifiera. gel.json = 13f75f3a….
