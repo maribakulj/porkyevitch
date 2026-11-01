@@ -1,0 +1,16 @@
+{
+  "stage": "reglage",
+  "wall_limit_seconds": 7200,
+  "ram_limit_bytes": 8000000000,
+  "output_limit_bytes": 1000000000,
+  "status": "passed",
+  "no_automatic_continuation": true,
+  "exit_code": 0,
+  "elapsed_s": 2726.173951566,
+  "failure": null,
+  "peak": {
+    "rss_bytes": 2393505792,
+    "output_bytes": 8284
+  },
+  "started": true
+}

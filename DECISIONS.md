@@ -52,3 +52,98 @@ RF-DETR Nano en option de débit seulement ; les autres modèles hors du test mi
 ne sont jamais repris comme résultats. À figer avant les 26 : poids, versions, NMS, seuil ; préparation du texte hors régime
 établi, même portion de pipeline chronométrée. Préalable : corriger le chronométrage de l'élève (no_grad/autocast, comme OWLv2)
 et le chargement de Florence-2. Gemini mesure la fidélité, pas la vérité.
+
+## D9 (30/10/2026) : arbitrages de la note tranche 300 v3 (wA:pH 4f8359b)
+
+(3) Relations : **détecteur sans relations pour tous les bras du test**, E0 réentraîné sous ce code, en ablation nommée ; le petit
+élève v1 (avec relations) reste une colonne de comparaison. Raison : M0 et le comptage montrent que l'instabilité de S1b est
+dans la détection (4 objets sur 10 non retrouvés), et la question posée est « ces données aident-elles la détection ». Les
+relations restent dans le produit (petit élève v1) ; leur apport sera une autre brique.
+(4) Références séparées comme proposé. **Option des 60 Gemini acceptée** : passe Gemini (agy -p, une session par image, lecture
+d'image vérifiée) sur les 60 de validation interne, figée AVANT toute sortie d'entraînement ; juge principal = 86 images
+(26 + 60), fidélité au professeur Gemini, pas vérité de localisation (D5).
+Le reste de la v3 est adopté. La préinscription viendra après la porte D2 (complet du petit élève).
+
+## D10 (30/10/2026) : priorités après la phase 1 (Grok p7 challenger, contre-expertise Codex p4)
+
+1. L'article publie des recettes et un artefact **exploratoires** : aucune brique retenue, aucun gain démontré sur le
+   Rijksmuseum ; T* et TK améliorent l'accord avec le catalogue ICAI seulement. Un F1 mesure un accord de catalogue.
+2. Référence Iconclass du petit élève et de la carte : **T\***. P9-A, A1 et D3 gardent T-Z comme référence, sans changer leurs
+   règles ni leurs interdits, mais ce sont des **sondes de validation**, pas une tête à publier.
+3. Cause du non-transfert : **non établie**. La lecture de Grok (codes fréquents profonds absents des notices Rijksmuseum) n'est
+   qu'une hypothèse : fréquence > 100 et profondeur sont deux marges, pas leur croisement. Diagnostic à préinscrire, dev et
+   validation seulement, selon le protocole de Codex (R_tête contre R_vote pondéré, table appariée, contrôle de prévalence,
+   croisement fréquence × profondeur), script audité avant lancement.
+4. Priorités : ce diagnostic et le petit élève, puis les sondes P9-A / A1 / D3 déjà prêtes.
+
+## D11 (30/10/2026) : noms Kaggle
+
+Kaggle a supprimé les jeux de données mabaku/porky-* (nom pris pour NSFW ; c'est une référence à Pynchon). Ce n'était pas la
+modération des images de planches, contrairement à l'hypothèse du journal. Désormais tout jeu de données ou noyau Kaggle se
+nomme **pkyevitch-*** ; les noyaux porky-* encore vivants sont rapatriés puis recréés sous le nouveau nom quand on les relance.
+Les pilotes qui citent un chemin /kaggle/input/…/porky-… doivent être amendés (relecture) avant toute relance.
+Précision (Marcel, 30/10) : la cause exacte n'est pas sûre ; le nom « porky » est probable, mais les images de nus dessinés
+ont pu jouer aussi. Double prudence : noms pkyevitch-* ET images de planches ou d'évaluation potentiellement sensibles
+transmises dans une archive .bin épinglée (que Kaggle n'ouvre pas), comme pour la mesure de la phase 1.
+
+## D12 (30/10/2026) : audit de remplacement quand Codex est indisponible (accord de Marcel)
+
+Quand Codex p4 n'a plus de crédits (ou ne répond pas), l'audit final avant lancement est fait par un Grok qui n'a PAS fait la
+première relecture de ces octets (p7 ou p3 selon disponibilité), avec la même exigence (rapport, FEU VERT ou BLOCAGE, pins).
+Le lancement peut alors partir. À son retour, Codex contre-vérifie ces audits AVANT que les résultats servent à une décision,
+une publication ou une étape suivante. Pendant une indisponibilité, la boucle avance aussi sur tout ce qui ne demande pas
+d'audit (dossiers de lancement, préinscriptions, rédaction).
+
+## D13 (30/10/2026) : relectures par sous-agents Sonnet (Marcel)
+
+Marcel juge les Grok lents et inadaptés à la relecture. Désormais, **toutes les relectures** (code, diffs, sorties, regards
+de planches) sont faites par des **sous-agents Sonnet** lancés par wA:p1 (Agent, model=sonnet), indépendants, avec un brief
+complet et un rapport écrit dans ~/Documents/reviews/porkyevitch-*-sonnet.md. L'audit final de Codex p4 avant lancement reste
+inchangé (D12 : si Codex est indisponible, un second sous-agent Sonnet indépendant fait l'audit de remplacement). Les Grok
+ne relisent plus ; leurs rôles sont à réaffecter (littérature, challenger).
+
+## D14 (30/10/2026) : P9-A, gel.json contient le score de B
+
+gel.json porte B_reference {H_F1 0,58908 sur 4 241 éligibles}, alors que RUNNER.md dit « aucune mesure ». Décision wA:p1 :
+non bloquant. Ce score est celui de la référence B (T-Z), déjà publié par le devis et le diagnostic (contrôle d'intégrité
+autorisé sur B seul) ; aucun score de bras (A, C, F, contrôle) n'y figure, et la sélection est scellée avant le gel
+(selection_sha256 repris dans gel.json). Écart déclaré au RUNNER ; Codex le contre-vérifiera. gel.json = 13f75f3a….
+
+## D15 (30/10/2026) : P9-A, graines 1 et 2 non lancées
+
+Règle préinscrite §9.4 appliquée mécaniquement : aucun bras G/R à la graine 0 (verdicts.json 6a026547…) ⇒ graines 1 et 2
+non lancées ; graine 0 publiée comme résultat exploratoire négatif. (Relu par Sonnet ; Codex contre-vérifiera.)
+
+## D16 (30/10/2026) : suite du petit élève après D2 (Grok p7 challenger, contre-expertise Codex p4)
+
+Le petit élève v1 (tête sur C-RADIO gelé) s'arrête là (D2 « pas de signal »). Une seule brique suivante, préinscrite :
+**transfert de YOLOE-v8-S**, couches de localisation explicitement entraînées sur les 106 graphes Gemini, budget global
+écrit d'avance, même règle Loc/AP/D, mêmes 26 images (donc exploratoire : ces 26 ont déjà servi de juge). Aucune ouverture
+automatique de la campagne Haiku (300) ; OWLv2 n'est pas « adopté » par défaut. Si encore Loc−, la piste élève s'arrête.
+Rapports : porkyevitch-apres-d2-grok.md, porkyevitch-apres-d2-codex.md. Licence AGPL de YOLOE notée, pas une porte.
+
+## D17 (30/10/2026) : partie Iconclass après la phase 2 (Grok p7, contre-expertise Codex p4)
+
+Une seule mesure, puis écrire : A1 avec q figé (eta = 1) et son seuil scellé au réglage, sans réajustement, mesuré une fois
+en H-F1 sur le dev Rijksmuseum (301 images, 239 composantes ; pas les 211 paires de D10), contre B = T-Z (comparaison
+principale) et T* (référence figée), bootstrap par composantes, règle écrite d'avance ; aucune ligne de test, aucun réglage
+sur le dev. Pas de kNN en produit ni de Hill dans ce tour. Rapports : porkyevitch-apres-phase2-grok.md / -codex.md.
+
+## D18 (30/10/2026) : comparaison avec des VLM (accord de Marcel)
+
+Marcel lance la comparaison VLM contre modèle rapide (objectif initial). Systèmes : **Haiku 5.5** (VLM bon marché, déjà
+validé chez nous pour les graphes), **Gemini 3.8 Flash** (déjà dans le dispositif), **Opus 5.5 sur une petite tranche
+seulement** (repère de plafond, pas candidat de production). Préinscription v1 de wA:pH (vocabulaire fermé principal,
+invalidité, refus, répétabilité, coûts et temps symétriques) à mettre en v2 avec ces trois systèmes ; famille ajustée.
+Images : Gemini a déjà reçu ces images ICAI/dev aux pilotes ; même pratique, déclarée. Relecture Sonnet puis audit Codex.
+
+## D19 (30/10/2026) : amendement données du test YOLOE (Marcel : 106 images trop peu ; Grok p7, contre-expertise Codex)
+
+Entraînement en deux temps (recommandation Codex) : pré-apprentissage externe sur DEArt (cc-by-nc-sa-4.0, usage interne,
+sans les 1 066 fichiers Rijksmuseum) et ODOR (cc-by-4.0, après jointure de source), puis adaptation sur 106 Gemini + 240
+S1b d'apprentissage. Avant tout usage : détection de copies entre DEArt/ODOR et nos réserves (ICAI, juges, banc gelé),
+recouvrement ICAI mesuré. Correspondance des 70 noms DEArt et 139 classes ODOR vers les 8 super-catégories GELÉE avant
+l'entraînement, supervision partielle explicite (ce que deviennent les boîtes « autre »). Juge = 79 images (26 + 53),
+références recalculées, 26 et 53 publiés séparément, lecture exploratoire ; les 60 de validation interne réservés entiers.
+Préparation des images sur Kaggle CPU seulement (~18,2 Go d'archives DEArt), jamais sur le Mac ; plafond 14 400 s T4 avec
+nouveau devis complet. Licence notée, pas une porte. Rapports porkyevitch-yoloe-donnees-grok.md / -codex.md.

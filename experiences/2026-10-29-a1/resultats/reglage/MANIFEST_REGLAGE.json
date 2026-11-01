@@ -1,0 +1,13 @@
+{
+ "files": {
+  "identite.json": "4bcde9fd9e581a6d1493cff690e3fe34bfd276790f7df2783bca4adf68f1f27b",
+  "planche.html": "b75f8cf91bad997d9625bf45be09b54b5f95415b76ac834e8cf0be420c23045c",
+  "planche.json": "6c58d36062542d117958e2ab425d227ede51537e90fa348760644b602c7732b5",
+  "reglage.json": "fdab15e7799c7c693fa0cd6d6ab13fc72a97c071d959945fa04b24b90554f917",
+  "structure.json": "62998e74572a480b3a558eecedb27bd8faa2b8b3b28f41c0454264cbd66faba9"
+ },
+ "script_sha256": {
+  "a1_run.py": "78b1ed982ae9b2e59624a30b83675703e156b92a1d45309b6089162c9dcee597",
+  "a1_core.py": "177ef54243fd6dfed0aa557561aa365f41b2c992379aef6d4fab4c5e27ab205a"
+ }
+}

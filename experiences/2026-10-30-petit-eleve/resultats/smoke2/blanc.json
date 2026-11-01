@@ -1,0 +1,138 @@
+{
+ "stage": "smoke",
+ "versions": {
+  "python": "3.13.15",
+  "torch": "2.11.0+cu128",
+  "numpy": "2.1.3",
+  "transformers": "5.16.1",
+  "ultralytics": "8.4.177",
+  "open_clip_torch": "3.3.0",
+  "torchvision": "0.26.0+cu128"
+ },
+ "gpu": "Tesla T4",
+ "identity_8x8": {
+  "images": 8,
+  "min_cell_cosine": 0.9999996423721313,
+  "max_abs_diff": 0.0,
+  "rule": "min cell cosine >= 0.999"
+ },
+ "overfit_control": {
+  "images": [
+   "p013",
+   "p022",
+   "p026",
+   "p079",
+   "p088",
+   "p126",
+   "p151",
+   "p188"
+  ],
+  "steps": 1000,
+  "recall_at_30": 0.948051948051948,
+  "first_loss": 25.997278213500977,
+  "last_loss": 1.5166019201278687,
+  "grads_finite": true,
+  "parameters_without_gradient_at_step1": [],
+  "box_roundtrip_max_error": 5.960464477539063e-08,
+  "passed": true
+ },
+ "revisions": {
+  "google/owlv2-base-patch16-ensemble": "cfd3195ba4ea9592eec887ded089f4c08eff231d",
+  "florence_native": [
+   "florence-community/Florence-2-base",
+   "00921df66db728a9ceb750f5eca43e5c203a2051"
+  ],
+  "florence_source": [
+   "microsoft/Florence-2-base",
+   "5ca5edf5bd017b9919c05d08aebef5e4c7ac3bac"
+  ],
+  "resolved_now": {
+   "google/owlv2-base-patch16-ensemble": "cfd3195ba4ea9592eec887ded089f4c08eff231d",
+   "florence-community/Florence-2-base": "00921df66db728a9ceb750f5eca43e5c203a2051"
+  }
+ },
+ "owlv2_smoke": [
+  {
+   "detections": 1,
+   "agnostic": 1
+  },
+  {
+   "detections": 6,
+   "agnostic": 5
+  }
+ ],
+ "florence2_smoke": [
+  {
+   "boxes": 2
+  },
+  {
+   "boxes": 7
+  }
+ ],
+ "yoloe": {
+  "package": "8.4.177",
+  "weights_url": "https://github.com/ultralytics/assets/releases/download/v8.3.0/yoloe-v8s-seg.pt",
+  "weights_sha256": "ac2b90ed23011495a3e86d89caeb3432a15129cac8d849ba121293c8fc1e0536",
+  "clip_tokenizer": {
+   "version": "1.0",
+   "direct_url": {
+    "url": "https://github.com/ultralytics/CLIP.git",
+    "vcs_info": {
+     "vcs": "git",
+     "commit_id": "7ffa84b3bfa40c42ecc1c77147a855e69cb2dd40"
+    }
+   }
+  },
+  "text_model": "mobileclip:blt",
+  "text_encoder_sha256": "a67804d1b0f07b8b9a20c1761ec0847f34660f5fa338ec70e8f3fce68ed95e54",
+  "queries": [
+   "a person",
+   "an angel or a winged figure",
+   "an animal",
+   "a piece of clothing or jewellery",
+   "a small object",
+   "a building, furniture, a statue or a vehicle",
+   "a tree, a plant, a rock, water or the sky",
+   "text, an inscription, a coat of arms or a framed picture"
+  ],
+  "text_preparation_seconds": 21.033089008000047,
+  "conf": 0.1,
+  "nms_iou_per_class": 0.5,
+  "agnostic_nms_iou": 0.5,
+  "max_det": 300,
+  "imgsz": 640,
+  "fp16": true,
+  "executed": "detection and segmentation heads (masks computed by the -seg checkpoint, not used)"
+ },
+ "yoloe_smoke": [
+  {
+   "detections": 2,
+   "agnostic": 2
+  },
+  {
+   "detections": 2,
+   "agnostic": 2
+  }
+ ],
+ "timing_smoke_student_full_b8": {
+  "images_per_second_median": 30.77730933943108,
+  "min": 30.77730933943108,
+  "max": 30.77730933943108,
+  "repetitions": 1
+ },
+ "timing_smoke_student_detector_only_b8": {
+  "images_per_second_median": 32.01708239414396,
+  "min": 32.01708239414396,
+  "max": 32.01708239414396,
+  "repetitions": 1
+ },
+ "listes_sha256": "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af",
+ "noms_sha256": "dfa0e011f7f1df458d5396602b5f33ede99ac2a9f34b7465940241afec648ed2",
+ "script_sha256": {
+  "pe_kaggle.py": "a6ae6582b7598bd86ae34027b5500d56dd79e323ffe198554bb20b9b7f729794",
+  "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"
+ },
+ "peak_rss_mib": 3825.05859375,
+ "vram_peak_gib": 2.510711669921875,
+ "wall_seconds": 287.10890030699994
+}

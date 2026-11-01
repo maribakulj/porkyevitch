@@ -1,0 +1,59 @@
+{
+  "stage": "planches",
+  "seed": 0,
+  "config_sha256": "3d8136a329e6f7a2793bc493190ef6d8e01db8699db954d3ebe75fcfa9c4f5fe",
+  "source_manifest_sha256": "3b2662173d8edbec59dc8c2481483d0769366788bb1126707aba868347999be2",
+  "versions": {
+    "safetensors": "0.8.0",
+    "psutil": "5.9.5",
+    "transformers": "5.16.1",
+    "scipy": "1.16.3",
+    "huggingface-hub": "1.29.0",
+    "tokenizers": "0.23.1",
+    "torch": "2.11.0+cu128",
+    "numpy": "2.1.3",
+    "Pillow": "13.0.0",
+    "pyarrow": "23.0.1"
+  },
+  "python": "3.13.15",
+  "approval": {
+    "grok_p2_report": "porkyevitch-p9a-seed-sorties-sonnet.md (relecture Sonnet des sorties de la graine 0, D13) + D14",
+    "codex_p4_report": "porkyevitch-p9a-planches-audit-sonnet.md (audit de remplacement Sonnet, D12 ; Codex sans cr\u00e9dits)",
+    "slot_granted_by": "wA:p1",
+    "slot_id": "p9a-planches-0-2026-10-30",
+    "seeds_1_2_decision": null
+  },
+  "wall_limit_seconds": 3600,
+  "status": "passed",
+  "no_automatic_continuation": true,
+  "exit_code": 0,
+  "elapsed_s": 255.80974313899998,
+  "failure": null,
+  "monitor_samples": [
+    {
+      "elapsed_s": 5.738197796000009,
+      "aggregate_rss_bytes": 786432,
+      "output_bytes": 19042
+    },
+    {
+      "elapsed_s": 65.75392777600001,
+      "aggregate_rss_bytes": 4785000448,
+      "output_bytes": 60273
+    },
+    {
+      "elapsed_s": 125.76782054,
+      "aggregate_rss_bytes": 10049122304,
+      "output_bytes": 111586
+    },
+    {
+      "elapsed_s": 185.785732607,
+      "aggregate_rss_bytes": 12587720704,
+      "output_bytes": 1204431853
+    },
+    {
+      "elapsed_s": 245.80637089600003,
+      "aggregate_rss_bytes": 12526989312,
+      "output_bytes": 940433402
+    }
+  ]
+}

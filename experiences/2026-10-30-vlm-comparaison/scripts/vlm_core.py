@@ -1,0 +1,417 @@
+"""VLM comparison (PREINSCRIPTION-v2.6.md): pure rules, no network, no model call. numpy only (plus the pinned copies
+a1_core.py and pe_common.py, imported by the scripts that need them).
+
+Everything a score depends on is here and frozen by SHA-256 in the preparation seal: the prompts, the notation syntax,
+the chain classes, the call states, the samples, the bootstrap and the reading.
+"""
+import contextlib
+import hashlib
+import json
+import re
+import sqlite3
+from pathlib import Path
+
+import numpy as np
+
+SEED, SEED_REPEAT, DRAWS = 20261035, 20261036, 10_000
+SALT = "A1-2026-10-29|"  # A1's V-reglage / V-diagnostic partition (a1_run.py)
+MODELS = {"H": "claude-haiku-5-5", "G": "gemini-3.8-flash-medium", "O": "claude-opus-5-5"}
+CLAUDE_SYSTEMS, MAIN_SYSTEMS = ("H", "O"), ("H", "G")
+MIN_IMAGES = {"vdiag": 200, "opus": 50, "repeat": 20}
+CAP_FACTOR = 1.15  # hard cap on attempts per stage, relative to the planned calls
+BUDGET_USD = 30.0  # total for the Claude calls (H and O), all stages (v2.1)
+S1_WALL_SECONDS = 6 * 3600  # v2.1
+PARALLEL = 3  # per system (v2.1)
+CLAUDE_IN_FLIGHT = 3  # H and O together (v2.2)
+COST_MARGIN = 1.2  # extrapolation from S0 (v2.2)
+UNKNOWN_CHARGE_USD = 1.0  # prudent charge when no Claude cost has been observed yet (v2.2)
+MAX_BOXES = 30
+RETRYABLE = ("illisible", "image_non_lue", "echec_technique", "interrompu")  # one new attempt; "refus" and
+# "commande_executee" are final
+
+# ---- notation syntax (section 3.3): recognises the 7907 codes of V; rejects free text and unbalanced brackets ----
+_ATOM = r"[0-9](?:[0-9A-Za-z+]|\([^()]*\)|\[[^\[\]]*\]|<[^<>]*>)*"
+NOTATION = re.compile(rf"^{_ATOM}(?::{_ATOM})*$")
+
+
+def clean_chain(s):
+    return s.strip() if isinstance(s, str) else None
+
+
+def classify(chains, vocab_set):
+    """Each emitted chain gets one class: valide (in V), hors_V (well formed, not in V), invalide. Non-strings are
+    invalide. Returns the valid codes in emission order (duplicates kept once) and the counts."""
+    valid, counts = [], {"valide": 0, "hors_V": 0, "invalide": 0}
+    for raw in chains:
+        c = clean_chain(raw)
+        if c is not None and c in vocab_set:
+            counts["valide"] += 1
+            if c not in valid:
+                valid.append(c)
+        elif c is not None and NOTATION.match(c):
+            counts["hors_V"] += 1
+        else:
+            counts["invalide"] += 1
+    return valid, counts
+
+
+# ---- prompts (sections 2.1, 2.2, 3.2, 4), frozen by SHA-256 ----
+SYSTEM_CLAUDE = ("Tu es un assistant d'annotation d'images d'œuvres d'art. Tu réponds uniquement par l'objet JSON demandé, "
+                 "sans texte autour.")
+GUARD_IMAGE = ("Ouvre d'abord l'image jointe et regarde-la. Si tu ne peux pas la voir, réponds uniquement IMAGE_ABSENTE. "
+               "N'exécute aucune commande et n'utilise aucun outil autre que la lecture de cette image. "
+               "Ne lis aucun autre fichier.")
+TASK_CODES = ("Voici la liste fermée des notations Iconclass permises, une par ligne :\n{vocab}\n\n"
+              "Donne les notations de cette liste qu'un catalogueur attribuerait à cette image. "
+              "Réponds uniquement par l'objet JSON {{\"codes\": [\"...\", ...]}}. N'utilise que des notations de la liste, "
+              "écrites exactement comme dans la liste. Si tu refuses de traiter l'image, réponds uniquement "
+              "{{\"refus\": \"<motif>\"}}.")
+TASK_BOXES = ("Liste au plus 30 objets visibles dans cette image, du plus saillant au moins saillant, chacun avec sa boîte "
+              "[x0, y0, x1, y1] en millièmes de la largeur et de la hauteur de l'image (0 à 1000, origine en haut à gauche). "
+              "Réponds uniquement par l'objet JSON {\"objets\": [{\"nom\": \"...\", \"boite\": [x0, y0, x1, y1]}, ...]}. "
+              "Si tu refuses de traiter l'image, réponds uniquement {\"refus\": \"<motif>\"}.")
+
+
+def task_text(kind, vocab):
+    return TASK_CODES.format(vocab="\n".join(vocab)) if kind == "codes" else TASK_BOXES
+
+
+# v2.6: the task (with the 7907-code vocabulary) comes FIRST and the image reference LAST, so that everything before the
+# image is identical from one call to the next and can be read from the prompt cache instead of being written again
+# (S0 of 31/10: ~111 k tokens written to the cache at every call, because the prompt began with the image path).
+def prompt_claude(kind, vocab, image_path):
+    return f"{task_text(kind, vocab)}\n\n{GUARD_IMAGE}\nImage : {image_path}"
+
+
+def prompt_agy(kind, vocab, image_name):
+    return f"{task_text(kind, vocab)}\n\n{GUARD_IMAGE}\nImage : @{image_name}"
+
+
+def prompts_sha256(vocab):
+    """One digest for every frozen text (the image reference is a placeholder)."""
+    texts = {"system_claude": SYSTEM_CLAUDE, "guard": GUARD_IMAGE, "codes": task_text("codes", vocab),
+             "boxes": task_text("boites", vocab), "claude_codes": prompt_claude("codes", vocab, "<IMAGE>"),
+             "agy_codes": prompt_agy("codes", vocab, "<IMAGE>")}
+    return hashlib.sha256(json.dumps(texts, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+
+
+# ---- answers ----
+_FENCE = re.compile(r"^```(?:json)?\s*|\s*```$")
+
+
+def extract_json(text):
+    """The first JSON object in the text (code fences removed), or None."""
+    if not isinstance(text, str):
+        return None
+    t = _FENCE.sub("", text.strip())
+    dec = json.JSONDecoder()
+    for i, ch in enumerate(t):
+        if ch == "{":
+            try:
+                obj, _ = dec.raw_decode(t[i:])
+            except json.JSONDecodeError:
+                continue
+            if isinstance(obj, dict):
+                return obj
+    return None
+
+
+def parse_answer(kind, text):
+    """(state, payload): ('refus', motif) | ('illisible', None) | ('image_non_lue', None) | ('reponse', chains or boxes).
+    For boxes, payload is the list of raw boxes in rank order (at most MAX_BOXES entries are read)."""
+    if isinstance(text, str) and "IMAGE_ABSENTE" in text:
+        return "image_non_lue", None
+    obj = extract_json(text)
+    if obj is None:
+        return "illisible", None
+    if "refus" in obj and len(obj) == 1:
+        return "refus", str(obj["refus"])
+    if kind == "codes":
+        codes = obj.get("codes")
+        return ("reponse", list(codes)) if isinstance(codes, list) else ("illisible", None)
+    objs = obj.get("objets")
+    if not isinstance(objs, list):
+        return "illisible", None
+    boxes = []
+    for o in objs[:MAX_BOXES]:
+        b = o.get("boite") if isinstance(o, dict) else None
+        ok = isinstance(b, list) and len(b) == 4 and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in b)
+        boxes.append(b if ok else None)
+    return "reponse", boxes
+
+
+# ---- Claude: claude -p --output-format stream-json --verbose ----
+def parse_claude_stream(stdout, image_path):
+    """Final text, whether a Read tool call opened exactly image_path, refusal stop reason, cost and usage."""
+    out = {"text": None, "image_read": False, "refusal": False, "cost_usd": None, "usage": None, "duration_ms": None,
+           "is_error": None, "model": None, "events": 0, "read_errors": 0}
+    target = str(Path(image_path).resolve())
+    reads, results = set(), {}  # ids of Read calls on the image; tool_result is_error by id (v2.2: an errored Read is no read)
+    for line in (stdout or "").splitlines():
+        try:
+            ev = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(ev, dict):
+            continue
+        out["events"] += 1
+        if ev.get("type") == "assistant":
+            msg = ev.get("message") or {}
+            out["model"] = msg.get("model", out["model"])
+            if msg.get("stop_reason") == "refusal":
+                out["refusal"] = True
+            for block in msg.get("content") or []:
+                if isinstance(block, dict) and block.get("type") == "tool_use" and block.get("name") == "Read":
+                    path = (block.get("input") or {}).get("file_path")
+                    if path and str(Path(path).resolve()) == target:
+                        reads.add(block.get("id"))
+        elif ev.get("type") == "user":
+            for block in (ev.get("message") or {}).get("content") or []:
+                if isinstance(block, dict) and block.get("type") == "tool_result":
+                    results[block.get("tool_use_id")] = bool(block.get("is_error"))
+        elif ev.get("type") == "result":
+            out["text"] = ev.get("result")
+            out["cost_usd"] = ev.get("total_cost_usd")
+            out["usage"] = ev.get("usage")
+            out["duration_ms"] = ev.get("duration_ms")
+            out["is_error"] = ev.get("is_error")
+            if ev.get("stop_reason") == "refusal":
+                out["refusal"] = True
+    out["image_read"] = any(i in results and not results[i] for i in reads)
+    out["read_errors"] = sum(1 for i in reads if results.get(i))
+    return out
+
+
+def claude_state(kind, parsed):
+    if parsed["text"] is None:
+        return "echec_technique", None
+    if parsed["refusal"]:
+        return "refus", "stop_reason refusal"
+    state, payload = parse_answer(kind, parsed["text"])
+    if state in ("reponse", "illisible") and not parsed["image_read"]:
+        return "image_non_lue", None
+    return state, payload
+
+
+# ---- Gemini: agy -p --output-format json, image opening checked in the conversation database (BBVLM region_agy) ----
+AGY_HISTORY = Path.home() / ".gemini/antigravity-cli/conversations"
+
+
+READ_RESULT, DONE = 132, 3
+
+
+def image_shown(conversation_id, path, history=AGY_HISTORY):
+    """True only if agy's log holds a successful read_file/view_file result for exactly `path` carrying image bytes: a
+    tool-result step (step_type 132) with status 3 and no error, whose payload holds read calls on the canonical path only,
+    and an image mime. Copied from the audited graphes_agy.image_shown (Codex wA:p4, B2 of 29/10; B1 of 30/10). A mention of
+    the path, a failed or refused read, another image, a textual read or an absent log is no proof."""
+    if not conversation_id or not re.fullmatch(r"[0-9a-f-]{36}", conversation_id):
+        return False
+    db = Path(history) / f"{conversation_id}.db"
+    if not db.exists():
+        return False
+    target = json.dumps(str(path))[1:-1].encode()
+    try:
+        with contextlib.closing(sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True)) as con:
+            rows = list(con.execute("SELECT step_type, status, error_details, step_payload FROM steps"))
+    except sqlite3.Error:
+        return False
+    for step_type, status, error, payload in rows:
+        if step_type != READ_RESULT or status != DONE or error is not None or not isinstance(payload, bytes):
+            continue
+        calls = re.findall(rb'(?:read_file|view_file)[^{]{0,8}\{"(?:Absolute)?Path":"([^"]+)"\}', payload)
+        if calls and all(c == target for c in calls) and (b"image/jpeg" in payload or b"image/png" in payload):
+            return True
+    return False
+
+
+# A command call in agy's database: the tool name run_command or send_command_input followed, within a few bytes, by a
+# JSON object of arguments that decodes (v2.4, Codex B2: the arguments are parsed, their key order does not matter). It does
+# not match the tool declaration present in every conversation, nor the model's reasoning that only names the tool
+# (checked on the 497 local conversations, 30/10: the 6 real calls are found, nothing else).
+COMMAND_TOOL = re.compile(rb"(?:run_command|send_command_input)[^{]{0,8}(?=\{)")
+
+
+def command_calls(payload):
+    """Argument objects of the command calls held in one step payload."""
+    found = []
+    for m in COMMAND_TOOL.finditer(payload):
+        text = payload[m.end():].decode("utf-8", "ignore")
+        try:
+            obj, _ = json.JSONDecoder().raw_decode(text)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(obj, dict):
+            found.append(obj)
+    return found
+
+
+def commands_requested(conversation_id, history=AGY_HISTORY):
+    """Number of steps holding a command call (requested, executed or refused by the guard), read-only. An unreadable
+    database counts as one call: no proof that no command ran."""
+    db = Path(history) / f"{conversation_id}.db"
+    if not db.exists():
+        return 0
+    try:
+        with contextlib.closing(sqlite3.connect(db.resolve().as_uri() + "?mode=ro", uri=True)) as con:
+            rows = list(con.execute("SELECT step_payload FROM steps"))
+    except sqlite3.Error:
+        return 1
+    n = 0
+    for (payload,) in rows:
+        if payload:
+            b = payload if isinstance(payload, bytes) else str(payload).encode()
+            n += bool(command_calls(b))
+    return n
+
+
+def parse_agy(stdout, image_path, history=AGY_HISTORY):
+    out = {"text": None, "status": None, "usage": None, "conversation_id": None, "image_read": False, "commands": 0}
+    s = (stdout or "").strip()
+    try:
+        env = json.loads(s) if s.startswith("{") else {}
+    except json.JSONDecodeError:
+        env = {}
+    out["text"], out["status"], out["usage"] = env.get("response"), env.get("status"), env.get("usage")
+    out["conversation_id"] = env.get("conversation_id")
+    if out["conversation_id"]:
+        out["commands"] = commands_requested(out["conversation_id"], history)
+        out["image_read"] = image_shown(out["conversation_id"], Path(image_path).resolve(), history)
+    return out
+
+
+SAFETY_STATUSES = ("BLOCKED", "SAFETY", "BLOCKED_SAFETY")  # [à vérifier en S0] : statuts réels d'agy
+
+
+def agy_state(kind, parsed):
+    if parsed.get("commands"):
+        return "commande_executee", None  # v2.3: answer discarded and counted, no new attempt
+    if parsed["status"] in SAFETY_STATUSES:
+        return "refus", f"status {parsed['status']}"
+    if not parsed["text"] or parsed["status"] != "SUCCESS":
+        return "echec_technique", None
+    state, payload = parse_answer(kind, parsed["text"])
+    if state in ("reponse", "illisible") and not parsed["image_read"]:
+        return "image_non_lue", None
+    return state, payload
+
+
+# ---- samples (section 3.1) ----
+def vdiag_rows(md5s):
+    """A1's partition of the 4265 validation rows: V-diagnostic = rows whose salted md5 hash byte is >= 128."""
+    reg = {k for k in range(len(md5s)) if hashlib.sha256((SALT + md5s[k]).encode()).digest()[0] < 128}
+    return [k for k in range(len(md5s)) if k not in reg]
+
+
+def draw_whole_groups(groups, min_images, seed):
+    """groups: {group id: [items]}. Permutes the sorted group ids with default_rng(seed) and adds whole groups until at
+    least min_images items. Returns the chosen group ids in draw order."""
+    ids = sorted(groups)
+    order = np.random.default_rng(seed).permutation(len(ids))
+    chosen, n = [], 0
+    for i in order:
+        if n >= min_images:
+            break
+        chosen.append(ids[i])
+        n += len(groups[ids[i]])
+    if n < min_images:
+        raise ValueError("not enough items")
+    return chosen
+
+
+# ---- measures (section 3.5) ----
+def paired_bootstrap(per_image, groups, draws=DRAWS, seed=SEED):
+    """per_image: {name: array over images}; groups: one label per image. Resamples groups with replacement; the statistic
+    is the mean over the resampled images. Returns the mean, the Bonferroni bounds of the family (1.25th and 98.75th
+    percentiles, two contrasts, v2.2) and the uncorrected 95 % interval (2.5th, 97.5th), numpy 'linear'."""
+    labels = sorted(set(groups))
+    gi = np.array([labels.index(g) for g in groups])
+    counts = np.bincount(gi, minlength=len(labels)).astype(float)
+    rng = np.random.default_rng(seed)
+    idx = rng.integers(0, len(labels), size=(draws, len(labels)))
+    n = counts[idx].sum(axis=1)
+    out = {"draws": draws, "seed": seed, "groups": len(labels), "images": len(groups), "contrasts": {}}
+    for name, values in per_image.items():
+        v = np.asarray(values, float)
+        sums = np.bincount(gi, weights=v, minlength=len(labels))
+        stat = sums[idx].sum(axis=1) / n
+        b_lo, lo, hi, b_hi = np.percentile(stat, [1.25, 2.5, 97.5, 98.75])
+        out["contrasts"][name] = {"mean": float(v.mean()), "q1_25": float(b_lo), "q98_75": float(b_hi),
+                                  "q2_5": float(lo), "q97_5": float(hi)}
+    return out
+
+
+def reading(contrast):
+    """Section 3.5, written beforehand, for the family H - T* and G - T* on the dev: two-sided Bonferroni over 2."""
+    if contrast["q1_25"] > 0:
+        return "dépasse T* sur le dev, en accord de catalogue"
+    if contrast["q98_75"] < 0:
+        return "sous T* sur le dev"
+    return "pas de différence établie"
+
+
+def jaccard(a, b):
+    a, b = set(a), set(b)
+    return 1.0 if not a and not b else len(a & b) / len(a | b)
+
+
+def invalid_rate(counts):
+    total = sum(counts.values())
+    return None if total == 0 else (counts["hors_V"] + counts["invalide"]) / total
+
+
+def graph_boxes(path, clean_box):
+    """Reference boxes of a teacher graph exactly as the petit élève's load_graph keeps them (clean_box not None)."""
+    g = json.loads(Path(path).read_text())
+    return [b for b in (clean_box(o["box"]) for o in g["objects"]) if b is not None]
+
+
+# ---- budget (v2.2) ----
+def budget_charge(cost, observed):
+    """What a Claude attempt costs the budget: its total_cost_usd, or, when absent (time-out, failure), twice the largest
+    cost observed for this system, or UNKNOWN_CHARGE_USD when none is observed yet."""
+    if isinstance(cost, (int, float)) and not isinstance(cost, bool):
+        return float(cost)
+    return 2 * max(observed) if observed else UNKNOWN_CHARGE_USD
+
+
+def plan_s1(s0_records, sizes, vdiag_groups, spent_s0, budget=None):
+    """Section 6, extrapolation rule, applied once after S0. s0_records: S0 journal records; sizes: n_dev, n_repeat,
+    n_graphs, n_opus; vdiag_groups: [(group, n_images)] in draw order. Returns the plan with its arithmetic."""
+    budget = BUDGET_USD if budget is None else budget
+    obs = {}
+    for r in s0_records:
+        if r["system"] in CLAUDE_SYSTEMS and isinstance(r.get("cost_usd"), (int, float)):
+            obs.setdefault((r["system"], r["kind"]), []).append(float(r["cost_usd"]))
+    by_sys = {s: [c for (x, _), v in obs.items() if x == s for c in v] for s in CLAUDE_SYSTEMS}
+
+    def unit(system, kind):
+        v = obs.get((system, kind))
+        return float(np.mean(v)) if v else budget_charge(None, by_sys[system])
+    c_h, c_hb, c_o = unit("H", "codes"), unit("H", "boites"), unit("O", "codes")
+
+    def cost(n):
+        return COST_MARGIN * (c_h * (sizes["n_dev"] + n + sizes["n_repeat"]) + c_hb * sizes["n_graphs"] + c_o * sizes["n_opus"])
+    available = budget - spent_s0
+    kept, n = [], 0
+    for g, k in vdiag_groups:
+        if cost(n + k) > available:
+            break
+        kept.append(g)
+        n += k
+    full = len(kept) == len(vdiag_groups)
+    return {"units_usd": {"H_codes": c_h, "H_boites": c_hb, "O_codes": c_o}, "margin": COST_MARGIN,
+            "available_usd": available, "predicted_full_usd": cost(sum(k for _, k in vdiag_groups)),
+            "predicted_kept_usd": cost(n), "vdiag_groups_kept": kept, "vdiag_images_kept": n, "reduced": not full,
+            "launch": cost(0) <= available}
+
+
+# ---- isolation of claude -p (v2.2) ----
+USER_CLAUDE_MD = Path.home() / ".claude" / "CLAUDE.md"
+
+
+def claude_isolation_ok(workdir, home=Path.home(), user_md=None):
+    """No user CLAUDE.md, and a working folder outside the home folder (no project memory, no CLAUDE.md discovery)."""
+    user_md = USER_CLAUDE_MD if user_md is None else user_md
+    w = Path(workdir).resolve()
+    return not Path(user_md).exists() and Path(home).resolve() not in w.parents and w != Path(home).resolve()

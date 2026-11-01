@@ -1,0 +1,2 @@
+06:37:38 stage blanc python 3.13.15 numpy 2.1.3 torch 2.11.0+cu128 cuda 12.8 gpu Tesla T4 wall limit 7200 s
+06:38:22 CHAIN DONE d3 blanc ok in 55 s

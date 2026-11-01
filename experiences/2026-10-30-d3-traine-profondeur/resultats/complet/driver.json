@@ -1,0 +1,20 @@
+{
+  "stage": "complet",
+  "wall_limit_seconds": 7200,
+  "output_limit_bytes": 200000000,
+  "status": "passed",
+  "no_automatic_continuation": true,
+  "device": {
+    "torch": "2.11.0+cu128",
+    "cuda": "12.8",
+    "gpu": "Tesla T4"
+  },
+  "exit_code": 0,
+  "elapsed_s": 457.15935975800005,
+  "failure": null,
+  "peak": {
+    "rss_bytes": 3845918720,
+    "output_bytes": 62536
+  },
+  "started": true
+}

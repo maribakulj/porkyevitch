@@ -1,0 +1,12 @@
+{
+  "reference_json": "/kaggle/input/datasets/mabaku/pkyevitch-gel-config/reference.json",
+  "t0_root": "/kaggle/input/datasets/mabaku/caypollard-iconclass-t0",
+  "e0_root": "/kaggle/input/notebooks/mabaku/porky-e0-run/full",
+  "e1_root": "/kaggle/input/notebooks/mabaku/porky-e1-run/full",
+  "e2_root": "/kaggle/input/notebooks/mabaku/porky-e2-run/full",
+  "e3_root": "/kaggle/input/notebooks/mabaku/porky-e3-run/full",
+  "encoder_root": "/kaggle/input/notebooks/mabaku/caypollard-encode-cradio/full",
+  "frozen_json": "/kaggle/input/datasets/mabaku/pkyevitch-banc-gel/frozen.json",
+  "mldec_py": "/kaggle/input/datasets/mabaku/pkyevitch-gel-config/ml_decoder.py",
+  "radio_hf_cache": "/kaggle/input/notebooks/mabaku/porky-radio-cache/hub"
+}

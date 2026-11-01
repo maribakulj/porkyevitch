@@ -1,0 +1,53 @@
+AMP_SKIP {"arm": "F", "epoch": 2, "step": 719, "scale_before": 131072.0, "n_inf": 1, "n_nan": 0, "most_affected_parameter": "W", "most_affected_counts": [1, 0], "scale_after": 65536.0}
+AMP_SKIP {"arm": "F", "epoch": 4, "step": 162, "scale_before": 131072.0, "n_inf": 388, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 65536.0}
+AMP_SKIP {"arm": "F", "epoch": 4, "step": 569, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "F", "epoch": 6, "step": 452, "scale_before": 65536.0, "n_inf": 1, "n_nan": 0, "most_affected_parameter": "W", "most_affected_counts": [1, 0], "scale_after": 32768.0}
+AMP_SKIP {"arm": "F", "epoch": 7, "step": 1181, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "F", "epoch": 9, "step": 680, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "F", "epoch": 9, "step": 1138, "scale_before": 32768.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 16384.0}
+INVARIANT {"check": "controle_global/hierarchy_probability_violation", "value": -5.820766091346741e-11}
+INVARIANT {"check": "controle_global/hierarchy_intensity_violation", "value": -5.820766091346741e-11}
+INVARIANT {"check": "controle_global/weighted_cell_duplication/float64_cpu", "value": 1.6653345369377348e-16}
+INVARIANT {"check": "controle_global/weighted_cell_duplication/float32_gpu_descriptive", "value": 7.450580596923828e-08}
+INVARIANT {"check": "controle_global/weighted_cell_duplication/production_fp16_gpu_descriptive", "value": 7.450580596923828e-08}
+INVARIANT {"check": "controle_global/one_level_max_intensity_error", "value": 5.960464477539063e-08}
+AMP_SKIP {"arm": "controle_global", "epoch": 1, "step": 11, "scale_before": 65536.0, "n_inf": 1528, "n_nan": 12, "most_affected_parameter": "U", "most_affected_counts": [1524, 12], "scale_after": 32768.0}
+AMP_SKIP {"arm": "controle_global", "epoch": 1, "step": 117, "scale_before": 32768.0, "n_inf": 19100, "n_nan": 150, "most_affected_parameter": "U", "most_affected_counts": [19050, 150], "scale_after": 16384.0}
+AMP_SKIP {"arm": "controle_global", "epoch": 4, "step": 797, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "controle_global", "epoch": 6, "step": 280, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "controle_global", "epoch": 7, "step": 1006, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "controle_global", "epoch": 8, "step": 417, "scale_before": 32768.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 16384.0}
+AMP_SKIP {"arm": "controle_global", "epoch": 9, "step": 1156, "scale_before": 32768.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 16384.0}
+INVARIANT {"check": "controle_global/hierarchy_probability_violation", "value": 9.313225746154785e-10}
+INVARIANT {"check": "controle_global/hierarchy_intensity_violation", "value": 9.313225746154785e-10}
+INVARIANT {"check": "controle_global/weighted_cell_duplication/float64_cpu", "value": 3.3306690738754696e-16}
+INVARIANT {"check": "controle_global/weighted_cell_duplication/float32_gpu_descriptive", "value": 2.980232238769531e-07}
+INVARIANT {"check": "controle_global/weighted_cell_duplication/production_fp16_gpu_descriptive", "value": 0.00012065470218658447}
+INVARIANT {"check": "controle_global/one_level_max_intensity_error", "value": 4.76837158203125e-07}
+INVARIANT {"check": "A/hierarchy_probability_violation", "value": -5.820766091346741e-11}
+INVARIANT {"check": "A/hierarchy_intensity_violation", "value": -5.820766091346741e-11}
+INVARIANT {"check": "A/hierarchy_local_violation", "value": -6.548361852765083e-11}
+INVARIANT {"check": "A/weighted_cell_duplication/float64_cpu", "value": 5.551115123125783e-17}
+INVARIANT {"check": "A/weighted_cell_duplication/float32_gpu_descriptive", "value": 2.9802322387695312e-08}
+INVARIANT {"check": "A/weighted_cell_duplication/production_fp16_gpu_descriptive", "value": 2.9802322387695312e-08}
+INVARIANT {"check": "A/one_level_max_intensity_error", "value": 5.960464477539063e-08}
+AMP_SKIP {"arm": "A", "epoch": 1, "step": 11, "scale_before": 65536.0, "n_inf": 2292, "n_nan": 18, "most_affected_parameter": "U", "most_affected_counts": [2286, 18], "scale_after": 32768.0}
+AMP_SKIP {"arm": "A", "epoch": 1, "step": 17, "scale_before": 32768.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 16384.0}
+AMP_SKIP {"arm": "A", "epoch": 4, "step": 184, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "A", "epoch": 5, "step": 907, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "A", "epoch": 6, "step": 597, "scale_before": 32768.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 16384.0}
+AMP_SKIP {"arm": "A", "epoch": 9, "step": 242, "scale_before": 32768.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 16384.0}
+AMP_SKIP {"arm": "A", "epoch": 10, "step": 1167, "scale_before": 32768.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 16384.0}
+INVARIANT {"check": "A/hierarchy_probability_violation", "value": 0.0}
+INVARIANT {"check": "A/hierarchy_intensity_violation", "value": 0.0}
+INVARIANT {"check": "A/hierarchy_local_violation", "value": 0.0}
+INVARIANT {"check": "A/weighted_cell_duplication/float64_cpu", "value": 1.1102230246251565e-16}
+INVARIANT {"check": "A/weighted_cell_duplication/float32_gpu_descriptive", "value": 5.960464477539063e-08}
+INVARIANT {"check": "A/weighted_cell_duplication/production_fp16_gpu_descriptive", "value": 7.176399230957031e-05}
+INVARIANT {"check": "A/one_level_max_intensity_error", "value": 2.384185791015625e-07}
+AMP_SKIP {"arm": "C", "epoch": 2, "step": 773, "scale_before": 131072.0, "n_inf": 1, "n_nan": 0, "most_affected_parameter": "W", "most_affected_counts": [1, 0], "scale_after": 65536.0}
+AMP_SKIP {"arm": "C", "epoch": 4, "step": 321, "scale_before": 131072.0, "n_inf": 1, "n_nan": 0, "most_affected_parameter": "W", "most_affected_counts": [1, 0], "scale_after": 65536.0}
+AMP_SKIP {"arm": "C", "epoch": 5, "step": 1042, "scale_before": 131072.0, "n_inf": 1, "n_nan": 0, "most_affected_parameter": "W", "most_affected_counts": [1, 0], "scale_after": 65536.0}
+AMP_SKIP {"arm": "C", "epoch": 6, "step": 1177, "scale_before": 65536.0, "n_inf": 1, "n_nan": 0, "most_affected_parameter": "U", "most_affected_counts": [1, 0], "scale_after": 32768.0}
+AMP_SKIP {"arm": "C", "epoch": 8, "step": 619, "scale_before": 65536.0, "n_inf": 382, "n_nan": 3, "most_affected_parameter": "U", "most_affected_counts": [381, 3], "scale_after": 32768.0}
+AMP_SKIP {"arm": "C", "epoch": 10, "step": 71, "scale_before": 65536.0, "n_inf": 130, "n_nan": 256, "most_affected_parameter": "U", "most_affected_counts": [128, 256], "scale_after": 32768.0}

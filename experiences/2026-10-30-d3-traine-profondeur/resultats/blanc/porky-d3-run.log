@@ -1,0 +1,9 @@
+[{"stream_name":"stdout","time":12.289023053,"data":"stage blanc python 3.13.15 numpy 2.1.3 torch 2.11.0+cu128 cuda 12.8 gpu Tesla T4 wall limit 7200 s\n"}
+,{"stream_name":"stdout","time":56.338242575,"data":"CHAIN DONE d3 blanc ok in 55 s\n"}
+,{"stream_name":"stderr","time":58.905965225,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":58.905996441,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":59.195519527,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":59.195546156,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":60.013392847,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":61.063028997,"data":"[NbConvertApp] Writing 318233 bytes to __results__.html\n"}
+]

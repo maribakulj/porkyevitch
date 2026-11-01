@@ -1,0 +1,16 @@
+{
+ "stage": "planche_petit_eleve_regardee",
+ "manifest_sha256": "82d9f59d6f0b61747d239be2361d7d8a83871b4acca61de4be06487d2315ca20",
+ "regards": [
+  {
+   "viewer": "wA:p1",
+   "viewed_at": "2026-10-30T10:06:00+01:00",
+   "notes": "resultats/full/REGARD_wA_p1.md"
+  },
+  {
+   "viewer": "Grok wA:p7",
+   "viewed_at": "2026-10-30T10:09:15+01:00",
+   "notes": "~/Documents/reviews/porkyevitch-pe-planches-grok.md"
+  }
+ ]
+}

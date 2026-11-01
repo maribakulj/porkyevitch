@@ -1,0 +1,26 @@
+{
+  "seed": 0,
+  "selection_sha256": "deaeabd5edfa75c8f782a236cc8b54f8e15f3a7bc32f63d8af150fcd05b06a97",
+  "predictions_sha256": {
+    "F": "23b152b6babad3cf516dc10bfc8dc40d058a4d1d34c2abe4f8a7332f89a717b6",
+    "controle_global": "1b26a10753ca5f0f3df76648e0def55f8c2f97e7383dc5c02ae87e838328effc",
+    "A": "f8fb05ac89341f3f39e109a159b93614b5adbe62382245bfce4c645e0323060f",
+    "C": "4d9f12e0c96370eba0fcf07bde11130326cdc903a721ab70fcdf1a24a7119489"
+  },
+  "B_reference": {
+    "H_F1": 0.5890847528448202,
+    "eligible": 4241,
+    "seconds": 1.6898839039999984,
+    "frozen_predictions_sha256": "0608dd1ae202efbb9aa04f7211dac6f4b2f231a941e978118ca121f8917e352e"
+  },
+  "identity": {
+    "seed": 0,
+    "data_sha256": "82f8caf1e4703fdc9530a04f8358968da3c69f9b78191c984fccbaa49bb9c7b3",
+    "permutations_sha256": "b3bf9042eeef8015d7cea439a8a1a79890cd4d10365c73d7245fef44b4ba6073",
+    "preparation_sha256": "b16b06d1a84fbedc175b0bb7b326be18d302dd65a7313c97c71c803a3b607b46",
+    "prereg_sha256": "25f1040f5b657d7b94896cba41852f59c2f6e3042a555f798c126ca8698d3585",
+    "micro": 64
+  },
+  "scientific_measures": null,
+  "next": "planches (after freeze) then viewing receipt then mesures"
+}

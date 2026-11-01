@@ -11,8 +11,8 @@
 # starts, writing and renaming nothing; only a blanc.json created by the failed run itself is ever renamed.
 import glob, hashlib, json, os, shutil, signal, subprocess, sys, time
 
-STAGE = "blanc"
-BLANK_SHA256 = None
+STAGE = "complet"
+BLANK_SHA256 = "b913a273995d53ac2de1286a3384b2abe5cd9994767362c5bd9a3cf7266fda24"  # reviewed blanc.json (Grok p3 CONFORME, 30/10)
 W = "/kaggle/working"
 SCRIPTS = {"d3_run.py": "2529107d7a16f08f2441bba81f5d7613e264b6232cc102f7cf783cbb25bf913a", "d3_core.py": "8a31d87b4364980bbf9e9ffb552c2bf622920ec03444cdadcb67f0dd3ab85039"}
 DIAG = "312d5a40affb6a399e807dec318e2bd8b569b7c8fcfecfb3552cd1f4cc4457d3"

@@ -514,6 +514,13 @@ def stage_planches(args):
 
 
 # ---------------------------------------------------------------- mesures
+# budget.json is the resource log of the plates stage: stage_planches seals MANIFEST_PLANCHES.json, THEN the final
+# budget.check rewrites budget.json, so its manifest entry can never match (Sonnet audit, 30/10). It carries no plate
+# content and nothing in mesures reads it: it is the only file exempted. planches.json, the four HTML plates and every
+# image stay required and sha-checked; the receipt still binds the manifest and the four HTML shas.
+PLATES_VOLATILE = frozenset({"budget.json"})
+
+
 def check_plate_receipt(plates_dir, receipt_path, gel_sha256):
     """Before any aggregate: the plates of THIS freeze (four arms, 12 rows each, every file present and unchanged) and
     a receipt recording both looks, wA:p1 and a Grok, each with viewed_at, on exactly these plates (as phase 1)."""
@@ -521,6 +528,8 @@ def check_plate_receipt(plates_dir, receipt_path, gel_sha256):
     manifest_path = plates_dir / "MANIFEST_PLANCHES.json"
     files = read_json(manifest_path).get("files") or {}
     for rel, digest in files.items():
+        if rel in PLATES_VOLATILE:
+            continue
         require((plates_dir / rel).is_file() and sha(plates_dir / rel) == digest, "plate file missing or changed")
     require("planches.json" in files, "plates index missing")
     index = read_json(plates_dir / "planches.json")

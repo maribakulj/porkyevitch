@@ -1,0 +1,61 @@
+{
+ "stage": "predictions_sealed",
+ "planche": [
+  "p009",
+  "p016",
+  "p049",
+  "p052",
+  "p059",
+  "p071",
+  "p073",
+  "p085",
+  "p123",
+  "p133",
+  "p163",
+  "p195"
+ ],
+ "panels": [
+  "élève 28x28 graine 0, score >= 0.5",
+  "Gemini",
+  "S1b"
+ ],
+ "script_sha256": {
+  "pe_kaggle.py": "91996fe00a615496529f1035d437d30caab6d27f0ea880ab9e28e7bb660af22a",
+  "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"
+ },
+ "listes_sha256": "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065af",
+ "files": {
+  "planche/p009.jpg": "d463ec2e669f136e11d6ae0005de61efbe48ed9b6c59b9290f12f29ef1c547ab",
+  "planche/p016.jpg": "aa09b46d87255dc0d6e00abf0d84b3704ff9a61279eef6e8a37e1b2848cfb4f8",
+  "planche/p049.jpg": "15f88d6634c63fb13e3d56974774fa3730b51b716d44a0969d2428e2b00741e3",
+  "planche/p052.jpg": "155427c61612abf40ba387f3ce28a464a353b4ec3da5d12f63e02bff954e98e7",
+  "planche/p059.jpg": "616029fe31cc1853c21b705dc47c8b3e782c54c02e5426222023d47856316be4",
+  "planche/p071.jpg": "69b7ea1eb2b6b5c11f29a7982c4eba459b0863e03ace2848095c3b1aac0cfea8",
+  "planche/p073.jpg": "a485c5f939ca66bfb53a8defa156051efdc344d7ac2897aefee87eb775f11f88",
+  "planche/p085.jpg": "b42ea9783f104a055bc95d14cb39bdd7f09be0fc818caa482bd331616074bd87",
+  "planche/p123.jpg": "21dd9860bad9e03ec18a6a33e07950693f0da72cd7872bd6a757307932318d33",
+  "planche/p133.jpg": "1b8c5b2900580dbb7c55535ae14c2341fe14be474ab2d2892ec74276c3ddd01e",
+  "planche/p163.jpg": "da40b47f3f309ed5a7776fe7019f1aa5b405915b7e26e6f403c0c3fbecc06134",
+  "planche/p195.jpg": "3d4e7d5eb85c3ca4245e63a3bd871fa1959393f0d0fe026a8a24b4424aa41324",
+  "predictions/a_priori.json": "90e6e27e9c3a4582e91d7580424f16fd119b7ecf46aded2915d48aaa39730f8a",
+  "predictions/florence2.json": "4bbedeb49cf03dd67e23633e35f1f5c29029944e5be7d63d45e8cb4b4a9cba0c",
+  "predictions/owlv2.json": "396727638114e3780908c0e8040e15960b12293f051ee5feff805f6387c9b7ec",
+  "predictions/student_28x28_seed0.json": "7564df3e4da772dc398f7e1b2dabc4bef64f6d7eeff8dd06e6c569efc2f1fd2a",
+  "predictions/student_28x28_seed0_rel.npy": "df5a92285670be7457def117efeb0ff1fece8ad7fe78c71d8b0327aa72533bd1",
+  "predictions/student_28x28_seed0_s1b30.json": "a7bc2ddca92358f53dabba514503dedb3f5d1a4f8c6d18707310b1caf68f92a9",
+  "predictions/student_28x28_seed0_s1b30_rel.npy": "161face51a846fe61ce044c8120e218caf3f3fbdd4875a8e6aceb3285ae3e154",
+  "predictions/student_28x28_seed1.json": "da4a442d80f9929c60ed207838468aa7fd853265ae85a3b1e64dfe5ab282e373",
+  "predictions/student_28x28_seed1_rel.npy": "b0757985102225bd0315acc889ef5fe9e610429f7815456bbb12e711eeebf035",
+  "predictions/student_28x28_seed2.json": "e61ee195f65a0f0849bf5e3d6d703b3454b3720ab5e0cc9bdc2ae202c00f910b",
+  "predictions/student_28x28_seed2_rel.npy": "7c89e65df8a0cb03ab4ded5a3da6dd5e9e7eb7df92c4e101e33f24ce5bdfd734",
+  "predictions/student_8x8_seed0.json": "3870c710d3eeb1c2c4524874d0d52218cb0f1a0a9a3ca5b376272739ad633b15",
+  "predictions/student_8x8_seed0_rel.npy": "cfd8598fe35ed3d0fea33eca6fe5c398abe76f94d9fdf040a43757158d973903",
+  "predictions/student_8x8_seed1.json": "59b1ddb58f3bcf351cb6fdcf4355e584548a4e28486ad3c2373e88c10c8d4349",
+  "predictions/student_8x8_seed1_rel.npy": "e586862a45171d4d972b6b71f095dd94277e067e64f4a2be6b08ce15256a8ccd",
+  "predictions/student_8x8_seed2.json": "2dcb553d3828cba4764365220e75f1c4f14161486c99c7b78e9ae24f5c1c0215",
+  "predictions/student_8x8_seed2_rel.npy": "0267b384a973f93a9cd969c742906ff847d76f070e3a42e5bcbf2bcc0606e9f6",
+  "predictions/yoloe.json": "78c5fc4d663c5249353b5ac4301575c963ed26514b4e0647ac65d8ecd4adcdc9",
+  "run.json": "c2f55133f4b5147f92e026571e80a388e568ec4b72bb42da70a17144f454651a",
+  "timing.json": "19e1c4480e8822e6012b105d670a26128831af0dff28ac4b74319a7465a1d940"
+ }
+}

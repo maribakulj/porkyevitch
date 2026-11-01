@@ -1,0 +1,3 @@
+07:51:04 stage full inputs /kaggle/input/datasets/mabaku/porky-petit-eleve-v1 /kaggle/input/notebooks/mabaku/caypollard-encode-cradio/full
+07:51:14 installed open_clip_torch==3.3.0 ultralytics==8.4.177: versions {'open_clip_torch': '3.3.0', 'ultralytics': '8.4.177', 'torch': '2.11.0+cu128'}
+09:02:30 CHAIN DONE petit eleve full ok
