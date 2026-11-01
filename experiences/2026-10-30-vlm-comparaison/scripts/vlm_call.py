@@ -1,4 +1,4 @@
-"""VLM comparison, calls (PREINSCRIPTION-v2.4.md sections 2, 3.4, 5, 6). Computes NO score.
+"""VLM comparison, calls (PREINSCRIPTION-v2.6.md sections 2, 3.4, 5, 6). Computes NO score.
 
 One image per call, a fresh session per call, in a new temporary folder (canonical path, outside the home folder) that holds
 only the image.
@@ -221,11 +221,18 @@ def observed_costs(lines):
                 and isinstance(l.get("cost_usd"), (int, float))] for s in vc.CLAUDE_SYSTEMS}
 
 
+def prior_spent(root):
+    """v2.6: the Claude budget charges already spent under an earlier prep.json (written there by vlm_prepare)."""
+    p = Path(root) / "prep.json"
+    return float(json.loads(p.read_text()).get("prior_spend", {}).get("claude_charged_usd", 0.0)) if p.exists() else 0.0
+
+
 def claude_spent(root):
     """Budget charges of every Claude result, all stages, plus the prudent charge of any Claude start still without result."""
     lines = all_lines(root)
     obs = observed_costs(lines)
-    total = sum(l.get("budget_charge_usd") or 0.0 for l in lines
+    total = prior_spent(root)  # v2.6: Claude charges of an earlier preparation folder (S0 of v2.5), carried over
+    total += sum(l.get("budget_charge_usd") or 0.0 for l in lines
                 if l.get("phase") == "result" and l.get("system") in vc.CLAUDE_SYSTEMS)
     done = {(l["id"], l["attempt"]) for l in lines if l.get("phase") == "result"}
     for s in lines:
@@ -367,7 +374,7 @@ def s1_plan(root, prep):
     count = lambda block, system: sum(c["block"] == block and c["system"] == system for c in calls)  # noqa: E731
     sizes = {"n_dev": count("dev", "H"), "n_repeat": sum(c["system"] == "H" for c in prep["calls"]["R"]),
              "n_graphs": count("graphes", "H"), "n_opus": count("opus", "O")}
-    spent_s0 = sum(r.get("budget_charge_usd") or 0.0 for r in s0 if r.get("system") in vc.CLAUDE_SYSTEMS)
+    spent_s0 = prior_spent(root) + sum(r.get("budget_charge_usd") or 0.0 for r in s0 if r.get("system") in vc.CLAUDE_SYSTEMS)
     plan = {"sizes": sizes, "spent_S0_usd": spent_s0,
             **vc.plan_s1(s0, sizes, [tuple(x) for x in prep["samples"]["vdiag_groups_order"]], spent_s0)}
     path = root / "plan_S1.json"

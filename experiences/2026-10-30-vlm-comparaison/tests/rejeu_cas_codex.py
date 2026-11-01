@@ -1,5 +1,5 @@
-"""Replays EVERY case of Codex's reproduction scripts (porkyevitch-vlm-cas-audit-codex.py, 0016904; and
-porkyevitch-vlm-plafond-cas-codex.py, b8c221e) against the current code, each case isolated, on fictitious data only (no
+"""Replays EVERY case of Codex's reproduction scripts (porkyevitch-vlm-cas-audit-codex.py, 0016904;
+porkyevitch-vlm-plafond-cas-codex.py, b8c221e; porkyevitch-vlm-v25-doublon-cas-codex.py, b6fa41f) against the current code, each case isolated, on fictitious data only (no
 model, no network, no real image). Codex's conversation ids ('mention', 'failed') are kept AND replayed as valid UUIDs, since
 the current guard rejects malformed ids before anything else. Prints, per case, whether the defect still reproduces.
 Run: python -I -B tests/rejeu_cas_codex.py  (exit status 1 if any defect reproduces)
@@ -18,6 +18,7 @@ sys.path[:0] = [str(BASE / "scripts"), str(BASE / "tests")]
 import vlm_call as call  # noqa: E402
 import vlm_core as vc  # noqa: E402
 import vlm_prepare as prep  # noqa: E402
+import kaggle_fetch_icai as kf  # noqa: E402
 import test_vlm as fixture  # noqa: E402
 
 call.cli_versions = lambda: {"claude": "test", "agy": "test"}
@@ -125,6 +126,15 @@ with tempfile.TemporaryDirectory(prefix="rejeu-codex-") as tmp:
     finally:
         call.image_path = original
     out["B4 plafond non atomique (24 départs)"] = len(journal.starts) > caps.max_attempts or len(sent) != 1
+
+    # v2.5 doubled md5 (porkyevitch-vlm-v25-doublon-cas-codex.py): two rows, one md5 -> one archive member
+    import tarfile
+    stage = root / "stage"
+    stage.mkdir()
+    (stage / "0123456789abcdef0123456789abcdef.jpg").write_bytes(b"x")
+    kf.write_bin(stage, ["0123456789abcdef0123456789abcdef.jpg"] * 2, root / "d.bin")
+    with tarfile.open(root / "d.bin", "r:") as t:
+        out["v2.5 md5 doublé (deux membres identiques)"] = len(t.getmembers()) != 1
 
 for k, v in out.items():
     print(f"{'PRÉSENT' if v else 'levé  '}  {k}")

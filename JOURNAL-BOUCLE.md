@@ -103,3 +103,42 @@
 - 30/10 : D10 rendu (identités 0/301, test_rows 0), relecture Sonnet en cours. Petit élève MESURES : relecture Sonnet + audit de remplacement Sonnet (Codex sans crédits) FEU VERT ; lancement auto au premier T4 libre ; contre-vérif Codex à son retour avant usage de D2.
 - 30/10 : P9-A graine 0 : sorties complètes relues (Sonnet ; D14 score de B dans gel.json non bloquant) ; planches lancées après audit de remplacement Sonnet (Codex sans crédits). Petit élève : D2 « pas de signal » (relu Sonnet) ; options demandées à Grok p7, contre-expertise Codex à venir. D3 : deux bras non retenus. D10 : lecture faite. A1 : gain dû au q des voisins.
 - 30/10 : dossier des mesures P9-A graine 0 prêt (verrous jusqu'au reçu des planches) ; note graines 1-2 : règle §9.4 appliquée mécaniquement après les mesures de la graine 0 (deux graines ou aucune) ; agrégation à 3 graines à écrire et relire avant lecture.
+- 30/10 : planches P9-A échouées avant tout calcul (Kaggle a aplati txt/ du jeu iconclass, piège connu) ; jeu re-versionné avec un fichier racine ; relance (emballage seul, aucun code changé).
+- 30/10 : production (Grok p3) : code câblé (9d8bf9b, 47 tests) mais le complet du petit élève n'a écrit AUCUN checkpoint ; piste en pause jusqu'à la décision après D2.
+- 30/10 : mesures P9-A BLOQUÉES par l'audit Sonnet : défaut de code (budget.json réécrit après MANIFEST_PLANCHES ⇒ reçu toujours refusé) ; correctif minimal demandé à pH ; planches.json re-téléchargé (0 octet avant).
+- 30/10 : correctif reçu P9-A (7f5726f, e4023b8d) relu/audité par Sonnet ; mesures P9-A graine 0 lancées (pkyevitch-p9a-mesures). Contrôle 3D2D pour wA:pC : RP-P-OB-1843 (pid 200123279) absent du banc gelé.
+- 30/10 : Codex contre-vérifie A1 (lancement et sorties) : CONFORME.
+- 30/10 : Codex contre-vérifie D3 : CONFORME.
+- 30/10 : Codex contre-vérifie D10 : CONFORME (réserve disponibilité ≠ gain récupérable).
+- 30/10 : Codex contre-vérifie le petit élève (pilotes .bin, mesures) : CONFORME, pas de signal.
+- 30/10 : Codex a traité toute sa file (décisions D16/D17, contre-vérifications A1, D3, D10, petit élève, P9-A : CONFORMES ; production à corriger).
+- 30/10 : A1-dev (D17) lancé après Sonnet + audit Codex FEU VERT.
+- 30/10 : A1-dev contre-vérifié par Codex : CONFORME ; partie Iconclass close (D17).
+- 30/10 : contrôle 3D2D RP-P-OB-35.958 (pid 200184642) : absent du banc gelé. Signalement : Grok wA:pJ (3D2D) a cherché une chaîne dans frozen.json et vu.json lui-même ; commande exacte et affichage éventuel demandés via wA:pC pour qualifier l'incident.
+- 30/10 : incident Grok wA:pJ qualifié : deux commandes rg -l / rg -c (sortie limitée à noms de fichiers ou comptes), sortie vide ; aucune ligne de frozen.json ni vu.json affichée ⇒ écart de procédure SANS exposition. Règle rappelée : ces contrôles passent par wA:p1.
+- 30/10 : JALON article : audit factuel Codex favorable (B1–B7 levés) ; finitions (bibliographie, figures, assemblage) confiées à pH.
+- 30/10 : article complet v2 (résumé 218 mots, retouches Sonnet) ; Efron-Tibshirani 1994 = date du DOI cité, gardée (décision wA:p1 : citer ce que la source datée donne).
+- 30/10 : code YOLOE : FEU VERT Sonnet (v3, HEAD b1b335a) pour préparer le blanc ; dossier demandé à Grok p3.
+- 30/10 : contrôle 3D2D : RP-T-1920-60 et A 2167 (7 pids candidats) absents du banc gelé.
+- 30/10 : disque 3,6 Go : sauvegardes-kaggle (3,5 Go) à déplacer d'urgence vers le Drive (Grok p2).
+- 30/10 : herdr a redémarré ; tâches relancées (p2 disque + jeu de poids, p3 lanceur YOLOE, pH v1 VLM, p4/p7 en attente).
+- 30/10 : téléchargeur de Grok p2 (rapatrier_reprise.py, 5 h de boucle) arrêté par wA:p1 : il remplissait le disque (3,4 Go) ; p2 redirigé vers le seul déplacement vers le Drive.
+- 30/10 : Grok p2 a sauvé le cache npz de diag-run (c7df9d3d, 246 Mo) et t_h.pt / t_z.pt (avant 0 octet) par téléchargement à reprise HTTP ; cause : le CLI écrit d'un bloc et laisse 0 octet sur coupure. Disque 99 % : déplacement vers le Drive en cours.
+- 30/10 : disque 2,9 Go : déplacement des sauvegardes-kaggle vers Mon Drive/porkyevitch-sauvegardes par wA:p1 (accord de Marcel), fichier par fichier, SHA vérifié, attente d'envoi, éviction ; journal ~/porkyevitch-donnees/drive-move.log.
+- 30/10 : incident 3D2D (Haiku wA:pD) : un ls -d porkyevitch-donnees/rijks-* (noms de dossiers seulement), aucun contenu lu ⇒ sans exposition.
+- 30/10 : Marcel juge 106 images trop peu pour YOLOE ; amendement D16 en préparation (DEArt + graphes Gemini/Haiku), examen des données par Grok p7.
+- 30/10 : comparaison VLM : Codex FEU VERT S0 seulement ; S0 (19 appels) autorisé à wA:pH.
+- 30/10 : données YOLOE (Grok p7) : DEArt (sans Rijksmuseum) + ODOR + 106 Gemini + 240 S1b ; juges 26 + 53 ; contre-expertise Codex demandée.
+- 30/10 : noyau pkyevitch-yoloe-poids-dl lancé (téléchargement des poids sur Kaggle, SHA vérifiés) ; chemins figés du blanc à corriger (Kaggle monte sous datasets/mabaku et notebooks/mabaku).
+- 30/10 : VLM S0 bloqué avant tout appel (fragments ICAI de 302 Mo, réseau ~130 Ko/s) ; option A choisie : images ICAI ligne par ligne par l'API datasets-server, md5 vérifiés (amendement v2.5).
+- 30/10 : VLM : Codex FEU VERT récupération ICAI Kaggle → prepare → S0 ; lancement autorisé à wA:pH.
+- 30/10 : blanc YOLOE lancé (noyau pkyevitch-yoloe, 9929f16, code 2d3a7371, entrées a63cea84, poids = sortie pkyevitch-yoloe-poids-dl) après Sonnet + Codex FEU VERT.
+- 30/10 : blanc YOLOE échoué au contrôle des versions (avant calcul) ; sonde : versions de base conformes, ultralytics/clip absents de l'image (roues) ; diagnostic demandé à Grok p3.
+- 30/10 : VLM : Codex FEU VERT S0 (1e338502) ; S0 autorisé après prepare.
+- 30/10 : code v3 YOLOE (préparation DEArt/ODOR, crible) : Sonnet FEU VERT après correctifs (56c56f3..fccf721) ; audit Codex à faire avant la préparation Kaggle ; d'abord le blanc.
+- 31/10 : blanc YOLOE RELANCÉ (d14ea56, code 7139235a, roue ultralytics ajoutée) après Sonnet + Codex FEU VERT.
+- 31/10 : blanc YOLOE réellement relancé (noyau pkyevitch-yoloe) : versions OK ; arrêt « t4 » (2 GPU visibles, CUDA_VISIBLE_DEVICES non fixé) ; correctif demandé à Grok p3.
+- 31/10 : blanc YOLOE 3e lancement : GPU/versions/poids OK ; arrêt « fusion » (head.fuse sur vrais poids) ; cause masquée, à reproduire en local avec les vrais poids (Grok p3).
+- 31/10 : blanc YOLOE 4e lancement : fusion OK, arrêt « grad » au contrôle des gradients des deux pas ; diagnostic demandé à Grok p3 (reproduction CPU complète avec fusion).
+- 31/10 : VLM : option 1 (cache du vocabulaire) préparée en v2.6 sans attendre Marcel (aucune dépense nouvelle hors budget) ; tranche Opus / budget : décision de Marcel après nouveau S0.
+- 31/10 : VLM v2.6 : Codex FEU VERT prep-v26 + nouveau S0 (report 4,589728 USD obligatoire) ; lancé par pH.

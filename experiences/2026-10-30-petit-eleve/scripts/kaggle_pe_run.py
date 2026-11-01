@@ -17,14 +17,14 @@
 import glob, hashlib, importlib.metadata, os, subprocess, sys, tarfile, time
 from pathlib import Path
 
-STAGE = "full"  # after smoke 2 (Grok p3 CONFORME), revisions, MobileCLIP and CLIP tokenizer pinned in pe_kaggle.py
+STAGE = "mesures"  # after the full run, its plate viewed by wA:p1 and Grok (recu_planche_pe.json, manifest 82d9f59d)
 OPEN_CLIP = "open_clip_torch==3.3.0"
 ULTRALYTICS = "ultralytics==8.4.177"  # YOLOE-v8-S witness (D8), smoke and full only
 W = "/kaggle/working"
 EXTRACT = "/tmp/pkyevitch"  # not persisted by Kaggle
 SCRIPT_SHA256 = {"pe_kaggle.py": "91996fe00a615496529f1035d437d30caab6d27f0ea880ab9e28e7bb660af22a", "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"}
 ENTREES_SHA256 = "b48cb32c9880c35dd2bc55cfb5b791e2de7437a736463b78c50e93ad37b90608"  # pe-entrees.bin built by outils/construire_entrees_bin.py
-SCELLE_SHA256 = None  # pe-scelle.bin, only if the sealed folder of the full run has to be re-uploaded
+SCELLE_SHA256 = "ed6dc1d8be05a6cb157e1bde798c6c3fc2f1be0b5baa2b44a3ba3ba32a9f1bea"  # pe-scelle.bin of the full run (outils/construire_scelle_bin.py, manifest 82d9f59d)
 
 
 def log(m):

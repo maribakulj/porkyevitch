@@ -1,17 +1,18 @@
 {
- "date": "2026-10-30",
- "preinscription": "PREINSCRIPTION-v2.4.md",
- "note": "Sceau du code avant S0, après la contre-vérification Codex (résiduel B4 : contrôle et réservation du plafond d'essais dans une seule section critique). vlm_prepare écrira prep.json avec ces mêmes SHA (code_sha256) ; tout écart refuse les appels.",
- "previous_seal_sha256": "68020152287212fe78ffad5c17b00f8a591148edf4848141ace04111dbaaa1a5",
+ "date": "2026-10-31",
+ "preinscription": "PREINSCRIPTION-v2.6.md",
+ "note": "Sceau v2.6 : consigne réordonnée (vocabulaire en tête, image en dernier) ; report de la dépense du S0 v2.5 dans le budget de 30 USD. Noyau Kaggle inchangé (déjà exécuté).",
+ "previous_seal_sha256": "4c45fd384567abdbe28fe6affeafa8b47c254c860bdfcddf1e750144eeff478f",
  "sha256": {
-  "PREINSCRIPTION-v2.4.md": "b7969ed941e624c868e042f56cb7b08c48dbe9352630c15764af237e8b9063d1",
+  "PREINSCRIPTION-v2.6.md": "108c16d7f0f31578b550a3eb6d465636c6eec54faf722e86f1d33858bdc857a3",
   "scripts/a1_core.py": "177ef54243fd6dfed0aa557561aa365f41b2c992379aef6d4fab4c5e27ab205a",
+  "scripts/kaggle_fetch_icai.py": "e3c0ed95509ab8731a033331925b98fbd77646961ac123481c0d64046bf1b496",
   "scripts/pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af",
-  "scripts/vlm_call.py": "92754e29629ee2bed844239fe2df5a76992e6921c9f1a6c91a177c02ba0ca60e",
-  "scripts/vlm_core.py": "9fb5096cd2245f8530df10a3becdc07ff3644a73207bf7e0f221477c81efc223",
-  "scripts/vlm_measure.py": "de47253c478f0f7616abf1847cb0f7106b3a1cf30b1f0e5c8d2cb4f56c78d06e",
-  "scripts/vlm_prepare.py": "94f909d074174e5da5a52c75c199928030569a7b7345f47b4aead92424192b25",
-  "tests/rejeu_cas_codex.py": "ecc28591791a3160ef6f6ad0aa0610728f5e7852118e94084c812cce59cb7c48",
-  "tests/test_vlm.py": "7782a8ce3739b276e1ea2bc1e2214526c24b6f2e235fc6f9a5bd8fe675577af4"
+  "scripts/vlm_call.py": "ec65a88bdc2923dc4cdab39d5a5a8a5bbeda541ad44da79f85bc2d9538fb4f4e",
+  "scripts/vlm_core.py": "3093065c990ec3abc724681eb3624c3404d47979ead50136c4e9af688fb6d5c8",
+  "scripts/vlm_measure.py": "356e89898da92ca658e3fd02b54aa659bda435a1a76cbf307822d552c597b9d0",
+  "scripts/vlm_prepare.py": "74683f86c2b452d85dca38788ba5861ccc2d51d9566edec12df1dff46050bb1a",
+  "tests/rejeu_cas_codex.py": "3cfeb562e13760098330a8878996bd509fea973995f6ca683e112f5c3730eaf0",
+  "tests/test_vlm.py": "3bc4dbb8f8ebab37d7ced0a433f9c9d2dd82ad133f1920f254b26b5dad8baa36"
  }
 }

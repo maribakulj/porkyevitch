@@ -1,10 +1,15 @@
-"""VLM comparison, step 1 (PREINSCRIPTION-v2.4.md section 6): samples, images, truths, B and T* references, identity
+"""VLM comparison, step 1 (PREINSCRIPTION-v2.6.md section 6): samples, images, truths, B and T* references, identity
 controls, call plan and preparation seal. No model call, no score of a VLM.
 
 Reads only validation rows of the ICAI train shards (never data/test-*), the "dev" member of the Rijksmuseum frozen bank
 (D10's decoding: the test member is never decoded), the two dev files of the phase-1 seal, and the petit élève inputs.
 
-Usage: vlm_prepare.py --diag DIAG --frozen FROZEN.json --seal SEAL --pe PE_UPLOAD --out OUT
+v2.5: the ICAI images are not read from the network here. kaggle_fetch_icai.py (Kaggle, fast network, public dataset
+without token) draws the same sample with the functions vdiag_truth and vdiag_sample below (imported, not copied) and returns
+an uncompressed tar archive (.bin, D11) of the JPEG/PNG bytes named by md5; icai_images reads that archive, accepts only
+regular members named <md5>.jpg|.png, and requires the exact set of drawn md5s, each matching its bytes (else REFUSED).
+
+Usage: vlm_prepare.py --diag DIAG --frozen FROZEN.json --seal SEAL --pe PE_UPLOAD --icai-bin ICAI.bin --out OUT
   DIAG  = porky-diag-run/diag-full (diagnostic.json, identites_validation.json, probabilites_validation.npz, vocabulaire.json)
   SEAL  = phase1_freeze_2 (MANIFEST.json 3c468faa...)   PE_UPLOAD = petit-eleve/upload (listes.json, images, graphes, s1b)
 """
@@ -12,7 +17,9 @@ import argparse
 import hashlib
 import http.client
 import json
+import re
 import sys
+import tarfile
 import time
 import urllib.error
 import urllib.request
@@ -37,7 +44,7 @@ LISTES_SHA256 = "87e45b418ace7a4f1a15857456d3d40d107ee3a9c286962e9c19723ecfb065a
 DEV_KEY = b'\n "dev": '
 PINNED = {"a1_core.py": "177ef54243fd6dfed0aa557561aa365f41b2c992379aef6d4fab4c5e27ab205a",
           "pe_common.py": "20034ce4f6a71cca72787d53e8d5e6d420d89613ed6b61ba134e9fd5529061af"}
-CODE = ("vlm_core.py", "vlm_prepare.py", "vlm_call.py", "vlm_measure.py", "a1_core.py", "pe_common.py")
+CODE = ("vlm_core.py", "vlm_prepare.py", "vlm_call.py", "vlm_measure.py", "a1_core.py", "pe_common.py", "kaggle_fetch_icai.py")
 
 
 def sha(p):
@@ -125,8 +132,8 @@ class Shards:
         return out
 
 
-def icai_vdiag(ids, preds, shards):
-    """V-diagnostic rows with their projected truth (labels read from the shards; image md5 checked later)."""
+def vdiag_truth(ids, shards):
+    """V-diagnostic rows, their projected truth (labels read from the TRAIN shards) and the evaluable rows (2100)."""
     vd = vc.vdiag_rows([x["md5"] for x in ids])
     by_shard = {}
     for k in vd:
@@ -138,25 +145,55 @@ def icai_vdiag(ids, preds, shards):
             truth[k] = a1.drop86(got[ids[k]["row"]]["label"])
     evaluable = [k for k in vd if truth[k]]
     require(len(evaluable) == 2100, "vdiag_evaluable_2100")
+    return evaluable, truth
+
+
+def vdiag_sample(ids, evaluable):
+    """Section 3.1: whole md5 groups drawn with SEED until >= 200 images. Returns (groups, chosen groups in draw order,
+    rows in draw order of their groups)."""
+    groups = {}
+    for k in evaluable:
+        groups.setdefault(ids[k]["md5"], []).append(k)
+    chosen = vc.draw_whole_groups(groups, vc.MIN_IMAGES["vdiag"], vc.SEED)
+    return groups, chosen, [k for g in chosen for k in sorted(groups[g])]
+
+
+def icai_vdiag(ids, preds, shards):
+    """vdiag_truth plus the identity control of B on the 2100 evaluable rows."""
+    evaluable, truth = vdiag_truth(ids, shards)
     h_b = float(np.mean([a1.hier_f1(truth[k], preds["B_TZ"][k]) for k in evaluable]))
     require(abs(h_b - VDIAG_B_H) <= 1e-9, "vdiag_B_H_not_reproduced")
     return evaluable, truth
 
 
-def icai_images(ids, chosen, shards, out_dir):
+MEMBER = re.compile(r"[0-9a-f]{32}\.(?:jpg|png)")
+
+
+def image_ext(body):
+    return ".png" if body[:8] == b"\x89PNG\r\n\x1a\n" else ".jpg"
+
+
+def icai_images(ids, chosen, bin_path, out_dir):
+    """v2.5: the drawn images from the fetched archive, no network. Regular members named <md5>.jpg|.png only; the set of
+    md5s must equal the drawn set; each member's bytes must have its md5, and its extension must match its bytes."""
+    want = {ids[k]["md5"] for k in chosen}
+    bodies = {}
+    with tarfile.open(bin_path, "r:") as tar:  # uncompressed tar only
+        for m in tar.getmembers():
+            require(m.isfile() and MEMBER.fullmatch(m.name) is not None, f"icai_bin_member_{m.name!r}")
+            body = tar.extractfile(m).read()
+            md5 = m.name.split(".")[0]
+            require(hashlib.md5(body).hexdigest() == md5 and m.name.endswith(image_ext(body)), f"icai_bin_bytes_{m.name}")
+            require(md5 not in bodies, f"icai_bin_duplicate_{md5}")
+            bodies[md5] = body
+    require(set(bodies) == want, "icai_bin_not_the_drawn_sample")
     out_dir.mkdir(parents=True, exist_ok=True)
-    by_shard, files = {}, {}
+    files = {}
     for k in chosen:
-        by_shard.setdefault(ids[k]["shard"], []).append(k)
-    for tag, ks in sorted(by_shard.items()):
-        got = shards.rows(tag, [ids[k]["row"] for k in ks], ["image"])
-        for k in ks:
-            body = got[ids[k]["row"]]["image"]["bytes"]
-            require(hashlib.md5(body).hexdigest() == ids[k]["md5"], "icai_image_md5")
-            ext = ".png" if body[:8] == b"\x89PNG\r\n\x1a\n" else ".jpg"
-            path = out_dir / f"{ids[k]['md5']}{ext}"
-            path.write_bytes(body)
-            files[k] = path.name
+        body = bodies[ids[k]["md5"]]
+        path = out_dir / f"{ids[k]['md5']}{image_ext(body)}"
+        path.write_bytes(body)
+        files[k] = path.name
     return files
 
 
@@ -180,7 +217,25 @@ def dev_items(path):
     return dev, items
 
 
-def sealed_dev(seal, dev):
+def object_sha(obj):
+    """gel_common.object_sha, unchanged (the seal's identity_order_sha256)."""
+    return hashlib.sha256(json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+                                     allow_nan=False).encode()).hexdigest()
+
+
+def dev_key(pid):
+    """A file-safe key for a dev item: 'rk' + the last segment of its URI (https://id.rijksmuseum.nl/200455078 ->
+    rk200455078). The pid itself stays in the bank entry."""
+    seg = str(pid).rstrip("/").rsplit("/", 1)[-1]
+    require(re.fullmatch(r"[0-9A-Za-z_-]+", seg) is not None, f"dev_key_{pid!r}")
+    return f"rk{seg}"
+
+
+def sealed_dev(seal, items):
+    """The two dev prediction files of the phase-1 seal. Their row identities are the gel's (gel_predictions.rijks_features:
+    index, pid, image_sha256 in the order of the dev items), rebuilt here from the items and checked against both the rows
+    and the manifest's identity_order_sha256 (v2.5 fix: the frozen dev member holds no 'identities' key)."""
+    identities = [{"index": j, "id": it["pid"], "image_sha256": it["image_sha256"]} for j, it in enumerate(items)]
     seal = Path(seal)
     require(sha(seal / "MANIFEST.json") == SEAL_SHA256, "seal_identity")
     files = json.loads((seal / "MANIFEST.json").read_text())["files"]
@@ -191,7 +246,8 @@ def sealed_dev(seal, dev):
         require(info["bank"] == "rijks_dev" and info["system"] == system and sha(seal / name) == info["sha256"],
                 "sealed_dev_file")
         rows = json.loads((seal / name).read_text())["rows"]
-        require([{k: x[k] for k in ("index", "id", "image_sha256")} for x in rows] == dev["identities"], "dev_identity_order")
+        require([{k: x[k] for k in ("index", "id", "image_sha256")} for x in rows] == identities and
+                object_sha(identities) == info["identity_order_sha256"], "dev_identity_order")
         out[system] = [x["codes"] for x in rows]
     return out
 
@@ -270,6 +326,7 @@ def plan_calls(vdiag, dev, opus, repeat, pe):
     for stage, lst in calls.items():
         for c in lst:
             c["id"] = f"{stage}:{c['system']}:{c['bank']}:{c['item']}"
+            require(re.fullmatch(r"[0-9A-Za-z_:-]+", c["id"]) is not None, f"call_id_not_file_safe_{c['id']!r}")
         require(len({c["id"] for c in lst}) == len(lst), f"unique_call_ids_{stage}")
     return calls
 
@@ -283,24 +340,20 @@ def main(a):
     vocab, ids, preds = load_diag(a.diag)
     shards = Shards()
     evaluable, truth = icai_vdiag(ids, preds, shards)
-    groups = {}
-    for k in evaluable:
-        groups.setdefault(ids[k]["md5"], []).append(k)
-    chosen_groups = vc.draw_whole_groups(groups, vc.MIN_IMAGES["vdiag"], vc.SEED)
-    vdiag_rows = [k for g in chosen_groups for k in sorted(groups[g])]  # draw order of the groups (v2.2 reduction rule)
-    files = icai_images(ids, vdiag_rows, shards, out / "images" / "icai")
+    groups, chosen_groups, vdiag_rows = vdiag_sample(ids, evaluable)  # draw order of the groups (v2.2 reduction rule)
+    files = icai_images(ids, vdiag_rows, a.icai_bin, out / "images" / "icai")
 
     dev, items = dev_items(a.frozen)
-    sealed = sealed_dev(a.seal, dev)
+    sealed = sealed_dev(a.seal, items)
     dev_controls(items, sealed)
     (out / "images" / "rijks").mkdir(exist_ok=True)
     for it in items:
-        path = out / "images" / "rijks" / f"{it['pid']}.jpg"
+        path = out / "images" / "rijks" / f"{dev_key(it['pid'])}.jpg"
         if not (path.exists() and sha(path) == it["image_sha256"]):
             path.write_bytes(download(it))
     comps = {}
     for it in items:
-        comps.setdefault(str(it["component"]), []).append(it["pid"])
+        comps.setdefault(str(it["component"]), []).append(dev_key(it["pid"]))
     opus = sorted(p for c in vc.draw_whole_groups(comps, vc.MIN_IMAGES["opus"], vc.SEED) for p in comps[c])
     repeat = sorted(p for c in vc.draw_whole_groups(comps, vc.MIN_IMAGES["repeat"], vc.SEED_REPEAT) for p in comps[c])
     pe = pe_evaluation(a.pe, out / "images" / "pe")
@@ -309,11 +362,19 @@ def main(a):
     icai = [{"key": f"v{k}", "row": k, "md5": ids[k]["md5"], "image": f"icai/{files[k]}", "truth": truth[k],
              "group": ids[k]["md5"], "draw_rank": rank[ids[k]["md5"]], "B": preds["B_TZ"][k], "T_star": preds["T_star"][k]}
             for k in vdiag_rows]
-    rijks = [{"key": it["pid"], "image": f"rijks/{it['pid']}.jpg", "image_sha256": it["image_sha256"],
+    require(len({dev_key(it["pid"]) for it in items}) == len(items), "dev_keys_unique")
+    rijks = [{"key": dev_key(it["pid"]), "pid": it["pid"], "image": f"rijks/{dev_key(it['pid'])}.jpg",
+              "image_sha256": it["image_sha256"],
               "truth": it["truth_projected"], "group": str(it["component"]), "B": sealed["T-Z"][i],
               "T_star": sealed["T_star"][i]} for i, it in enumerate(items)]
     calls = plan_calls([x["key"] for x in icai], [x["key"] for x in rijks], opus, repeat, [x["name"] for x in pe])
-    prep = {"preinscription": "PREINSCRIPTION-v2.4.md", "models": vc.MODELS, "seed": vc.SEED, "seed_repeat": vc.SEED_REPEAT,
+    prior = None
+    if a.prior_status:  # v2.6: carry the Claude spend of the earlier folder into the 30 USD budget
+        st = json.loads(Path(a.prior_status).read_text())
+        require(st["stage"] == "S0" and isinstance(st["claude_charged_usd"], (int, float)), "prior_status_shape")
+        prior = {"status_sha256": sha(a.prior_status), "claude_charged_usd": float(st["claude_charged_usd"]),
+                 "journal_sha256": st["journal_sha256"]}
+    prep = {"preinscription": "PREINSCRIPTION-v2.6.md", "icai_bin_sha256": sha(a.icai_bin), "prior_spend": prior or {}, "models": vc.MODELS, "seed": vc.SEED, "seed_repeat": vc.SEED_REPEAT,
             "vocabulary": vocab, "prompts_sha256": vc.prompts_sha256(vocab),
             "code_sha256": {n: sha(HERE / n) for n in CODE},
             "banks": {"icai_vdiag": icai, "rijks_dev": rijks, "pe_eval": pe},
@@ -331,6 +392,7 @@ def main(a):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    for k in ("diag", "frozen", "seal", "pe", "out"):
+    for k in ("diag", "frozen", "seal", "pe", "icai-bin", "out"):
         ap.add_argument(f"--{k}", required=True)
+    ap.add_argument("--prior-status", default=None, help="status_S0.json of an earlier folder (v2.6 budget carry-over)")
     main(ap.parse_args())

@@ -99,3 +99,10 @@ Kaggle a supprimé les jeux `porky-*`, dont `porky-petit-eleve-v1`, qui portait 
   - scripts non relus refusés, et `listes.json` exigé à la racine ;
   - dossier scellé pris dans la sortie du noyau, ou dans l'archive seulement avec un SHA épinglé ;
   - reconstruction réelle reproductible, égale au SHA épinglé.
+
+## 10. Étape `mesures` (après le complet, la planche regardée et le reçu)
+
+- Le complet a écrit son dossier scellé (`MANIFEST_PREDICTIONS.json` `82d9f59d…`, 32 fichiers dont 12 planches JPG). La planche a été regardée par wA:p1 et Grok wA:p7 ; le reçu `recu_planche_pe.json` (`d91a9cd3…`) porte sur ce manifeste.
+- **`pe-scelle.bin`** (sha `ed6dc1d8…`, 33 membres) est construit par `outils/construire_scelle_bin.py`, de façon reproductible. Il contient exactement les fichiers du manifeste, chacun vérifié, plus le manifeste lui-même. Tout fichier hors du sceau est refusé, et le manifeste doit être celui que nomme le reçu.
+- Le pilote passe à `STAGE = "mesures"` et épingle `SCELLE_SHA256`. Les deux archives sont extraites par `safe_extract` dans `/tmp/pkyevitch`.
+- **Vérification à sec, sur le Mac, sans aucune mesure** : extraction des deux archives, puis `check_receipt`. Le résultat est un sceau complet, Florence disponible, des scripts scellés égaux à ceux de l'archive d'entrées, et les deux regards présents. `pe_kaggle.py` et `pe_common.py` sont inchangés.

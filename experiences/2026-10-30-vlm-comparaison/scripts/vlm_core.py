@@ -1,4 +1,4 @@
-"""VLM comparison (PREINSCRIPTION-v2.4.md): pure rules, no network, no model call. numpy only (plus the pinned copies
+"""VLM comparison (PREINSCRIPTION-v2.6.md): pure rules, no network, no model call. numpy only (plus the pinned copies
 a1_core.py and pe_common.py, imported by the scripts that need them).
 
 Everything a score depends on is here and frozen by SHA-256 in the preparation seal: the prompts, the notation syntax,
@@ -76,12 +76,15 @@ def task_text(kind, vocab):
     return TASK_CODES.format(vocab="\n".join(vocab)) if kind == "codes" else TASK_BOXES
 
 
+# v2.6: the task (with the 7907-code vocabulary) comes FIRST and the image reference LAST, so that everything before the
+# image is identical from one call to the next and can be read from the prompt cache instead of being written again
+# (S0 of 31/10: ~111 k tokens written to the cache at every call, because the prompt began with the image path).
 def prompt_claude(kind, vocab, image_path):
-    return f"Image : {image_path}\n{GUARD_IMAGE}\n\n{task_text(kind, vocab)}"
+    return f"{task_text(kind, vocab)}\n\n{GUARD_IMAGE}\nImage : {image_path}"
 
 
 def prompt_agy(kind, vocab, image_name):
-    return f"Image : @{image_name}\n{GUARD_IMAGE}\n\n{task_text(kind, vocab)}"
+    return f"{task_text(kind, vocab)}\n\n{GUARD_IMAGE}\nImage : @{image_name}"
 
 
 def prompts_sha256(vocab):

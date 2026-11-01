@@ -1,4 +1,4 @@
-"""VLM comparison, measures (PREINSCRIPTION-v2.4.md sections 3.5, 3.6, 4, 5). Runs only after the plate receipt.
+"""VLM comparison, measures (PREINSCRIPTION-v2.6.md sections 3.5, 3.6, 4, 5). Runs only after the plate receipt.
 
 The receipt (recu.json) names the SHA-256 of the journals of S1 and R and of status_S1.json, and at least two distinct looks;
 every raw output must still match the SHA-256 written in its journal record. Nothing is measured otherwise. V-diagnostic is

@@ -20,6 +20,7 @@ import vlm_call as call  # noqa: E402
 import vlm_core as vc  # noqa: E402
 import vlm_measure as vm  # noqa: E402
 import vlm_prepare as prep  # noqa: E402
+import kaggle_fetch_icai as kf  # noqa: E402
 
 call.cli_versions = lambda: {"claude": "test", "agy": "test"}  # never run the real CLIs in tests
 
@@ -238,6 +239,38 @@ class PrepareGuardsTest(unittest.TestCase):
             prep.FROZEN_SHA = old
         self.assertEqual(len(items), 300)
 
+    def test_sealed_dev_rebuilds_the_gel_identities(self):
+        """v2.5 fix: the frozen dev member has no 'identities' key; the seal's identities come from the dev items."""
+        items = [{"pid": f"p{i}", "image_sha256": f"{i:064x}"} for i in range(3)]
+        ident = [{"index": j, "id": it["pid"], "image_sha256": it["image_sha256"]} for j, it in enumerate(items)]
+        d = Path(tempfile.mkdtemp())
+        files = {}
+        for system in ("T-Z", "T_star"):
+            name = f"predictions__rijks_dev__{system}.json"
+            (d / name).write_text(json.dumps({"rows": [{**x, "codes": ["11H"]} for x in ident]}))
+            files[name] = {"bank": "rijks_dev", "system": system, "sha256": sha(d / name),
+                           "identity_order_sha256": prep.object_sha(ident)}
+        (d / "MANIFEST.json").write_text(json.dumps({"files": files}))
+        old = prep.SEAL_SHA256
+        prep.SEAL_SHA256 = sha(d / "MANIFEST.json")
+        try:
+            got = prep.sealed_dev(d, items)
+            self.assertEqual(got["T_star"], [["11H"]] * 3)
+            with self.assertRaises(SystemExit):  # another order of the items is refused
+                prep.sealed_dev(d, items[::-1])
+        finally:
+            prep.SEAL_SHA256 = old
+
+    def test_dev_keys_and_call_ids_are_file_safe(self):
+        """The real dev pids are URIs (https://id.rijksmuseum.nl/...): keys and call ids must be file-safe."""
+        self.assertEqual(prep.dev_key("https://id.rijksmuseum.nl/200455078"), "rk200455078")
+        with self.assertRaises(SystemExit):
+            prep.dev_key("https://id.rijksmuseum.nl/a b")
+        with self.assertRaises(SystemExit):
+            prep.plan_calls([], ["https://id.rijksmuseum.nl/1"], [], [], [])
+        calls = prep.plan_calls([], [prep.dev_key("https://id.rijksmuseum.nl/1")], [], [], [])
+        self.assertTrue(all("/" not in c["id"] for c in calls["S0"]))
+
     def test_plan_counts(self):
         calls = prep.plan_calls([f"v{i}" for i in range(200)], [f"r{i}" for i in range(301)], [f"r{i}" for i in range(50)],
                                 [f"r{i}" for i in range(20)], [f"p{i:03d}" for i in range(26)])
@@ -272,7 +305,7 @@ def fake_prep(root, n_dev=6):
         (root / "images" / x["image"]).write_bytes(x["key"].encode())
     opus, repeat = [x["key"] for x in rijks[:4]], [x["key"] for x in rijks[:2]]
     calls = prep.plan_calls([x["key"] for x in icai], [x["key"] for x in rijks], opus, repeat, [x["name"] for x in pe])
-    p = {"preinscription": "PREINSCRIPTION-v2.4.md", "vocabulary": VOCAB, "prompts_sha256": vc.prompts_sha256(VOCAB),
+    p = {"preinscription": "PREINSCRIPTION-v2.6.md", "vocabulary": VOCAB, "prompts_sha256": vc.prompts_sha256(VOCAB),
          "code_sha256": {n: sha(ROOT / "scripts" / n) for n in prep.CODE},
          "banks": {"icai_vdiag": icai, "rijks_dev": rijks, "pe_eval": pe},
          "samples": {"opus": opus, "repeat": repeat, "vdiag_groups_order": [["m0", 2], ["m1", 2]]},
@@ -566,6 +599,231 @@ class CodexB3B4Test(unittest.TestCase):
         caps.wall_base = vc.S1_WALL_SECONDS - 60
         self.assertFalse(caps.allow("G"))
         self.assertEqual(caps.stopped_by(), "temps réel de S1")
+
+
+class FakeShards:
+    """Labels and image bytes per (shard, row); refuses any test shard like vlm_prepare.shard_path."""
+    def __init__(self, table):
+        self.table, self.reads = table, []
+
+    def rows(self, tag, rows, columns):
+        prep.shard_path(tag)
+        self.reads.append((tag, tuple(columns)))
+        return {r: {c: self.table[(tag, r)][c] for c in columns} for r in rows}
+
+
+def fake_validation(pairs=False):
+    """4265 fictitious validation identities whose V-diagnostic has exactly 2100 evaluable rows. With pairs, rows 2j and
+    2j+1 share their bytes, hence their md5 (doubled md5 groups, as in the real V-diagnostic)."""
+    ids, table = [], {}
+    for k in range(4265):
+        body = b"\xff\xd8\xff fake jpeg %d" % (k // 2 if pairs else k)
+        tag, row = f"train-{k % 11:05d}-of-00011", k // 11
+        ids.append({"shard": tag, "row": row, "md5": hashlib.md5(body).hexdigest()})
+        table[(tag, row)] = {"image": {"bytes": body}, "label": None}
+    vd = vc.vdiag_rows([x["md5"] for x in ids])
+    keep = set(vd[:2100])
+    for k, x in enumerate(ids):
+        table[(x["shard"], x["row"])]["label"] = ["11H"] if k in keep else ["86A"]  # drop86 empties the others
+    return ids, table
+
+
+class FetchIcaiTest(unittest.TestCase):
+    """v2.5: the Kaggle fetch draws the sample with vlm_prepare's own functions; prepare reads the .bin, no network."""
+    def setUp(self):
+        self.ids, table = fake_validation()
+        self.shards = FakeShards(table)
+        self.inp = Path(tempfile.mkdtemp()) / "input"
+        (self.inp / "code").mkdir(parents=True)
+        for n in ("vlm_prepare.py", "vlm_core.py", "a1_core.py"):
+            (self.inp / "code" / n).write_bytes((ROOT / "scripts" / n).read_bytes())
+        (self.inp / "diag").mkdir()
+        ident = self.inp / "diag" / "identites_validation.json"
+        ident.write_text(json.dumps(self.ids))
+        self.old = dict(kf.PINS)
+        kf.PINS["identites_validation.json"] = sha(ident)
+        kf.PINS["vlm_prepare.py"] = sha(ROOT / "scripts/vlm_prepare.py")  # fictitious run on the current code
+        kf.PINS["vlm_core.py"] = sha(ROOT / "scripts/vlm_core.py")
+        self.work, self.stage = Path(tempfile.mkdtemp()), Path(tempfile.mkdtemp()) / "stage"
+
+    def tearDown(self):
+        kf.PINS.clear()
+        kf.PINS.update(self.old)
+
+    def run_fetch(self):
+        return kf.main(self.inp, self.work, self.stage, shards=self.shards)
+
+    def test_doubled_md5_group_end_to_end(self):
+        """Codex v2.5: a doubled md5 group gives ONE archive member; every row stays in the draw and the manifest."""
+        self.ids, table = fake_validation(pairs=True)
+        self.shards = FakeShards(table)
+        ident = self.inp / "diag" / "identites_validation.json"
+        ident.write_text(json.dumps(self.ids))
+        kf.PINS["identites_validation.json"] = sha(ident)
+        m = self.run_fetch()
+        evaluable, _ = prep.vdiag_truth(self.ids, self.shards)
+        groups, chosen, rows = prep.vdiag_sample(self.ids, evaluable)
+        self.assertTrue(any(len(groups[g]) == 2 for g in chosen))  # the drawn sample holds doubled groups
+        self.assertEqual(m["images"], len(rows))  # manifest: every row
+        import tarfile
+        with tarfile.open(self.work / "icai-vdiag.bin", "r:") as t:
+            names = [x.name for x in t.getmembers()]
+        self.assertEqual(len(names), len(set(names)))
+        self.assertEqual(len(names), len({self.ids[k]["md5"] for k in rows}))  # one member per md5
+        files = prep.icai_images(self.ids, rows, self.work / "icai-vdiag.bin", Path(tempfile.mkdtemp()))
+        self.assertEqual(len(files), len(rows))  # prepare accepts it and serves both rows of each pair
+
+    def test_kernel_pins_and_executed_functions(self):
+        """The kernel ran on Kaggle with vlm_prepare 89b00a35 (commit c3ef340). The later fix of sealed_dev does not touch
+        what it used: the functions it calls are identical, by AST, in that version and in the current code."""
+        import ast
+        import subprocess
+        self.assertEqual(self.old["a1_core.py"], sha(ROOT / "scripts/a1_core.py"))
+        core_rel = "experiences/2026-10-30-vlm-comparaison/scripts/vlm_core.py"
+        core_exec = subprocess.run(["git", "-C", str(ROOT), "show", f"c3ef340:{core_rel}"], capture_output=True,
+                                   check=True).stdout
+        self.assertEqual(hashlib.sha256(core_exec).hexdigest(), self.old["vlm_core.py"])  # the version the kernel ran
+
+        def core_defs(src):
+            t = ast.parse(src)
+            out = {n.name: ast.dump(n) for n in t.body if isinstance(n, ast.FunctionDef)}
+            out.update({tg.id: ast.dump(n.value) for n in t.body if isinstance(n, ast.Assign) for tg in n.targets
+                        if isinstance(tg, ast.Name)})
+            out.update({e.id: ast.dump(n.value) for n in t.body if isinstance(n, ast.Assign) for tg in n.targets
+                        if isinstance(tg, ast.Tuple) for e in tg.elts})
+            return out
+        co, cn = core_defs(core_exec.decode()), core_defs((ROOT / "scripts/vlm_core.py").read_text())
+        for name in ("vdiag_rows", "draw_whole_groups", "SALT", "MIN_IMAGES", "SEED"):
+            self.assertEqual(co[name], cn[name], name)  # what the kernel used from vlm_core is unchanged by v2.6
+        rel = "experiences/2026-10-30-vlm-comparaison/scripts/vlm_prepare.py"
+        executed = subprocess.run(["git", "-C", str(ROOT), "show", f"c3ef340:{rel}"], capture_output=True,
+                                  check=True).stdout
+        self.assertEqual(hashlib.sha256(executed).hexdigest(), self.old["vlm_prepare.py"])
+
+        def defs(src):
+            return {n.name: ast.dump(n) for n in ast.parse(src).body if isinstance(n, (ast.FunctionDef, ast.ClassDef))}
+        old, new = defs(executed.decode()), defs((ROOT / "scripts/vlm_prepare.py").read_text())
+        for name in ("vdiag_truth", "vdiag_sample", "Shards", "shard_path", "image_ext", "require"):
+            self.assertEqual(old[name], new[name], name)
+        self.assertEqual((prep.REPO, prep.REV), ("davanstrien/iconclass-vlm-brillfull",
+                                                 "8045366ff092a06e8e1c4e47f1eb43cb2a54d732"))
+        line = f'REPO, REV = "{prep.REPO}", "{prep.REV}"'
+        self.assertIn(line, executed.decode())  # same pinned dataset revision in the executed version
+
+    def test_fetch_then_prepare_reads_the_bin(self):
+        m = self.run_fetch()
+        self.assertEqual(sorted(p.name for p in self.work.iterdir()), ["fetch_manifest.json", "icai-vdiag.bin"])
+        self.assertTrue(all(tag.startswith("train-") for tag, _ in self.shards.reads))
+        evaluable, _ = prep.vdiag_truth(self.ids, self.shards)
+        _, chosen, rows = prep.vdiag_sample(self.ids, evaluable)
+        self.assertGreaterEqual(len(rows), 200)
+        self.assertEqual(m["images"], len(rows))
+        out = Path(tempfile.mkdtemp())
+        files = prep.icai_images(self.ids, rows, self.work / "icai-vdiag.bin", out)
+        self.assertEqual(len(files), len(rows))
+        self.assertTrue(all(hashlib.md5((out / f).read_bytes()).hexdigest() == self.ids[k]["md5"] for k, f in files.items()))
+
+    def tampered(self, edit):
+        """Rewrites the fetched archive through edit(members) -> members, then asks prepare to read it."""
+        import io
+        import tarfile
+        self.run_fetch()
+        src = self.work / "icai-vdiag.bin"
+        with tarfile.open(src, "r:") as t:
+            members = [(m, t.extractfile(m).read() if m.isfile() else None) for m in t.getmembers()]
+        dst = Path(tempfile.mkdtemp()) / "x.bin"
+        with tarfile.open(dst, "w:") as t:
+            for info, body in edit(members):
+                t.addfile(info, io.BytesIO(body) if body is not None else None)
+        evaluable, _ = prep.vdiag_truth(self.ids, self.shards)
+        rows = prep.vdiag_sample(self.ids, evaluable)[2]
+        prep.icai_images(self.ids, rows, dst, Path(tempfile.mkdtemp()))
+
+    def test_tampered_archives_are_refused(self):
+        import tarfile
+
+        def changed(ms):
+            (i, b), rest = ms[0], ms[1:]
+            i.size = len(b) + 1  # the declared size must follow, or tarfile writes the original bytes
+            return [(i, b + b"x")] + rest
+
+        def missing(ms):
+            return ms[1:]
+
+        def extra(ms):
+            body = b"\xff\xd8\xff other"
+            i = tarfile.TarInfo(hashlib.md5(body).hexdigest() + ".jpg")
+            i.size = len(body)
+            return ms + [(i, body)]
+
+        def traversal(ms):
+            (i, b), rest = ms[0], ms[1:]
+            i.name = "../" + i.name
+            return [(i, b)] + rest
+
+        def symlink(ms):
+            (i, b), rest = ms[0], ms[1:]
+            link = tarfile.TarInfo(i.name)
+            link.type, link.linkname = tarfile.SYMTYPE, "/etc/passwd"
+            return [(link, None)] + rest
+        for edit in (changed, missing, extra, traversal, symlink):
+            with self.assertRaises(SystemExit, msg=edit.__name__):
+                self.tampered(edit)
+
+    def test_compressed_archive_is_refused(self):
+        import tarfile
+        self.run_fetch()
+        gz = Path(tempfile.mkdtemp()) / "x.bin"
+        with tarfile.open(self.work / "icai-vdiag.bin", "r:") as src, tarfile.open(gz, "w:gz") as dst:
+            for m in src.getmembers():
+                dst.addfile(m, src.extractfile(m))
+        evaluable, _ = prep.vdiag_truth(self.ids, self.shards)
+        rows = prep.vdiag_sample(self.ids, evaluable)[2]
+        with self.assertRaises(tarfile.ReadError):
+            prep.icai_images(self.ids, rows, gz, Path(tempfile.mkdtemp()))
+
+    def test_no_token_is_sent(self):
+        os.environ["HF_TOKEN"] = "secret-fictif"
+        try:
+            kf.no_token()
+            self.assertNotIn("HF_TOKEN", os.environ)
+            self.assertEqual(os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"], "1")
+        finally:
+            os.environ.pop("HF_HUB_DISABLE_IMPLICIT_TOKEN", None)
+
+    def test_inputs_found_by_name_and_sha_only(self):
+        (self.inp / "copie").mkdir()
+        (self.inp / "copie" / "vlm_core.py").write_text("# autre contenu")  # same name, other bytes: ignored
+        self.assertEqual(kf.find(self.inp, "vlm_core.py", kf.PINS["vlm_core.py"]).parent.name, "code")
+        (self.inp / "copie" / "vlm_core.py").write_bytes((ROOT / "scripts/vlm_core.py").read_bytes())
+        with self.assertRaises(SystemExit):  # two identical copies: ambiguous
+            kf.find(self.inp, "vlm_core.py", kf.PINS["vlm_core.py"])
+
+
+class V26Test(unittest.TestCase):
+    """v2.6: the vocabulary is a prefix shared by every call (prompt cache); the earlier spend is carried over."""
+    def test_vocabulary_then_image_last(self):
+        import os.path
+        for build, a, b in ((vc.prompt_claude, "/tmp/vlm-a/x.jpg", "/tmp/vlm-b/y.jpg"), (vc.prompt_agy, "x.jpg", "y.jpg")):
+            pa, pb = build("codes", VOCAB, a), build("codes", VOCAB, b)
+            common = os.path.commonprefix([pa, pb])
+            self.assertTrue(common.startswith(vc.task_text("codes", VOCAB)))  # the whole vocabulary is shared
+            self.assertIn(vc.GUARD_IMAGE, common)
+            self.assertTrue(pa.endswith(a) and pb.endswith(b))  # the image reference comes last
+            self.assertEqual(pa.count("Image : "), 1)
+
+    def test_prior_spend_counts_in_the_budget_and_the_plan(self):
+        root = Path(tempfile.mkdtemp())
+        fake_prep(root)
+        p = json.loads((root / "prep.json").read_text())
+        p["prior_spend"] = {"claude_charged_usd": vc.BUDGET_USD, "status_sha256": "x", "journal_sha256": "y"}
+        (root / "prep.json").write_text(json.dumps(p))
+        self.assertAlmostEqual(call.claude_spent(root), vc.BUDGET_USD)
+        st = call.stage_run(root, "S0", ("H", "G", "O"), attempt_fn=scripted(OK))
+        self.assertEqual(st["stopped_by"], "budget Claude")
+        recs = results(root, "S0")
+        self.assertEqual(sum(r["system"] in vc.CLAUDE_SYSTEMS for r in recs), 0)  # nothing left: no Claude call
+        self.assertEqual(sum(r["system"] == "G" for r in recs), 7)  # Gemini goes on
 
 
 class V22Test(unittest.TestCase):

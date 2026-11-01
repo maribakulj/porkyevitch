@@ -1,0 +1,10 @@
+{
+  "encoder_root": "/kaggle/input/notebooks/mabaku/caypollard-encode-cradio/full",
+  "baseline_pt": "/kaggle/input/notebooks/mabaku/porky-e3-run/full/t_z.pt",
+  "e3_json": "/kaggle/input/notebooks/mabaku/porky-e3-run/full/e3.json",
+  "e3_run_json": "/kaggle/input/notebooks/mabaku/porky-e3-run/full/run.json",
+  "iconclass_root": "/kaggle/input/datasets/mabaku/pkyevitch-p9a-iconclass",
+  "hf_cache": "/kaggle/input/datasets/mabaku/pkyevitch-p9a-minilm",
+  "image_cache": "/kaggle/input/notebooks/mabaku/porky-p9a-images/p9a-images-initiales",
+  "image_manifest_sha256": "041d4e77a136d025d9e1950f946485802e404058f44bdd96ae8664fddf5b8c8b"
+}

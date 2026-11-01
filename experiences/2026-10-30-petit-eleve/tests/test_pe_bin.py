@@ -107,9 +107,51 @@ class BinTest(unittest.TestCase):
 
     def test_pins(self):
         self.assertEqual(len(k.ENTREES_SHA256), 64)
-        self.assertIsNone(k.SCELLE_SHA256)
+        self.assertEqual(len(k.SCELLE_SHA256), 64)
+        self.assertEqual(k.STAGE, "mesures")
         for name, want in k.SCRIPT_SHA256.items():
             self.assertEqual(hashlib.sha256((ROOT / "scripts" / name).read_bytes()).hexdigest(), want)
+
+
+class ScelleBuilderTest(unittest.TestCase):
+    SEALED = Path.home() / "porkyevitch-donnees/petit-eleve/full/petit-eleve-full"
+
+    def fake(self):
+        import json
+        d = Path(tempfile.mkdtemp())
+        (d / "planche").mkdir()
+        (d / "planche/p001.jpg").write_bytes(b"jpg")
+        (d / "run.json").write_text("{}")
+        files = {r: hashlib.sha256((d / r).read_bytes()).hexdigest() for r in ("planche/p001.jpg", "run.json")}
+        (d / "MANIFEST_PREDICTIONS.json").write_text(json.dumps({"stage": "predictions_sealed", "files": files}))
+        return d
+
+    def test_exactly_the_seal(self):
+        import construire_scelle_bin as sb
+        d = self.fake()
+        out = Path(tempfile.mkdtemp())
+        a, n = sb.build(d, out / "a.bin")
+        b, _ = sb.build(d, out / "b.bin")
+        self.assertEqual((a, n), (b, 3))
+        (d / "extra.txt").write_text("x")
+        with self.assertRaises(AssertionError):
+            sb.build(d, out / "c.bin")
+        (d / "extra.txt").unlink()
+        (d / "run.json").write_text("{ }")
+        with self.assertRaises(AssertionError):
+            sb.build(d, out / "d.bin")
+        with self.assertRaises(AssertionError):
+            sb.build(self.fake(), out / "e.bin", manifest_sha256="0" * 64)
+
+    @unittest.skipUnless(SEALED.is_dir(), "sealed folder of the full run absent")
+    def test_real_archive_is_the_pinned_one_and_extracts(self):
+        import construire_scelle_bin as sb
+        out = Path(tempfile.mkdtemp())
+        digest, n = sb.build(self.SEALED, out / "pe-scelle.bin")
+        self.assertEqual(digest, k.SCELLE_SHA256)
+        root = k.safe_extract(out / "pe-scelle.bin", k.SCELLE_SHA256, out / "x")
+        self.assertTrue((root / "MANIFEST_PREDICTIONS.json").is_file())
+        self.assertEqual(n, 33)
 
 
 class BuilderTest(unittest.TestCase):

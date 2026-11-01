@@ -118,3 +118,17 @@ Le blanc 2 n'a eu aucun saut : il passe aussi sous cette règle.
 - chemin fini identique à la recette.
 
 Ce que le correctif ne tranche pas : si le premier saut du devis corrigé est un NaN et que l'échelle s'effondre, la garde l'arrête. C'est alors une vraie divergence de G, à examiner sans changer de tolérance.
+
+## Correctif du 30/10 : `budget.json` des planches (audit Sonnet, avant les mesures)
+
+**Défaut.** `stage_planches` écrit `MANIFEST_PLANCHES.json`, puis son dernier `budget.check("planches_finished")` réécrit `budget.json`. Or ce fichier est listé dans le manifeste. `check_plate_receipt` échouait donc toujours (« plate file missing or changed »), sur Kaggle aussi. C'est reproduit sur les vraies planches de la graine 0 : `budget.json` est le seul écart à leur manifeste `ef3d9008…`.
+
+**Correctif** (`p9a_run.py` seul, fonction `check_plate_receipt`) : `PLATES_VOLATILE = {"budget.json"}` est exempté de la vérification. C'est le journal des ressources : il ne porte aucun contenu de planche, et les mesures ne le lisent pas. Tout le reste est exigé et vérifié par SHA, comme avant : `planches.json`, les quatre HTML et chaque image. Le reçu lie toujours le manifeste et les quatre HTML. **Les planches ne sont pas refaites.**
+
+**Pourquoi la graine 0 et les planches restent valables.** Par comparaison de l'arbre syntaxique avec `29faa62`, **toutes les autres définitions de `p9a_run.py` sont identiques**, dont `stage_seed` et `stage_planches` qui ont produit le gel `13f75f3a…` et les planches. Les onze autres fichiers de la liste fermée ne changent pas. Seule l'empreinte du paquet change (`CODE_SHA256_SCIENCE.json`) ; la config des mesures doit épingler la nouvelle. Le gel, la sélection et les prédictions sont vérifiés par leurs propres SHA, qui ne dépendent pas de ce paquet.
+
+**Test** (`tests/test_plate_receipt_reel.py`, 5 tests, sur une copie des vraies planches) :
+- l'ancien code échoue, et le nouveau passe ;
+- une image ou un HTML modifiés sont toujours refusés, de même que `planches.json` absent ;
+- `budget.json` absent est sans effet ;
+- seule `check_plate_receipt` diffère de `29faa62`.
