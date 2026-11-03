@@ -147,3 +147,14 @@ l'entraînement, supervision partielle explicite (ce que deviennent les boîtes 
 références recalculées, 26 et 53 publiés séparément, lecture exploratoire ; les 60 de validation interne réservés entiers.
 Préparation des images sur Kaggle CPU seulement (~18,2 Go d'archives DEArt), jamais sur le Mac ; plafond 14 400 s T4 avec
 nouveau devis complet. Licence notée, pas une porte. Rapports porkyevitch-yoloe-donnees-grok.md / -codex.md.
+
+## D20 (03/11/2026, à contre-expertiser par Codex) : couverture du banc Rijksmuseum dans le crible YOLOE
+
+Problème : les images du test Rijksmuseum ne sont pas atteignables sans lire une donnée qui contient la vérité (membre test de
+frozen.json, notices Linked Art portant les sujets Iconclass). Proposition initiale de wA:p1 (retirer le test du crible,
+compenser par les filtres de source) REFUSÉE par Grok p7 (porkyevitch-d20-grok.md) : les filtres de source laissent passer
+la même œuvre sous une autre source (WikiArt…). Décision retenue (sous réserve de Codex) : cribler par cosinus C-RADIO ≥ 0,95
+contre les 7 644 vecteurs de rijks_vec.npz (sortie du noyau rijks-filtres-run v2, clé x seule, SHA e6e188b8…, même recette
+C-RADIOv3-L 9d04134 summary+meanspatial), qui couvrent tous les candidats du banc, test compris, SANS identifiant ni vérité ;
+ne joindre ni pid ni empreinte d'image. Le dHash 256 bits de ces images n'a pas été conservé : trou déclaré. Aucune API du
+musée, aucune lecture du membre test.
