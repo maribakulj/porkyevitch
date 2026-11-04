@@ -166,3 +166,11 @@ et plongements figés des descriptions Iconclass (all-mpnet-base-v2), ajustée s
 seulement (test fermé), avec contrôles gloses permutées et a priori, codes rares et non vus. Le théorème ne s'applique pas tel quel
 (« même code » ≠ deux vues d'une scène, porkyevitch-prh-rotation-grok.md) : c'est une expérience, pas une application. Circuit
 habituel : préinscription écrite avant calcul, relecture Sonnet, audit Codex, Kaggle CPU. N'interrompt pas la chaîne YOLOE.
+
+## D22 (04/11/2026, Marcel « oui lance la série ») : série zéro-coup Iconclass par descriptions
+
+Suite de D21. Briques préinscrites une à une sur la validation ICAI (même tirage des non vus que D21) : descriptions enrichies
+(mots-clés + ancêtres), encodeurs de texte (mpnet, SigLIP2, PE-Core), encodeurs d'image (C-RADIO, PE-Core, SigLIP2 ; question de
+Marcel : C-RADIO reste-t-il le meilleur ?), zéro-coup natif des tours image-texte alignées (sans carte, référence obligatoire),
+tête contrastive légère, score par la hiérarchie. Une seule mesure finale sur le test ICAI pour la meilleure combinaison, choisie
+sur la validation. Circuit allégé (proposition du 04/11) : un audit Codex par lot, petit essai réel avant tout gros calcul.
