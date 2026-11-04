@@ -158,3 +158,11 @@ contre les 7 644 vecteurs de rijks_vec.npz (sortie du noyau rijks-filtres-run v2
 C-RADIOv3-L 9d04134 summary+meanspatial), qui couvrent tous les candidats du banc, test compris, SANS identifiant ni vérité ;
 ne joindre ni pid ni empreinte d'image. Le dHash 256 bits de ces images n'a pas été conservé : trou déclaré. Aucune API du
 musée, aucune lecture du membre test.
+
+## D21 (04/11/2026, demandé par Marcel « lance le ») : test de la rotation PRH sur Iconclass
+
+D'après Balestriero & LeCun (arXiv 2610.39302) : une carte à lignes orthonormales entre vecteurs C-RADIO figés des images ICAI
+et plongements figés des descriptions Iconclass (all-mpnet-base-v2), ajustée sur l'apprentissage, mesurée sur la validation ICAI
+seulement (test fermé), avec contrôles gloses permutées et a priori, codes rares et non vus. Le théorème ne s'applique pas tel quel
+(« même code » ≠ deux vues d'une scène, porkyevitch-prh-rotation-grok.md) : c'est une expérience, pas une application. Circuit
+habituel : préinscription écrite avant calcul, relecture Sonnet, audit Codex, Kaggle CPU. N'interrompt pas la chaîne YOLOE.
