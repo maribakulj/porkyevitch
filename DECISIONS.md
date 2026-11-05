@@ -188,3 +188,13 @@ Gemini sort de la cible de production. Décision prise sans aucune mesure ouvert
 gardé : Gemini reste comparé là où il est COMPLET (dev Rijksmuseum, avec les échecs techniques comptés comme préinscrits) ; ses
 appels restants sur V-diag (≈ 145) et sur les graphes (52) sont abandonnés par amendement écrit avant toute mesure ; les ≈ 55
 V-diag déjà faits sont publiés en descriptif. Haiku et Opus vont au bout (S1, R, O2 Opus 200). Audit Codex de l'amendement.
+
+## D25 (05/11/2026, Marcel : « oui … inclus Haiku ») : évaluation par jugement mis en commun (pooling), au-delà des notices
+
+Constat (analyse d'erreurs ~/Documents/reviews/porkyevitch-vlm-anguille.md) : les notices de catalogue sont un minimum, pas
+une vérité exhaustive ; le F1 hiérarchique punit les codes justes non catalogués. Nouvelle mesure préinscrite : pour chaque
+image, union des codes de T*, Opus, Haiku (et Gemini sur le dev) et du catalogue, présentés mélangés et anonymes à deux juges
+indépendants (ni Opus ni Haiku comme juge) qui décident présent / absent / incertain en regardant l'image ; précision
+vérifiée et rappel élargi ; accord inter-juges et contrôle d'un échantillon par wA:p1. En complément : comparaison par paires
+à l'aveugle (préférence entre deux listes anonymes, classement Bradley-Terry). Circuit habituel : préinscription, Codex,
+mesure unique.
