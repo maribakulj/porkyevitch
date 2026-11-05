@@ -181,3 +181,10 @@ S1 (plan préinscrit, Opus 50) continue sans modification. Brique séparée, ame
 restantes de V-diag 200 (mêmes images, même consigne, mêmes gardes), pour une comparaison complète des trois modèles. Budget
 relevé par Marcel ; plafond écrit dans l'amendement (45 USD au total, dépense actuelle incluse). Audit Codex avant lancement ;
 la mesure reste fermée jusqu'à la fin des deux passages.
+
+## D24 (05/11/2026, Marcel : « je ne passerais pas par l'API, donc on laisse tomber Gemini … finis le minimum pour une comparaison sérieuse »)
+
+Gemini sort de la cible de production. Décision prise sans aucune mesure ouverte (motif : usage, pas résultat). Le travail fait est
+gardé : Gemini reste comparé là où il est COMPLET (dev Rijksmuseum, avec les échecs techniques comptés comme préinscrits) ; ses
+appels restants sur V-diag (≈ 145) et sur les graphes (52) sont abandonnés par amendement écrit avant toute mesure ; les ≈ 55
+V-diag déjà faits sont publiés en descriptif. Haiku et Opus vont au bout (S1, R, O2 Opus 200). Audit Codex de l'amendement.
