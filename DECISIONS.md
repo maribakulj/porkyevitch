@@ -174,3 +174,10 @@ Suite de D21. Briques préinscrites une à une sur la validation ICAI (même tir
 Marcel : C-RADIO reste-t-il le meilleur ?), zéro-coup natif des tours image-texte alignées (sans carte, référence obligatoire),
 tête contrastive légère, score par la hiérarchie. Une seule mesure finale sur le test ICAI pour la meilleure combinaison, choisie
 sur la validation. Circuit allégé (proposition du 04/11) : un audit Codex par lot, petit essai réel avant tout gros calcul.
+
+## D23 (05/11/2026, Marcel : « ramène opus à 200 aussi ») : Opus sur les 200 images de la comparaison VLM
+
+S1 (plan préinscrit, Opus 50) continue sans modification. Brique séparée, amendée AVANT toute mesure : Opus sur les 150 images
+restantes de V-diag 200 (mêmes images, même consigne, mêmes gardes), pour une comparaison complète des trois modèles. Budget
+relevé par Marcel ; plafond écrit dans l'amendement (45 USD au total, dépense actuelle incluse). Audit Codex avant lancement ;
+la mesure reste fermée jusqu'à la fin des deux passages.
