@@ -26,10 +26,12 @@ jobs:
           elif [ "${{ github.ref_name }}" = "main" ]; then REF=${{ github.event.before }}
           else REF=$(git merge-base origin/main HEAD); fi
           if git cat-file -e "$REF^{commit}" 2>/dev/null; then python3 -I outils/version.py "$REF"; else echo "pas de révision de comparaison"; fi
+      - name: Dépendances facultatives du graphe
+        run: pip install -r labo/graphe/requirements.txt
       - name: Tests
         run: |
           set -e
-          for f in labo/guichet/tests/test_*.py labo/tests/test_*.py outils/tests/test_*.py hooks/tests/test_*.py; do
+          for f in labo/guichet/tests/test_*.py labo/tests/test_*.py labo/graphe/tests/test_*.py outils/tests/test_*.py hooks/tests/test_*.py; do
             echo "== $f"
             python3 -I "$f"
           done

@@ -1,0 +1,163 @@
+# Formes SHACL du graphe de recherche : douze règles de base (R0 à R11) et la règle des suspensions (R12).
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix lab:     <https://labo.invalid/ns#> .
+@prefix labsh:   <https://labo.invalid/formes#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix mls:     <http://www.w3.org/ns/mls#> .
+@prefix spdx:    <http://spdx.org/rdf/terms#> .
+
+labsh: sh:declare
+    [ sh:prefix "lab" ;     sh:namespace "https://labo.invalid/ns#"^^xsd:anyURI ] ,
+    [ sh:prefix "prov" ;    sh:namespace "http://www.w3.org/ns/prov#"^^xsd:anyURI ] ,
+    [ sh:prefix "dcterms" ; sh:namespace "http://purl.org/dc/terms/"^^xsd:anyURI ] ,
+    [ sh:prefix "mls" ;     sh:namespace "http://www.w3.org/ns/mls#"^^xsd:anyURI ] .
+
+# R0 — une empreinte est un SHA-256 en hexadécimal minuscule
+labsh:Empreinte a sh:NodeShape ;
+    sh:property [ sh:path spdx:algorithm ; sh:hasValue spdx:checksumAlgorithm_sha256 ] ;
+    sh:property [ sh:path spdx:checksumValue ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:datatype xsd:string ; sh:pattern "^[0-9a-f]{64}$" ] .
+
+# R1 — toute idée a un identifiant et une source (article, ou lab:interne)
+labsh:Idee a sh:NodeShape ; sh:targetClass lab:Idee ;
+    sh:property [ sh:path dcterms:identifier ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path dcterms:source ; sh:minCount 1 ;
+                  sh:message "Idée sans source : citer l'article, ou dcterms:source lab:interne." ] .
+
+# R2 — une hypothèse vient d'une idée, nomme sa mesure et son effet minimal d'intérêt
+labsh:Hypothese a sh:NodeShape ; sh:targetClass lab:Hypothese ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:class lab:Idee ; sh:minCount 1 ] ;
+    sh:property [ sh:path dcterms:description ; sh:minCount 1 ] ;
+    sh:property [ sh:path mls:specifiedBy ; sh:minCount 1 ] ;
+    sh:property [ sh:path lab:effetMinimal ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:message "Hypothèse sans effet minimal d'intérêt : elle ne peut pas être déclarée non soutenue." ] .
+
+# R3 — une course a une clé, un état, une carte de calcul hachée
+labsh:Course a sh:NodeShape ; sh:targetClass lab:Course ;
+    sh:property [ sh:path lab:cle ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^[0-9a-f]{64}$" ] ;
+    sh:property [ sh:path lab:etat ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( lab:REUSSIE lab:ECHOUEE lab:ECHOUEE_ARTEFACTS lab:INCONNUE ) ] ;
+    sh:property [ sh:path ( prov:qualifiedAssociation prov:hadPlan ) ; sh:minCount 1 ;
+                  sh:class lab:CarteCalcul ] .
+
+labsh:CarteCalcul a sh:NodeShape ; sh:targetClass lab:CarteCalcul , lab:CarteRecherche ;
+    sh:property [ sh:path spdx:checksum ; sh:minCount 1 ; sh:node labsh:Empreinte ] ;
+    sh:property [ sh:path dcterms:created ; sh:minCount 1 ; sh:datatype xsd:dateTime ] .
+
+# R4 — pas de résultat sans artefact haché produit par une course réussie
+labsh:Resultat a sh:NodeShape ; sh:targetClass lab:Resultat ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ;
+                  sh:qualifiedValueShape [
+                      sh:property [ sh:path spdx:checksum ; sh:minCount 1 ; sh:node labsh:Empreinte ] ;
+                      sh:property [ sh:path prov:wasGeneratedBy ; sh:minCount 1 ; sh:class lab:Course ] ] ;
+                  sh:qualifiedMinCount 1 ;
+                  sh:message "Résultat sans artefact haché issu d'une course." ] ;
+    sh:property [ sh:path ( prov:wasDerivedFrom prov:wasGeneratedBy lab:etat ) ;
+                  sh:hasValue lab:REUSSIE ;
+                  sh:message "Résultat tiré d'une course qui n'est pas REUSSIE." ] ;
+    sh:property [ sh:path mls:hasValue ; sh:minCount 1 ; sh:maxCount 1 ] .
+
+# R5 — un verdict a exactement un statut ; hors « non testée » et « suspendue », il a un fondement et des conditions
+labsh:Verdict a sh:NodeShape ; sh:targetClass lab:Verdict ;
+    sh:property [ sh:path lab:portesur ; sh:minCount 1 ; sh:maxCount 1 ; sh:class lab:Hypothese ] ;
+    sh:property [ sh:path lab:fondeSur ; sh:or ( [ sh:class lab:Resultat ] [ sh:class lab:Course ] ) ;
+                  sh:message "Un verdict se fonde sur un résultat ou une course du graphe, pas sur un nœud inconnu." ] ;
+    sh:property [ sh:path lab:statut ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( lab:NonTestee lab:TestInvalide lab:NonConcluante lab:RefuteeIci lab:Soutenue lab:Suspendue ) ] ;
+    sh:or (
+        [ sh:path lab:statut ; sh:hasValue lab:NonTestee ]
+        [ sh:path lab:statut ; sh:hasValue lab:Suspendue ]
+        [ sh:and (
+            [ sh:path lab:statut ; sh:hasValue lab:TestInvalide ]
+            [ sh:path lab:motifInvalidite ; sh:minCount 1 ]
+            [ sh:path prov:wasAttributedTo ; sh:minCount 1 ] ) ]
+        [ sh:and (
+            [ sh:path lab:fondeSur ; sh:minCount 1 ]
+            [ sh:path lab:conditions ; sh:minCount 1 ]
+            [ sh:path prov:wasAttributedTo ; sh:minCount 1 ] ) ] ) ;
+    sh:message "Verdict testé sans fondement, sans conditions ou sans auteur." .
+
+# R6 — « réfutée dans ces conditions » exige : carte confirmatoire, prémisse vérifiée,
+#      puissance recalculée ≥ 0,8, et un IC dont la borne haute est sous l'effet minimal d'intérêt
+labsh:Refutation a sh:NodeShape ; sh:targetClass lab:Verdict ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "« Réfutée dans ces conditions » sans puissance ≥ 0,8, sans prémisse vérifiée, ou avec un IC qui n'exclut pas l'effet minimal : déclarer « non concluante »." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:statut lab:RefuteeIci ; lab:portesur ?h .
+          FILTER NOT EXISTS {
+            $this lab:fondeSur ?res .
+            ?res prov:wasDerivedFrom/prov:wasGeneratedBy ?course ; lab:icHaut ?haut .
+            ?course prov:qualifiedAssociation/prov:hadPlan/lab:carteRecherche ?cr .
+            ?cr lab:teste ?h ; lab:puissance ?p ; lab:exploratoire false ;
+                lab:premisse/lab:etatPremisse lab:verifiee .
+            ?h lab:effetMinimal ?m .
+            FILTER (?p >= 0.8 && ?haut < ?m)
+          }
+        }""" ] .
+
+# R7 — « soutenue » exige une carte confirmatoire sur cette hypothèse et une borne basse > 0
+labsh:Soutien a sh:NodeShape ; sh:targetClass lab:Verdict ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "« Soutenue » sans carte confirmatoire sur cette hypothèse, ou borne basse ≤ 0." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:statut lab:Soutenue ; lab:portesur ?h .
+          FILTER NOT EXISTS {
+            $this lab:fondeSur ?res .
+            ?res prov:wasDerivedFrom/prov:wasGeneratedBy/prov:qualifiedAssociation/prov:hadPlan/lab:carteRecherche ?cr ;
+                 lab:icBas ?bas .
+            ?cr lab:teste ?h ; lab:exploratoire false .
+            FILTER (?bas > 0)
+          }
+        }""" ] .
+
+# R8 — « test invalide » renvoie à une course échouée, ou dit en clair pourquoi le test est invalide
+labsh:Invalide a sh:NodeShape ; sh:targetClass lab:Verdict ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "« Test invalide » sans course ECHOUEE ou ECHOUEE_ARTEFACTS, ni lab:motifInvalidite." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:statut lab:TestInvalide .
+          FILTER NOT EXISTS { $this lab:motifInvalidite ?m }
+          FILTER NOT EXISTS { $this lab:fondeSur ?c . ?c a lab:Course ;
+                              lab:etat ?e . FILTER (?e IN (lab:ECHOUEE, lab:ECHOUEE_ARTEFACTS)) }
+        }""" ] .
+
+# R9 — préinscription : la carte de recherche est datée AVANT le début de la course
+labsh:Preinscription a sh:NodeShape ; sh:targetClass lab:Course ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Carte de recherche datée après le début de la course : ce n'est pas une préinscription." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this prov:startedAtTime ?debut ;
+                prov:qualifiedAssociation/prov:hadPlan/lab:carteRecherche/dcterms:created ?ecrite .
+          FILTER (?ecrite > ?debut)
+        }""" ] .
+
+# R10 — une décision s'appuie sur au moins un verdict et a un auteur
+labsh:Decision a sh:NodeShape ; sh:targetClass lab:Decision ;
+    sh:property [ sh:path lab:fondeSur ; sh:minCount 1 ; sh:class lab:Verdict ] ;
+    sh:property [ sh:path prov:wasAttributedTo ; sh:minCount 1 ] .
+
+# R12 — « suspendue » dit à quelle condition on rouvre, et qui l'a décidé
+labsh:Suspension a sh:NodeShape ; sh:targetClass lab:Verdict ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "« Suspendue » sans lab:reouvrirSi ni auteur." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:statut lab:Suspendue .
+          FILTER (NOT EXISTS { $this lab:reouvrirSi ?c } || NOT EXISTS { $this prov:wasAttributedTo ?a })
+        }""" ] .
+
+# R11 — les raccourcis refuteIci / soutient ne s'écrivent pas à la main : un verdict doit les porter
+labsh:Raccourci a sh:NodeShape ; sh:targetSubjectsOf lab:refuteIci ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "lab:refuteIci sans verdict « réfutée dans ces conditions » correspondant." ;
+        sh:select """
+        SELECT $this ?value WHERE {
+          $this lab:refuteIci ?value .
+          FILTER NOT EXISTS { ?v lab:fondeSur $this ; lab:portesur ?value ; lab:statut lab:RefuteeIci }
+        }""" ] .

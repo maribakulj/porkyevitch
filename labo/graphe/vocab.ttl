@@ -1,0 +1,104 @@
+# Vocabulaire du graphe de recherche : neuf classes posées sur PROV-O, ML-Schema, DCTERMS, CiTO et SKOS.
+@prefix lab:     <https://labo.invalid/ns#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix mls:     <http://www.w3.org/ns/mls#> .
+@prefix mp:      <http://purl.org/mp/> .
+@prefix cito:    <http://purl.org/spar/cito/> .
+@prefix spdx:    <http://spdx.org/rdf/terms#> .
+
+# ---------- Classes (9) ----------
+lab:Idee            a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:comment "Une ligne du stock d'idées (id, thème, source, coût, risque, priorité…)." .
+lab:Hypothese       a owl:Class ; rdfs:subClassOf prov:Entity ; skos:closeMatch mp:Claim ;
+    rdfs:comment "Énoncé réfutable : mesure, contraste, effet minimal d'intérêt, conditions." .
+lab:Premisse        a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:comment "Ce que le calcul suppose sans l'avoir mesuré (question 3 de la carte de recherche)." .
+lab:CarteRecherche  a owl:Class ; rdfs:subClassOf prov:Plan ;
+    rdfs:comment "Préinscription : décision, puissance, prémisse. Hachée au moment de la soumission." .
+lab:CarteCalcul     a owl:Class ; rdfs:subClassOf prov:Plan ;
+    rdfs:comment "Carte TOML lue par le guichet (dossier, point d'entrée, entrées, artefacts attendus)." .
+lab:Course          a owl:Class ; rdfs:subClassOf prov:Activity , mls:Run ;
+    rdfs:comment "Une course du guichet (identifiant R-…), avec sa clé et son état." .
+lab:Resultat        a owl:Class ; rdfs:subClassOf prov:Entity , mls:ModelEvaluation ;
+    rdfs:comment "Une estimation chiffrée avec son intervalle, tirée d'un artefact haché." .
+lab:Verdict         a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:comment "Relation qualifiée hypothèse–résultat : statut + conditions. Seule source du statut." .
+lab:Decision        a owl:Class ; rdfs:subClassOf prov:Entity ;
+    rdfs:comment "Ce qu'on fait ensuite (garder, abandonner, relancer), fondé sur des verdicts." .
+
+# ---------- Statuts ----------
+# Six statuts, jamais « marche / marche pas ». Seul un verdict porte un statut.
+lab:statuts a skos:ConceptScheme .
+lab:NonTestee       a skos:Concept ; skos:inScheme lab:statuts ; skos:prefLabel "non testée"@fr ;
+    skos:definition "Aucun calcul valide n'a encore porté sur l'hypothèse."@fr .
+lab:TestInvalide    a skos:Concept ; skos:inScheme lab:statuts ; skos:prefLabel "test invalide"@fr ;
+    skos:altLabel "échec technique"@fr ;
+    skos:definition "Le test n'a pas pu mesurer ce qu'il devait (course échouée, contrôle direct manqué, prémisse fausse)."@fr .
+lab:NonConcluante   a skos:Concept ; skos:inScheme lab:statuts ; skos:prefLabel "non concluante"@fr ;
+    skos:definition "Le test a tourné mais ne pouvait pas, ou n'a pas pu, trancher : jamais « pas de signal »."@fr .
+lab:RefuteeIci      a skos:Concept ; skos:inScheme lab:statuts ; skos:prefLabel "réfutée dans ces conditions"@fr ;
+    skos:altLabel "non soutenue dans ces conditions"@fr ;
+    skos:definition "Test confirmatoire assez puissant dont l'IC exclut l'effet minimal d'intérêt, sous des conditions écrites."@fr .
+lab:Soutenue        a skos:Concept ; skos:inScheme lab:statuts ; skos:prefLabel "soutenue"@fr ;
+    skos:definition "Test confirmatoire dont l'IC exclut zéro dans le sens prévu."@fr .
+lab:Suspendue       a skos:Concept ; skos:inScheme lab:statuts ; skos:prefLabel "suspendue"@fr ;
+    skos:definition "Mise de côté, avec la condition écrite qui la rouvrirait."@fr .
+
+lab:etatsCourse a skos:ConceptScheme ;
+    skos:definition "Recopie des états du registre du guichet (SOUMISE … ABANDONNEE)." .
+lab:SOUMISE a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:EN_FILE a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:EN_COURS a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:REUSSIE a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:ECHOUEE a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:ECHOUEE_ARTEFACTS a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:ANNULEE a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:REFUSEE a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:ABANDONNEE a skos:Concept ; skos:inScheme lab:etatsCourse .
+lab:INCONNUE a skos:Concept ; skos:inScheme lab:etatsCourse .
+
+lab:verifiee a skos:Concept . lab:non_verifiee a skos:Concept . lab:sans_objet a skos:Concept .
+
+# ---------- Propriétés propres (le reste vient de PROV, DCTERMS, CiTO, ML-Schema, SPDX) ----------
+lab:motive          a owl:ObjectProperty ; rdfs:subPropertyOf prov:wasInfluencedBy ;
+    rdfs:comment "X lab:motive Y : Y a été motivé par X (lecture : « X motive Y »)." .
+lab:teste           a owl:ObjectProperty ; rdfs:domain lab:CarteRecherche ; rdfs:range lab:Hypothese .
+lab:premisse        a owl:ObjectProperty ; rdfs:range lab:Premisse .
+lab:etatPremisse    a owl:ObjectProperty ; rdfs:range skos:Concept .
+lab:carteRecherche  a owl:ObjectProperty ; rdfs:domain lab:CarteCalcul ; rdfs:range lab:CarteRecherche .
+lab:etat            a owl:ObjectProperty ; rdfs:domain lab:Course .
+lab:cle             a owl:DatatypeProperty ; rdfs:domain lab:Course ;
+    rdfs:comment "Clé du calcul (SHA-256 du dossier, du point d'entrée et des entrées)." .
+lab:portesur        a owl:ObjectProperty ; rdfs:domain lab:Verdict ; rdfs:range lab:Hypothese .
+lab:fondeSur        a owl:ObjectProperty ; rdfs:comment "Verdict → Résultat ; Décision → Verdict." .
+lab:statut          a owl:ObjectProperty ; rdfs:domain lab:Verdict ; rdfs:range skos:Concept .
+lab:conditions      a owl:ObjectProperty ; rdfs:domain lab:Verdict ;
+    rdfs:comment "Ressources qui bornent la portée du verdict : jeu de mesure, modèle, réglage, sous-ensemble." .
+lab:reouvrirSi      a owl:DatatypeProperty ; rdfs:comment "Condition écrite qui rouvrirait la piste (verdict suspendu, non concluant ou invalide)." .
+lab:motifInvalidite a owl:DatatypeProperty ; rdfs:domain lab:Verdict ; rdfs:comment "Pourquoi le test est invalide quand aucune course échouée ne l'explique." .
+lab:statutDeclare   a owl:DatatypeProperty ; rdfs:comment "Statut de travail tel que le tableau source le dit, en texte libre." .
+lab:notation        a owl:ObjectProperty ; rdfs:domain lab:Idee ; rdfs:comment "Une notation de tri (prov:Entity) posée sur l'idée par un notateur." .
+lab:notePar         a owl:ObjectProperty ; rdfs:subPropertyOf prov:wasAttributedTo .
+lab:elimine         a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+lab:motif           a owl:DatatypeProperty . lab:doublonDe a owl:ObjectProperty .
+lab:score           a owl:DatatypeProperty ; rdfs:comment "Note d'un critère (nom du critère en lab:critere sur un nœud de note, ou propriété lab:score_<critère>)." .
+lab:decisionRegle   a owl:DatatypeProperty ; rdfs:comment "Règle de décision écrite dans la carte de recherche." .
+lab:erreurType      a owl:DatatypeProperty ; rdfs:comment "Erreur-type retenue par la carte pour le calcul de puissance." .
+lab:refuteIci       a owl:ObjectProperty ; rdfs:domain lab:Resultat ; rdfs:range lab:Hypothese ;
+    rdfs:comment "Raccourci DÉRIVÉ d'un lab:Verdict RefuteeIci, jamais écrit à la main." .
+lab:soutient        a owl:ObjectProperty ; rdfs:domain lab:Resultat ; rdfs:range lab:Hypothese ;
+    rdfs:comment "Raccourci DÉRIVÉ d'un lab:Verdict Soutenue." .
+lab:effetMinimal    a owl:DatatypeProperty ; rdfs:comment "Plus petit effet d'intérêt (SESOI) déclaré par l'hypothèse." .
+lab:effetPlausible  a owl:DatatypeProperty . lab:icBas a owl:DatatypeProperty . lab:icHaut a owl:DatatypeProperty .
+lab:puissance       a owl:DatatypeProperty ; rdfs:comment "Puissance RECALCULÉE par le guichet (puissance.py), jamais recopiée de la carte." .
+lab:exploratoire    a owl:DatatypeProperty ; rdfs:range xsd:boolean .
+lab:famille         a owl:DatatypeProperty ; rdfs:range xsd:integer .
+lab:theme a owl:DatatypeProperty . lab:cout a owl:DatatypeProperty . lab:risque a owl:DatatypeProperty .
+lab:priorite a owl:DatatypeProperty . lab:orientation a owl:DatatypeProperty .
+lab:etatIdee a owl:ObjectProperty ; rdfs:comment "Statut de travail du stock (à faire, en cours, close), distinct du statut épistémique." .

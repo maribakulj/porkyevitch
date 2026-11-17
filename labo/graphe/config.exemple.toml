@@ -1,0 +1,50 @@
+# Configuration d'un projet : où le générateur lit ses sources. Les chemins sont relatifs à ce fichier.
+[projet]
+espace = "https://labo.invalid/g/"   # base des identifiants de nœuds
+racine = ".."                        # racine des motifs ci-dessous (le dépôt du projet)
+
+[sortie]
+graphe = "graphe.ttl"
+rapports = "rapports"
+
+# Tableau des idées : une ligne par idée. Les noms de colonnes sont ceux de l'en-tête du CSV.
+[idees]
+fichier = "sources/idees.csv"
+separateur = ";"
+encodage = "utf-8-sig"
+[idees.colonnes]
+identifiant = "id"
+description = "idée"
+source = "source"            # vide : l'idée est rattachée à lab:interne
+theme = "thème"
+cout = "coût"
+risque = "risque"
+priorite = "priorité"
+orientation = "orientation"
+dependances = "dépendances"  # identifiants d'idées séparés par des virgules
+statut_declare = "statut"
+
+# Une section par notateur du tri.
+[[notations]]
+fichier = "sources/notateur-1.csv"
+notateur = "notateur-1"
+scores = ["G", "P"]          # colonnes de notes (facultatif) ; elimine, motif, doublon_de, justification par défaut
+
+# Cartes de recherche : un bloc ```toml recherche``` (decision, premisse, [puissance]) en fin de carte.
+[cartes]
+motifs = ["experiences/*/recherche.md"]
+exploratoire = false         # valeur par défaut d'une carte qui ne dit rien : à écrire en connaissance de cause
+
+# Cartes de calcul du guichet.
+[calculs]
+motifs = ["experiences/*/carte.toml"]
+
+# Registre du guichet : un export JSON {"courses": [{id, cle, etat, carte_calcul, debut, fin,
+# artefacts: [{nom, sha256}], entrees: [{nom, sha256}]}]}. Absent : le générateur le dit et n'invente rien.
+[guichet]
+export = "sources/guichet-export.json"
+
+# Jugements écrits par les agents : hypothèses et décisions à la main, verdicts par verdict.py.
+[jugements]
+hypotheses = "jugements/hypotheses.toml"
+verdicts = "jugements/verdicts.toml"

@@ -1,0 +1,20 @@
+# Fichier des hypothèses (écrit à la main par les agents). Un verdict, lui, passe par verdict.py.
+[[hypothese]]
+id = "H-001"
+idee = "I001"                       # l'idée d'où elle vient
+description = "Énoncé réfutable, avec sa mesure, son contraste et ses conditions."
+mesure = "Différence de la mesure M entre le bras testé et le bras témoin."
+effet_minimal = 0.02                # plus petit effet d'intérêt
+carte = "2026-01-01-essai"          # nom du dossier de la carte de recherche qui la teste
+auteur = "orchestrateur"            # un rôle, jamais un nom
+reouvrir_si = "Une condition écrite qui rouvrirait la piste."
+
+[[hypothese.premisse]]
+id = "P-001"
+description = "Ce que le calcul suppose sans l'avoir mesuré."
+
+# [[decision]]
+# id = "DEC-001"
+# verdicts = ["V-H-001-1"]
+# description = "Ce qu'on fait ensuite."
+# auteur = "orchestrateur"
