@@ -21,7 +21,10 @@ jobs:
         run: python3 -I outils/neutralite.py
       - name: Version du plugin (elle monte avec ce qu'il livre)
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then REF=origin/${{ github.base_ref }}; else REF=${{ github.event.before }}; fi
+          # Une branche de travail se compare à main (une hausse par livraison, pas par commit) ; main à son état précédent.
+          if [ "${{ github.event_name }}" = "pull_request" ]; then REF=origin/${{ github.base_ref }}
+          elif [ "${{ github.ref_name }}" = "main" ]; then REF=${{ github.event.before }}
+          else REF=$(git merge-base origin/main HEAD); fi
           if git cat-file -e "$REF^{commit}" 2>/dev/null; then python3 -I outils/version.py "$REF"; else echo "pas de révision de comparaison"; fi
       - name: Tests
         run: |
