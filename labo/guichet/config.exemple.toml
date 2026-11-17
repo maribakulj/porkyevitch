@@ -1,0 +1,14 @@
+# Configuration du guichet, dans ~labo/guichet/config.toml (« labo » : le compte du guichet). Seul le compte du guichet peut la modifier.
+
+budget_gpu_hebdo_h = 30        # heures GPU engagées sur 7 jours glissants (le quota Kaggle de la semaine est de 30 h)
+seuil_accord_gpu_h = 3         # au-delà, une course GPU attend ton accord
+duree_a_mesurer_h = 3          # au-delà, la durée doit avoir été mesurée par un essai chronométré réussi
+max_gpu_simultanes = 2         # courses GPU actives à la fois, toutes plateformes
+taille_max_dossier_mo = 200    # les données passent par des entrées déclarées, pas par le dossier de code
+
+# Sorties rapatriées : un dossier que le compte du guichet écrit et que l'agent peut lire.
+sorties = "/chemin/vers/guichet-sorties"
+
+# CLI installés dans le compte du guichet (pas dans celui de l'agent).
+kaggle_cli = "/chemin/du/compte-guichet/.venv-guichet/bin/kaggle"
+colab_cli = "/chemin/du/compte-guichet/.local/bin/colab"

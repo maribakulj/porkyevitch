@@ -1,0 +1,12 @@
+{
+  "name": "porkyevitch",
+  "description": "La boîte à outils porkyevitch, installable comme plugin.",
+  "owner": { "name": "maribakulj" },
+  "plugins": [
+    {
+      "name": "porkyevitch",
+      "source": "./",
+      "description": "Guichet de calcul, carte de recherche, calcul de puissance, gabarits de boucle autonome."
+    }
+  ]
+}
