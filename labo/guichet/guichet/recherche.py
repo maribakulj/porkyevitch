@@ -41,8 +41,11 @@ from pathlib import Path
 try:  # copie installée à côté du guichet par installer.sh
     from . import puissance  # type: ignore[attr-defined]
 except ImportError:  # dépôt : labo/puissance.py
+    import sys
+
     _spec = importlib.util.spec_from_file_location("puissance", Path(__file__).resolve().parents[2] / "puissance.py")
     puissance = importlib.util.module_from_spec(_spec)
+    sys.modules["puissance"] = puissance  # avant l'exécution : sous 3.11-3.13, @dataclass l'y cherche
     _spec.loader.exec_module(puissance)
 
 _BLOC = re.compile(r"^```toml recherche[ \t]*\n(.*?)^```[ \t]*$", re.S | re.M)
