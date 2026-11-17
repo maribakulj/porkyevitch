@@ -1,0 +1,5 @@
+#!/bin/sh
+# Le dépôt courant est-il neutre ? Raccourci vers outils/neutralite.py ; sans argument, vérifie le dossier courant.
+ICI=$(cd "$(dirname "$0")" && pwd -P)
+[ $# -eq 0 ] && set -- .
+exec python3 -I "$ICI/../outils/neutralite.py" "$@"

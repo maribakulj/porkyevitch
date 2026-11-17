@@ -60,7 +60,13 @@ FAUX_COLAB = textwrap.dedent("""\
             print("No such file")
     elif cmd == "exec":
         code = sys.stdin.read().replace("/content", os.path.join(racine, a[2], "content"))
-        subprocess.run([sys.executable, "-c", code])
+        # Une machine Colab a une commande `python` ; un Mac n'a souvent que `python3`.
+        outils = os.path.join(racine, a[2], "bin")
+        os.makedirs(outils, exist_ok=True)
+        if not os.path.exists(os.path.join(outils, "python")):
+            os.symlink(sys.executable, os.path.join(outils, "python"))
+        env = dict(os.environ, PATH=outils + os.pathsep + os.environ.get("PATH", ""))
+        subprocess.run([sys.executable, "-c", code], env=env)
     elif cmd == "stop":
         shutil.rmtree(os.path.join(racine, a[2]), ignore_errors=True)
 """)

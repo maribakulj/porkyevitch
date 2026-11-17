@@ -8,6 +8,7 @@ Format TOML, un fichier par calcul :
     gpu = true
     duree_estimee_s = 2900
     duree_mesuree_par = ""             # course réussie qui a mesuré la durée ; requise au-delà du seuil (3 h)
+    carte_recherche = "recherche.md"   # relative à la carte ; requise pour une course GPU (voir recherche.py)
     artefacts_attendus = ["recu.json", "etats/*.pt"]   # relatifs à la sortie ; une course sans eux échoue
     plateformes = ["kaggle", "colab"]  # celles qui sont permises pour ce calcul
 
@@ -53,6 +54,7 @@ class Carte:
     plateformes: list[str]
     entrees: list[dict] = field(default_factory=list)
     duree_mesuree_par: str = ""
+    carte_recherche: str = ""  # chemin absolu, ou vide
     kaggle: dict = field(default_factory=dict)
     colab: dict = field(default_factory=dict)
 
@@ -77,7 +79,7 @@ def lire(chemin: Path) -> Carte:
         raise CarteInvalide(f"carte TOML invalide : {e}") from None
 
     connus = {"experience", "dossier", "point_entree", "gpu", "duree_estimee_s", "duree_mesuree_par",
-              "artefacts_attendus", "plateformes", "entrees", "kaggle", "colab"}
+              "artefacts_attendus", "plateformes", "entrees", "kaggle", "colab", "carte_recherche"}
     inconnus = set(d) - connus
     if inconnus:
         raise CarteInvalide(f"champs inconnus : {sorted(inconnus)}")
@@ -116,11 +118,14 @@ def lire(chemin: Path) -> Carte:
     exiger(isinstance(mesuree, str), "duree_mesuree_par : identifiant de course")
     for nom in ("kaggle", "colab"):
         exiger(isinstance(d.get(nom, {}), dict), f"[{nom}] : table")
+    recherche = d.get("carte_recherche", "")
+    exiger(isinstance(recherche, str), "carte_recherche : chemin du fichier, relatif à la carte")
+    recherche = str((chemin.parent / recherche).resolve()) if recherche else ""
 
     dossier = (chemin.parent / d["dossier"]).resolve()
     return Carte(experience=d["experience"], dossier=dossier, point_entree=d["point_entree"], gpu=d["gpu"],
                  duree_estimee_s=d["duree_estimee_s"], artefacts_attendus=list(arts), plateformes=list(pl),
-                 entrees=[dict(e) for e in entrees], duree_mesuree_par=mesuree,
+                 entrees=[dict(e) for e in entrees], duree_mesuree_par=mesuree, carte_recherche=recherche,
                  kaggle=dict(d.get("kaggle", {})), colab=dict(d.get("colab", {})))
 
 

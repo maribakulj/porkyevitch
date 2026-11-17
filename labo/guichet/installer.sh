@@ -38,6 +38,7 @@ EOF
 rm -rf "$LIB"
 mkdir -p "$LIB/guichet"
 cp "$ICI"/guichet/*.py "$LIB/guichet/"
+cp "$ICI/../puissance.py" "$LIB/guichet/puissance.py"  # la porte de recherche recalcule la puissance
 printf '%s\n' "$COMPTE" > "$LIB/compte.txt"
 chown -R 0:0 "$LIB"
 chmod -R u=rwX,go=rX "$LIB"

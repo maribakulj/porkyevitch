@@ -1,0 +1,4 @@
+#!/bin/sh
+# Ce calcul peut-il conclure ? Raccourci vers labo/puissance.py (le dossier bin/ du plugin est dans le PATH de Bash).
+ICI=$(cd "$(dirname "$0")" && pwd -P)
+exec python3 -I "$ICI/../labo/puissance.py" "$@"

@@ -1,6 +1,7 @@
 ---
 name: carte-de-recherche
 description: Avant de concevoir une expérience, une préinscription ou un entraînement, ou avant de lancer un calcul, vérifier qu'il peut conclure et qu'il change une décision. Six questions et un calcul de puissance. À utiliser aussi avant de clore une piste sur un résultat « pas de signal ».
+allowed-tools: Bash(puissance *)
 ---
 
 # Carte de recherche
@@ -17,7 +18,7 @@ le code et la préinscription détaillée, en quelques lignes par question. Le g
    l'erreur-type attendue (un IC déjà mesuré sur le même banc, ou un pilote). Puis lancer :
 
    ```bash
-   python3 -I "${CLAUDE_PLUGIN_ROOT}/labo/puissance.py" --ic BAS HAUT --effet-plausible E [--n N0:N1] [--famille K] [--unilateral]
+   puissance --ic BAS HAUT --effet-plausible E [--n N0:N1] [--famille K] [--unilateral]
    ```
 
    Code 2 (« ne peut pas conclure ») : **ne pas lancer**. Redessiner l'effectif, le banc ou le contraste, ou
@@ -42,5 +43,16 @@ le code et la préinscription détaillée, en quelques lignes par question. Le g
 | `ECHEC_TECHNIQUE` | le calcul n'a pas mesuré ce qu'il devait | rien sur l'hypothèse |
 | `NON_TESTE` | | |
 
-Avant de clore une piste, relancer `${CLAUDE_PLUGIN_ROOT}/labo/puissance.py` sur le test qui la clôturerait. S'il rend le code 2, le
-statut est `NON_CONCLUANT`.
+Avant de clore une piste, relancer `puissance` sur le test qui la clôturerait. S'il rend le code 2, le statut est
+`NON_CONCLUANT`.
+
+## Le bloc que lit le guichet
+
+La carte se termine par un bloc ` ```toml recherche ` (voir le gabarit) : la décision, l'état de la prémisse et les
+nombres de la question 2 (IC ou erreur-type, effet plausible, effectif, famille). Pour une course GPU, la carte de
+calcul le nomme dans `carte_recherche`, et le guichet **recalcule** la puissance à partir de ces nombres : écrire
+« peut conclure » ne sert à rien, seuls les nombres comptent. Un calcul qui ne prétend rien conclure le déclare par
+`exploratoire = "pourquoi"`, et attend un accord humain.
+
+Pour une relecture de conception indépendante, confier la carte, le code et, s'il y en a, les résultats à l'agent
+`relecteur-conception`, sans lui donner le raisonnement de l'auteur.

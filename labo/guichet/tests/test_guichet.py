@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from outils import Banc, Distant, LancementIncertain, Releve  # noqa: E402
+from outils import Banc, Distant, LancementIncertain, Releve, bloc_recherche  # noqa: E402
 
 from guichet import cli  # noqa: E402
 from guichet.plateformes import lire_journal_colab, lire_statut_kaggle  # noqa: E402
@@ -207,6 +207,70 @@ class DureeEtBudget(Base):
         r = self.b.g.soumettre(self.b.carte("g2", code="2\n"), "colab")
         self.assertEqual(r.code, "REFUS")
         self.assertIn("Attendre", r.message)
+
+
+class Recherche(Base):
+    """La porte scientifique : une course GPU nomme sa carte de recherche, dont le guichet recalcule la puissance."""
+
+    def test_gpu_sans_carte_de_recherche_refuse(self):
+        r = self.b.g.soumettre(self.b.carte(recherche=None), "kaggle")
+        self.assertEqual(r.code, "REFUS")
+        self.assertIn("carte de recherche", r.message)
+        self.assertEqual(self.b.kaggle.lances, [])
+
+    def test_cpu_sans_carte_de_recherche_accepte(self):
+        r = self.b.g.soumettre(self.b.carte(gpu=False, recherche=None), "kaggle")
+        self.assertEqual(r.code, "ACCEPTEE")
+
+    def test_carte_incomplete_refusee(self):
+        for corps, attendu in (
+                ('premisse = "verifiee"\n[puissance]\nse = 0.01\neffet_plausible = 0.05\n', "decision"),
+                ('decision = "d"\n[puissance]\nse = 0.01\neffet_plausible = 0.05\n', "premisse"),
+                ('decision = "d"\npremisse = "verifiee"\n', "pas les deux ni aucun"),
+                ('decision = "d"\npremisse = "verifiee"\n[puissance]\nse = 0.01\n', "effet_plausible")):
+            r = self.b.g.soumettre(self.b.carte(recherche=bloc_recherche(corps)), "kaggle")
+            self.assertEqual(r.code, "REFUS", corps)
+            self.assertIn(attendu, r.message)
+        r = self.b.g.soumettre(self.b.carte(recherche="# carte sans bloc\n"), "kaggle")
+        self.assertEqual(r.code, "REFUS")
+        self.assertIn("```toml recherche```", r.message)
+
+    def test_ne_peut_pas_conclure_demande_un_accord_puis_part(self):
+        # se = 0,05 pour un effet plausible de 0,02 : puissance ≈ 7 %.
+        faible = bloc_recherche('decision = "d"\npremisse = "verifiee"\n[puissance]\nse = 0.05\neffet_plausible = 0.02\n')
+        r = self.b.g.soumettre(self.b.carte(recherche=faible), "kaggle")
+        self.assertEqual(r.code, "ACCORD_REQUIS")
+        self.assertIn("ne peut pas conclure", r.message)
+        self.assertEqual(self.b.kaggle.lances, [])
+        self.assertEqual(self.b.g.approuver(r.demande).code, "ACCEPTEE")
+        self.assertEqual(len(self.b.kaggle.lances), 1)
+
+    def test_le_verdict_ecrit_ne_compte_pas_seule_la_puissance_recalculee(self):
+        # Un commentaire « PEUT CONCLURE » dans la carte ne change rien au calcul.
+        faux = bloc_recherche('decision = "d"  # PEUT CONCLURE\npremisse = "verifiee"\n'
+                              '[puissance]\nse = 0.05\neffet_plausible = 0.02\n')
+        self.assertEqual(self.b.g.soumettre(self.b.carte(recherche=faux), "kaggle").code, "ACCORD_REQUIS")
+
+    def test_effectif_reechelonne(self):
+        # Même IC, mais mesuré sur 100 et prévu sur 10 000 : se divisée par 10, le calcul peut conclure.
+        corps = 'decision = "d"\npremisse = "verifiee"\n[puissance]\nse = 0.05\neffet_plausible = 0.02\nn = "100:10000"\n'
+        self.assertEqual(self.b.g.soumettre(self.b.carte(recherche=bloc_recherche(corps)), "kaggle").code, "ACCEPTEE")
+
+    def test_exploratoire_et_premisse_non_verifiee_demandent_un_seul_accord(self):
+        corps = 'decision = "d"\npremisse = "non_verifiee"\nexploratoire = "voir l\'ordre de grandeur"\n'
+        r = self.b.g.soumettre(self.b.carte(recherche=bloc_recherche(corps)), "kaggle")
+        self.assertEqual(r.code, "ACCORD_REQUIS")
+        self.assertIn("exploratoire", r.message)
+        self.assertIn("prémisse", r.message)
+        self.assertEqual(self.b.g.approuver(r.demande).code, "ACCEPTEE")
+
+    def test_reecrire_la_carte_de_recherche_ne_fait_pas_un_calcul_nouveau(self):
+        self.assertEqual(self.b.g.soumettre(self.b.carte("a"), "kaggle").code, "ACCEPTEE")
+        autre = bloc_recherche('decision = "autre texte"\npremisse = "sans_objet"\n[puissance]\nse = 0.01\n'
+                               'effet_plausible = 0.1\n')
+        r = self.b.g.soumettre(self.b.carte("b", slug="compte/b", recherche=autre), "colab")
+        self.assertEqual(r.code, "REFUS")
+        self.assertIn("déjà", r.message)
 
 
 class Bascule(Base):

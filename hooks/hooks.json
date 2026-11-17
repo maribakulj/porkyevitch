@@ -1,0 +1,18 @@
+{
+  "description": "Un calcul Kaggle ou Colab passe par le guichet ; la sortie de guichet-agent ne passe pas dans un tube.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3",
+            "args": ["-I", "${CLAUDE_PLUGIN_ROOT}/hooks/garde_calcul.py"],
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

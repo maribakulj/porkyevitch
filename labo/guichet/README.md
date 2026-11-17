@@ -25,12 +25,17 @@ ni lire les identifiants. Python 3.11 ou plus, bibliothèque standard seule.
 - **Durée et budget.** Une durée estimée au-delà de 3 h doit avoir été mesurée par un essai chronométré réussi
   (une estimation jamais mesurée finit en noyau coupé à 12 h, sans sortie). Une course GPU de plus de 3 h attend ton accord. Le guichet tient un budget GPU sur 7 jours
   glissants et un nombre maximal de courses GPU simultanées.
+- **Une course GPU nomme sa carte de recherche** (`carte_recherche` dans la carte de calcul). Sans elle, ou si son
+  bloc ` ```toml recherche ` est incomplet, refus. Le guichet **recalcule** la puissance à partir des nombres de la carte
+  (il ne croit pas un verdict écrit) : une course qui ne peut pas conclure, exploratoire, ou dont la prémisse n'est pas
+  vérifiée attend ton accord. Le format est en tête de `guichet/recherche.py`. Une course CPU n'en a pas besoin.
 - **Ce qui part est ce qui a été haché.** Le guichet copie le dossier, hache la copie et lance la copie. Il refuse
   les liens symboliques, les liens physiques et tout chemin pris dans son propre espace.
 
 ## Ce qu'il ne garantit pas
 
-- Qu'un calcul mérite d'être fait. C'est la carte de recherche (`skills/carte-de-recherche`) et sa revue qui en décident.
+- Que la carte de recherche dise vrai. Le guichet vérifie qu'elle est complète et refait le calcul de puissance, mais
+  l'effet plausible et l'IC cités restent à relire (`skills/carte-de-recherche`, agent `relecteur-conception`).
 - Que la carte déclare tout ce dont la suite aura besoin. Le guichet ne devine pas un artefact non déclaré
   (`tests/test_incidents.py` le dit en clair). Le résumé te montre les artefacts déclarés de chaque demande.
 - Que les vrais CLI répondent toujours dans les formats attendus. Les adaptateurs sont testés contre de faux CLI
@@ -96,3 +101,9 @@ d'`artefacts_attendus` sont relatifs à ce dossier.
     python3 -I tests/test_guichet.py       # les règles, une par test
     python3 -I tests/test_incidents.py     # incidents types d'une boucle autonome, rejoués à vide
     python3 -I tests/test_adaptateurs.py   # Kaggle et Colab contre de faux CLI ; la chaîne Colab tourne vraiment
+
+## Mise à jour depuis la version 0.1
+
+La table `demandes` accepte une nouvelle nature d'accord, `RECHERCHE`. Un registre créé par la version 0.1 garde
+l'ancienne contrainte : avant la mise à jour, s'assurer qu'aucune demande n'est en attente, puis renommer
+`~labo/guichet/registre.sqlite` (le guichet en recrée un). Les courses passées restent lisibles dans l'ancien fichier.

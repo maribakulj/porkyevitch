@@ -14,6 +14,20 @@ from guichet.guichet import Config, Guichet  # noqa: E402
 from guichet.plateformes import Distant, LancementIncertain, Releve  # noqa: E402
 
 
+def bloc_recherche(corps: str) -> str:
+    return "# Carte de recherche\n\nTexte libre.\n\n```toml recherche\n" + textwrap.dedent(corps) + "```\n"
+
+
+# Puissance ≈ 100 % : IC [0,02 ; 0,14], soit se ≈ 0,031, pour un effet plausible de 0,15.
+RECHERCHE_OK = bloc_recherche("""\
+    decision = "garder la tête si le gain est établi, sinon T*"
+    premisse = "verifiee"
+    [puissance]
+    ic = [0.02, 0.14]
+    effet_plausible = 0.15
+    """)
+
+
 class Fausse:
     """Plateforme simulée : on fixe à la main ce que « le site » répond."""
 
@@ -93,7 +107,8 @@ class Banc:
 
     def carte(self, nom: str = "calcul", code: str = "print('ok')\n", slug: str | None = None,
               duree: int = 2700, gpu: bool = True, artefacts=("recu.json",), mesuree: str = "",
-              plateformes=("kaggle", "colab"), entrees=(("vecteurs", "a" * 64),)) -> Path:
+              plateformes=("kaggle", "colab"), entrees=(("vecteurs", "a" * 64),),
+              recherche: str | None = RECHERCHE_OK) -> Path:
         d = self.depot / nom
         noyau = d / "noyau"
         noyau.mkdir(parents=True, exist_ok=True)
@@ -110,7 +125,11 @@ class Banc:
             duree_mesuree_par = "{mesuree}"
             artefacts_attendus = {json.dumps(list(artefacts))}
             plateformes = {json.dumps(list(plateformes))}
-            """) + entrees_toml
+            """)
+        if recherche is not None:  # avant les tables [[entrees]], sinon la clé tomberait dans la dernière
+            (d / "recherche.md").write_text(recherche)
+            texte += 'carte_recherche = "recherche.md"\n'
+        texte += entrees_toml
         chemin = d / "carte.toml"
         chemin.write_text(texte)
         return chemin
@@ -131,4 +150,4 @@ class Banc:
         self._tmp.cleanup()
 
 
-__all__ = ["Banc", "Fausse", "Distant", "Releve", "LancementIncertain"]
+__all__ = ["Banc", "Fausse", "Distant", "Releve", "LancementIncertain", "RECHERCHE_OK", "bloc_recherche"]

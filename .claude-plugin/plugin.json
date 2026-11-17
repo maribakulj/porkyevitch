@@ -1,6 +1,6 @@
 {
   "name": "porkyevitch",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Boîte à outils de recherche sur les modèles : guichet de calcul Kaggle/Colab sans doublon, carte de recherche et calcul de puissance avant de lancer, gabarits de boucle autonome.",
   "repository": "https://github.com/maribakulj/porkyevitch",
   "keywords": ["recherche", "entrainement", "kaggle", "colab", "puissance-statistique"]

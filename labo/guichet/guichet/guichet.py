@@ -8,9 +8,12 @@ Ce qu'il garantit, parce que lui seul détient les identifiants :
 - une course n'est réussie que si les artefacts déclarés sont dans sa sortie rapatriée ;
 - un échec de rapatriement n'est pas un échec de calcul : on retente le rapatriement, jamais le calcul ;
 - une durée estimée au-delà du seuil doit avoir été mesurée ; une longue course GPU demande un accord ;
-- le budget GPU de la semaine et le nombre de courses GPU simultanées sont tenus.
+- le budget GPU de la semaine et le nombre de courses GPU simultanées sont tenus ;
+- une course GPU nomme sa carte de recherche, dont il recalcule la puissance : sans carte complète, refus ; si elle
+  ne peut pas conclure, si elle est exploratoire ou si sa prémisse n'est pas vérifiée, accord humain.
 
-Ce qu'il ne garantit pas : qu'un calcul mérite d'être fait, ni que la carte déclare tout ce dont la suite aura besoin.
+Ce qu'il ne garantit pas : que la carte de recherche dise vrai (l'effet plausible et l'IC cités restent à relire), ni
+que la carte de calcul déclare tout ce dont la suite aura besoin.
 """
 
 from __future__ import annotations
@@ -23,7 +26,7 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import arbre, carte as cartes, registre
+from . import arbre, carte as cartes, recherche, registre
 from .plateformes import Distant, LancementIncertain, LancementRefuse
 
 SEMAINE = 7 * 24 * 3600
@@ -185,6 +188,9 @@ class Guichet:
                                             "d'abord un essai chronométré sur les vraies données, puis nomme sa "
                                             "course réussie dans « duree_mesuree_par ».")
             if c.gpu:
+                r = self._porte_recherche(db, c, k, plateforme, instantane, enveloppe, motif, accords)
+                if r is not None:
+                    return r
                 n = db.execute(f"SELECT COUNT(*) FROM courses WHERE gpu = 1 AND etat IN {registre.ACTIFS}"
                                ).fetchone()[0]
                 if n >= self.config.max_gpu_simultanes:
@@ -207,6 +213,22 @@ class Guichet:
                         reussie["id"] if reussie else source))
             registre.noter(db, ident, f"admise sur {plateforme}, clé {k[:12]}")
         return Reponse("ACCEPTEE", "", course=ident)
+
+    def _porte_recherche(self, db, c, k, plateforme, instantane, enveloppe, motif, accords) -> Reponse | None:
+        """Une course GPU nomme sa carte de recherche ; le guichet en recalcule la puissance."""
+        if not c.carte_recherche:
+            return Reponse("REFUS", "course GPU sans carte de recherche : écris-la d'abord (gabarits/carte-de-recherche.md, "
+                                    "skill carte-de-recherche), puis nomme-la dans « carte_recherche ». Une course qui "
+                                    "ne peut rien conclure se découvre avant la dépense, pas après.")
+        try:
+            ev = recherche.evaluer(Path(c.carte_recherche))
+        except recherche.CarteRechercheInvalide as e:
+            return Reponse("REFUS", str(e))
+        registre.noter(db, k[:16], f"carte de recherche {ev.sha256[:16]} : {ev.note}")
+        if ev.accords_requis and "RECHERCHE" not in accords:
+            return self._demande(db, "RECHERCHE", c, k, plateforme, instantane, enveloppe, None, motif,
+                                 " ; ".join(ev.accords_requis))
+        return None
 
     def _demande(self, db, nature, c, k, plateforme, instantane, enveloppe, source, motif, raison) -> Reponse:
         ident = registre.identifiant("D")

@@ -1,6 +1,7 @@
 ---
 name: guichet
 description: Pour tout calcul sur Kaggle ou Colab (entraînement, encodage, mesure, sonde, essai à blanc) : le soumettre, le suivre, le basculer, en récupérer la sortie. Ne jamais lancer `kaggle kernels push` ni `colab new` directement. À utiliser aussi quand une file tarde, qu'un lancement a expiré, ou qu'on veut refaire un calcul.
+allowed-tools: Bash(command -v guichet-agent) Bash(sudo -u labo guichet-agent *)
 ---
 
 # Guichet de calcul
@@ -10,8 +11,21 @@ refuse les doublons, suit les courses, rapatrie et vérifie les sorties. Sa docu
 `${CLAUDE_PLUGIN_ROOT}/labo/guichet/README.md`. Le format de la carte est en tête de
 `${CLAUDE_PLUGIN_ROOT}/labo/guichet/guichet/carte.py`.
 
+## Avant tout : le guichet est-il installé ?
+
+```bash
+command -v guichet-agent
+```
+
+Rien ne s'affiche : le guichet n'est pas installé sur cette machine. Ne lance rien par un autre chemin, ni Kaggle ni
+Colab directement (un crochet du plugin le refuse de toute façon). Dis-le, et renvoie à l'installation, faite une fois
+par machine par une personne : `${CLAUDE_PLUGIN_ROOT}/labo/guichet/README.md`.
+
 ## Soumettre
 
+0. Pour une course GPU : la **carte de recherche** d'abord (skill `carte-de-recherche`). La carte de calcul la nomme
+   dans `carte_recherche`. Sans elle, ou incomplète, le guichet refuse. Il recalcule lui-même la puissance : une course
+   qui ne peut pas conclure, exploratoire, ou dont la prémisse n'est pas vérifiée attend un accord humain (code 3).
 1. Un dossier avec le code, sa configuration et, pour Kaggle, `kernel-metadata.json` (`code_file` = le point
    d'entrée, `enable_gpu` = `gpu`). Pas de données lourdes, ni de lien symbolique.
 2. Le calcul écrit ses artefacts dans `os.environ.get("GUICHET_SORTIE", "/kaggle/working")`.
@@ -52,4 +66,6 @@ sudo -u labo guichet-agent etat R-…
 | refaire un calcul réussi (« contrôle croisé ») | refus : déjà fait, voici la sortie | relire la sortie ; sinon `--replication MOTIF` (accord humain) |
 | relancer à l'identique après un échec | refus sans motif | corriger le code (calcul nouveau), ou `--motif` si la cause est extérieure |
 | durée estimée > 3 h | refus : à mesurer | un essai chronométré d'abord, nommé dans `duree_mesuree_par` |
+| lancer une course GPU sans carte de recherche | refus | écrire la carte, la nommer dans `carte_recherche` |
+| la carte dit « ne peut pas conclure » | accord humain requis | redessiner l'effectif ou le contraste, ou attendre l'accord |
 | plus de N GPU à la fois, budget atteint | refus | attendre : c'est une issue normale |

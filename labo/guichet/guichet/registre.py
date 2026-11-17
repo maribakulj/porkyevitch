@@ -46,7 +46,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS un_noyau_actif ON courses (plateforme, slug)
                                 OR (etat = 'ABANDONNEE' AND fin_vue IS NULL));
 CREATE TABLE IF NOT EXISTS demandes (
     id TEXT PRIMARY KEY,
-    nature TEXT NOT NULL CHECK (nature IN ('DUREE', 'REPLICATION', 'BASCULE')),
+    nature TEXT NOT NULL CHECK (nature IN ('DUREE', 'REPLICATION', 'BASCULE', 'RECHERCHE')),
     etat TEXT NOT NULL CHECK (etat IN ('EN_ATTENTE', 'ACCORDEE', 'REFUSEE')),
     carte TEXT NOT NULL,
     instantane TEXT NOT NULL,
