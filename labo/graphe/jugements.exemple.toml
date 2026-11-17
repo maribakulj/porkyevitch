@@ -1,4 +1,10 @@
 # Fichier des hypothèses (écrit à la main par les agents). Un verdict, lui, passe par verdict.py.
+# Une idée née d'un travail du projet (source : lab:interne), avec ses plus proches lignes du tableau.
+# [[idee_interne]]
+# id = "I-INT-001"
+# description = "…"
+# proche_de = ["I001"]
+
 [[hypothese]]
 id = "H-001"
 idee = "I001"                       # l'idée d'où elle vient

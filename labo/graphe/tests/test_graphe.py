@@ -146,6 +146,14 @@ class Graphe(unittest.TestCase):
         graphe.ecrire(graphe.construire(self.cfg)[0], self.d / "2.ttl")
         self.assertEqual((self.d / "1.ttl").read_bytes(), (self.d / "2.ttl").read_bytes())
 
+    def test_idee_interne(self):
+        h = self.d / "graphe/jugements/hypotheses.toml"
+        h.write_text('[[idee_interne]]\nid = "I-INT-1"\ndescription = "née d\'une étude"\nproche_de = ["I1"]\n'
+                     + HYPOTHESES.replace('idee = "I2"', 'idee = "I-INT-1"'), encoding="utf-8")
+        g, _ = graphe.construire(self.cfg)
+        self.assertEqual(graphe.violations(g), [])
+        self.assertEqual(graphe.compter(g)["Idee"], 3)
+
     def test_puissance_recalculee_pas_recopiee(self):
         g, _ = graphe.construire(self.cfg)
         cr = graphe.URIRef(self.cfg.espace + "CR-a")

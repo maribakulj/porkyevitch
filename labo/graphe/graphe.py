@@ -383,6 +383,15 @@ class Constructeur:
 
     def _hypotheses(self, d: dict) -> None:
         etats = self.bloc_etat
+        for i in d.get("idee_interne", []):  # une idée née d'un travail du projet, qui n'est pas une ligne du tableau
+            idn = self.n(i["id"])
+            self.idees.add(i["id"])
+            self.g.add((idn, RDF.type, LAB.Idee))
+            self.g.add((idn, DCTERMS.identifier, Literal(i["id"])))
+            self.g.add((idn, DCTERMS.description, Literal(i["description"], lang="fr")))
+            self.g.add((idn, DCTERMS.source, LAB.interne))
+            for proche in i.get("proche_de", []):
+                self.g.add((idn, DCTERMS.relation, self.n(proche)))
         for h in d.get("hypothese", []):
             hn = self.n(h["id"])
             self.g.add((hn, RDF.type, LAB.Hypothese))
