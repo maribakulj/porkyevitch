@@ -12,7 +12,7 @@ Usage :
 proposer : FICHIER.toml décrit une décision (champs au premier niveau, ou dans un bloc [[decision]]) :
     id (facultatif), description, auteur (un rôle), fonde_sur (verdicts, résultats ou décisions),
     options = [{libelle = "…", valeur_v = 1.5}, …] (dont « ne rien faire »), choix (un libellé), regle,
-    prediction_issue (un des six statuts) et prediction_proba (dans [0,1]), p_changement (dans [0,1]),
+    prediction_issue (un des six statuts) ou prediction_branche (une branche du tableau issue → décision), et prediction_proba (dans [0,1]), p_changement (dans [0,1]),
     poids (1 à 5), chantier (« C-n »), effet (ouvre_chantier, ferme_chantier, clot_piste, production, suite,
     instrument), statut_propose, heures_agent, heures_calcul, remplace (décision remplacée), etat (proposee,
     en_attente_humain, relue ; par défaut relue si la relecture est jointe),

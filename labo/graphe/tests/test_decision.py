@@ -122,6 +122,9 @@ class Decisions(Base):
         self.refuse("probabilité", prediction_proba=1.5)
         self.refuse("p_changement", p_changement=None)
 
+    def test_prediction_par_branche(self):
+        self.assertTrue(self.proposer(prediction_issue=None, prediction_branche="assez d'œuvres, droits clairs")[0])
+
     def test_importance_calculee_jamais_choisie(self):
         ok, nouvelles = self.proposer(effet="ouvre_chantier", importance="courante")
         self.assertFalse(ok)                       # importante malgré le fichier, donc exige une relecture

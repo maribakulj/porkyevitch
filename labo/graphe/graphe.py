@@ -504,6 +504,8 @@ class Constructeur:
                     if statut is None:
                         raise ErreurContenu(f"décision {dc['id']} : statut inconnu « {dc[cle]} » ({cle})")
                     self.g.add((dn, prop, statut))
+            if dc.get("prediction_branche"):   # issue attendue écrite comme une branche du tableau issue → décision
+                self.g.add((dn, LAB.predictionBranche, Literal(dc["prediction_branche"], lang="fr")))
             for cle, prop in (("realisee", LAB.realisee), ("changement_realise", LAB.changementRealise)):
                 if cle in dc:
                     self.g.add((dn, prop, Literal(bool(dc[cle]))))

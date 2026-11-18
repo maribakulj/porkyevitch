@@ -175,9 +175,14 @@ labsh:OptionForme a sh:NodeShape ; sh:targetObjectsOf lab:option ;
 
 # R14 — deux prédictions : l'issue attendue (un statut) avec sa probabilité, et la probabilité de changer une décision
 labsh:Prediction a sh:NodeShape ; sh:targetClass lab:Decision ;
-    sh:property [ sh:path lab:predictionIssue ; sh:minCount 1 ; sh:maxCount 1 ;
+    sh:property [ sh:path lab:predictionIssue ; sh:maxCount 1 ;
                   sh:in ( lab:NonTestee lab:TestInvalide lab:NonConcluante lab:RefuteeIci lab:Soutenue lab:Suspendue ) ;
-                  sh:message "Décision sans issue attendue (un des six statuts)." ] ;
+                  sh:message "Issue attendue hors des six statuts." ] ;
+    sh:property [ sh:path lab:predictionBranche ; sh:maxCount 1 ] ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Décision sans issue attendue : un des six statuts, ou une branche du tableau issue → décision." ;
+        sh:select """
+        SELECT $this WHERE { FILTER (NOT EXISTS { $this lab:predictionIssue ?i } && NOT EXISTS { $this lab:predictionBranche ?b }) }""" ] ;
     sh:property [ sh:path lab:predictionProba ; sh:minCount 1 ; sh:maxCount 1 ;
                   sh:minInclusive 0 ; sh:maxInclusive 1 ;
                   sh:message "Prédiction sans probabilité dans [0,1]." ] ;
