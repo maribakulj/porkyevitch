@@ -7,6 +7,7 @@ Usage :
         [--changement-realise true|false] [--statut-obtenu STATUT] [--heures-mesurees H] [--heures-agent-mesurees H]
     python3 decision.py [--config config.toml] executer D-ID
     python3 decision.py [--config config.toml] renverser D-ID --par D-ID2
+    python3 decision.py [--config config.toml] corriger-note D-ID --champ CHAMP --valeur V --motif TEXTE
     python3 decision.py [--config config.toml] bilan
 
 proposer : FICHIER.toml décrit une décision (champs au premier niveau, ou dans un bloc [[decision]]) :
@@ -185,6 +186,24 @@ def noter(cfg: Config, ident: str, issue: str, realisee: bool, changement: bool 
     return modifier(cfg, ident, ch, deja_present="issue")
 
 
+CHAMPS_CORRIGEABLES = ("realisee", "changement_realise", "statut_obtenu", "heures_mesurees", "heures_agent_mesurees")
+
+
+def corriger_note(cfg: Config, ident: str, champ: str, valeur, motif: str):
+    """Corrige un champ de notation déjà écrit ; l'ancienne valeur, la date et le motif restent dans `corrections`."""
+    if champ not in CHAMPS_CORRIGEABLES:
+        raise ErreurContenu(f"champ {champ} non corrigeable (seuls : {', '.join(CHAMPS_CORRIGEABLES)})")
+    brut = tomllib.loads(_lire(_chemin(cfg)))
+    d = next((x for x in brut.get("decision", []) if x.get("id") == ident), None)
+    if d is None:
+        raise ErreurContenu(f"décision {ident} inconnue")
+    if "issue" not in d:
+        raise ErreurContenu(f"décision {ident} : pas encore notée, utiliser noter")
+    corr = list(d.get("corrections", [])) + [{"champ": champ, "avant": d.get(champ, "absent"), "apres": valeur,
+                                              "date": maintenant(), "motif": motif}]
+    return modifier(cfg, ident, {champ: valeur, "corrections": corr})
+
+
 def executer(cfg: Config, ident: str):
     return modifier(cfg, ident, {"etat": "executee", "date_execution": maintenant()}, deja_present="date_execution")
 
@@ -307,6 +326,11 @@ def main(argv: list[str] | None = None) -> int:
     a4 = sp.add_parser("renverser")
     a4.add_argument("id")
     a4.add_argument("--par", required=True)
+    a5 = sp.add_parser("corriger-note")
+    a5.add_argument("id")
+    a5.add_argument("--champ", required=True, choices=CHAMPS_CORRIGEABLES)
+    a5.add_argument("--valeur", required=True, help="true/false, un nombre ou un statut")
+    a5.add_argument("--motif", required=True)
     sp.add_parser("bilan")
     a = p.parse_args(argv)
     try:
@@ -320,6 +344,16 @@ def main(argv: list[str] | None = None) -> int:
             ident = a.id
         elif a.cmd == "executer":
             ok, nouvelles = executer(cfg, a.id)
+            ident = a.id
+        elif a.cmd == "corriger-note":
+            v = a.valeur
+            val = {"true": True, "false": False}.get(v.lower(), v)
+            if isinstance(val, str):
+                try:
+                    val = float(val)
+                except ValueError:
+                    pass
+            ok, nouvelles = corriger_note(cfg, a.id, a.champ, val, a.motif)
             ident = a.id
         elif a.cmd == "renverser":
             ok, nouvelles = renverser(cfg, a.id, a.par)

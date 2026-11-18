@@ -200,6 +200,17 @@ class Decisions(Base):
         self.assertAlmostEqual(b["cout_ratio_median"], 0.5)
         self.assertAlmostEqual(b["cout_ecart_median_h"], -1.0)
 
+    def test_corriger_note_garde_la_trace(self):
+        self.assertTrue(self.proposer(id="D-1")[0])
+        self.assertTrue(decision.noter(self.cfg, "D-1", "x", False, True, None, None, None)[0])
+        self.assertTrue(decision.corriger_note(self.cfg, "D-1", "changement_realise", False, "aucune branche atteinte")[0])
+        import tomllib
+        d = tomllib.loads(self.fichier.read_text())["decision"][0]
+        self.assertIs(d["changement_realise"], False)
+        self.assertEqual([(c["champ"], c["avant"], c["apres"]) for c in d["corrections"]], [("changement_realise", True, False)])
+        with self.assertRaises(graphe.ErreurContenu):
+            decision.corriger_note(self.cfg, "D-1", "choix", "autre", "interdit")
+
     def test_noter_deux_fois_refuse_et_decision_inconnue(self):
         self.assertTrue(self.proposer()[0])
         self.assertTrue(decision.noter(self.cfg, "D-1", "x", True, None, None, None, None)[0])
