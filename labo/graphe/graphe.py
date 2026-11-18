@@ -551,6 +551,8 @@ class Constructeur:
                 self.g.add((vn, PROV.wasRevisionOf, self.n(v["remplace"])))
             if v.get("reouvrir_si"):
                 self.g.add((vn, LAB.reouvrirSi, Literal(v["reouvrir_si"], lang="fr")))
+            if v.get("recalcule_par"):   # recalcul indépendant (politique § 4.3) : artefact d'un autre code, concordant
+                self.g.add((vn, LAB.recalculePar, Literal(v["recalcule_par"])))
             if v.get("motif_invalidite"):
                 self.g.add((vn, LAB.motifInvalidite, Literal(v["motif_invalidite"], lang="fr")))
             if v.get("course") and v.get("artefact"):

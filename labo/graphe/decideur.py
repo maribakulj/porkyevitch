@@ -168,6 +168,7 @@ def cycle(g, cfg: Config) -> list[dict]:
         SELECT ?v ?h ?st (COUNT(DISTINCT ?co) AS ?n) WHERE {
           ?v lab:statut ?st ; lab:portesur ?h . FILTER (?st IN (lab:Soutenue, lab:RefuteeIci))
           FILTER NOT EXISTS { ?w prov:wasRevisionOf ?v }
+          FILTER NOT EXISTS { ?v lab:recalculePar ?r }
           OPTIONAL { ?cr lab:teste ?h . ?cc lab:carteRecherche ?cr . ?co prov:qualifiedAssociation/prov:hadPlan ?cc }
         } GROUP BY ?v ?h ?st ORDER BY ?v"""):
         if int(row.n) < 2:

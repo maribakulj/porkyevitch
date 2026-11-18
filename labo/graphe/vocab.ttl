@@ -83,6 +83,7 @@ lab:statut          a owl:ObjectProperty ; rdfs:domain lab:Verdict ; rdfs:range 
 lab:conditions      a owl:ObjectProperty ; rdfs:domain lab:Verdict ;
     rdfs:comment "Ressources qui bornent la portée du verdict : jeu de mesure, modèle, réglage, sous-ensemble." .
 lab:reouvrirSi      a owl:DatatypeProperty ; rdfs:comment "Condition écrite qui rouvrirait la piste (verdict suspendu, non concluant ou invalide)." .
+lab:recalculePar  a owl:DatatypeProperty ; rdfs:domain lab:Verdict ; rdfs:comment "Artefact du recalcul indépendant et concordant de ce verdict (autre code, mêmes données)." .
 lab:motifInvalidite a owl:DatatypeProperty ; rdfs:domain lab:Verdict ; rdfs:comment "Pourquoi le test est invalide quand aucune course échouée ne l'explique." .
 lab:statutDeclare   a owl:DatatypeProperty ; rdfs:comment "Statut de travail tel que le tableau source le dit, en texte libre." .
 lab:notation        a owl:ObjectProperty ; rdfs:domain lab:Idee ; rdfs:comment "Une notation de tri (prov:Entity) posée sur l'idée par un notateur." .

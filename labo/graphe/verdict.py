@@ -83,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--ic-haut", type=float)
     p.add_argument("--reouvrir-si")
     p.add_argument("--motif-invalidite")
+    p.add_argument("--recalcule-par", help="recalcul indépendant concordant : chemin relatif de son artefact")
     p.add_argument("--donnees", action="append", default=[], help="jeu ou partition de données (identifiant)")
     p.add_argument("--remplace", help="verdict remplacé (prov:wasRevisionOf)")
     p.add_argument("--id")
@@ -98,7 +99,7 @@ def main(argv: list[str] | None = None) -> int:
             v["conditions"] = a.condition
         if a.donnees:
             v["donnees"] = a.donnees
-        for cle in ("course", "artefact", "valeur", "ic_bas", "ic_haut", "reouvrir_si", "motif_invalidite", "remplace"):
+        for cle in ("course", "artefact", "valeur", "ic_bas", "ic_haut", "reouvrir_si", "motif_invalidite", "remplace", "recalcule_par"):
             if getattr(a, cle) is not None:
                 v[cle] = getattr(a, cle)
         ok, nouvelles = proposer(cfg, v)

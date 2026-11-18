@@ -327,6 +327,15 @@ class Decideur(Base):
         self.assertEqual([c["verdict"] for c in r], ["V-2"])
         self.assertEqual(r[0]["statut"], "Suspendue")                     # statut court, pas l'IRI
 
+    def test_recalcul_independant_retire_le_candidat(self):
+        v = ('\n[[verdict]]\nid = "V-1"\nhypothese = "H-A"\nstatut = "soutenue"\nauteur = "o"\n'
+             'date = "2026-01-01T00:00:00Z"\nconditions = ["x"]\n')
+        (self.d / "graphe/jugements/verdicts.toml").write_text(v, encoding="utf-8")
+        self.assertIn("H-A", [c["cible"] for c in self.file()["cycle"] if c["type"] == "recalcul"])
+        (self.d / "graphe/jugements/verdicts.toml").write_text(v + 'recalcule_par = "recalcul/recalcul.json"\n',
+                                                               encoding="utf-8")
+        self.assertNotIn("H-A", [c["cible"] for c in self.file()["cycle"] if c["type"] == "recalcul"])
+
     def test_idees_couvertes(self):
         self.hyp(HYP + '\n[[idee_interne]]\nid = "I-INT-9"\ndescription = "interne"\nproche_de = ["I3"]\n'
                  '[[hypothese]]\nid = "H-D"\nidee = "I-INT-9"\ndescription = "d"\nmesure = "m"\n'
