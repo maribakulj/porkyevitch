@@ -30,6 +30,7 @@ import subprocess
 import sys
 import tomllib
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 from urllib.parse import quote
 
@@ -135,9 +136,10 @@ def charger_puissance():
 # ---------------------------------------------------------------- construction
 
 class Constructeur:
-    def __init__(self, cfg: Config, verdicts_texte: str | None = None):
+    def __init__(self, cfg: Config, verdicts_texte: str | None = None, decisions_texte: str | None = None):
         self.cfg = cfg
         self.verdicts_texte = verdicts_texte
+        self.decisions_texte = decisions_texte
         self.ns = Namespace(cfg.espace)
         self.g = Graph()
         for p, n in (("", self.ns), ("lab", LAB), ("prov", PROV), ("dcterms", DCTERMS), ("mls", MLS), ("skos", SKOS),
@@ -380,6 +382,12 @@ class Constructeur:
             texte = v.read_text(encoding="utf-8") if v and v.is_file() else ""
         self._verdicts(tomllib.loads(texte) if texte.strip() else {})
         self._derives()
+        if self.decisions_texte is not None:
+            texte = self.decisions_texte
+        else:
+            dd = self.cfg.chemin(c["decisions"]) if c.get("decisions") else None
+            texte = dd.read_text(encoding="utf-8") if dd and dd.is_file() else ""
+        self._decisions(tomllib.loads(texte) if texte.strip() else {})
 
     def _hypotheses(self, d: dict) -> None:
         etats = self.bloc_etat
@@ -408,6 +416,9 @@ class Constructeur:
             self.g.add((hn, MLS.specifiedBy, mesure))
             if h.get("auteur"):
                 self.g.add((hn, PROV.wasAttributedTo, self.agent(h["auteur"])))
+            if h.get("revision_de"):
+                self.g.add((hn, PROV.wasRevisionOf, self.n(h["revision_de"])))
+            self._chantier(h.get("chantier"), hn)
             if h.get("reouvrir_si"):
                 self.g.add((hn, LAB.reouvrirSi, Literal(h["reouvrir_si"], lang="fr")))
             cr = self.cartes.get(h.get("carte", ""))
@@ -424,14 +435,91 @@ class Constructeur:
                     self.g.add((pn, LAB.etatPremisse, LAB[etat]))
                 if cr is not None:
                     self.g.add((cr, LAB.premisse, pn))
+
+    def _chantier(self, cid: str | None, membre: URIRef) -> None:
+        """Un chantier est une prov:Collection (C-n) dont hypothèses et décisions sont membres."""
+        if cid:
+            cn = self.n(cid)
+            self.g.add((cn, RDF.type, PROV.Collection))
+            self.g.add((cn, DCTERMS.identifier, Literal(cid)))
+            self.g.add((cn, PROV.hadMember, membre))
+
+    def _decisions(self, d: dict) -> None:
+        """Décisions du fichier des décisions (écrit par decision.py) : options, choix, règle, prédictions, relecture, issue."""
+        def dec(x):
+            return Literal(Decimal(str(x)))
+
+        def lit_date(x):
+            return Literal(x, datatype=XSD.dateTime)
+
         for dc in d.get("decision", []):
             dn = self.n(dc["id"])
             self.g.add((dn, RDF.type, LAB.Decision))
-            self.g.add((dn, DCTERMS.description, Literal(dc["description"], lang="fr")))
-            for v in dc.get("verdicts", []):
-                self.g.add((dn, LAB.fondeSur, self.n(v)))
+            self.g.add((dn, DCTERMS.identifier, Literal(dc["id"])))
+            if dc.get("description"):
+                self.g.add((dn, DCTERMS.description, Literal(dc["description"], lang="fr")))
+            for ref in dc.get("fonde_sur", []):
+                self.g.add((dn, LAB.fondeSur, self.n(ref)))
             if dc.get("auteur"):
                 self.g.add((dn, PROV.wasAttributedTo, self.agent(dc["auteur"])))
+            if dc.get("date"):
+                self.g.add((dn, PROV.generatedAtTime, lit_date(dc["date"])))
+            self._chantier(dc.get("chantier"), dn)
+            for i, o in enumerate(dc.get("options", []), 1):
+                on = self.n(f"{dc['id']}-option-{i}")
+                self.g.add((on, RDF.type, PROV.Entity))
+                self.g.add((on, RDFS.label, Literal(o["libelle"])))
+                if "valeur_v" in o:
+                    self.g.add((on, LAB.valeurV, dec(o["valeur_v"])))
+                self.g.add((dn, LAB.option, on))
+                if dc.get("choix") == o["libelle"]:
+                    self.g.add((dn, LAB.choix, on))
+            if dc.get("choix") and not any(o["libelle"] == dc["choix"] for o in dc.get("options", [])):
+                hors = self.n(f"{dc['id']}-choix")        # un choix hors des options : la forme R13 le refuse
+                self.g.add((hors, RDF.type, PROV.Entity))
+                self.g.add((hors, RDFS.label, Literal(dc["choix"])))
+                self.g.add((dn, LAB.choix, hors))
+            for cle, prop in (("regle", LAB.regle), ("issue", LAB.issue)):
+                if dc.get(cle):
+                    self.g.add((dn, prop, Literal(dc[cle], lang="fr")))
+            for cle, prop in (("importance", LAB.importance), ("effet", LAB.effet), ("etat", LAB.etatDecision),
+                              ("dossier_empreinte", LAB.empreinteCandidats)):
+                if dc.get(cle):
+                    self.g.add((dn, prop, Literal(dc[cle])))
+            for cle, prop in (("poids", LAB.poids), ("heures_agent", LAB.heuresAgent),
+                              ("heures_calcul", LAB.heuresCalcul), ("heures_cumulees_24h", LAB.heuresCumulees24h),
+                              ("prediction_proba", LAB.predictionProba), ("p_changement", LAB.predictionChangement),
+                              ("heures_mesurees", LAB.heuresMesurees),
+                              ("heures_agent_mesurees", LAB.heuresAgentMesurees)):
+                if cle in dc:
+                    self.g.add((dn, prop, dec(dc[cle])))
+            for cle, prop in (("prediction_issue", LAB.predictionIssue), ("statut_propose", LAB.statutPropose),
+                              ("statut_obtenu", LAB.statutObtenu)):
+                if dc.get(cle):
+                    statut = STATUTS.get(dc[cle])
+                    if statut is None:
+                        raise ErreurContenu(f"décision {dc['id']} : statut inconnu « {dc[cle]} » ({cle})")
+                    self.g.add((dn, prop, statut))
+            for cle, prop in (("realisee", LAB.realisee), ("changement_realise", LAB.changementRealise)):
+                if cle in dc:
+                    self.g.add((dn, prop, Literal(bool(dc[cle]))))
+            for cle, prop in (("date_notation", LAB.dateNotation), ("date_execution", LAB.dateExecution)):
+                if dc.get(cle):
+                    self.g.add((dn, prop, lit_date(dc[cle])))
+            if dc.get("remplace"):
+                self.g.add((dn, PROV.wasRevisionOf, self.n(dc["remplace"])))
+            if dc.get("renversee_par"):
+                self.g.add((dn, LAB.renverseePar, self.n(dc["renversee_par"])))
+            if dc.get("relecture_verdict") or dc.get("relecture_date") or dc.get("relecture_auteur"):
+                rn = self.n(f"{dc['id']}-relecture")
+                self.g.add((rn, RDF.type, PROV.Entity))
+                if dc.get("relecture_verdict"):
+                    self.g.add((rn, LAB.verdictRelecture, Literal(dc["relecture_verdict"], lang="fr")))
+                if dc.get("relecture_date"):
+                    self.g.add((rn, DCTERMS.created, lit_date(dc["relecture_date"])))
+                if dc.get("relecture_auteur"):
+                    self.g.add((rn, PROV.wasAttributedTo, self.agent(dc["relecture_auteur"])))
+                self.g.add((dn, LAB.relecture, rn))
 
     def _verdicts(self, d: dict) -> None:
         for v in d.get("verdict", []):
@@ -450,6 +538,11 @@ class Constructeur:
                 cn = self.n("condition-" + slug(cond))
                 self.g.add((cn, RDFS.label, Literal(cond, lang="fr")))
                 self.g.add((vn, LAB.conditions, cn))
+            for dn_ in v.get("donnees", []):
+                jeu = self.n("donnees-" + slug(dn_))
+                self.g.add((jeu, RDF.type, PROV.Entity))
+                self.g.add((jeu, DCTERMS.identifier, Literal(dn_)))
+                self.g.add((vn, LAB.donnees, jeu))
             if v.get("reouvrir_si"):
                 self.g.add((vn, LAB.reouvrirSi, Literal(v["reouvrir_si"], lang="fr")))
             if v.get("motif_invalidite"):
@@ -491,8 +584,9 @@ class Constructeur:
         return self.g
 
 
-def construire(cfg: Config, verdicts_texte: str | None = None) -> tuple[Graph, list[str]]:
-    c = Constructeur(cfg, verdicts_texte)
+def construire(cfg: Config, verdicts_texte: str | None = None,
+               decisions_texte: str | None = None) -> tuple[Graph, list[str]]:
+    c = Constructeur(cfg, verdicts_texte, decisions_texte)
     g = c.construire()
     return g, c.avertissements
 

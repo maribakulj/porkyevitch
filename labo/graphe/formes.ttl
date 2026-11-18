@@ -1,15 +1,17 @@
-# Formes SHACL du graphe de recherche : douze règles de base (R0 à R11) et la règle des suspensions (R12).
+# Formes SHACL du graphe de recherche : douze règles de base (R0 à R11), la règle des suspensions (R12) et les règles des décisions et de la lignée (R13 à R18).
 @prefix sh:      <http://www.w3.org/ns/shacl#> .
 @prefix lab:     <https://labo.invalid/ns#> .
 @prefix labsh:   <https://labo.invalid/formes#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix mls:     <http://www.w3.org/ns/mls#> .
 @prefix spdx:    <http://spdx.org/rdf/terms#> .
 
 labsh: sh:declare
     [ sh:prefix "lab" ;     sh:namespace "https://labo.invalid/ns#"^^xsd:anyURI ] ,
+    [ sh:prefix "rdfs" ;    sh:namespace "http://www.w3.org/2000/01/rdf-schema#"^^xsd:anyURI ] ,
     [ sh:prefix "prov" ;    sh:namespace "http://www.w3.org/ns/prov#"^^xsd:anyURI ] ,
     [ sh:prefix "dcterms" ; sh:namespace "http://purl.org/dc/terms/"^^xsd:anyURI ] ,
     [ sh:prefix "mls" ;     sh:namespace "http://www.w3.org/ns/mls#"^^xsd:anyURI ] .
@@ -137,10 +139,130 @@ labsh:Preinscription a sh:NodeShape ; sh:targetClass lab:Course ;
           FILTER (?ecrite > ?debut)
         }""" ] .
 
-# R10 — une décision s'appuie sur au moins un verdict et a un auteur
+# R10 — une décision s'appuie sur au moins un verdict, une idée, un résultat ou une autre décision, et a un auteur
 labsh:Decision a sh:NodeShape ; sh:targetClass lab:Decision ;
-    sh:property [ sh:path lab:fondeSur ; sh:minCount 1 ; sh:class lab:Verdict ] ;
-    sh:property [ sh:path prov:wasAttributedTo ; sh:minCount 1 ] .
+    sh:property [ sh:path lab:fondeSur ; sh:minCount 1 ;
+                  sh:or ( [ sh:class lab:Verdict ] [ sh:class lab:Idee ] [ sh:class lab:Resultat ] [ sh:class lab:Decision ] ) ;
+                  sh:message "Décision sans fondement : un verdict, une idée, un résultat ou une autre décision du graphe." ] ;
+    sh:property [ sh:path prov:wasAttributedTo ; sh:minCount 1 ] ;
+    sh:property [ sh:path prov:generatedAtTime ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:dateTime ] ;
+    sh:property [ sh:path lab:regle ; sh:minCount 1 ] ;
+    sh:property [ sh:path lab:importance ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "courante" "importante" ) ] ;
+    sh:property [ sh:path lab:etatDecision ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( "proposee" "en_attente_humain" "relue" "executee" "notee" ) ] ;
+    sh:property [ sh:path lab:poids ; sh:maxCount 1 ; sh:minInclusive 1 ; sh:maxInclusive 5 ] ;
+    sh:property [ sh:path lab:effet ; sh:maxCount 1 ;
+                  sh:in ( "ouvre_chantier" "ferme_chantier" "clot_piste" "production" "suite" "instrument" ) ] ;
+    sh:property [ sh:path prov:wasRevisionOf ; sh:class lab:Decision ] .
+
+# R13 — au moins deux options, dont « ne rien faire », chacune avec sa valeur V ; le choix est l'une d'elles
+labsh:Options a sh:NodeShape ; sh:targetClass lab:Decision ;
+    sh:property [ sh:path lab:option ; sh:minCount 2 ; sh:message "Décision avec moins de deux options." ] ;
+    sh:property [ sh:path ( lab:option rdfs:label ) ; sh:hasValue "ne rien faire" ;
+                  sh:message "Décision sans l'option « ne rien faire »." ] ;
+    sh:property [ sh:path lab:choix ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Choix qui n'est pas l'une des options de la décision." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:choix ?c .
+          FILTER NOT EXISTS { $this lab:option ?c }
+        }""" ] .
+
+labsh:OptionForme a sh:NodeShape ; sh:targetObjectsOf lab:option ;
+    sh:property [ sh:path rdfs:label ; sh:minCount 1 ; sh:maxCount 1 ] ;
+    sh:property [ sh:path lab:valeurV ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "Option sans valeur V estimée." ] .
+
+# R14 — deux prédictions : l'issue attendue (un statut) avec sa probabilité, et la probabilité de changer une décision
+labsh:Prediction a sh:NodeShape ; sh:targetClass lab:Decision ;
+    sh:property [ sh:path lab:predictionIssue ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:in ( lab:NonTestee lab:TestInvalide lab:NonConcluante lab:RefuteeIci lab:Soutenue lab:Suspendue ) ;
+                  sh:message "Décision sans issue attendue (un des six statuts)." ] ;
+    sh:property [ sh:path lab:predictionProba ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:minInclusive 0 ; sh:maxInclusive 1 ;
+                  sh:message "Prédiction sans probabilité dans [0,1]." ] ;
+    sh:property [ sh:path lab:predictionChangement ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:minInclusive 0 ; sh:maxInclusive 1 ;
+                  sh:message "Décision sans p_changement dans [0,1]." ] .
+
+# R15 — une décision importante a une relecture datée et signée par un autre que l'auteur, et l'empreinte
+#       du fichier de candidats dont les cinq premiers forment le dossier de relecture ;
+#       exécutée, elle a été relue avant l'exécution
+labsh:Relecture a sh:NodeShape ; sh:targetObjectsOf lab:relecture ;
+    sh:property [ sh:path lab:verdictRelecture ; sh:minCount 1 ] ;
+    sh:property [ sh:path prov:wasAttributedTo ; sh:minCount 1 ] ;
+    sh:property [ sh:path dcterms:created ; sh:minCount 1 ; sh:datatype xsd:dateTime ] .
+
+labsh:ImportanteRelue a sh:NodeShape ; sh:targetClass lab:Decision ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Décision importante sans relecture." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:importance "importante" .
+          FILTER NOT EXISTS { $this lab:relecture ?r }
+        }""" ] ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Décision importante sans empreinte (SHA-256) du fichier de candidats du dossier de relecture." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:importance "importante" .
+          FILTER NOT EXISTS { $this lab:empreinteCandidats ?e . FILTER regex(str(?e), "^[0-9a-f]{64}$") }
+        }""" ] ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Relecteur identique à l'auteur de la décision." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:relecture ?rel ; prov:wasAttributedTo ?a . ?rel prov:wasAttributedTo ?r .
+          FILTER (?r = ?a)
+        }""" ] ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Décision importante exécutée sans relecture datée avant l'exécution." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:importance "importante" ; lab:etatDecision ?e . FILTER (?e IN ("executee", "notee"))
+          FILTER NOT EXISTS { $this lab:relecture/dcterms:created ?d ; lab:dateExecution ?x . FILTER (?d <= ?x) }
+        }""" ] .
+
+# R16 — importance calculée : poids ≥ 4, effet ouvrant ou fermant un chantier, clôturant une piste ou de production,
+#       statut réfuté ou suspendu proposé, plus de 3 h de calcul du chantier sur 24 h, ou verdict exploratoire
+#       pour une mise en production. Une décision qui remplit une condition est importante.
+labsh:ImportanceForcee a sh:NodeShape ; sh:targetClass lab:Decision ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Décision qui remplit une condition d'importance (poids ≥ 4, effet de chantier, de clôture ou de production, statut réfuté ou suspendu, > 3 h de calcul sur 24 h, verdict exploratoire pour la production) : elle est importante." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this lab:importance "courante" .
+          { $this lab:poids ?p . FILTER (?p >= 4) }
+          UNION
+          { $this lab:effet ?e . FILTER (?e IN ("ouvre_chantier", "ferme_chantier", "clot_piste", "production")) }
+          UNION
+          { $this lab:statutPropose ?s . FILTER (?s IN (lab:RefuteeIci, lab:Suspendue)) }
+          UNION
+          { $this lab:heuresCumulees24h ?h . FILTER (?h > 3) }
+          UNION
+          { $this lab:effet "production" ; lab:fondeSur ?v . ?v lab:fondeSur/prov:wasDerivedFrom/prov:wasGeneratedBy/prov:qualifiedAssociation/prov:hadPlan/lab:carteRecherche ?cr .
+            ?cr lab:exploratoire true }
+        }""" ] .
+
+# R17 — une course ne s'appuie pas sur une carte confirmatoire dont une prémisse est non vérifiée
+labsh:PremisseVerifiee a sh:NodeShape ; sh:targetClass lab:Course ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "Course rattachée à une carte confirmatoire dont une prémisse n'est pas vérifiée." ;
+        sh:select """
+        SELECT $this WHERE {
+          $this prov:qualifiedAssociation/prov:hadPlan/lab:carteRecherche ?cr .
+          ?cr lab:exploratoire false ; lab:premisse/lab:etatPremisse lab:non_verifiee .
+        }""" ] .
+
+# R18 — lignée et données : une révision renvoie à une hypothèse ; les données d'un verdict sont des ressources
+labsh:Lignee a sh:NodeShape ; sh:targetSubjectsOf prov:wasRevisionOf ;
+    sh:sparql [ a sh:SPARQLConstraint ; sh:prefixes labsh: ;
+        sh:message "prov:wasRevisionOf sur une hypothèse renvoie à autre chose qu'une hypothèse." ;
+        sh:select """
+        SELECT $this WHERE { $this a lab:Hypothese ; prov:wasRevisionOf ?o . FILTER NOT EXISTS { ?o a lab:Hypothese } }""" ] .
+
+labsh:DonneesVerdict a sh:NodeShape ; sh:targetClass lab:Verdict ;
+    sh:property [ sh:path lab:donnees ; sh:nodeKind sh:IRI ] .
 
 # R12 — « suspendue » dit à quelle condition on rouvre, et qui l'a décidé
 labsh:Suspension a sh:NodeShape ; sh:targetClass lab:Verdict ;

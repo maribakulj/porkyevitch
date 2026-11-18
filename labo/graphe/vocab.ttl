@@ -13,6 +13,8 @@
 @prefix spdx:    <http://spdx.org/rdf/terms#> .
 
 # ---------- Classes (9) ----------
+# Les options, relectures, chantiers et jeux de données ne sont pas des classes à part : ce sont des prov:Entity
+# ou des prov:Collection reliés par les propriétés ci-dessous.
 lab:Idee            a owl:Class ; rdfs:subClassOf prov:Entity ;
     rdfs:comment "Une ligne du stock d'idées (id, thème, source, coût, risque, priorité…)." .
 lab:Hypothese       a owl:Class ; rdfs:subClassOf prov:Entity ; skos:closeMatch mp:Claim ;
@@ -30,7 +32,7 @@ lab:Resultat        a owl:Class ; rdfs:subClassOf prov:Entity , mls:ModelEvaluat
 lab:Verdict         a owl:Class ; rdfs:subClassOf prov:Entity ;
     rdfs:comment "Relation qualifiée hypothèse–résultat : statut + conditions. Seule source du statut." .
 lab:Decision        a owl:Class ; rdfs:subClassOf prov:Entity ;
-    rdfs:comment "Ce qu'on fait ensuite (garder, abandonner, relancer), fondé sur des verdicts." .
+    rdfs:comment "Ce qu'on fait ensuite : options chiffrées (dont « ne rien faire »), choix, règle, importance, prédiction, relecture, puis issue réelle." .
 
 # ---------- Statuts ----------
 # Six statuts, jamais « marche / marche pas ». Seul un verdict porte un statut.
@@ -76,7 +78,7 @@ lab:etat            a owl:ObjectProperty ; rdfs:domain lab:Course .
 lab:cle             a owl:DatatypeProperty ; rdfs:domain lab:Course ;
     rdfs:comment "Clé du calcul (SHA-256 du dossier, du point d'entrée et des entrées)." .
 lab:portesur        a owl:ObjectProperty ; rdfs:domain lab:Verdict ; rdfs:range lab:Hypothese .
-lab:fondeSur        a owl:ObjectProperty ; rdfs:comment "Verdict → Résultat ; Décision → Verdict." .
+lab:fondeSur        a owl:ObjectProperty ; rdfs:comment "Verdict → Résultat ou Course ; Décision → Verdict, Idée, Résultat ou autre Décision." .
 lab:statut          a owl:ObjectProperty ; rdfs:domain lab:Verdict ; rdfs:range skos:Concept .
 lab:conditions      a owl:ObjectProperty ; rdfs:domain lab:Verdict ;
     rdfs:comment "Ressources qui bornent la portée du verdict : jeu de mesure, modèle, réglage, sous-ensemble." .
@@ -102,3 +104,39 @@ lab:famille         a owl:DatatypeProperty ; rdfs:range xsd:integer .
 lab:theme a owl:DatatypeProperty . lab:cout a owl:DatatypeProperty . lab:risque a owl:DatatypeProperty .
 lab:priorite a owl:DatatypeProperty . lab:orientation a owl:DatatypeProperty .
 lab:etatIdee a owl:ObjectProperty ; rdfs:comment "Statut de travail du stock (à faire, en cours, close), distinct du statut épistémique." .
+
+# ---------- Décisions ----------
+lab:option          a owl:ObjectProperty ; rdfs:domain lab:Decision .
+lab:choix           a owl:ObjectProperty ; rdfs:domain lab:Decision ;
+    rdfs:comment "L'option retenue ; doit être l'une des options de la décision." .
+lab:valeurV         a owl:DatatypeProperty ; rdfs:range xsd:decimal ;
+    rdfs:comment "Valeur de l'information par heure estimée pour l'option (politique de décision, § 3)." .
+lab:regle           a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "Règle de la politique invoquée, en texte." .
+lab:predictionIssue a owl:ObjectProperty ; rdfs:domain lab:Decision ; rdfs:range skos:Concept ; rdfs:comment "Issue attendue : un des six statuts." .
+lab:predictionProba a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:range xsd:decimal ; rdfs:comment "Probabilité de l'issue attendue, dans [0,1]." .
+lab:predictionChangement a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:range xsd:decimal ;
+    rdfs:comment "Probabilité que l'issue change une décision suivante, dans [0,1]." .
+lab:poids           a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "Poids de la décision, de 1 à 5 (politique § 3)." .
+lab:heuresAgent     a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "Heures d'agent estimées." .
+lab:heuresCalcul    a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "Heures de calcul estimées." .
+lab:heuresCumulees24h a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "Heures de calcul du chantier engagées sur 24 h, cette décision comprise (calculé par decision.py)." .
+lab:statutPropose   a owl:ObjectProperty ; rdfs:domain lab:Decision ; rdfs:range skos:Concept ; rdfs:comment "Statut qu'une décision écrit ou propose pour une hypothèse (réfutée, suspendue…)." .
+lab:effet           a owl:DatatypeProperty ; rdfs:domain lab:Decision ;
+    rdfs:comment "ouvre_chantier, ferme_chantier, clot_piste, production, suite ou instrument." .
+lab:importance      a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "« courante » ou « importante » ; calculée par decision.py, jamais choisie." .
+lab:etatDecision    a owl:DatatypeProperty ; rdfs:domain lab:Decision ;
+    rdfs:comment "proposee, en_attente_humain, relue, executee ou notee. Un remplacement s'écrit prov:wasRevisionOf." .
+lab:relecture       a owl:ObjectProperty ; rdfs:domain lab:Decision ; rdfs:comment "Relecture aveugle (prov:Entity : verdict, date, auteur)." .
+lab:verdictRelecture a owl:DatatypeProperty ; rdfs:comment "Verdict du relecteur (texte)." .
+lab:empreinteCandidats a owl:DatatypeProperty ; rdfs:domain lab:Decision ;
+    rdfs:comment "SHA-256 du fichier de candidats dont les cinq premiers forment le dossier de relecture." .
+lab:dateExecution   a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:range xsd:dateTime .
+lab:renverseePar    a owl:ObjectProperty ; rdfs:domain lab:Decision ; rdfs:range lab:Decision ; rdfs:comment "Décision postérieure qui renverse celle-ci." .
+lab:donnees         a owl:ObjectProperty ; rdfs:domain lab:Verdict ; rdfs:comment "Jeu ou partition de données sur lequel le verdict a été obtenu (ressource)." .
+lab:issue           a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "Issue réelle, écrite après coup." .
+lab:realisee        a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:range xsd:boolean ; rdfs:comment "L'issue prédite s'est-elle réalisée." .
+lab:changementRealise a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:range xsd:boolean ; rdfs:comment "L'issue a-t-elle changé une décision suivante." .
+lab:statutObtenu    a owl:ObjectProperty ; rdfs:domain lab:Decision ; rdfs:range skos:Concept .
+lab:dateNotation    a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:range xsd:dateTime .
+lab:heuresMesurees  a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "Heures de calcul mesurées." .
+lab:heuresAgentMesurees a owl:DatatypeProperty ; rdfs:domain lab:Decision .

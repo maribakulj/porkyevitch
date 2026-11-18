@@ -19,8 +19,5 @@ reouvrir_si = "Une condition écrite qui rouvrirait la piste."
 id = "P-001"
 description = "Ce que le calcul suppose sans l'avoir mesuré."
 
-# [[decision]]
-# id = "DEC-001"
-# verdicts = ["V-H-001-1"]
-# description = "Ce qu'on fait ensuite."
-# auteur = "orchestrateur"
+# Les décisions ne s'écrivent pas ici : voir decision.py (proposer, noter) et le fichier [jugements] decisions.
+# Une hypothèse peut porter chantier = "C-1" et revision_de = "H-001" (lignée).
