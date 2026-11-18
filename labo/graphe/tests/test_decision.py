@@ -239,6 +239,17 @@ class Premisse(Base):
         g, _ = graphe.construire(self.cfg)
         self.assertTrue(any("prémisse n'est pas vérifiée" in m for _, m in graphe.violations(g)))
 
+    def course(self, debut):
+        (self.d / "graphe/sources/guichet.json").write_text(json.dumps({"courses": [{
+            "id": "R-1", "cle": hashlib.sha256(b"k").hexdigest(), "etat": "REUSSIE", "carte_calcul": "a",
+            "debut": debut, "fin": debut, "artefacts": [{"nom": "recu.json", "sha256": H64}]}]}), encoding="utf-8")
+        g, _ = graphe.construire(self.cfg)
+        return [m for _, m in graphe.violations(g) if "prémisse n'est pas vérifiée" in m]
+
+    def test_r17_date_d_entree_en_vigueur(self):
+        self.assertEqual(self.course("2026-11-18T12:00:00Z"), [])       # avant : un constat, pas une violation
+        self.assertTrue(self.course("2026-11-19T12:00:00Z"))            # après : violation
+
     def test_decideur_propose_de_verifier_la_premisse(self):
         g, _ = graphe.construire(self.cfg)
         f = decideur.file_candidats(g, self.cfg)
@@ -286,6 +297,61 @@ class Decideur(Base):
                 'date = "2026-01-01T00:00:00Z"\nconditions = ["x"]\ndonnees = ["partition-1"]\n'
         (self.d / "graphe/jugements/verdicts.toml").write_text(texte, encoding="utf-8")
         self.assertFalse(any(r.get("ecartee") for r in self.file()["reouvertures"]))
+
+    def hyp(self, texte):
+        (self.d / "graphe/jugements/hypotheses.toml").write_text(texte, encoding="utf-8")
+
+    def test_premisse_infirmee_une_seule_reouverture(self):
+        # une prémisse partagée par deux hypothèses de la même carte : un seul candidat
+        carte = self.carte_a.replace('premisse = "verifiee"', 'premisse = "infirmee"')
+        (self.d / "experiences/a/recherche.md").write_text(carte, encoding="utf-8")
+        T.git(self.d, "commit", "-qam", "infirmee")
+        self.hyp(HYP + '\n[[hypothese]]\nid = "H-C"\nidee = "I3"\ndescription = "d"\nmesure = "m"\n'
+                 'effet_minimal = 0.1\ncarte = "a"\n[[hypothese.premisse]]\nid = "P-A"\ndescription = "partagée"\n')
+        f = self.file()
+        r = [c for c in f["reouvertures"] if c["type"] == "reouverture-premisse"]
+        self.assertEqual([(c["cible"], c["hypotheses"]) for c in r], [("P-A", ["H-A", "H-C"])])
+        self.assertFalse(any(c["type"] == "verifier-premisse" for c in f["cycle"]))
+
+    def test_verdict_remplace_n_est_plus_candidat(self):
+        v = ('\n[[verdict]]\nid = "V-1"\nhypothese = "H-A"\nstatut = "suspendue"\nauteur = "o"\n'
+             'date = "2026-01-01T00:00:00Z"\nreouvrir_si = "ancienne condition"\n'
+             '\n[[verdict]]\nid = "V-2"\nhypothese = "H-A"\nstatut = "suspendue"\nauteur = "o"\n'
+             'date = "2026-01-02T00:00:00Z"\nreouvrir_si = "nouvelle condition"\nremplace = "V-1"\n')
+        (self.d / "graphe/jugements/verdicts.toml").write_text(v, encoding="utf-8")
+        r = [c for c in self.file()["reouvertures"] if c["cible"] == "H-A"]
+        self.assertEqual([c["verdict"] for c in r], ["V-2"])
+        # remplacé par un verdict plus ancien en date : le remplacé ne l'emporte jamais
+        (self.d / "graphe/jugements/verdicts.toml").write_text(v.replace("2026-01-02", "2025-12-01"), encoding="utf-8")
+        r = [c for c in self.file()["reouvertures"] if c["cible"] == "H-A"]
+        self.assertEqual([c["verdict"] for c in r], ["V-2"])
+        self.assertEqual(r[0]["statut"], "Suspendue")                     # statut court, pas l'IRI
+
+    def test_idees_couvertes(self):
+        self.hyp(HYP + '\n[[idee_interne]]\nid = "I-INT-9"\ndescription = "interne"\nproche_de = ["I3"]\n'
+                 '[[hypothese]]\nid = "H-D"\nidee = "I-INT-9"\ndescription = "d"\nmesure = "m"\n'
+                 'effet_minimal = 0.1\ncouvre = ["I4"]\n')
+        f = self.file()
+        self.assertEqual(f["portefeuille"], [])
+        self.assertEqual(f["idees_couvertes"], 4)      # I1, I2 (sources), I3 (proche_de), I4 (couvre)
+
+    def test_course_technique_sans_candidat_verdict(self):
+        (self.d / "graphe/sources/guichet.json").write_text(json.dumps({"courses": [{
+            "id": "R-1", "cle": hashlib.sha256(b"k").hexdigest(), "etat": "REUSSIE", "carte_calcul": "a",
+            "debut": "2999-01-01T00:00:00Z", "artefacts": [{"nom": "recu.json", "sha256": H64}]}]}), encoding="utf-8")
+        self.assertIn("R-1", [c["cible"] for c in self.file()["cycle"] if c["type"] == "verdict"])
+        self.hyp(HYP + '\n[[course_technique]]\nid = "R-1"\nmotif = "essai du guichet"\n')
+        self.assertNotIn("R-1", [c["cible"] for c in self.file()["cycle"] if c["type"] == "verdict"])
+
+    def test_instruments_non_faits(self):
+        (self.d / "graphe/jugements/instruments.toml").write_text(
+            '[[instrument]]\nid = "a"\ndescription = "x"\nfait = false\npoids = 2\n'
+            '[[instrument]]\nid = "b"\ndescription = "y"\nfait = true\npoids = 5\n'
+            '[[instrument]]\nid = "c"\ndescription = "z"\nfait = false\npoids = 4\n', encoding="utf-8")
+        cfg = self.d / "graphe/config.toml"
+        cfg.write_text(cfg.read_text().replace('decisions = ', 'instruments = "jugements/instruments.toml"\ndecisions = '))
+        self.cfg = graphe.Config(cfg)
+        self.assertEqual([c["cible"] for c in self.file()["instruments"]], ["c", "a"])
 
     def test_portefeuille_s_reconcilie(self):
         p = self.file()["portefeuille"]

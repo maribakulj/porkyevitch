@@ -62,8 +62,14 @@ ouverte, les réouvertures (dernier verdict non concluant, invalide ou suspendu,
 (idées gardées par les deux notateurs, sans hypothèse, rangées par S moyen des deux). **Règle d'arrêt** : une lignée
 d'hypothèses (`revision_de` dans le fichier des hypothèses, `prov:wasRevisionOf` dans le graphe) qui compte deux verdicts
 non concluants sur les mêmes données (`--donnees` de `verdict.py`, une ressource `lab:donnees`) voit ses nouvelles
-cartes marquées « écartée (règle d'arrêt) ». Il compte aussi les chantiers actifs et signale plus de 3. Les sources 4
-(instruments) et 5 (suites déclarées) ne sont pas lues.
+cartes marquées « écartée (règle d'arrêt) ». Il compte aussi les chantiers actifs et signale plus de 3.
+Précisions : une prémisse infirmée (état `infirmee`) donne une seule réouverture « redessiner sans cette prémisse »,
+même partagée par plusieurs hypothèses ; un verdict qui porte `remplace` (`verdict.py --remplace`) laisse seul son
+remplaçant compter ; une idée est couverte (hors du rang, comptée à part) si une hypothèse la cite, si une idée interne
+la désigne en `proche_de` ou si une hypothèse porte `couvre = ["I…"]` ; `[[course_technique]] id = "R-…" motif = "…"`
+retire une course sans hypothèse des candidats « verdict » ; la source 4 lit `jugements/instruments.toml`
+(`[[instrument]]` id, description, fait, poids) et liste les instruments non faits. La source 5 (suites déclarées)
+n'est pas lue. R17 ne vaut que pour les courses commencées ou finies après le 18/11/2026 17 h.
 
 `config.exemple.toml` et `jugements.exemple.toml` montrent le format ; les chemins y sont relatifs au fichier de
 configuration. Le rapport garde ce qui est écrit sous sa dernière rubrique (« Interprétation ») quand on le régénère.

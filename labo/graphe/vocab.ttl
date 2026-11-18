@@ -65,7 +65,7 @@ lab:REFUSEE a skos:Concept ; skos:inScheme lab:etatsCourse .
 lab:ABANDONNEE a skos:Concept ; skos:inScheme lab:etatsCourse .
 lab:INCONNUE a skos:Concept ; skos:inScheme lab:etatsCourse .
 
-lab:verifiee a skos:Concept . lab:non_verifiee a skos:Concept . lab:sans_objet a skos:Concept .
+lab:verifiee a skos:Concept . lab:infirmee a skos:Concept ; skos:definition "Prémisse testée et fausse."@fr . lab:non_verifiee a skos:Concept . lab:sans_objet a skos:Concept .
 
 # ---------- Propriétés propres (le reste vient de PROV, DCTERMS, CiTO, ML-Schema, SPDX) ----------
 lab:motive          a owl:ObjectProperty ; rdfs:subPropertyOf prov:wasInfluencedBy ;
@@ -140,3 +140,5 @@ lab:statutObtenu    a owl:ObjectProperty ; rdfs:domain lab:Decision ; rdfs:range
 lab:dateNotation    a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:range xsd:dateTime .
 lab:heuresMesurees  a owl:DatatypeProperty ; rdfs:domain lab:Decision ; rdfs:comment "Heures de calcul mesurées." .
 lab:heuresAgentMesurees a owl:DatatypeProperty ; rdfs:domain lab:Decision .
+lab:couvre          a owl:ObjectProperty ; rdfs:domain lab:Hypothese ; rdfs:range lab:Idee ; rdfs:comment "Idée du portefeuille que l'hypothèse couvre sans la citer comme source." .
+lab:motifTechnique  a owl:DatatypeProperty ; rdfs:domain lab:Course ; rdfs:comment "Course sans hypothèse (essai de l'outil) : aucun verdict attendu." .

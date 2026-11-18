@@ -49,3 +49,4 @@ export = "sources/guichet-export.json"
 hypotheses = "jugements/hypotheses.toml"
 verdicts = "jugements/verdicts.toml"
 decisions = "jugements/decisions.toml"      # écrit seulement par decision.py
+instruments = "jugements/instruments.toml"   # facultatif : [[instrument]] id, description, fait, poids

@@ -400,6 +400,8 @@ class Constructeur:
             self.g.add((idn, DCTERMS.source, LAB.interne))
             for proche in i.get("proche_de", []):
                 self.g.add((idn, DCTERMS.relation, self.n(proche)))
+        for ct in d.get("course_technique", []):    # course sans hypothèse (essai du guichet) : pas de verdict attendu
+            self.g.add((self.n(ct["id"]), LAB.motifTechnique, Literal(ct["motif"], lang="fr")))
         for h in d.get("hypothese", []):
             hn = self.n(h["id"])
             self.g.add((hn, RDF.type, LAB.Hypothese))
@@ -416,6 +418,8 @@ class Constructeur:
             self.g.add((hn, MLS.specifiedBy, mesure))
             if h.get("auteur"):
                 self.g.add((hn, PROV.wasAttributedTo, self.agent(h["auteur"])))
+            for i_ in h.get("couvre", []):
+                self.g.add((hn, LAB.couvre, self.n(i_)))
             if h.get("revision_de"):
                 self.g.add((hn, PROV.wasRevisionOf, self.n(h["revision_de"])))
             self._chantier(h.get("chantier"), hn)
@@ -431,7 +435,7 @@ class Constructeur:
                 self.g.add((pn, RDF.type, LAB.Premisse))
                 self.g.add((pn, DCTERMS.description, Literal(p["description"], lang="fr")))
                 etat = p.get("etat") or etats.get(h.get("carte", ""))
-                if etat in ("verifiee", "non_verifiee", "sans_objet"):
+                if etat in ("verifiee", "non_verifiee", "sans_objet", "infirmee"):
                     self.g.add((pn, LAB.etatPremisse, LAB[etat]))
                 if cr is not None:
                     self.g.add((cr, LAB.premisse, pn))
@@ -543,6 +547,8 @@ class Constructeur:
                 self.g.add((jeu, RDF.type, PROV.Entity))
                 self.g.add((jeu, DCTERMS.identifier, Literal(dn_)))
                 self.g.add((vn, LAB.donnees, jeu))
+            if v.get("remplace"):
+                self.g.add((vn, PROV.wasRevisionOf, self.n(v["remplace"])))
             if v.get("reouvrir_si"):
                 self.g.add((vn, LAB.reouvrirSi, Literal(v["reouvrir_si"], lang="fr")))
             if v.get("motif_invalidite"):

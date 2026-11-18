@@ -4,7 +4,7 @@
 Usage :
     python3 verdict.py [--config config.toml] H-ID STATUT --auteur ROLE [--condition TEXTE]...
         [--course R-ID --artefact NOM [--valeur X --ic-bas B --ic-haut H]] [--reouvrir-si TEXTE]
-        [--motif-invalidite TEXTE] [--donnees JEU]... [--id V-…]
+        [--motif-invalidite TEXTE] [--donnees JEU]... [--remplace V-…] [--id V-…]
 
 STATUT : non-testee, test-invalide, non-concluante, refutee, soutenue ou suspendue.
 
@@ -84,6 +84,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--reouvrir-si")
     p.add_argument("--motif-invalidite")
     p.add_argument("--donnees", action="append", default=[], help="jeu ou partition de données (identifiant)")
+    p.add_argument("--remplace", help="verdict remplacé (prov:wasRevisionOf)")
     p.add_argument("--id")
     a = p.parse_args(argv)
     try:
@@ -97,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
             v["conditions"] = a.condition
         if a.donnees:
             v["donnees"] = a.donnees
-        for cle in ("course", "artefact", "valeur", "ic_bas", "ic_haut", "reouvrir_si", "motif_invalidite"):
+        for cle in ("course", "artefact", "valeur", "ic_bas", "ic_haut", "reouvrir_si", "motif_invalidite", "remplace"):
             if getattr(a, cle) is not None:
                 v[cle] = getattr(a, cle)
         ok, nouvelles = proposer(cfg, v)
