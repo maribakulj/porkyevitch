@@ -272,7 +272,8 @@ def en_markdown(f: dict) -> str:
         L += ["| hypothèse | dernier verdict | statut | rouvrir si | |", "|---|---|---|---|---|"]
         L += [f"| {c['cible']} | {c['verdict']} | {c['statut']} | {(c['reouvrir_si'] or '—').replace('|', '/')} | "
               f"{c.get('ecartee', '')} |"
-              for c in f["reouvertures"]]
+              for c in f["reouvertures"] if c["type"] == "reouverture"]
+        L += [f"- {c['texte']}" for c in f["reouvertures"] if c["type"] != "reouverture"]
     else:
         L.append("Aucune.")
     L += ["", "## 3. Portefeuille", ""]
