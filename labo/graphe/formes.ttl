@@ -252,6 +252,9 @@ labsh:PremisseVerifiee a sh:NodeShape ; sh:targetClass lab:Course ;
         SELECT $this WHERE {
           $this prov:qualifiedAssociation/prov:hadPlan/lab:carteRecherche ?cr .
           ?cr lab:exploratoire false ; lab:premisse/lab:etatPremisse lab:non_verifiee .
+          # Entrée en vigueur : les courses commencées ou finies avant la règle restent des constats, pas des violations.
+          FILTER NOT EXISTS { $this prov:startedAtTime|prov:endedAtTime ?t .
+                              FILTER (?t < "2026-11-18T17:00:00Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>) }
         }""" ] .
 
 # R18 — lignée et données : une révision renvoie à une hypothèse ; les données d'un verdict sont des ressources
