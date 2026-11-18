@@ -91,6 +91,11 @@ lab:notation        a owl:ObjectProperty ; rdfs:domain lab:Idee ; rdfs:comment "
 lab:notePar         a owl:ObjectProperty ; rdfs:subPropertyOf prov:wasAttributedTo .
 lab:elimine         a owl:DatatypeProperty ; rdfs:range xsd:boolean .
 lab:motif           a owl:DatatypeProperty . lab:doublonDe a owl:ObjectProperty .
+lab:conditions a skos:ConceptScheme ; skos:definition "Conditions nommées dont l'état rouvrirait une idée écartée (jugements/conditions.toml)."@fr .
+lab:leveeSi         a owl:ObjectProperty ; rdfs:domain prov:Entity ; rdfs:range skos:Concept ;
+    rdfs:comment "Notation qui écarte une idée -> condition nommée qui lèverait l'écartement."@fr .
+lab:etatCondition   a owl:DatatypeProperty ; rdfs:comment "vraie ou fausse, à la date de construction."@fr .
+lab:leveeQuand      a owl:DatatypeProperty ; rdfs:comment "État de la condition (vraie ou fausse) qui lève l'écartement."@fr .
 lab:score           a owl:DatatypeProperty ; rdfs:comment "Note d'un critère (nom du critère en lab:critere sur un nœud de note, ou propriété lab:score_<critère>)." .
 lab:decisionRegle   a owl:DatatypeProperty ; rdfs:comment "Règle de décision écrite dans la carte de recherche." .
 lab:erreurType      a owl:DatatypeProperty ; rdfs:comment "Erreur-type retenue par la carte pour le calcul de puissance." .

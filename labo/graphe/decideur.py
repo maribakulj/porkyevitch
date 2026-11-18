@@ -23,6 +23,9 @@ un `course_technique` : pas de candidat « verdict ». Verdict portant `remplace
 Pour chaque prémisse non vérifiée d'une hypothèse ouverte, un candidat « vérifier la prémisse ». Il compte les
 chantiers actifs (limite 3) et écrit `dossier-relecture.json` : les cinq premiers candidats non écartés et
 l'empreinte SHA-256 de `file-candidats.json`, à recopier dans la décision (champ dossier_empreinte).
+Section 5, « idées à réexaminer » (`a_reexaminer` dans le JSON) : idées écartées dont la condition de levée est
+remplie (conditions.toml, levees.toml), puis désaccords entre notateurs par S du notateur qui garde ; hors du dossier de
+relecture, et jamais une idée couverte.
 La source 4 (instruments) vient de jugements/instruments.toml ; la source 5 (suites déclarées) n'est pas lue ici.
 Code de sortie : 0, 2 usage.
 """
@@ -39,6 +42,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import graphe  # noqa: E402
+import idees  # noqa: E402
 from graphe import LAB, Config, ErreurContenu  # noqa: E402
 
 PREFIXES = """
@@ -47,6 +51,7 @@ PREFIX prov: <http://www.w3.org/ns/prov#>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 """
 MAX_PORTEFEUILLE_MD = 20
+MAX_REEXAMEN_MD = 40
 K_DOSSIER = 5          # taille du dossier de relecture : les cinq premiers candidats
 MAX_CHANTIERS = 3
 
@@ -223,13 +228,7 @@ def reouvertures(g) -> list[dict]:
     return cands
 
 
-def couvertes(g) -> set:
-    """Idées déjà traitées : citées en source d'une hypothèse, en proche_de d'une idée interne, ou couvertes."""
-    c = set(g.objects(None, LAB.couvre)) | {o for _, o in g.subject_objects(graphe.PROV.wasDerivedFrom)
-                                            if (o, graphe.RDF.type, LAB.Idee) in g}
-    for i in g.subjects(graphe.DCTERMS.source, LAB.interne):
-        c |= set(g.objects(i, graphe.DCTERMS.relation))
-    return c
+couvertes = idees.couvertes   # définie dans idees.py, partagée avec le rapport des idées
 
 
 def portefeuille(g) -> tuple[list[dict], str | None]:
@@ -267,9 +266,17 @@ def portefeuille(g) -> tuple[list[dict], str | None]:
     return sortie, note
 
 
+def reexamen(g) -> list[dict]:
+    """Idées à réexaminer : écartées dont la condition de levée est remplie, puis désaccords entre notateurs
+    (rangés par S du notateur qui garde). Une idée couverte par une hypothèse n'y figure pas."""
+    return [{"source": 6, "type": "reexamen", "cible": e["id"], "raisons": e["raisons"], "s_garde": e["s_garde"],
+             "conditions": sorted({n["condition"] for n in e["notations"] if n["elimine"] and n["levee"]}),
+             "texte": e["idee"]} for e in idees.a_reexaminer(idees.etat_idees(g))]
+
+
 def file_candidats(g, cfg: Config) -> dict:
     port, note = portefeuille(g)
-    return {"cycle": cycle(g, cfg) + [c for c in premisses(g) if c["source"] == 1], "chantiers": chantiers(g), "reouvertures": reouvertures(g) + [c for c in premisses(g) if c["source"] == 2],
+    return {"a_reexaminer": reexamen(g), "cycle": cycle(g, cfg) + [c for c in premisses(g) if c["source"] == 1], "chantiers": chantiers(g), "reouvertures": reouvertures(g) + [c for c in premisses(g) if c["source"] == 2],
             "portefeuille": port, "idees_couvertes": len([i for i in couvertes(g) if (i, graphe.RDF.type, LAB.Idee) in g
                                     and (i, LAB.notation, None) in g]),
             "instruments": instruments(cfg),
@@ -308,6 +315,19 @@ def en_markdown(f: dict) -> str:
     L += ["", f"{f['idees_couvertes']} idée(s) déjà couverte(s) par une hypothèse, hors du rang.", "",
           "## 4. Instruments non faits", ""]
     L += [f"- **{c['cible']}** (poids {c['poids']}) — {c['texte'].split(' : ', 1)[-1]}" for c in f["instruments"]] or ["Aucun."]
+    L += ["", "## 5. Idées à réexaminer", ""]
+    r = f.get("a_reexaminer", [])
+    nl = sum(1 for c in r if c["conditions"])
+    L += [f"{len(r)} idée(s) : {nl} écartée(s) dont la condition de levée est remplie, {len(r) - nl} en désaccord "
+          "entre notateurs (par S du notateur qui garde).", ""]
+    if r:
+        L += ["| idée | pourquoi | S | description |", "|---|---|---|---|"]
+        for c in r[:MAX_REEXAMEN_MD]:
+            s_ = f"{c['s_garde']:g}" if c["s_garde"] is not None else "—"
+            L.append(f"| {c['cible']} | {'; '.join(c['raisons']).replace('|', '/')} | {s_} | "
+                     f"{c['texte'][:90].replace('|', '/')} |")
+        if len(r) > MAX_REEXAMEN_MD:
+            L.append(f"\n{len(r)} au total ; les {MAX_REEXAMEN_MD} premières ici, la liste complète dans le JSON.")
     L += ["", "Source non lue : " + ", ".join(f["sources_non_lues"]) + ".", ""]
     return "\n".join(L)
 

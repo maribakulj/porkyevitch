@@ -209,8 +209,40 @@ class Constructeur:
             if inconnues:
                 self.avertissements.append(f"{inconnues} dépendance(s) vers une idée absente du tableau, ignorée(s)")
 
+    # -- conditions de levée
+    def conditions(self) -> dict:
+        """Conditions nommées (jugements/conditions.toml) et correspondances motif -> condition (levees.toml)."""
+        import levees
+        cfg = self.cfg.brut
+        conds, lev = {}, {}
+        if cfg.get("conditions", {}).get("fichier"):
+            f = self.cfg.chemin(cfg["conditions"]["fichier"])
+            if not f.is_file():
+                raise ErreurContenu(f"source absente : {f}")
+            try:
+                conds = levees.lire_conditions(f)
+            except (ValueError, KeyError) as e:
+                raise ErreurContenu(f"conditions illisibles ({f}) : {e}") from e
+            for cid, c in conds.items():
+                cn = self.n("COND-" + slug(cid))
+                self.g.add((cn, RDF.type, SKOS.Concept))
+                self.g.add((cn, SKOS.inScheme, LAB.conditions))
+                self.g.add((cn, DCTERMS.identifier, Literal(cid)))
+                self.g.add((cn, DCTERMS.description, Literal(c.get("description", ""), lang="fr")))
+                self.g.add((cn, LAB.etatCondition, Literal(c["etat"])))
+                self.g.add((cn, LAB.leveeQuand, Literal(c.get("levee_quand", "vraie"))))
+        if cfg.get("levees", {}).get("fichier"):
+            for e in levees.lire_levees(self.cfg.chemin(cfg["levees"]["fichier"])):
+                if e["condition"] not in conds:
+                    self.avertissements.append(f"levée {e['idee']} : condition {e['condition']} inconnue, ignorée")
+                    continue
+                lev[(e["idee"], e["notateur"])] = e["condition"]
+        return lev
+
     # -- notations du tri
     def notations(self) -> None:
+        import levees
+        lev = self.conditions()
         for c in self.cfg.brut.get("notations", []):
             notateur = c["notateur"]
             agent = self.agent(notateur)
@@ -231,8 +263,13 @@ class Constructeur:
                     if v:
                         self.g.add((nn, prop, Literal(v)))
                 dbl = lig.get(c.get("doublon_de", "doublon_de"), "").strip()
+                if not dbl:   # colonne vide : « même … que I011 » dans le motif ou la justification
+                    dbl = levees.doublon_de(lig.get(c.get("motif", "motif"), ""),
+                                            lig.get(c.get("justification", "justification"), ""), ident) or ""
                 if dbl:
                     self.g.add((nn, LAB.doublonDe, self.n(dbl) if dbl in self.idees else Literal(dbl)))
+                if (ident, notateur) in lev and el in ("oui", "true", "1", "o"):
+                    self.g.add((nn, LAB.leveeSi, self.n("COND-" + slug(lev[(ident, notateur)]))))
                 for s in c.get("scores", []):
                     v = lig.get(s, "").strip()
                     if v:
@@ -777,6 +814,7 @@ def main(argv: list[str] | None = None) -> int:
     sous.add_parser("compter")
     r = sous.add_parser("rapport")
     r.add_argument("hypothese")
+    sous.add_parser("rapport-idees")
     a = p.parse_args(argv)
     try:
         cfg = Config(Path(a.config))
@@ -788,7 +826,7 @@ def main(argv: list[str] | None = None) -> int:
                 print("note :", m)
             print(f"{sortie} écrit : {len(g)} triplets")
             return 0
-        if a.cmd in ("valider", "compter", "rapport"):
+        if a.cmd in ("valider", "compter", "rapport", "rapport-idees"):
             sortie = cfg.sortie("graphe", "graphe.ttl")
             if not sortie.is_file():
                 print(f"{sortie} absent : lance d'abord « construire ».", file=sys.stderr)
@@ -800,6 +838,11 @@ def main(argv: list[str] | None = None) -> int:
                 return 0
             if a.cmd == "rapport":
                 print(ecrire_rapport(g, a.hypothese, cfg))
+                return 0
+            if a.cmd == "rapport-idees":
+                import idees
+                for chemin in idees.ecrire_rapports(g, cfg):
+                    print(chemin)
                 return 0
             v = violations(g)
             if not v:

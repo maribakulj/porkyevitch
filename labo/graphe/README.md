@@ -25,6 +25,21 @@ Le graphe ne contient que des métadonnées, des empreintes et des statuts, jama
     python3 labo/graphe/verdict.py --config graphe/config.toml H-001 non-concluante --auteur orchestrateur \
         --condition "jeu J, modèle M" --course R-… --artefact recu.json --valeur 0.004 --ic-bas -0.006 --ic-haut 0.014
 
+## Les idées : conditions de levée et rapport (`levees.py`, `idees.py`)
+
+    python3 labo/graphe/levees.py --config graphe/config.toml                 # propose graphe/jugements/levees.toml
+    python3 labo/graphe/graphe.py --config graphe/config.toml rapport-idees   # rapports/IDEES.md et rapports/idees.html
+
+`[conditions] fichier` (TOML) liste des conditions nommées : `id`, `description`, `etat` (`vraie` ou `fausse`) et
+`levee_quand` (l'état qui lève l'écartement, `vraie` par défaut). `levees.py` applique des règles de mots-clés au motif
+et à la justification de chaque notation qui écarte une idée et PROPOSE une condition ; l'orchestrateur relit
+`[levees] fichier` (une entrée `relu = true` est conservée à la régénération). Une idée sans règle applicable n'a pas
+de condition. Dans le graphe, la notation porte `lab:leveeSi` ; pour un doublon, `lab:doublonDe` vient de la colonne
+dédiée ou, si elle est vide, de « que I011 » dans le texte. `decideur.py` ajoute la section « Idées à réexaminer »
+(écartées dont la condition est levée, puis désaccords entre notateurs par S du notateur qui garde ; une idée couverte
+par une hypothèse n'y figure pas). `rapport-idees` écrit un tableau Markdown et une page HTML autonome, filtrable par
+statut (gardée, écartée, désaccord, couverte, à réexaminer).
+
 ## Les décisions (`decision.py`, `decideur.py`)
 
     python3 labo/graphe/decision.py --config graphe/config.toml proposer decision.toml   # code 1 si refusée, fichier inchangé
