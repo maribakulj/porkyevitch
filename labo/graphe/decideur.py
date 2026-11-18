@@ -159,7 +159,8 @@ def cycle(g, cfg: Config) -> list[dict]:
     # carte confirmatoire sans règle rejouable ni témoins (labo/regle) : instrument manquant
     for row in g.query(PREFIXES + """
         SELECT ?nom WHERE { ?cr a lab:CarteRecherche ; dcterms:identifier ?nom ; lab:exploratoire ?e .
-          FILTER (?e = false) } ORDER BY ?nom"""):
+          FILTER (?e = false)
+          FILTER NOT EXISTS { ?cr lab:teste ?h . ?v lab:portesur ?h } } ORDER BY ?nom"""):   # avant la course seulement
         nom = str(row.nom)
         d = dossiers.get(nom)
         if d is None:
