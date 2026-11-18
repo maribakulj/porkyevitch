@@ -56,13 +56,16 @@ le taux de décisions (champ `renversee_par`) et de verdicts conclusifs renvers�
 coût mesuré / estimé avec l'écart signé en heures.
 
 `decideur.py` lit le graphe et écrit `file-candidats.json`, `file-candidats.md` et `dossier-relecture.json`. Il ne décide
-rien. Candidats : cartes sans `RELECTURE-CONCEPTION.md` (et sans course), courses réussies sans verdict, verdicts
+rien. Candidats : cartes sans `RELECTURE-CONCEPTION.md` (et sans course), cartes confirmatoires sans `regle.py` ni `temoins/*.json`
+dans leur dossier (« instrument manquant », voir `labo/regle`), courses réussies sans verdict, verdicts
 conclusifs portés par une seule course, une vérification de prémisse pour chaque prémisse non vérifiée d'une hypothèse
 ouverte, les réouvertures (dernier verdict non concluant, invalide ou suspendu, avec sa condition) et le portefeuille
 (idées gardées par les deux notateurs, sans hypothèse, rangées par S moyen des deux). **Règle d'arrêt** : une lignée
 d'hypothèses (`revision_de` dans le fichier des hypothèses, `prov:wasRevisionOf` dans le graphe) qui compte deux verdicts
 non concluants sur les mêmes données (`--donnees` de `verdict.py`, une ressource `lab:donnees`) voit ses nouvelles
 cartes marquées « écartée (règle d'arrêt) ». Il compte aussi les chantiers actifs et signale plus de 3.
+Un verdict soutenu ou réfuté sans `recalcule_par` (artefact d'un recalcul indépendant, par exemple `labo/regle/rejouer.py`)
+reste candidat « recalcul ».
 Précisions : une prémisse infirmée (état `infirmee`) donne une seule réouverture « redessiner sans cette prémisse »,
 même partagée par plusieurs hypothèses ; un verdict qui porte `remplace` (`verdict.py --remplace`) laisse seul son
 remplaçant compter ; une idée est couverte (hors du rang, comptée à part) si une hypothèse la cite, si une idée interne

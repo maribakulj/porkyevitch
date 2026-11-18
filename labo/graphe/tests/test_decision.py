@@ -269,6 +269,27 @@ class Decideur(Base):
         f = self.file()
         self.assertNotIn("a", [c["cible"] for c in f["cycle"] if c["type"] == "relecture-conception"])
 
+    def test_carte_confirmatoire_sans_instrument(self):
+        def manquants():
+            return {c["cible"]: c["texte"] for c in self.file()["cycle"] if c["type"] == "instrument-manquant"}
+        m = manquants()
+        self.assertEqual(sorted(m), ["a", "b"])                       # cartes confirmatoires, ni règle ni témoins
+        self.assertIn("regle.py", m["a"])
+        self.assertIn("temoins/", m["a"])
+        (self.d / "experiences/a/regle.py").write_text("def issue(recu):\n    return {}\n", encoding="utf-8")
+        self.assertNotIn("regle.py", manquants()["a"])                # il reste les témoins
+        self.assertIn("temoins/", manquants()["a"])
+        (self.d / "experiences/a/temoins").mkdir()
+        self.assertIn("a", manquants())                               # un dossier vide ne vaut pas des témoins
+        (self.d / "experiences/a/temoins/nul.json").write_text("{}", encoding="utf-8")
+        self.assertNotIn("a", manquants())
+        self.assertIn("b", manquants())
+        # une carte exploratoire n'est pas concernée
+        (self.d / "experiences/b/recherche.md").write_text(
+            T.CARTE_FAIBLE.replace('premisse = "verifiee"', 'premisse = "verifiee"\nexploratoire = "descriptif"'),
+            encoding="utf-8")
+        self.assertNotIn("b", manquants())
+
     def test_course_reussie_sans_verdict(self):
         (self.d / "graphe/sources/guichet.json").write_text(json.dumps({"courses": [{
             "id": "R-1", "cle": hashlib.sha256(b"k").hexdigest(), "etat": "REUSSIE", "carte_calcul": "a",

@@ -10,7 +10,9 @@ Lit le graphe (reconstruit en mémoire depuis la configuration, ou un Turtle don
 
 1. le cycle en cours : carte de recherche sans relecture (un RELECTURE-CONCEPTION.md à côté de la carte ; les cartes
    dont une course existe déjà ne sont pas listées), course réussie sans verdict, verdict « soutenue » ou « réfutée »
-   porté par une seule course (pas de recalcul) ;
+   porté par une seule course (pas de recalcul : un verdict qui porte `recalcule_par` n'est plus candidat), carte
+   confirmatoire (bloc `toml recherche` non exploratoire) sans `regle.py` ni `temoins/*.json` dans son dossier
+   (« instrument manquant », voir labo/regle) ;
 2. les réouvertures : dernier verdict non concluant, invalide ou suspendu de chaque hypothèse, avec sa condition
    `reouvrirSi`, à afficher ; une lignée (prov:wasRevisionOf) qui compte deux verdicts non concluants sur les mêmes
    données (lab:donnees) voit ses nouvelles cartes et réouvertures marquées « écartée (règle d'arrêt) » ;
@@ -154,6 +156,21 @@ def cycle(g, cfg: Config) -> list[dict]:
                 if h in stop:
                     c["ecartee"] = stop[h]
             cands.append(c)
+    # carte confirmatoire sans règle rejouable ni témoins (labo/regle) : instrument manquant
+    for row in g.query(PREFIXES + """
+        SELECT ?nom WHERE { ?cr a lab:CarteRecherche ; dcterms:identifier ?nom ; lab:exploratoire ?e .
+          FILTER (?e = false) } ORDER BY ?nom"""):
+        nom = str(row.nom)
+        d = dossiers.get(nom)
+        if d is None:
+            continue
+        manque = [m for m, ok in (("regle.py", (d / "regle.py").is_file()),
+                                  ("temoins/", (d / "temoins").is_dir() and any((d / "temoins").glob("*.json"))))
+                  if not ok]
+        if manque:
+            cands.append({"source": 1, "type": "instrument-manquant", "cible": nom,
+                          "texte": f"Carte confirmatoire « {nom} » : instrument manquant ({', '.join(manque)} absent de "
+                                   "son dossier) ; voir labo/regle."})
     # course réussie sans verdict
     for row in g.query(PREFIXES + """
         SELECT ?co ?id WHERE { ?co a lab:Course ; lab:etat lab:REUSSIE ; dcterms:identifier ?id .
