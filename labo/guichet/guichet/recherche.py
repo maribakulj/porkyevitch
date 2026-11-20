@@ -26,6 +26,16 @@ Le guichet ne croit pas un verdict écrit : il recalcule la puissance avec `puis
 illisible ou incomplète fait refuser la course. Une course qui ne peut pas conclure, une course exploratoire et une
 prémisse non vérifiée demandent un accord humain. La carte ne fait pas partie de l'identité du calcul : la réécrire ne
 fait pas un calcul nouveau.
+
+Pendant un sprint de construction (`chantiers` et `sprint_fin` dans la configuration du guichet, que seul son compte
+modifie), la porte s'inverse : une carte qui nomme `chantier = "…"`, pris dans la liste retenue par l'humain, passe
+sans puissance ni accord ; toute autre course (confirmation, diagnostic, calibration…) demande un accord humain.
+
+    ```toml recherche
+    decision = "…"
+    premisse = "sans_objet"
+    chantier = "tete-objets"
+    ```
 """
 
 from __future__ import annotations
@@ -56,6 +66,12 @@ class CarteRechercheInvalide(Exception):
     pass
 
 
+def sprint_hors_chantier(chantiers, nomme=None) -> str:
+    quoi = f"chantier « {nomme} » non retenu" if nomme else "aucun chantier nommé"
+    return (f"sprint de construction : {quoi} ; seuls {', '.join(chantiers)} passent sans accord. Une confirmation, "
+            "un diagnostic ou une calibration attend l'humain")
+
+
 @dataclass
 class Evaluation:
     sha256: str
@@ -63,7 +79,8 @@ class Evaluation:
     note: str = ""  # ce que le guichet ajoute à sa réponse (puissance, verdict)
 
 
-def evaluer(chemin: Path) -> Evaluation:
+def evaluer(chemin: Path, chantiers: tuple[str, ...] = ()) -> Evaluation:
+    """`chantiers` non vide : sprint de construction en cours (voir l'en-tête)."""
     try:
         texte = chemin.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as e:
@@ -77,7 +94,7 @@ def evaluer(chemin: Path) -> Evaluation:
     except tomllib.TOMLDecodeError as e:
         raise CarteRechercheInvalide(f"bloc recherche invalide : {e}") from None
 
-    inconnus = set(d) - {"decision", "premisse", "puissance", "exploratoire"}
+    inconnus = set(d) - {"decision", "premisse", "puissance", "exploratoire", "chantier"}
     if inconnus:
         raise CarteRechercheInvalide(f"bloc recherche : champs inconnus {sorted(inconnus)}")
     if not (isinstance(d.get("decision"), str) and d["decision"].strip()):
@@ -85,6 +102,14 @@ def evaluer(chemin: Path) -> Evaluation:
                                      "Si toutes les issues mènent à la même décision, ne pas lancer")
     if d.get("premisse") not in PREMISSES:
         raise CarteRechercheInvalide(f"bloc recherche : « premisse » parmi {PREMISSES}")
+    if chantiers:
+        ev = Evaluation(sha256=hashlib.sha256(texte.encode("utf-8")).hexdigest())
+        if d.get("chantier") in chantiers:
+            ev.note = f"construction : chantier {d['chantier']}"
+        else:
+            ev.accords_requis.append(sprint_hors_chantier(chantiers, d.get("chantier")))
+            ev.note = "hors des chantiers du sprint"
+        return ev
     if ("puissance" in d) == ("exploratoire" in d):
         raise CarteRechercheInvalide("bloc recherche : soit une table [puissance], soit « exploratoire », pas les deux "
                                      "ni aucun")

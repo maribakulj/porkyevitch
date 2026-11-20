@@ -20,6 +20,7 @@ que la carte de calcul déclare tout ce dont la suite aura besoin.
 
 from __future__ import annotations
 
+import datetime
 import fnmatch
 import hashlib
 import json
@@ -50,6 +51,15 @@ class Config:
     sorties: str = ""
     kaggle_cli: str = "kaggle"
     colab_cli: str = ""
+    chantiers: list[str] = field(default_factory=list)  # sprint de construction : chantiers retenus par l'humain
+    sprint_fin: str = ""  # AAAA-MM-JJ inclus ; le sprint est inactif sans chantiers, sans date ou après elle
+
+    def sprint(self, maintenant: float) -> tuple[str, ...]:
+        """Les chantiers du sprint en cours, ou () hors sprint."""
+        if not (self.chantiers and self.sprint_fin):
+            return ()
+        fin = datetime.date.fromisoformat(self.sprint_fin)
+        return tuple(self.chantiers) if datetime.date.fromtimestamp(maintenant) <= fin else ()
 
     @classmethod
     def lire(cls, chemin: Path) -> "Config":
@@ -194,7 +204,7 @@ class Guichet:
                                             f"{self.config.duree_a_mesurer_h:g} h : elle doit être mesurée. Lance "
                                             "d'abord un essai chronométré sur les vraies données, puis nomme sa "
                                             "course réussie dans « duree_mesuree_par ».")
-            if c.gpu:
+            if c.gpu or self.config.sprint(self.horloge()):
                 r = self._porte_recherche(db, c, k, plateforme, instantane, enveloppe, motif, accords)
                 if r is not None:
                     return r
@@ -222,13 +232,20 @@ class Guichet:
         return Reponse("ACCEPTEE", "", course=ident)
 
     def _porte_recherche(self, db, c, k, plateforme, instantane, enveloppe, motif, accords) -> Reponse | None:
-        """Une course GPU nomme sa carte de recherche ; le guichet en recalcule la puissance."""
+        """Une course GPU nomme sa carte de recherche ; le guichet en recalcule la puissance. Pendant un sprint de
+        construction, toute course passe par cette porte, GPU ou non, et seuls les chantiers retenus passent seuls."""
+        chantiers = self.config.sprint(self.horloge())
+        if not c.carte_recherche and chantiers:
+            if "RECHERCHE" in accords:
+                return None
+            return self._demande(db, "RECHERCHE", c, k, plateforme, instantane, enveloppe, None, motif,
+                                 recherche.sprint_hors_chantier(chantiers))
         if not c.carte_recherche:
             return Reponse("REFUS", "course GPU sans carte de recherche : écris-la d'abord (gabarits/carte-de-recherche.md, "
                                     "skill carte-de-recherche), puis nomme-la dans « carte_recherche ». Une course qui "
                                     "ne peut rien conclure se découvre avant la dépense, pas après.")
         try:
-            ev = recherche.evaluer(Path(c.carte_recherche))
+            ev = recherche.evaluer(Path(c.carte_recherche), chantiers)
         except recherche.CarteRechercheInvalide as e:
             return Reponse("REFUS", str(e))
         registre.noter(db, k[:16], f"carte de recherche {ev.sha256[:16]} : {ev.note}")
