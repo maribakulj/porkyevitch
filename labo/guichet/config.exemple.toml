@@ -12,3 +12,8 @@ sorties = "/chemin/vers/guichet-sorties"
 # CLI installés dans le compte du guichet (pas dans celui de l'agent).
 kaggle_cli = "/chemin/du/compte-guichet/.venv-guichet/bin/kaggle"
 colab_cli = "/chemin/du/compte-guichet/.local/bin/colab"
+
+# Sprint de construction (facultatif) : jusqu'à sprint_fin incluse, une carte de recherche qui nomme l'un de ces
+# chantiers (« chantier = "…" ») passe sans puissance ni accord ; toute autre course, GPU ou CPU, attend ton accord.
+# chantiers = ["tete-objets", "donnees-icarus"]
+# sprint_fin = "2026-12-05"
