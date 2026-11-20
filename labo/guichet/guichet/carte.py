@@ -11,6 +11,9 @@ Format TOML, un fichier par calcul :
     carte_recherche = "recherche.md"   # relative à la carte ; requise pour une course GPU (voir recherche.py)
     artefacts_attendus = ["recu.json", "etats/*.pt"]   # relatifs à la sortie ; une course sans eux échoue
     plateformes = ["kaggle", "colab"]  # celles qui sont permises pour ce calcul
+    artefacts_purgeables = ["*.tar"]   # facultatif ; motifs glob de noms de fichiers directement dans la sortie (ni "/"
+                                       # ni ".."). Seuls ces fichiers peuvent être supprimés par `guichet-agent purger`,
+                                       # après une course REUSSIE et avec leur sha256. Défaut vide : rien n'est purgeable.
 
     [[entrees]]                        # données lues par le calcul, avec leur empreinte
     nom = "vecteurs-v3"
@@ -57,6 +60,7 @@ class Carte:
     carte_recherche: str = ""  # chemin absolu, ou vide
     kaggle: dict = field(default_factory=dict)
     colab: dict = field(default_factory=dict)
+    artefacts_purgeables: list[str] = field(default_factory=list)
 
     def en_json(self) -> str:
         d = asdict(self)
@@ -79,7 +83,7 @@ def lire(chemin: Path) -> Carte:
         raise CarteInvalide(f"carte TOML invalide : {e}") from None
 
     connus = {"experience", "dossier", "point_entree", "gpu", "duree_estimee_s", "duree_mesuree_par",
-              "artefacts_attendus", "plateformes", "entrees", "kaggle", "colab", "carte_recherche"}
+              "artefacts_attendus", "plateformes", "entrees", "kaggle", "colab", "carte_recherche", "artefacts_purgeables"}
     inconnus = set(d) - connus
     if inconnus:
         raise CarteInvalide(f"champs inconnus : {sorted(inconnus)}")
@@ -105,6 +109,12 @@ def lire(chemin: Path) -> Carte:
            "une course qui ne les produit pas échoue")
     for a in arts:
         exiger(not a.startswith("/") and ".." not in Path(a).parts, f"artefact hors de la sortie : {a}")
+    purgeables = d.get("artefacts_purgeables", [])
+    exiger(isinstance(purgeables, list) and all(isinstance(m, str) and m for m in purgeables),
+           "artefacts_purgeables : liste de motifs (chaînes non vides)")
+    for m in purgeables:
+        exiger("/" not in m and "\\" not in m and ".." not in m and "\0" not in m,
+               f"artefacts_purgeables : motif relatif à la sortie, sans « / » ni « .. » : {m}")
     pl = d["plateformes"]
     exiger(isinstance(pl, list) and pl and all(p in PLATEFORMES for p in pl), f"plateformes parmi {PLATEFORMES}")
     entrees = d.get("entrees", [])
@@ -126,7 +136,8 @@ def lire(chemin: Path) -> Carte:
     return Carte(experience=d["experience"], dossier=dossier, point_entree=d["point_entree"], gpu=d["gpu"],
                  duree_estimee_s=d["duree_estimee_s"], artefacts_attendus=list(arts), plateformes=list(pl),
                  entrees=[dict(e) for e in entrees], duree_mesuree_par=mesuree, carte_recherche=recherche,
-                 kaggle=dict(d.get("kaggle", {})), colab=dict(d.get("colab", {})))
+                 kaggle=dict(d.get("kaggle", {})), colab=dict(d.get("colab", {})),
+                 artefacts_purgeables=list(purgeables))
 
 
 def cle(empreinte_arbre: str, carte: Carte) -> str:

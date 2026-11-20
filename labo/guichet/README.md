@@ -74,6 +74,11 @@ Agent :
     sudo -u labo guichet-agent reconcilier
     sudo -u labo guichet-agent resume
     sudo -u labo guichet-agent demander-bascule R-… --vers colab --motif "file Kaggle bloquée depuis 1 h"
+    sudo -u labo guichet-agent purger R-… images.tar --sha256 <64 hex>
+
+`purger` supprime un fichier de la sortie d'une course REUSSIE, à trois conditions : son nom (simple, sans chemin ni
+lien symbolique) correspond à un motif de `artefacts_purgeables` de la carte (vide par défaut), son SHA-256 est celui
+donné, et il n'a pas déjà été purgé. Chaque purge est inscrite au registre et affichée par `etat`. Refus : code `2`.
 
 Humain (ton mot de passe à chaque appel) :
 
@@ -100,6 +105,7 @@ d'`artefacts_attendus` sont relatifs à ce dossier.
 
     python3 -I tests/test_guichet.py       # les règles, une par test
     python3 -I tests/test_incidents.py     # incidents types d'une boucle autonome, rejoués à vide
+    python3 -I tests/test_purge.py         # la purge d'artefacts rapatriés
     python3 -I tests/test_adaptateurs.py   # Kaggle et Colab contre de faux CLI ; la chaîne Colab tourne vraiment
 
 ## Mise à jour depuis la version 0.1

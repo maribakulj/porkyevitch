@@ -7,6 +7,8 @@ Ce qu'il garantit, parce que lui seul détient les identifiants :
 - un délai dépassé ou une réponse illisible rend la course INCONNUE, et rien ne la relance avant qu'elle soit tranchée ;
 - une course n'est réussie que si les artefacts déclarés sont dans sa sortie rapatriée ;
 - un échec de rapatriement n'est pas un échec de calcul : on retente le rapatriement, jamais le calcul ;
+- l'agent ne supprime que les fichiers que la carte déclare purgeables, d'une course réussie, après vérification de
+  leur SHA-256, et la purge est inscrite au registre ;
 - une durée estimée au-delà du seuil doit avoir été mesurée ; une longue course GPU demande un accord ;
 - le budget GPU de la semaine et le nombre de courses GPU simultanées sont tenus ;
 - une course GPU nomme sa carte de recherche, dont il recalcule la puissance : sans carte complète, refus ; si elle
@@ -18,9 +20,14 @@ que la carte de calcul déclare tout ce dont la suite aura besoin.
 
 from __future__ import annotations
 
+import fnmatch
+import hashlib
 import json
+import os
+import re
 import shutil
 import sqlite3
+import stat
 import time
 import tomllib
 from dataclasses import dataclass, field
@@ -289,6 +296,8 @@ class Guichet:
                                  "OR (etat = 'ABANDONNEE' AND fin_vue IS NULL) ORDER BY cree_a").fetchall()
         for r in suivies:
             ident, etat = r["id"], r["etat"]
+            if self.c.execute("SELECT 1 FROM purges WHERE course = ?", (ident,)).fetchone():
+                continue  # un artefact purgé n'est pas « manquant » : ni nouvel examen, ni nouveau rapatriement
             if etat == "SOUMISE":
                 if maintenant - r["cree_a"] > SOUMISE_PERIMEE:
                     self._etat(ident, "INCONNUE", "lancement interrompu : rien ne dit s'il est parti")
@@ -354,6 +363,65 @@ class Guichet:
             return f"{ident} : terminée SANS {manquants} ; elle ne compte pas comme réussie"
         self._etat(ident, "REUSSIE", "artefacts présents", fin=True, sortie=str(sortie))
         return f"{ident} : RÉUSSIE, sortie {sortie}"
+
+    # ----------------------------------------------------------------------------------------------- purge
+
+    def purger(self, ident: str, nom: str, sha256: str) -> Reponse:
+        """Supprime un fichier de la sortie rapatriée d'une course REUSSIE, s'il est déclaré purgeable par la carte
+        et si son SHA-256 est celui que l'appelant a vérifié. Rien d'autre ne peut être supprimé par cette porte."""
+        r = self.c.execute("SELECT * FROM courses WHERE id = ?", (ident,)).fetchone()
+        if r is None:
+            return Reponse("REFUS", f"course inconnue : {ident}")
+        if r["etat"] != "REUSSIE" or not r["sortie"]:
+            return Reponse("REFUS", f"{ident} : état {r['etat']}, seule une course REUSSIE à sortie rapatriée se purge")
+        if (not nom or nom in (".", "..") or "/" in nom or "\\" in nom or "\0" in nom or ".." in nom
+                or Path(nom).name != nom):
+            return Reponse("REFUS", f"nom refusé : un nom de fichier simple, sans chemin ni « .. » ({nom!r})")
+        voulu = sha256.strip().lower()
+        if not re.fullmatch(r"[0-9a-f]{64}", voulu):
+            return Reponse("REFUS", "--sha256 : 64 caractères hexadécimaux")
+        carte = cartes.Carte.depuis_json(r["carte"])
+        if not any(fnmatch.fnmatchcase(nom, m) for m in carte.artefacts_purgeables):
+            return Reponse("REFUS", f"{nom} : aucun motif de artefacts_purgeables de la carte ne le désigne "
+                                    f"({carte.artefacts_purgeables or 'liste vide'})")
+        deja = self.c.execute("SELECT * FROM purges WHERE course = ? AND nom = ?", (ident, nom)).fetchone()
+        if deja:
+            return Reponse("REFUS", f"{nom} : déjà purgé le {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(deja['purge_a']))}")
+        dossier = self.sorties / ident
+        try:
+            dfd = os.open(dossier, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        except OSError:
+            return Reponse("REFUS", f"{ident} : dossier de sortie introuvable ou lien symbolique")
+        try:
+            try:
+                fd = os.open(nom, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)  # refuse un lien symbolique
+            except FileNotFoundError:
+                return Reponse("REFUS", f"{nom} : fichier absent de la sortie de {ident}")
+            except OSError:
+                return Reponse("REFUS", f"{nom} : illisible ou lien symbolique, refusé")
+            with os.fdopen(fd, "rb") as f:
+                st = os.fstat(f.fileno())
+                if not stat.S_ISREG(st.st_mode):
+                    return Reponse("REFUS", f"{nom} : pas un fichier ordinaire")
+                h = hashlib.sha256()
+                for bloc in iter(lambda: f.read(1 << 20), b""):
+                    h.update(bloc)
+            if h.hexdigest() != voulu:
+                return Reponse("REFUS", f"{nom} : SHA-256 différent (fichier {h.hexdigest()}), rien supprimé")
+            with registre.Transaction(self.c) as db:
+                try:
+                    db.execute("INSERT INTO purges (course, nom, sha256, taille, purge_a) VALUES (?, ?, ?, ?, ?)",
+                               (ident, nom, voulu, st.st_size, self.horloge()))
+                except sqlite3.IntegrityError:
+                    return Reponse("REFUS", f"{nom} : déjà purgé")
+                registre.noter(db, ident, f"purgé {nom} ({st.st_size} octets, sha256 {voulu})")
+                actuel = os.stat(nom, dir_fd=dfd, follow_symlinks=False)
+                if (actuel.st_ino, actuel.st_dev) != (st.st_ino, st.st_dev):
+                    raise RuntimeError("le fichier a changé pendant la vérification")
+                os.unlink(nom, dir_fd=dfd)
+        finally:
+            os.close(dfd)
+        return Reponse("OK", f"{ident} : {nom} purgé ({st.st_size} octets, sha256 {voulu})", course=ident)
 
     # ------------------------------------------------------------------------------------- bascule, annulation
 
@@ -484,4 +552,8 @@ class Guichet:
         if r is None:
             return Reponse("REFUS", f"course inconnue : {ident}")
         champs = ("id", "experience", "plateforme", "etat", "slug", "version", "cle", "sortie", "detail")
-        return Reponse("OK", "\n".join(f"{k:<11} {r[k]}" for k in champs))
+        lignes = [f"{k:<11} {r[k]}" for k in champs]
+        for p in self.c.execute("SELECT * FROM purges WHERE course = ? ORDER BY purge_a", (ident,)):
+            lignes.append(f"purge       {p['nom']}  {p['taille']} octets  sha256 {p['sha256']}  "
+                          f"le {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(p['purge_a']))}")
+        return Reponse("OK", "\n".join(lignes))

@@ -60,6 +60,14 @@ CREATE TABLE IF NOT EXISTS demandes (
     tranchee_a REAL,
     course_creee TEXT
 );
+CREATE TABLE IF NOT EXISTS purges (
+    course TEXT NOT NULL,
+    nom TEXT NOT NULL,
+    sha256 TEXT NOT NULL,
+    taille INTEGER NOT NULL,
+    purge_a REAL NOT NULL,
+    PRIMARY KEY (course, nom)
+);
 CREATE TABLE IF NOT EXISTS journal (
     t REAL NOT NULL,
     objet TEXT NOT NULL,

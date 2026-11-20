@@ -1,6 +1,6 @@
 """Deux portes en ligne de commande.
 
-- `guichet-agent` : ce que l'agent peut faire (soumettre, suivre, demander une bascule, annuler, lire le résumé).
+- `guichet-agent` : ce que l'agent peut faire (soumettre, suivre, demander une bascule, annuler, purger un artefact, lire le résumé).
   Il l'appelle par `sudo -u labo guichet-agent …`, seule commande que sudoers lui permet sous ce compte.
 - `guichet` : tout, y compris approuver, refuser et trancher. L'humain l'appelle par `sudo -u labo guichet …`, et
   sudoers exige son mot de passe à chaque fois (`timestamp_timeout=0`). C'est ce mot de passe, que l'agent n'a pas,
@@ -67,6 +67,10 @@ def _commun(sous) -> None:
     b.add_argument("--motif", required=True)
     a = sous.add_parser("annuler", help="annuler une course active (Colab seulement)")
     a.add_argument("course")
+    pu = sous.add_parser("purger", help="supprimer un artefact purgeable de la sortie d'une course REUSSIE")
+    pu.add_argument("course")
+    pu.add_argument("nom")
+    pu.add_argument("--sha256", required=True, metavar="HEX")
 
 
 def _humain(sous) -> None:
@@ -96,6 +100,8 @@ def executer(args, g: Guichet):
             return g.demander_bascule(args.course, args.vers, args.motif)
         case "annuler":
             return g.annuler(args.course)
+        case "purger":
+            return g.purger(args.course, args.nom, args.sha256)
         case "approuver":
             return g.approuver(args.demande)
         case "refuser":
