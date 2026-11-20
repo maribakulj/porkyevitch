@@ -86,6 +86,14 @@ Humain (ton mot de passe à chaque appel) :
     sudo -u labo guichet approuver D-…
     sudo -u labo guichet refuser D-… --motif "…"
     sudo -u labo guichet trancher R-… EN_COURS --version 7 --motif "version 7 vue sur le site"
+    sudo -u labo guichet sprint tete-objets donnees-icarus --jusqu-au 2026-12-05
+    sudo -u labo guichet sprint          # sans chantier : arrête le sprint
+
+**Sprint de construction.** Jusqu'à la date donnée (incluse), une carte de recherche qui nomme l'un des chantiers
+(`chantier = "tete-objets"` dans son bloc `toml recherche`) passe sans calcul de puissance ni accord ; toute autre
+course, GPU ou CPU, attend ton accord. La liste est écrite dans `~labo/guichet/config.toml` ; l'agent n'a pas la
+commande et ne peut pas écrire ce fichier. Le guichet vérifie le **nom** du chantier, pas que la course le fasse
+avancer : à la fin du sprint, juge sur ce qui tourne. `resume` affiche le sprint en cours.
 
 Codes de sortie : `0` accepté, `2` refus, `3` accord requis, `4` incertain. **Ne passe jamais ces commandes dans un
 tube** : le code de sortie deviendrait celui de la dernière commande du tube.

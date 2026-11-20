@@ -2,7 +2,7 @@
 
 - `guichet-agent` : ce que l'agent peut faire (soumettre, suivre, demander une bascule, annuler, purger un artefact, lire le résumé).
   Il l'appelle par `sudo -u labo guichet-agent …`, seule commande que sudoers lui permet sous ce compte.
-- `guichet` : tout, y compris approuver, refuser et trancher. L'humain l'appelle par `sudo -u labo guichet …`, et
+- `guichet` : tout, y compris approuver, refuser, trancher et ouvrir un sprint. L'humain l'appelle par `sudo -u labo guichet …`, et
   sudoers exige son mot de passe à chaque fois (`timestamp_timeout=0`). C'est ce mot de passe, que l'agent n'a pas,
   qui sépare les deux portes : l'agent et l'humain partagent le même compte Unix.
 
@@ -84,6 +84,9 @@ def _humain(sous) -> None:
     t.add_argument("etat")
     t.add_argument("--motif", required=True)
     t.add_argument("--version")
+    sp = sous.add_parser("sprint", help="ouvrir un sprint de construction (sans chantier : l'arrêter)")
+    sp.add_argument("chantiers", nargs="*")
+    sp.add_argument("--jusqu-au", dest="fin", metavar="AAAA-MM-JJ")
 
 
 def executer(args, g: Guichet):
@@ -108,6 +111,8 @@ def executer(args, g: Guichet):
             return g.refuser(args.demande, args.motif)
         case "trancher":
             return g.trancher(args.course, args.etat, args.motif, args.version)
+        case "sprint":
+            return g.ouvrir_sprint(args.chantiers, args.fin)
 
 
 def _sortir(rep) -> int:

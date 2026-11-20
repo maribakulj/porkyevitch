@@ -544,6 +544,8 @@ class Guichet:
         m = self.horloge()
         lignes = [f"Budget GPU (7 jours) : {_duree(self._budget_utilise(self.c, m))} sur "
                   f"{_duree(self.config.budget_gpu_hebdo_h * 3600)}"]
+        if chantiers := self.config.sprint(m):
+            lignes.append(f"Sprint jusqu'au {self.config.sprint_fin} : {', '.join(chantiers)}")
         demandes = self.c.execute("SELECT * FROM demandes WHERE etat = 'EN_ATTENTE' ORDER BY cree_a").fetchall()
         lignes.append(f"Demandes en attente de toi : {len(demandes)}")
         for d in demandes:
@@ -563,6 +565,29 @@ class Guichet:
             lignes.append(f"  {r['id']}  {r['etat']:<17} {r['experience']}" +
                           (f" — {r['detail']}" if r["etat"] != "REUSSIE" else f" — {r['sortie']}"))
         return Reponse("OK", "\n".join(lignes))
+
+    def ouvrir_sprint(self, chantiers: list[str], fin: str | None) -> Reponse:
+        """Commande humaine : fixe (ou, sans chantier, arrête) le sprint dans config.toml, que seul ce compte écrit."""
+        if chantiers:
+            if len(chantiers) > 3 or not all(re.fullmatch(r"[a-z0-9][a-z0-9-]{0,40}", n) for n in chantiers):
+                return Reponse("REFUS", "1 à 3 chantiers, en minuscules, chiffres et tirets (ex. tete-objets)")
+            try:
+                jour = datetime.date.fromisoformat(fin or "")
+            except ValueError:
+                return Reponse("REFUS", "--jusqu-au AAAA-MM-JJ obligatoire")
+            if jour < datetime.date.fromtimestamp(self.horloge()):
+                return Reponse("REFUS", f"{jour} est déjà passé")
+        chemin = self.racine / "config.toml"
+        lignes = chemin.read_text().splitlines() if chemin.exists() else []
+        lignes = [l for l in lignes if not re.match(r"\s*(chantiers|sprint_fin)\s*=", l)]
+        if chantiers:
+            lignes += [f"chantiers = {json.dumps(chantiers)}", f'sprint_fin = "{jour.isoformat()}"']
+        chemin.write_text("\n".join(lignes) + "\n")
+        self.config = Config.lire(chemin)
+        if not chantiers:
+            return Reponse("OK", "sprint arrêté : règle ordinaire (puissance ou accord)")
+        return Reponse("OK", f"sprint jusqu'au {jour} inclus : {', '.join(chantiers)} passent sans accord ; "
+                             "toute autre course attend ton accord")
 
     def etat(self, ident: str) -> Reponse:
         r = self.c.execute("SELECT * FROM courses WHERE id = ?", (ident,)).fetchone()

@@ -55,5 +55,39 @@ class Sprint(unittest.TestCase):
         self.assertEqual(b.g.soumettre(b.carte(gpu=False, recherche=None), "kaggle").code, "ACCEPTEE")
 
 
+class CommandeSprint(unittest.TestCase):
+    def test_ouvrir_puis_arreter(self):
+        b = Banc()
+        r = b.g.ouvrir_sprint(["tete-objets"], "2099-01-31")
+        self.assertEqual(r.code, "OK", r.message)
+        self.assertIn('sprint_fin = "2099-01-31"', (b.maison / "guichet" / "config.toml").read_text())
+        self.assertEqual(b.g.soumettre(b.carte(recherche=CONSTRUCTION), "kaggle").code, "ACCEPTEE")
+        self.assertIn("Sprint jusqu'au 2099-01-31", b.g.resume().message)
+        self.assertEqual(b.g.ouvrir_sprint([], None).code, "OK")
+        self.assertNotIn("chantiers", (b.maison / "guichet" / "config.toml").read_text())
+        self.assertEqual(b.g.soumettre(b.carte(nom="c2", code="print(2)\n", gpu=False, recherche=None), "kaggle").code,
+                         "ACCEPTEE")
+
+    def test_rouvrir_remplace(self):
+        b = Banc()
+        b.g.ouvrir_sprint(["a"], "2099-01-31")
+        b.g.ouvrir_sprint(["b", "c"], "2099-02-28")
+        texte = (b.maison / "guichet" / "config.toml").read_text()
+        self.assertEqual(texte.count("chantiers ="), 1)
+        self.assertEqual(b.g.config.chantiers, ["b", "c"])
+
+    def test_refus(self):
+        b = Banc()
+        self.assertEqual(b.g.ouvrir_sprint(["tete-objets"], None).code, "REFUS")
+        self.assertEqual(b.g.ouvrir_sprint(["tete-objets"], "2000-01-01").code, "REFUS")
+        self.assertEqual(b.g.ouvrir_sprint(["Tête objets"], "2099-01-31").code, "REFUS")
+        self.assertEqual(b.g.ouvrir_sprint(["a", "b", "c", "d"], "2099-01-31").code, "REFUS")
+
+    def test_l_agent_n_a_pas_la_commande(self):
+        from guichet import cli
+        with self.assertRaises(SystemExit):
+            cli.agent(["sprint", "tete-objets", "--jusqu-au", "2099-01-31"])
+
+
 if __name__ == "__main__":
     unittest.main()
