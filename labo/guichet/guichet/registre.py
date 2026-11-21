@@ -83,6 +83,15 @@ def ouvrir(chemin: Path) -> sqlite3.Connection:
     c.execute("PRAGMA journal_mode=WAL")
     c.execute("PRAGMA synchronous=FULL")
     c.executescript(_SCHEMA)
+    # Colonnes ajoutées après la création du registre : une base ancienne les reçoit vides (NULL).
+    colonnes = {r["name"] for r in c.execute("PRAGMA table_info(courses)")}
+    for nom, decl in (("cle_code", "TEXT"), ("chantier", "TEXT")):
+        if nom not in colonnes:
+            try:
+                c.execute(f"ALTER TABLE courses ADD COLUMN {nom} {decl}")
+            except sqlite3.OperationalError as e:  # un autre processus l'a ajoutée entre-temps
+                if "duplicate column" not in str(e):
+                    raise
     return c
 
 

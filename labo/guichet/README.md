@@ -30,7 +30,14 @@ ni lire les identifiants. Python 3.11 ou plus, bibliothèque standard seule.
   (il ne croit pas un verdict écrit) : une course qui ne peut pas conclure, exploratoire, ou dont la prémisse n'est pas
   vérifiée attend ton accord. Le format est en tête de `guichet/recherche.py`. Une course CPU n'en a pas besoin.
 - **Ce qui part est ce qui a été haché.** Le guichet copie le dossier, hache la copie et lance la copie. Il refuse
-  les liens symboliques, les liens physiques et tout chemin pris dans son propre espace.
+  les liens symboliques, les liens physiques et tout chemin pris dans son propre espace. Seule exception, déterminée
+  par la carte : les `[parametres]` sont écrits, en une ligne qui pose `GUICHET_PARAMETRES`, au début du point d'entrée
+  de la copie ; ils font partie de la clé du calcul.
+- **Un point d'entrée qui ne se lit pas comme du Python est refusé** avant tout départ.
+- **Une longue course GPU suit un essai du même code.** Au-delà de `essai_requis_gpu_h` (1 h par défaut, 0 pour ne
+  rien exiger), la carte nomme dans `essai_par` une course réussie de même clé de code : mêmes dossier, point d'entrée
+  et entrées, seuls les `[parametres]` diffèrent (par exemple une `LIMITE`). Les copies du code faites pour changer une
+  constante ne comptent pas : c'est le but.
 
 ## Ce qu'il ne garantit pas
 
@@ -75,6 +82,13 @@ Agent :
     sudo -u labo guichet-agent resume
     sudo -u labo guichet-agent demander-bascule R-… --vers colab --motif "file Kaggle bloquée depuis 1 h"
     sudo -u labo guichet-agent purger R-… images.tar --sha256 <64 hex>
+    sudo -u labo guichet-agent attendre R-… --max-min 30
+    sudo -u labo guichet-agent bilan --depuis 2026-11-21
+
+`attendre` relève jusqu'à la fin d'une course : `0` réussie, `2` finie autrement, `4` toujours active à l'échéance
+(attendre encore, ne rien relancer). `bilan` liste les courses créées depuis un jour (défaut : 24 h) avec leur durée
+**vue** (du premier relevé en cours au premier relevé fini ; « ≤ » quand la course n'a jamais été vue tourner, file
+comprise) et les totaux par chantier, réussies et autres : c'est la source des durées d'un rapport.
 
 `purger` supprime un fichier de la sortie d'une course REUSSIE, à trois conditions : son nom (simple, sans chemin ni
 lien symbolique) correspond à un motif de `artefacts_purgeables` de la carte (vide par défaut), son SHA-256 est celui
@@ -107,14 +121,23 @@ lui-même, car la machine n'a aucun identifiant. Dans les deux cas, elles sont d
 empreinte, et le calcul vérifie cette empreinte.
 
 Le calcul écrit ses artefacts dans `os.environ.get("GUICHET_SORTIE", "/kaggle/working")`. Les motifs
-d'`artefacts_attendus` sont relatifs à ce dossier.
+d'`artefacts_attendus` sont relatifs à ce dossier. Il lit ses paramètres par
+`json.loads(os.environ.get("GUICHET_PARAMETRES", "{}"))`. Le gabarit `gabarits/noyau/` (noyau et essai local complet)
+fait tout cela, plus la vérification des entrées par SHA-256 et des repères d'étape sur disque.
 
 ## Tests
 
     python3 -I tests/test_guichet.py       # les règles, une par test
     python3 -I tests/test_incidents.py     # incidents types d'une boucle autonome, rejoués à vide
     python3 -I tests/test_purge.py         # la purge d'artefacts rapatriés
+    python3 -I tests/test_essai.py         # paramètres, essai exigé, syntaxe, bilan, attente, migration du registre
     python3 -I tests/test_adaptateurs.py   # Kaggle et Colab contre de faux CLI ; la chaîne Colab tourne vraiment
+
+## Mise à jour vers la version 0.5
+
+Le registre reçoit deux colonnes (`cle_code`, `chantier`) à sa première ouverture ; les courses d'avant les ont vides,
+ne peuvent donc pas servir d'`essai_par`, et apparaissent sans chantier dans le `bilan`. Les clés des cartes sans
+`[parametres]` sont inchangées : rien n'est recalculé.
 
 ## Mise à jour depuis la version 0.1
 

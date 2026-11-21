@@ -3,6 +3,7 @@
 budget_gpu_hebdo_h = 30        # heures GPU engagées sur 7 jours glissants (le quota Kaggle de la semaine est de 30 h)
 seuil_accord_gpu_h = 3         # au-delà, une course GPU attend ton accord
 duree_a_mesurer_h = 3          # au-delà, la durée doit avoir été mesurée par un essai chronométré réussi
+essai_requis_gpu_h = 1         # au-delà, une course GPU nomme un essai réussi du même code (essai_par) ; 0 : rien
 max_gpu_simultanes = 2         # courses GPU actives à la fois, toutes plateformes
 taille_max_dossier_mo = 200    # les données passent par des entrées déclarées, pas par le dossier de code
 

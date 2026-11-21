@@ -19,7 +19,7 @@ son propre dépôt, privé, avec son journal. Les modèles aboutis sont publiés
 | `labo/graphe/` | Graphe de recherche facultatif (rdflib, pyshacl) : vocabulaire, formes SHACL, générateur, rapport par hypothèse, écriture d'un verdict que les formes peuvent refuser. Voir son README |
 | `labo/puissance.py` | Puissance et effet minimal détectable à partir d'un IC déjà mesuré ; refuse ce qui ne peut pas conclure |
 | `porky/` | Colab en ligne de commande (`colab.py` : chaîne qui ne laisse jamais le noyau inactif, envoi en morceaux), montage du Drive (`drivemount.py`), sauvegarde vers un dépôt Hugging Face privé (`sauvegarde_hf.py`) |
-| `gabarits/` | `BOUCLE.md` (règles d'une boucle autonome) et `carte-de-recherche.md`, à copier dans un projet |
+| `gabarits/` | `BOUCLE.md` (règles d'une boucle autonome), `carte-de-recherche.md` et `noyau/` (noyau de calcul pour le guichet et son essai local complet), à copier dans un projet |
 | `outils/neutralite.py` | Le contrôle qui garde ce dépôt neutre |
 
 ## Trois règles d'entrée

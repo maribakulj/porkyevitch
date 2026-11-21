@@ -46,6 +46,7 @@ class Config:
     budget_gpu_hebdo_h: float = 30.0
     seuil_accord_gpu_h: float = 3.0
     duree_a_mesurer_h: float = 3.0
+    essai_requis_gpu_h: float = 1.0  # au-delà, une course GPU nomme un essai réussi du même code (0 : pas d'exigence)
     max_gpu_simultanes: int = 2
     taille_max_dossier_mo: int = 200
     sorties: str = ""
@@ -142,7 +143,15 @@ class Guichet:
         if not (instantane / c.point_entree).is_file():
             shutil.rmtree(instantane, ignore_errors=True)
             return Reponse("REFUS", f"point d'entrée absent du dossier : {c.point_entree}")
+        try:
+            arbre.verifier_syntaxe(instantane / c.point_entree)
+            if c.parametres:
+                arbre.injecter_parametres(instantane / c.point_entree, cartes.texte_parametres(c))
+        except (arbre.DossierRefuse, OSError) as e:
+            shutil.rmtree(instantane, ignore_errors=True)
+            return Reponse("REFUS", f"dossier refusé : {e}")
         k = cartes.cle(empreinte, c)
+        c.cle_code = cartes.cle_code(empreinte, c)
 
         r = self._admettre(c, k, plateforme, instantane, enveloppe, motif=motif, replication=replication,
                            accords=set())
@@ -231,16 +240,27 @@ class Guichet:
                 if utilise + c.duree_estimee_s > total:
                     return Reponse("REFUS", f"budget GPU de la semaine : {_duree(utilise)} engagées sur "
                                             f"{_duree(total)}, cette course en demande {_duree(c.duree_estimee_s)}.")
+                if self.config.essai_requis_gpu_h and c.duree_estimee_s > self.config.essai_requis_gpu_h * 3600:
+                    essai = db.execute("SELECT id FROM courses WHERE id = ? AND etat = 'REUSSIE' AND cle_code = ?",
+                                       (c.essai_par, c.cle_code)).fetchone() if c.essai_par else None
+                    if not essai:
+                        return Reponse("REFUS", f"course GPU de {_duree(c.duree_estimee_s)}, au-delà de "
+                                                f"{self.config.essai_requis_gpu_h:g} h : un essai court du MÊME code "
+                                                "doit avoir réussi. Lance-le (mêmes dossier, point d'entrée et "
+                                                "entrées ; seuls les [parametres] changent, par exemple une LIMITE), "
+                                                "puis nomme sa course dans « essai_par »." +
+                                       (f" {c.essai_par} n'est pas une course réussie de ce code."
+                                        if c.essai_par else ""))
                 if c.duree_estimee_s > self.config.seuil_accord_gpu_h * 3600 and "DUREE" not in accords:
                     return self._demande(db, "DUREE", c, k, plateforme, instantane, enveloppe, None, motif,
                                          f"course GPU de {_duree(c.duree_estimee_s)}, au-delà de "
                                          f"{self.config.seuil_accord_gpu_h:g} h")
             db.execute("INSERT INTO courses (id, cle, experience, plateforme, etat, gpu, slug, duree_estimee_s, "
-                       "cree_a, instantane, enveloppe_sha, carte, motif, replication_de) "
-                       "VALUES (?, ?, ?, ?, 'SOUMISE', ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                       "cree_a, instantane, enveloppe_sha, carte, motif, replication_de, cle_code, chantier) "
+                       "VALUES (?, ?, ?, ?, 'SOUMISE', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                        (ident, k, c.experience, plateforme, int(c.gpu), slug, c.duree_estimee_s, maintenant,
                         str(instantane), enveloppe, c.en_json(), motif or replication,
-                        reussie["id"] if reussie else source))
+                        reussie["id"] if reussie else source, c.cle_code or None, c.chantier or None))
             registre.noter(db, ident, f"admise sur {plateforme}, clé {k[:12]}")
         return Reponse("ACCEPTEE", "", course=ident)
 
@@ -262,6 +282,7 @@ class Guichet:
         except recherche.CarteRechercheInvalide as e:
             return Reponse("REFUS", str(e))
         registre.noter(db, k[:16], f"carte de recherche {ev.sha256[:16]} : {ev.note}")
+        c.chantier = ev.chantier
         if ev.accords_requis and "RECHERCHE" not in accords:
             return self._demande(db, "RECHERCHE", c, k, plateforme, instantane, enveloppe, None, motif,
                                  " ; ".join(ev.accords_requis))
@@ -584,6 +605,63 @@ class Guichet:
             lignes.append(f"  {r['id']}  {r['etat']:<17} {r['experience']}" +
                           (f" — {r['detail']}" if r["etat"] != "REUSSIE" else f" — {r['sortie']}"))
         return Reponse("OK", "\n".join(lignes))
+
+    def bilan(self, depuis: str | None = None) -> Reponse:
+        """Courses créées depuis un jour (AAAA-MM-JJ, heure locale ; défaut : 24 h), avec leur durée VUE : de la première
+        fois qu'un relevé les a vues tourner à la première fois qu'il les a vues finies. La précision est celle des relevés.
+        Une course jamais vue tourner n'a qu'une borne haute, file comprise (création → fin vue)."""
+        m = self.horloge()
+        if depuis:
+            try:
+                t0 = datetime.datetime.combine(datetime.date.fromisoformat(depuis), datetime.time()).timestamp()
+            except ValueError:
+                return Reponse("REFUS", "--depuis AAAA-MM-JJ")
+        else:
+            t0 = m - 24 * 3600
+        lignes = [f"Bilan des courses créées depuis {time.strftime('%Y-%m-%d %H:%M', time.localtime(t0))} "
+                  "(durée vue entre relevés ; « ≤ » : jamais vue tourner, file comprise)"]
+        totaux: dict[tuple[str, str], list[float]] = {}
+        sans = 0
+        for r in self.c.execute("SELECT * FROM courses WHERE cree_a >= ? ORDER BY cree_a", (t0,)):
+            if r["debut_vu"] and r["fin_vue"]:
+                d, texte = r["fin_vue"] - r["debut_vu"], _duree(r["fin_vue"] - r["debut_vu"])
+            elif r["fin_vue"]:
+                d, texte = r["fin_vue"] - r["cree_a"], "≤ " + _duree(r["fin_vue"] - r["cree_a"])
+            elif r["debut_vu"]:
+                d, texte = m - r["debut_vu"], _duree(m - r["debut_vu"]) + " (en cours)"
+            else:
+                d, texte = 0.0, "—"
+                sans += 1
+            chantier = r["chantier"] or "—"
+            genre = "GPU" if r["gpu"] else "CPU"
+            t = totaux.setdefault((chantier, genre), [0.0, 0.0])
+            t[0 if r["etat"] == "REUSSIE" else 1] += d
+            lignes.append(f"  {r['id']}  {r['etat']:<17} {r['plateforme']:<6} {genre}  {chantier:<20} "
+                          f"{r['experience']:<32} {texte}")
+        lignes.append("Totaux (réussies / autres) :")
+        for (chantier, genre), (ok, autre) in sorted(totaux.items()):
+            lignes.append(f"  {genre} {chantier:<20} {_duree(ok)} / {_duree(autre)}")
+        if sans:
+            lignes.append(f"  {sans} course(s) sans durée connue (jamais vues tourner ni finies)")
+        return Reponse("OK", "\n".join(lignes))
+
+    def attendre(self, ident: str, max_s: float, pas_s: float = 60.0, sommeil=time.sleep) -> Reponse:
+        """Relève jusqu'à ce que la course soit finie, au plus `max_s`. Code 0 : réussie ; 2 : finie autrement ;
+        4 : toujours active à l'échéance (rien n'est perdu : attendre encore ; ne rien relancer)."""
+        fin = self.horloge() + max_s
+        while True:
+            r = self.c.execute("SELECT * FROM courses WHERE id = ?", (ident,)).fetchone()
+            if r is None:
+                return Reponse("REFUS", f"course inconnue : {ident}")
+            if r["etat"] in registre.TERMINAUX:
+                texte = f"{ident} : {r['etat']}" + (f", sortie {r['sortie']}" if r["sortie"] else "") + \
+                        (f" — {r['detail']}" if r["detail"] and r["etat"] != "REUSSIE" else "")
+                return Reponse("OK" if r["etat"] == "REUSSIE" else "REFUS", texte, course=ident)
+            if self.horloge() >= fin:
+                return Reponse("INCERTAINE", f"{ident} toujours {r['etat']} après {_duree(max_s)} : attendre encore, "
+                                             "ne rien relancer", course=ident)
+            sommeil(pas_s)
+            self.reconcilier()
 
     def ouvrir_sprint(self, chantiers: list[str], fin: str | None) -> Reponse:
         """Commande humaine : fixe (ou, sans chantier, arrête) le sprint dans config.toml, que seul ce compte écrit."""

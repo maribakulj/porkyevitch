@@ -77,6 +77,7 @@ class Evaluation:
     sha256: str
     accords_requis: list[str] = field(default_factory=list)  # raisons qui demandent un accord humain
     note: str = ""  # ce que le guichet ajoute à sa réponse (puissance, verdict)
+    chantier: str = ""  # chantier nommé par la carte, s'il y en a un (pour le bilan)
 
 
 def evaluer(chemin: Path, chantiers: tuple[str, ...] = ()) -> Evaluation:
@@ -103,7 +104,7 @@ def evaluer(chemin: Path, chantiers: tuple[str, ...] = ()) -> Evaluation:
     if d.get("premisse") not in PREMISSES:
         raise CarteRechercheInvalide(f"bloc recherche : « premisse » parmi {PREMISSES}")
     if chantiers:
-        ev = Evaluation(sha256=hashlib.sha256(texte.encode("utf-8")).hexdigest())
+        ev = Evaluation(sha256=hashlib.sha256(texte.encode("utf-8")).hexdigest(), chantier=str(d.get("chantier", "")))
         if d.get("chantier") in chantiers:
             ev.note = f"construction : chantier {d['chantier']}"
         else:
@@ -114,7 +115,7 @@ def evaluer(chemin: Path, chantiers: tuple[str, ...] = ()) -> Evaluation:
         raise CarteRechercheInvalide("bloc recherche : soit une table [puissance], soit « exploratoire », pas les deux "
                                      "ni aucun")
 
-    ev = Evaluation(sha256=hashlib.sha256(texte.encode("utf-8")).hexdigest())
+    ev = Evaluation(sha256=hashlib.sha256(texte.encode("utf-8")).hexdigest(), chantier=str(d.get("chantier", "")))
     if d["premisse"] == "non_verifiee":
         ev.accords_requis.append("prémisse non vérifiée : le diagnostic le moins cher de ce fait passe d'abord")
     if "exploratoire" in d:

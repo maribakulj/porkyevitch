@@ -11,7 +11,9 @@ suivre de lien (`os.fwalk`, `O_NOFOLLOW`), pour qu'un lien posé entre la vérif
 
 from __future__ import annotations
 
+import ast
 import hashlib
+import json
 import os
 import stat
 from pathlib import Path
@@ -74,6 +76,38 @@ def copier_et_hacher(source: Path, destination: Path, taille_max: int) -> tuple[
         return hashlib.sha256("".join(lignes).encode()).hexdigest(), enveloppe
     finally:
         os.close(racine)
+
+
+def verifier_syntaxe(fichier: Path) -> None:
+    """Le point d'entrée doit au moins se lire comme du Python : une erreur de syntaxe se voit ici, pas après le départ."""
+    try:
+        ast.parse(fichier.read_text(encoding="utf-8"), filename=fichier.name)
+    except (SyntaxError, UnicodeDecodeError, ValueError) as e:
+        raise DossierRefuse(f"point d'entrée illisible par Python : {type(e).__name__} : {e}") from None
+
+
+def injecter_parametres(fichier: Path, texte_json: str) -> None:
+    """Écrit les paramètres de la carte dans la COPIE lancée (jamais dans le dossier de l'agent) : une ligne qui pose
+    GUICHET_PARAMETRES, après la docstring et les `from __future__`. Kaggle ne téléverse que le point d'entrée, d'où une
+    ligne de code plutôt qu'un fichier à côté. Les paramètres font partie de la clé : ce qui part reste ce qui a été
+    haché, plus cette seule ligne, déterminée par la carte."""
+    source = fichier.read_text(encoding="utf-8")
+    arbre_py = ast.parse(source)
+    apres = 0
+    for i, noeud in enumerate(arbre_py.body):
+        docstring = i == 0 and isinstance(noeud, ast.Expr) and isinstance(getattr(noeud, "value", None), ast.Constant) \
+            and isinstance(noeud.value.value, str)
+        futur = isinstance(noeud, ast.ImportFrom) and noeud.module == "__future__"
+        if docstring or futur:
+            apres = noeud.end_lineno
+        else:
+            break
+    lignes = source.splitlines(keepends=True)
+    if lignes and not lignes[-1].endswith("\n"):
+        lignes[-1] += "\n"
+    ligne = (f"import os as _guichet_os; _guichet_os.environ[\"GUICHET_PARAMETRES\"] = {json.dumps(texte_json)}"
+             "  # posé par le guichet\n")
+    fichier.write_text("".join(lignes[:apres] + [ligne] + lignes[apres:]), encoding="utf-8")
 
 
 def est_sous(chemin: Path, parent: Path) -> bool:

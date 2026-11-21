@@ -59,6 +59,11 @@ def _commun(sous) -> None:
     s.add_argument("--replication", metavar="MOTIF", help="refaire un calcul réussi : pourquoi (accord humain)")
     sous.add_parser("reconcilier", help="relever l'état distant de toutes les courses suivies")
     sous.add_parser("resume", help="budget, demandes, courses suivies, fins des dernières 24 h")
+    bi = sous.add_parser("bilan", help="courses créées depuis un jour, durée vue, totaux par chantier")
+    bi.add_argument("--depuis", metavar="AAAA-MM-JJ")
+    at = sous.add_parser("attendre", help="relever jusqu'à la fin d'une course (0 réussie, 2 autre fin, 4 échéance)")
+    at.add_argument("course")
+    at.add_argument("--max-min", type=float, default=30.0)
     e = sous.add_parser("etat", help="une course")
     e.add_argument("course")
     b = sous.add_parser("demander-bascule", help="changer de plateforme une course EN_FILE")
@@ -97,6 +102,10 @@ def executer(args, g: Guichet):
             return g.reconcilier()
         case "resume":
             return g.resume()
+        case "bilan":
+            return g.bilan(args.depuis)
+        case "attendre":
+            return g.attendre(args.course, args.max_min * 60)
         case "etat":
             return g.etat(args.course)
         case "demander-bascule":

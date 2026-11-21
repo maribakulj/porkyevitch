@@ -19,6 +19,11 @@ règles ci-dessous sont celles qui ont manqué dans une boucle réelle ; chacune
 La carte de recherche (skill `carte-de-recherche`) : décision, puissance, prémisse, comparabilité, contrôle direct,
 coût et artefacts. **Si le calcul ne peut pas conclure, on ne le lance pas.**
 
+Puis le code doit avoir tourné : noyau partant de `gabarits/noyau/`, vérification statique, essai local complet (tout
+le programme, sur le Mac, avec des comptes vérifiés), essai court sur la plateforme avec le même code et d'autres
+`[parametres]`. « Lancer sans demander » ne veut pas dire « lancer sans essai » : une course perdue coûte une heure de
+file et de calcul, un essai local quelques minutes.
+
 ## Calcul : tout passe par le guichet
 
 - Aucun lancement direct ; l'agent n'a pas les identifiants (skill `guichet`).

@@ -109,7 +109,8 @@ class Banc:
     def carte(self, nom: str = "calcul", code: str = "print('ok')\n", slug: str | None = None,
               duree: int = 2700, gpu: bool = True, artefacts=("recu.json",), mesuree: str = "",
               plateformes=("kaggle", "colab"), entrees=(("vecteurs", "a" * 64),),
-              recherche: str | None = RECHERCHE_OK, purgeables=None) -> Path:
+              recherche: str | None = RECHERCHE_OK, purgeables=None, parametres: dict | None = None,
+              essai: str = "") -> Path:
         d = self.depot / nom
         noyau = d / "noyau"
         noyau.mkdir(parents=True, exist_ok=True)
@@ -129,10 +130,14 @@ class Banc:
             """)
         if purgeables is not None:
             texte += f"artefacts_purgeables = {json.dumps(list(purgeables))}\n"
+        if essai:
+            texte += f'essai_par = "{essai}"\n'
         if recherche is not None:  # avant les tables [[entrees]], sinon la clé tomberait dans la dernière
             (d / "recherche.md").write_text(recherche)
             texte += 'carte_recherche = "recherche.md"\n'
         texte += entrees_toml
+        if parametres:
+            texte += "\n[parametres]\n" + "".join(f"{k} = {json.dumps(v)}\n" for k, v in parametres.items())
         chemin = d / "carte.toml"
         chemin.write_text(texte)
         return chemin

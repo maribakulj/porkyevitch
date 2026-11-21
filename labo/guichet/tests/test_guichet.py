@@ -182,9 +182,11 @@ class DureeEtBudget(Base):
         self.assertIn("mesurée", r.message)
 
     def test_duree_mesuree_et_longue_demande_un_accord(self):
-        blanc = self.b.g.soumettre(self.b.carte("blanc", code="blanc\n", duree=600), "kaggle")
+        # l'essai chronométré est un essai court du même code (seul un paramètre change) : il sert aux deux règles
+        blanc = self.b.g.soumettre(self.b.carte("blanc", duree=600, parametres={"LIMITE": 10}), "kaggle")
         self.b.finir(self.b.kaggle, "compte/blanc", {"recu.json": b"{}"}, duree=600)
-        r = self.b.g.soumettre(self.b.carte("complet", duree=7 * 3600, mesuree=blanc.course), "kaggle")
+        r = self.b.g.soumettre(self.b.carte("complet", slug="compte/complet", duree=7 * 3600, mesuree=blanc.course,
+                                            essai=blanc.course), "kaggle")
         self.assertEqual(r.code, "ACCORD_REQUIS")
         self.assertEqual(self.b.g.approuver(r.demande).code, "ACCEPTEE")
 
