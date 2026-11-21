@@ -97,6 +97,7 @@ class Banc:
         self.depot.mkdir()
         self.kaggle, self.colab = Fausse("kaggle", False), Fausse("colab", True)
         self.horloge = Horloge()
+        config.setdefault("disque_libre_min_go", 0)  # le disque réel ne décide pas des tests
         self.config = Config(**config)
         self.g = self.nouveau()
 

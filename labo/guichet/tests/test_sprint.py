@@ -89,5 +89,52 @@ class CommandeSprint(unittest.TestCase):
             cli.agent(["sprint", "tete-objets", "--jusqu-au", "2099-01-31"])
 
 
+class CorrectionsRelecture(unittest.TestCase):
+    def test_cpu_de_chantier_hors_limites_gpu(self):
+        b = Banc(chantiers=["tete-objets"], sprint_fin="2099-12-31", max_gpu_simultanes=0, seuil_accord_gpu_h=0.1)
+        r = b.g.soumettre(b.carte(gpu=False, duree=7200, recherche=CONSTRUCTION), "kaggle")
+        self.assertEqual(r.code, "ACCEPTEE", r.message)
+
+    def test_config_multiligne_reecrite_proprement(self):
+        b = Banc()
+        chemin = b.maison / "guichet" / "config.toml"
+        chemin.parent.mkdir(parents=True, exist_ok=True)
+        chemin.write_text('budget_gpu_hebdo_h = 30\nchantiers = [\n  "a",\n  "b",\n]\nsprint_fin = "2099-01-01"\n')
+        self.assertEqual(b.g.ouvrir_sprint(["c"], "2099-02-01").code, "OK")
+        import tomllib
+        d = tomllib.loads(chemin.read_text())
+        self.assertEqual((d["chantiers"], d["sprint_fin"], d["budget_gpu_hebdo_h"]), (["c"], "2099-02-01", 30))
+
+    def test_config_invalide_non_touchee(self):
+        b = Banc()
+        chemin = b.maison / "guichet" / "config.toml"
+        chemin.parent.mkdir(parents=True, exist_ok=True)
+        chemin.write_text("budget = = 3\n")
+        self.assertEqual(b.g.ouvrir_sprint(["c"], "2099-02-01").code, "REFUS")
+        self.assertEqual(chemin.read_text(), "budget = = 3\n")
+
+    def test_replication_approuvee_pendant_le_sprint(self):
+        b = Banc()
+        carte = b.carte(gpu=False, recherche=None)
+        r = b.g.soumettre(carte, "kaggle")
+        b.finir(b.kaggle, "compte/calcul", {"recu.json": b"{}"})
+        b.g.reconcilier()
+        b.g.ouvrir_sprint(["tete-objets"], "2099-12-31")
+        d = b.g.soumettre(carte, "kaggle", replication="contrôle voulu")
+        self.assertEqual(d.code, "ACCORD_REQUIS", d.message)
+        a = b.g.approuver(d.demande)
+        self.assertIn(a.code, ("ACCEPTEE", "OK"), a.message)
+
+
+class GardeDisque(unittest.TestCase):
+    def test_rapatriement_differe_sans_place(self):
+        b = Banc(disque_libre_min_go=1e9)
+        b.g.soumettre(b.carte(gpu=False, recherche=None), "kaggle")
+        b.finir(b.kaggle, "compte/calcul", {"recu.json": b"{}"})
+        r = b.g.reconcilier()
+        self.assertIn("DIFFÉRÉ", "\n".join([r.message] + r.lignes))
+        self.assertNotEqual(b.g.c.execute("SELECT etat FROM courses").fetchone()[0], "REUSSIE")
+
+
 if __name__ == "__main__":
     unittest.main()

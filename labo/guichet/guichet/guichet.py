@@ -52,14 +52,15 @@ class Config:
     kaggle_cli: str = "kaggle"
     colab_cli: str = ""
     chantiers: list[str] = field(default_factory=list)  # sprint de construction : chantiers retenus par l'humain
-    sprint_fin: str = ""  # AAAA-MM-JJ inclus ; le sprint est inactif sans chantiers, sans date ou après elle
+    sprint_fin: str = ""
+    disque_libre_min_go: float = 3.0  # sous ce seuil d'espace libre, le rapatriement attend (rien n'est perdu)  # AAAA-MM-JJ inclus ; le sprint est inactif sans chantiers, sans date ou après elle
 
     def sprint(self, maintenant: float) -> tuple[str, ...]:
         """Les chantiers du sprint en cours, ou () hors sprint."""
         if not (self.chantiers and self.sprint_fin):
             return ()
         fin = datetime.date.fromisoformat(self.sprint_fin)
-        return tuple(self.chantiers) if datetime.date.fromtimestamp(maintenant) <= fin else ()
+        return tuple(self.chantiers) if _jour_utc(maintenant) <= fin else ()
 
     @classmethod
     def lire(cls, chemin: Path) -> "Config":
@@ -83,6 +84,17 @@ class Reponse:
     @property
     def sortie(self) -> int:
         return {"OK": 0, "ACCEPTEE": 0, "REFUS": 2, "ACCORD_REQUIS": 3, "INCERTAINE": 4}[self.code]
+
+
+def _libre_go(chemin: Path) -> float:
+    while not chemin.exists() and chemin != chemin.parent:
+        chemin = chemin.parent
+    return shutil.disk_usage(chemin).free / 1e9
+
+
+def _jour_utc(t: float) -> datetime.date:
+    """Le jour en UTC : la date du sprint ne dépend pas du fuseau du processus (TZ peut passer sous sudo)."""
+    return datetime.datetime.fromtimestamp(t, datetime.timezone.utc).date()
 
 
 def _duree(s: float) -> str:
@@ -208,6 +220,7 @@ class Guichet:
                 r = self._porte_recherche(db, c, k, plateforme, instantane, enveloppe, motif, accords)
                 if r is not None:
                     return r
+            if c.gpu:
                 n = db.execute(f"SELECT COUNT(*) FROM courses WHERE gpu = 1 AND etat IN {registre.ACTIFS}"
                                ).fetchone()[0]
                 if n >= self.config.max_gpu_simultanes:
@@ -357,6 +370,12 @@ class Guichet:
             self._etat(ident, "EN_COURS", releve.detail or None, debut=True)
             return f"{ident} : en cours"
         sortie = self.sorties / ident
+        libre = _libre_go(self.sorties)
+        if libre < self.config.disque_libre_min_go:
+            self.c.execute("UPDATE courses SET detail = ? WHERE id = ?",
+                           (f"terminée à distance, rapatriement différé : {libre:.1f} Go libres", ident))
+            return (f"{ident} : terminée à distance ; rapatriement DIFFÉRÉ, {libre:.1f} Go libres sous le seuil de "
+                    f"{self.config.disque_libre_min_go:g} Go. Libère de la place : `reconcilier` reprendra")
         if releve.etat is Distant.ECHOUEE:
             try:
                 p.rapatrier(r["slug"], r["version"], sortie)
@@ -487,7 +506,7 @@ class Guichet:
         if d is None or d["etat"] != "EN_ATTENTE":
             return Reponse("REFUS", f"{ident} : pas de demande en attente de ce nom")
         c = cartes.Carte.depuis_json(d["carte"])
-        accords = {"DUREE", d["nature"]}
+        accords = {"DUREE", "RECHERCHE", d["nature"]}  # l'humain a vu la demande : la porte de recherche est levée
         if d["nature"] == "BASCULE":
             with registre.Transaction(self.c) as db:
                 src = db.execute("SELECT * FROM courses WHERE id = ?", (d["course_source"],)).fetchone()
@@ -575,14 +594,28 @@ class Guichet:
                 jour = datetime.date.fromisoformat(fin or "")
             except ValueError:
                 return Reponse("REFUS", "--jusqu-au AAAA-MM-JJ obligatoire")
-            if jour < datetime.date.fromtimestamp(self.horloge()):
+            if jour < _jour_utc(self.horloge()):
                 return Reponse("REFUS", f"{jour} est déjà passé")
         chemin = self.racine / "config.toml"
-        lignes = chemin.read_text().splitlines() if chemin.exists() else []
-        lignes = [l for l in lignes if not re.match(r"\s*(chantiers|sprint_fin)\s*=", l)]
+        texte = chemin.read_text() if chemin.exists() else ""
+        # retire les deux clés, y compris une liste écrite sur plusieurs lignes
+        texte = re.sub(r"(?ms)^[ \t]*chantiers[ \t]*=[ \t]*\[.*?\][ \t]*(#[^\n]*)?\n?", "", texte)
+        texte = re.sub(r"(?m)^[ \t]*(chantiers|sprint_fin)[ \t]*=.*\n?", "", texte)
+        if texte and not texte.endswith("\n"):
+            texte += "\n"
         if chantiers:
-            lignes += [f"chantiers = {json.dumps(chantiers)}", f'sprint_fin = "{jour.isoformat()}"']
-        chemin.write_text("\n".join(lignes) + "\n")
+            texte += f"chantiers = {json.dumps(chantiers)}\nsprint_fin = \"{jour.isoformat()}\"\n"
+        try:
+            d = tomllib.loads(texte)
+            if chantiers and (d.get("chantiers") != chantiers or d.get("sprint_fin") != jour.isoformat()):
+                raise ValueError("relecture différente")
+            Config(**d)
+        except (tomllib.TOMLDecodeError, TypeError, ValueError) as e:
+            return Reponse("REFUS", f"config.toml n'a pas été modifié : la nouvelle version serait invalide ({e}). "
+                                    "Corrige-le à la main")
+        provisoire = chemin.with_suffix(".toml.nouveau")
+        provisoire.write_text(texte)
+        os.replace(provisoire, chemin)
         self.config = Config.lire(chemin)
         if not chantiers:
             return Reponse("OK", "sprint arrêté : règle ordinaire (puissance ou accord)")
